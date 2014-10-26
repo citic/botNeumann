@@ -4,17 +4,11 @@
 *.o
 *.obj
 
-# Precompiled Headers
-*.gch
-*.pch
-
 # Compiled Dynamic libraries
 *.so
 *.dylib
+*.pyc
 *.dll
-
-# Fortran module files
-*.mod
 
 # Compiled Static libraries
 *.lai
@@ -22,7 +16,66 @@
 *.a
 *.lib
 
+# Precompiled Headers
+*.gch
+*.pch
+
+# Fortran module files
+*.mod
+
 # Executables
 *.exe
 *.out
 *.app
+
+# Cocos2d-x
+cocos2d
+cocos2dx
+
+# Output directories
+#doc/api/
+
+# Mac OS X
+.DS_Store
+
+# Xcode
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+
+#Python modules
+MANIFEST
+dist/
+build/
+
+# Backup files
+*~.nib
+\#*#
+.#*
+
+# Android projects
+assets/
+libs/
+obj/
+bin/
+gen/
+local.properties
+
+# QtCreator
+*build-*/
+*.user*
+
+# Visual Studio
+*.sdf
+*.suo
+Debug.win32/
+Release.win32/
+
+# Project specific
+tmp
+# temporary, due to file size
+Resources/GameMenu/GameMenu.svg
