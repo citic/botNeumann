@@ -5,10 +5,15 @@ TEMPLATE = app
 
 SOURCES += \
 	main.cpp\
-	MainWindow.cpp
+	MainWindow.cpp \
+	BotNeumannApp.cpp
 
 HEADERS += \
-	MainWindow.h
+	MainWindow.h \
+	BotNeumannApp.h
 
 FORMS += \
 	MainWindow.ui
+
+RESOURCES += \
+	Resources/Resources.qrc

@@ -1,11 +1,11 @@
+#include "BotNeumannApp.h"
 #include "MainWindow.h"
-#include <QApplication>
 
 int main(int argc, char *argv[])
 {
-	QApplication a(argc, argv);
+	BotNeumannApp app(argc, argv);
 	MainWindow window;
 	window.showMaximized();
 
-	return a.exec();
+	return app.exec();
 }
