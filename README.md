@@ -17,4 +17,5 @@ We surveyed our Computer Science students at Universidad de Costa Rica, asking t
 - [API documentation](doc/api/)
 - [Project oficial web page at CITIC](http://www.citic.ucr.ac.cr/proyecto/incentivo_lenguaje_programacion_en_estudiantes) (in Spanish)
 - Informal document with [Requirements](doc/requirements.md)
-- Build instructions can be found in [BUILD.md](BUILD.md) file.
+- Build instructions can be found in [BUILD.md](doc/BUILD.md) file.
+- License: [GPL v2](doc/LICENSE.txt)

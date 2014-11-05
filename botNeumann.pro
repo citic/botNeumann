@@ -4,16 +4,16 @@ TARGET = botNeumann
 TEMPLATE = app
 
 SOURCES += \
-	main.cpp\
-	MainWindow.cpp \
-	BotNeumannApp.cpp
+	source/main.cpp \
+	source/MainWindow.cpp \
+	source/BotNeumannApp.cpp
 
 HEADERS += \
-	MainWindow.h \
-	BotNeumannApp.h
+	source/MainWindow.h \
+	source/BotNeumannApp.h
 
 FORMS += \
-	MainWindow.ui
+	source/MainWindow.ui
 
 RESOURCES += \
 	assets/assets.qrc
