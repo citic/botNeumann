@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>button_config.svg</file>
+        <file>button_information.svg</file>
+        <file>button_rewards.svg</file>
+        <file>game_title.svg</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file>fonts/tenby_five.otf</file>
+    </qresource>
+    <qresource prefix="/game_menu">
+        <file>game_menu/background.svg</file>
+    </qresource>
+    <qresource prefix="/unit_playing"/>
+    <qresource prefix="/unit_playing/data_types"/>
+    <qresource prefix="/unit_selection">
+        <file>unit_selection/air_tube_pod.svg</file>
+        <file>unit_selection/air_tube_short.svg</file>
+        <file>unit_selection/background.svg</file>
+        <file>unit_selection/chip_damaged.svg</file>
+        <file>unit_selection/chip_restored.svg</file>
+    </qresource>
+</RCC>

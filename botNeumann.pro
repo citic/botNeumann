@@ -16,4 +16,4 @@ FORMS += \
 	MainWindow.ui
 
 RESOURCES += \
-	Resources/Resources.qrc
+	assets/assets.qrc
