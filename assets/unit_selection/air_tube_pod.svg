@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY st0 "opacity:0.8;fill:#00111A;enable-background:new    ;">
+	<!ENTITY st1 "fill:#22BC8B;">
+	<!ENTITY st2 "opacity:0.8;fill:#003F3D;enable-background:new    ;">
+	<!ENTITY st3 "fill:#00111A;">
+	<!ENTITY st4 "fill:#039B78;">
+]>
+<svg version="1.1" id="air_x5F_tube_x5F_pod" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 x="0px" y="0px" width="51.542px" height="22.96px" viewBox="0 0 51.542 22.96" style="enable-background:new 0 0 51.542 22.96;"
+	 xml:space="preserve">
+<g>
+	<path style="&st4;" d="M50.403,11.48c0,5.576-4.519,10.095-10.094,10.095H11.981c-5.575,0-10.094-4.52-10.094-10.095l0,0
+		c0-5.576,4.52-10.095,10.094-10.095H40.31C45.885,1.386,50.403,5.905,50.403,11.48L50.403,11.48z"/>
+	<path style="&st1;" d="M11.823,0H11.48C5.14,0,0,5.14,0,11.48c0,6.34,5.14,11.48,11.48,11.48h0.343V0z"/>
+	<path style="&st1;" d="M39.719,22.96h0.343c6.34,0,11.48-5.14,11.48-11.479c0-6.34-5.141-11.48-11.48-11.48h-0.343V22.96z"/>
+	<path style="&st3;" d="M38.453,14.058c0,2.354-1.91,4.265-4.267,4.265H17.304c-2.355,0-4.265-1.91-4.265-4.265V8.903
+		c0-2.355,1.91-4.265,4.265-4.265h16.883c2.355,0,4.267,1.91,4.267,4.265V14.058z"/>
+	<rect x="39.052" style="&st2;" width="1.424" height="22.951"/>
+	<rect x="11.112" style="&st0;" width="1.423" height="22.951"/>
+</g>
+</svg>

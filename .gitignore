@@ -58,7 +58,7 @@ build/
 .#*
 
 # Android projects
-assets/
+#assets/
 libs/
 obj/
 bin/
