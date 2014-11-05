@@ -4,5 +4,5 @@
 BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	: QApplication(argc, argv)
 {
-	QFontDatabase::addApplicationFont(":/Fonts/Tenby-Five.otf");
+	QFontDatabase::addApplicationFont(":/fonts/tenby_five.otf");
 }

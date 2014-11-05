@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
 	BotNeumannApp app(argc, argv);
 	MainWindow window;
-	window.showMaximized();
+	window.show();
 
 	return app.exec();
 }
