@@ -33,7 +33,7 @@ cocos2d
 cocos2dx
 
 # Output directories
-#doc/api/
+doc/api/
 
 # Mac OS X
 .DS_Store
@@ -77,5 +77,4 @@ Release.win32/
 
 # Project specific
 tmp
-# temporary, due to file size
-Resources/GameMenu/GameMenu.svg
+assets/*.png
