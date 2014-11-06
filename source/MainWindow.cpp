@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// Source code is visible only in playing scenes
 	ui->dockWidget->setVisible(false);
+
+	ui->graphicsView->setScene(& scene);
 }
 
 MainWindow::~MainWindow()
