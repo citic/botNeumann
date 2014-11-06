@@ -13,6 +13,7 @@ class QGraphicsView;
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(MainWindow)
 
   protected:
 	/// The place where scenes are performed. It is a graphics view control, able to render svg
@@ -33,7 +34,9 @@ class MainWindow : public QMainWindow
 	virtual ~MainWindow();
 
   protected:
+	/// Create the control where scenes are shown and shows the first scene
 	void setupStage();
+	/// Create the source code editor control
 	void setupCodeEditor();
 };
 
