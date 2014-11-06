@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
 	, ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
+
+	// Source code is visible only in playing scenes
+	ui->dockWidget->setVisible(false);
 }
 
 MainWindow::~MainWindow()
