@@ -1,5 +1,4 @@
 QT += core gui svg widgets
-
 TARGET = botNeumann
 TEMPLATE = app
 
@@ -11,9 +10,6 @@ SOURCES += \
 HEADERS += \
 	source/MainWindow.h \
 	source/BotNeumannApp.h
-
-FORMS += \
-	source/MainWindow.ui
 
 RESOURCES += \
 	assets/assets.qrc
