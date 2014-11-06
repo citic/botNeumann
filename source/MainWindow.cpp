@@ -1,6 +1,4 @@
 #include "MainWindow.h"
-#include "ui_MainWindow.h"
-
 #include <QDockWidget>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
@@ -41,7 +39,7 @@ void MainWindow::setupStage()
 	QGraphicsRectItem* rect = scene.addRect(0, 0, 1024, 768);
 	rect->setPen(Qt::NoPen);
 	rect->setBrush(Qt::NoBrush);
-	QGraphicsSvgItem* background = new QGraphicsSvgItem(":/game_menu/game_menu/background.svg", rect);
+	/*QGraphicsSvgItem* background =*/ new QGraphicsSvgItem(":/game_menu/game_menu/background.svg", rect);
 	//scene.addItem(background);
 }
 
