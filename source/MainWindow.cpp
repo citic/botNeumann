@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-	delete scene;
 }
 
 void MainWindow::setupStage()
@@ -38,13 +37,9 @@ void MainWindow::setupStage()
 	stageRoom->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	// The game menu is the default scene
-	scene = new BaseScene();
+	Q_ASSERT(scene == nullptr);
+	scene = new BaseScene(this, "game_menu", width(), height());
 	stageRoom->setScene(scene);
-	QGraphicsRectItem* rect = scene->addRect(0, 0, width(), height());
-	rect->setPen(Qt::NoPen);
-	rect->setBrush(Qt::NoBrush);
-	/*QGraphicsSvgItem* background =*/ new QGraphicsSvgItem(":/game_menu/game_menu/background.svg", rect);
-	//scene.addItem(background);
 }
 
 // ToDo: remove
