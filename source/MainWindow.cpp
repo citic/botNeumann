@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QGraphicsSvgItem>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -18,10 +19,13 @@ MainWindow::MainWindow(QWidget *parent)
 	// Create each window section
 	setupStage();
 	setupCodeEditor();
+	restoreSettings();
 }
 
 MainWindow::~MainWindow()
 {
+	// Store dimensions for next time
+	saveSettings();
 }
 
 void MainWindow::setupStage()
@@ -66,5 +70,19 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 
 	// Make the center visible again
 	stageRoom->centerOn(width() * 0.5, height() * 0.5);
+}
+
+void MainWindow::saveSettings()
+{
+	QSettings settings;
+	settings.setValue("MainWindow/Size", size());
+	settings.setValue("MainWindow/State", saveState());
+}
+
+void MainWindow::restoreSettings()
+{
+	QSettings settings;
+	resize( settings.value("MainWindow/Size", sizeHint()).toSize() );
+	restoreState( settings.value("MainWindow/State").toByteArray() );
 }
 

@@ -39,6 +39,10 @@ class MainWindow : public QMainWindow
 	void setupCodeEditor();
 	/// Called after each time the window is resized
 	virtual void resizeEvent(QResizeEvent* event) override;
+	/// Save the window dimensions to be used later
+	void saveSettings();
+	/// Restore (apply) the saved window dimensions
+	void restoreSettings();
 };
 
 #endif // MAINWINDOW_H
