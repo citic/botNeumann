@@ -1,3 +1,4 @@
+#include "BaseScene.h"
 #include "MainWindow.h"
 #include <QDockWidget>
 #include <QGraphicsView>
@@ -6,6 +7,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
+	, scene(nullptr)
 {
 	// Set basic properties for the main window
 	setObjectName("MainWindow"); // used to save preferences
@@ -20,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+	delete scene;
 }
 
 void MainWindow::setupStage()
@@ -34,9 +37,10 @@ void MainWindow::setupStage()
 	stageRoom->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	stageRoom->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-	// ToDo: replace with actual scene
-	stageRoom->setScene(& scene);
-	QGraphicsRectItem* rect = scene.addRect(0, 0, 1024, 768);
+	// The game menu is the default scene
+	scene = new BaseScene();
+	stageRoom->setScene(scene);
+	QGraphicsRectItem* rect = scene->addRect(0, 0, width(), height());
 	rect->setPen(Qt::NoPen);
 	rect->setBrush(Qt::NoBrush);
 	/*QGraphicsSvgItem* background =*/ new QGraphicsSvgItem(":/game_menu/game_menu/background.svg", rect);

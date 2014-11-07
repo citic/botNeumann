@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QGraphicsScene>
 
+class BaseScene;
 class QDockWidget;
 class QGraphicsView;
 
@@ -21,8 +21,7 @@ class MainWindow : public QMainWindow
 	QGraphicsView* stageRoom;
 	/// The scene currently shown in the central widget
 	/// It changes according to the context. For example: game menu, unit selection,
-	/// ToDo: Convert to a hierarchy of scenes, it is a test for now
-	QGraphicsScene scene;
+	BaseScene* scene;
 	/// Source code editor is shown as a docking widget
 	/// ToDo: implement as a new class inherited from QDockWidget
 	QDockWidget* codeEditor;
