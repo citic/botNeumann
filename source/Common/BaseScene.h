@@ -24,6 +24,8 @@ class BaseScene : public QGraphicsScene
   public:
 	/// Constructor
 	explicit BaseScene(QObject* parent = nullptr, const QString& sceneName = "", qreal width = 10.0, qreal height = 10.0);
+	/// Destructor
+	virtual ~BaseScene();
 	/// Changes the background image
 	virtual void setBackground(const QString& filename = "background.svg");
 

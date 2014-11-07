@@ -1,4 +1,4 @@
-#include "BaseScene.h"
+#include "GameMenuScene.h"
 #include "MainWindow.h"
 #include <QDockWidget>
 #include <QGraphicsView>
@@ -38,7 +38,7 @@ void MainWindow::setupStage()
 
 	// The game menu is the default scene
 	Q_ASSERT(scene == nullptr);
-	scene = new BaseScene(this, "game_menu", width(), height());
+	scene = new GameMenuScene(this, width(), height());
 	stageRoom->setScene(scene);
 }
 
