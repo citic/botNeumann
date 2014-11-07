@@ -28,6 +28,8 @@ class BaseScene : public QGraphicsScene
 	virtual ~BaseScene();
 	/// Changes the background image
 	virtual void setBackground(const QString& filename = "background.svg");
+	/// Call this method when the stage room has changed its dimensions
+	virtual void resize(qreal width, qreal height);
 
   signals:
 

@@ -20,7 +20,6 @@ class GameMenuScene : public BaseScene
   signals:
 
   public slots:
-
 };
 
 #endif // GAMEMENUSCENE_H

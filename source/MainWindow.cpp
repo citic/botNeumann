@@ -57,3 +57,14 @@ void MainWindow::setupCodeEditor()
 	// ToDo: only for testing: an empty widget
 	codeEditor->setWidget(new QTextEdit());
 }
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+	// The main window changed its size. It has a new size. Update the current scene
+	Q_UNUSED(event)
+	if ( scene ) scene->resize(width(), height());
+
+	// Make the center visible again
+	stageRoom->centerOn(width() * 0.5, height() * 0.5);
+}
+
