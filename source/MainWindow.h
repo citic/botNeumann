@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 
-class BaseScene;
+class Scene;
+class Stage;
 class QDockWidget;
-class QGraphicsView;
 
 /**
  * @brief The main window where all the scenes are shown
@@ -18,10 +18,10 @@ class MainWindow : public QMainWindow
   protected:
 	/// The place where scenes are performed. It is a graphics view control, able to render svg
 	/// actors (images)
-	QGraphicsView* stageRoom;
+	Stage* stage;
 	/// The scene currently shown in the central widget
 	/// It changes according to the context. For example: game menu, unit selection,
-	BaseScene* scene;
+	Scene* scene;
 	/// Source code editor is shown as a docking widget
 	/// ToDo: implement as a new class inherited from QDockWidget
 	QDockWidget* codeEditor;
@@ -37,8 +37,6 @@ class MainWindow : public QMainWindow
 	void setupStage();
 	/// Create the source code editor control
 	void setupCodeEditor();
-	/// Called after each time the window is resized
-	virtual void resizeEvent(QResizeEvent* event) override;
 	/// Save the window dimensions to be used later
 	void saveSettings();
 	/// Restore (apply) the saved window dimensions

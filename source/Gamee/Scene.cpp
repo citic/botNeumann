@@ -1,9 +1,9 @@
-#include "BaseScene.h"
+#include "Scene.h"
 #include <QtDebug>
 #include <QGraphicsRectItem>
 #include <QGraphicsSvgItem>
 
-BaseScene::BaseScene(QObject* parent, const QString& sceneName, qreal width, qreal height)
+Scene::Scene(QObject* parent, const QString& sceneName, qreal width, qreal height)
 	: QGraphicsScene(parent)
 	, sceneName(sceneName)
 {
@@ -13,12 +13,12 @@ BaseScene::BaseScene(QObject* parent, const QString& sceneName, qreal width, qre
 	setBackground();
 }
 
-BaseScene::~BaseScene()
+Scene::~Scene()
 {
 	qDebug() << sceneName << "scene deleted";
 }
 
-void BaseScene::setBackground(const QString& filename)
+void Scene::setBackground(const QString& filename)
 {
 	const QString& resource = ":/" + sceneName + '/' + sceneName + '/' + filename;
 	background = new QGraphicsSvgItem(resource, canvas);
@@ -26,7 +26,7 @@ void BaseScene::setBackground(const QString& filename)
 	//scene.addItem(background);
 }
 
-void BaseScene::resize(qreal width, qreal height)
+void Scene::resize(qreal width, qreal height)
 {
 	// Update canvas and background
 	setSceneRect(0, 0, width - 1, height - 1);

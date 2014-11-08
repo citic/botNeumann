@@ -7,23 +7,28 @@ INCLUDEPATH += \
 	source \
 	source/Common \
 	source/Dialogs \
+	source/Gamee \
 	source/GameMenu \
 	source/Players \
 	source/UnitPlaying \
-	source/UnitSelection
+	source/UnitSelection \
 
 SOURCES += \
+	source/BotNeumannApp.cpp \
+	source/Gamee/Actor.cpp \
+	source/Gamee/Scene.cpp \
+	source/Gamee/Stage.cpp \
+	source/GameMenu/GameMenuScene.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
-	source/BotNeumannApp.cpp \
-	source/Common/BaseScene.cpp \
-	source/GameMenu/GameMenuScene.cpp
 
 HEADERS += \
-	source/MainWindow.h \
 	source/BotNeumannApp.h \
-	source/Common/BaseScene.h \
-	source/GameMenu/GameMenuScene.h
+	source/Gamee/Actor.h \
+	source/Gamee/Scene.h \
+	source/Gamee/Stage.h \
+	source/GameMenu/GameMenuScene.h \
+	source/MainWindow.h \
 
 RESOURCES += \
 	assets/assets.qrc

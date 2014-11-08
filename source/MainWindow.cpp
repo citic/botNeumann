@@ -5,6 +5,7 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsSvgItem>
 #include <QSettings>
+#include "Stage.h"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -31,19 +32,14 @@ MainWindow::~MainWindow()
 void MainWindow::setupStage()
 {
 	// Create the stage room and make it the central widget
-	stageRoom = new QGraphicsView(this);
-	stageRoom->setObjectName("stageRoom");
-	setCentralWidget(stageRoom);
-
-	// Remove borders and avoid using scroll bars
-	stageRoom->setFrameShape(QFrame::NoFrame);
-	stageRoom->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	stageRoom->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	stage = new Stage(this);
+	stage->setObjectName("stageRoom");
+	setCentralWidget(stage);
 
 	// The game menu is the default scene
 	Q_ASSERT(scene == nullptr);
 	scene = new GameMenuScene(this, width(), height());
-	stageRoom->setScene(scene);
+	stage->setScene(scene);
 }
 
 // ToDo: remove
@@ -60,16 +56,6 @@ void MainWindow::setupCodeEditor()
 
 	// ToDo: only for testing: an empty widget
 	codeEditor->setWidget(new QTextEdit());
-}
-
-void MainWindow::resizeEvent(QResizeEvent* event)
-{
-	// The main window changed its size. It has a new size. Update the current scene
-	Q_UNUSED(event)
-	if ( scene ) scene->resize(width(), height());
-
-	// Make the center visible again
-	stageRoom->centerOn(width() * 0.5, height() * 0.5);
 }
 
 void MainWindow::saveSettings()

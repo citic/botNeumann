@@ -8,10 +8,10 @@ class QGraphicsSvgItem;
 /**
    @brief Base class for all the scenes
  */
-class BaseScene : public QGraphicsScene
+class Scene : public QGraphicsScene
 {
 	Q_OBJECT
-	Q_DISABLE_COPY(BaseScene)
+	Q_DISABLE_COPY(Scene)
 
   protected:
 	/// Each scene has a unique name, eg: "game_menu", "unit_selection", "unit_playing"...
@@ -23,9 +23,9 @@ class BaseScene : public QGraphicsScene
 
   public:
 	/// Constructor
-	explicit BaseScene(QObject* parent = nullptr, const QString& sceneName = "", qreal width = 10.0, qreal height = 10.0);
+	explicit Scene(QObject* parent = nullptr, const QString& sceneName = "", qreal width = 10.0, qreal height = 10.0);
 	/// Destructor
-	virtual ~BaseScene();
+	virtual ~Scene();
 	/// Changes the background image
 	virtual void setBackground(const QString& filename = "background.svg");
 	/// Call this method when the stage room has changed its dimensions

@@ -1,12 +1,12 @@
 #ifndef GAMEMENUSCENE_H
 #define GAMEMENUSCENE_H
 
-#include "BaseScene.h"
+#include "Scene.h"
 
 /**
    @brief The first scene where player chooses the game modality to play
  */
-class GameMenuScene : public BaseScene
+class GameMenuScene : public Scene
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(GameMenuScene)
