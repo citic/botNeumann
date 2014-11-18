@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="shelf_x5F_left" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="15.258px" height="47.375px" viewBox="0 0 15.258 47.375" enable-background="new 0 0 15.258 47.375"
+	 xml:space="preserve">
+<g>
+	<g>
+		<g>
+			<defs>
+				<rect id="SVGID_1_" x="0" width="15.258" height="47.375"/>
+			</defs>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_1_"  overflow="visible"/>
+			</clipPath>
+			<g id="estante_1_" clip-path="url(#SVGID_2_)">
+				<g>
+					<g>
+						<rect x="7.519" y="-69.026" fill="#5C5C5C" width="753.888" height="273.346"/>
+						<rect x="7.519" y="-28.71" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.133"/>
+						<rect x="7.519" y="19.008" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.135"/>
+						<rect x="7.519" y="66.747" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.022"/>
+						<rect x="7.519" y="114.178" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.225"/>
+						<rect x="7.519" y="160.473" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.232"/>
+					</g>
+					<g>
+						<g id="estante">
+							<path fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" d="M768.01-54.334H0.491v1.773v6.267v40.681v7.117v40.68v7.114
+								v40.681v7.117v40.678v7.119v40.678v7.115v20.271H7.52v-16.574h753.461v16.574h7.028V-53.409V-54.334L768.01-54.334z
+								 M7.52,185.57v-37.905h753.461v37.905H7.52L7.52,185.57z M7.52,136.85v0.924v-37.086h753.461v36.162H7.52L7.52,136.85z
+								 M7.52,89.898v-37.01h753.461l0.097,37.01H7.52L7.52,89.898z M7.52,42.184V5.295h753.461v36.889H7.52L7.52,42.184z
+								 M7.52-5.614v-37.908h753.461v37.908H7.52L7.52-5.614z"/>
+							<rect x="0.49" y="-85.782" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="767.854" height="31.449"/>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>
