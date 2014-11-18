@@ -54,7 +54,6 @@
 | shared_table | mesa compartida por todos los robots: segmento de datos. | ![shared_table: mesa compartida por todos los robots](unit_playing/shared_table.svg) |
 | tube_in | tubo de entrada, hacerle una sección abierta de 8 bytes. | ![tube_in](unit_playing/tube_in.svg) |
 | tube_out | tubo de salida: también requiere la sección abierta. | ![tube_out: tubo de salida](unit_playing/tube_out.svg) |
-| floor | piso del cuarto | ![floor](unit_playing/floor.svg) |
 
 
 ## unit_playing / data_types
