@@ -1,11 +1,11 @@
 #include "Actor.h"
 
-Actor::Actor(QGraphicsItem* parent)
-	: QGraphicsSvgItem(parent)
+Actor::Actor(QGraphicsItem* parentItem)
+	: ScenicElement(parentItem)
 {
 }
 
 Actor::Actor(const QString& fileName, QGraphicsItem* parentItem)
-	: QGraphicsSvgItem(fileName, parentItem)
+	: ScenicElement(fileName, parentItem)
 {
 }

@@ -21,6 +21,7 @@ SOURCES += \
 	source/GameMenu/GameMenuScene.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
+	source/Gamee/ScenicElement.cpp
 
 HEADERS += \
 	source/BotNeumannApp.h \
@@ -29,6 +30,7 @@ HEADERS += \
 	source/Gamee/Stage.h \
 	source/GameMenu/GameMenuScene.h \
 	source/MainWindow.h \
+	source/Gamee/ScenicElement.h
 
 RESOURCES += \
 	assets/assets.qrc
