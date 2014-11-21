@@ -13,7 +13,7 @@ class GameMenuScene : public Scene
 
   public:
 	/// Constructor
-	explicit GameMenuScene(QObject *parent = nullptr, qreal width = 10.0, qreal height = 10.0);
+	explicit GameMenuScene(QObject* parent = nullptr, qreal width = 10.0, qreal height = 10.0);
 	/// Destructor
 	virtual ~GameMenuScene();
 

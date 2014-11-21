@@ -9,7 +9,6 @@
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
-	, scene(nullptr)
 {
 	// Set basic properties for the main window
 	setObjectName("MainWindow"); // used to save preferences
@@ -37,8 +36,7 @@ void MainWindow::setupStage()
 	setCentralWidget(stage);
 
 	// The game menu is the default scene
-	Q_ASSERT(scene == nullptr);
-	scene = new GameMenuScene(this, width(), height());
+	auto scene = new GameMenuScene(stage, stage->width(), stage->height());
 	stage->setScene(scene);
 }
 

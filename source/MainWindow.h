@@ -19,16 +19,13 @@ class MainWindow : public QMainWindow
 	/// The place where scenes are performed. It is a graphics view control, able to render svg
 	/// actors (images)
 	Stage* stage;
-	/// The scene currently shown in the central widget
-	/// It changes according to the context. For example: game menu, unit selection,
-	Scene* scene;
 	/// Source code editor is shown as a docking widget
 	/// ToDo: implement as a new class inherited from QDockWidget
 	QDockWidget* codeEditor;
 
   public:
 	/// Constructor
-	explicit MainWindow(QWidget *parent = 0);
+	explicit MainWindow(QWidget* parent = nullptr);
 	/// Destructor
 	virtual ~MainWindow();
 
