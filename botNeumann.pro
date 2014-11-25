@@ -2,6 +2,8 @@ QT += core gui svg widgets
 TARGET = botNeumann
 TEMPLATE = app
 CONFIG += c++11
+ICON = assets/game_logo.icns
+RC_ICONS = assets/game_logo.ico
 
 INCLUDEPATH += \
 	source \

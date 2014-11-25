@@ -1,5 +1,6 @@
 #include "BotNeumannApp.h"
-#include "QFontDatabase"
+#include <QFontDatabase>
+#include <QIcon>
 
 BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	: QApplication(argc, argv)
@@ -10,6 +11,7 @@ BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	setOrganizationDomain("citic.ucr.ac.cr");
 	setApplicationDisplayName("bot Neumann++");
 	setApplicationVersion("1.0.0");
+	setWindowIcon(QIcon(":/game_logo.svg"));
 
 	// Default font for the game
 	QFontDatabase::addApplicationFont(":/fonts/tenby_five.otf");

@@ -77,4 +77,6 @@ Release.win32/
 
 # Project specific
 tmp
+assets/*.pdf
 assets/*.png
+assets/game_logo/
