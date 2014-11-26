@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 	setWindowTitle("bot Neumann++");
 	resize(1024, 768); // affects only desktop applications
 	setMinimumSize(480, 320);
+	setWindowIcon(QIcon(":/game_logo.svg"));
 
 	// Create each window section
 	setupStage();
