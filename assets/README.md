@@ -68,6 +68,8 @@
 | int_middle | rectángulo redondeado, extremo central que puede prolongarse a varios bytes | ![int_midldle](unit_playing/data_types/int_middle.svg) |
 | int_right | rectángulo redondeado, extremo derecho | ![int_right](unit_playing/data_types/int_right.svg) |
 | pointer_left | es igual que el entero (int) pero de otro color, puede tener un punto de color: verde (OK), rojo (dirección inválida). Ese punto puede estar fuera del rectángulo. Puede ser una especie de antena parabólica pequeñita con esos colores | ![pointer_left](unit_playing/data_types/pointer_left.svg) |
+| pointer_left_ok | antena con luz verde (OK) | ![pointer_left_ok](unit_playing/data_types/pointer_left_ok.svg)
+| pointer_left_invalid | antena con luz roja (dirección inválida) | ![pointer_left_invalid](unit_playing/data_types/pointer_left_invalid.svg)|
 | pointer_middle | extremo central del apuntador, que se puede extender por varios bytes | ![pointer_middle](unit_playing/data_types/pointer_middle.svg) |
 | pointer_right | extremo derecho del apuntador | ![pointer_right](unit_playing/data_types/pointer_right.svg) |
 | float_left | rectángulo con esquinas cuadradas, extremo izquierdo. Nota ya no es necesario el double, ni el long double | ![float_left](unit_playing/data_types/float_left.svg) |
