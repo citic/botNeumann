@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include <QtDebug>
 #include <QGraphicsRectItem>
 #include <QGraphicsSvgItem>
 
@@ -15,22 +14,23 @@ Scene::Scene(QObject* parent, const QString& sceneName, qreal width, qreal heigh
 
 Scene::~Scene()
 {
-	qDebug() << sceneName << "scene deleted";
 }
 
 void Scene::setBackground(const QString& filename)
 {
-	const QString& resource = ":/" + sceneName + '/' + sceneName + '/' + filename;
-	background = new QGraphicsSvgItem(resource, canvas);
-	//background->boundingRect().setSize(QSizeF(width, height));
-	//scene.addItem(background);
+	background = new QGraphicsSvgItem(getResourcePathFor(filename), canvas);
+}
+
+QString Scene::getResourcePathFor(const QString& assertName) const
+{
+	return ":/" + sceneName + '/' + sceneName + '/' + assertName;
 }
 
 void Scene::resize(qreal width, qreal height)
 {
 	// Update canvas and background
-	setSceneRect(0, 0, width - 1, height - 1);
-	canvas->setRect(0, 0, width - 1, height - 1);
+	setSceneRect(0, 0, width, height);
+	canvas->setRect(0, 0, width, height);
 
 	qreal sw = width / background->boundingRect().width();
 	qreal sh = height / background->boundingRect().height();

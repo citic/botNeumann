@@ -28,6 +28,15 @@ class Scene : public QGraphicsScene
 	virtual ~Scene();
 	/// Changes the background image
 	virtual void setBackground(const QString& filename = "background.svg");
+	/**	@brief Get full resouce filename for an assert that is contained in a folder with the same
+		name of the scene. For example
+		@code
+			Scene gameMenuScene(stage, "GameMenu", stage->width(), stage->heigth());
+			const QString& fullPath = gameMenuScene.getResourcePathFor("game_title.svg");
+			// fullPath value would be ":/GameMenu/game_title.svg"
+		@endcode
+	**/
+	virtual QString getResourcePathFor(const QString& assertName) const;
 	/// Call this method when the stage room has changed its dimensions
 	virtual void resize(qreal width, qreal height);
 
