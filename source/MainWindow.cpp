@@ -1,14 +1,16 @@
 #include "GameMenuScene.h"
 #include "MainWindow.h"
+#include "Stage.h"
 #include <QDockWidget>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QGraphicsSvgItem>
 #include <QSettings>
-#include "Stage.h"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
+	, stage(nullptr)
+	, codeEditor(nullptr)
 {
 	// Set basic properties for the main window
 	setObjectName("MainWindow"); // used to save preferences
@@ -33,7 +35,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupStage()
 {
-	// Create the stage room and make it the central widget
+	// Create the stage room and make it the central widget.
+	// It will be destroyed by QObject ownership mechanism
+	Q_ASSERT(stage == nullptr);
 	stage = new Stage(this);
 	stage->setObjectName("stageRoom");
 	setCentralWidget(stage);
@@ -49,6 +53,7 @@ void MainWindow::setupStage()
 void MainWindow::setupCodeEditor()
 {
 	// Source code editor is only visible in playing scenes, disabled by default
+	Q_ASSERT(codeEditor == nullptr);
 	codeEditor = new QDockWidget(this);
 	codeEditor->setObjectName("codeEditor");
 	codeEditor->setWindowTitle(tr("Program"));
@@ -72,4 +77,3 @@ void MainWindow::restoreSettings()
 	resize( settings.value("MainWindow/Size", sizeHint()).toSize() );
 	restoreState( settings.value("MainWindow/State").toByteArray() );
 }
-

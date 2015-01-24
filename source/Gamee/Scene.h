@@ -23,7 +23,7 @@ class Scene : public QGraphicsScene
 
   public:
 	/// Constructor
-	explicit Scene(QObject* parent = nullptr, const QString& sceneName = "", qreal width = 10.0, qreal height = 10.0);
+	explicit Scene(QObject* parent = nullptr, const QString& sceneName = "", qreal width = 1024.0, qreal height = 768.0);
 	/// Destructor
 	virtual ~Scene();
 	/// Changes the background image

@@ -37,14 +37,14 @@ void GameMenuScene::setupButtons()
 	buttonsLayout->addItem(addWidget(collaborationButton));
 	buttonsLayout->addItem(addWidget(createButton));
 
-	QGraphicsLinearLayout* globalLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+	globalLayout = new QGraphicsLinearLayout(Qt::Horizontal);
 	globalLayout->addStretch();
 	globalLayout->setItemSpacing(0, width() * 0.72);
 	globalLayout->addItem(buttonsLayout);
 
-	QGraphicsWidget* widget = new QGraphicsWidget();
-	widget->setLayout(globalLayout);
-	addItem(widget);
+	graphicsWidget = new QGraphicsWidget();
+	graphicsWidget->setLayout(globalLayout);
+	addItem(graphicsWidget);
 
 	connect(trainingButton, SIGNAL(clicked()), this, SLOT(trainingPressed()));
 	connect(missionsButton, SIGNAL(clicked()), this, SLOT(missionsPressed()));
@@ -72,4 +72,11 @@ void GameMenuScene::collaborationPressed()
 void GameMenuScene::createPressed()
 {
 	qDebug() << "Create: not implemented yet";
+}
+
+void GameMenuScene::resize(qreal width, qreal height)
+{
+	Scene::resize(width, height);
+	globalLayout->setItemSpacing(0, width * 0.72);
+	graphicsWidget->resize(width, height);
 }
