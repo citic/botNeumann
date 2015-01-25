@@ -36,6 +36,7 @@ HEADERS += \
 	source/Gamee/ScenicElement.h \
 	source/Gamee/Stage.h \
 	source/GameMenu/GameMenuScene.h \
+	source/Global.h\
 	source/MainWindow.h \
 
 RESOURCES += \

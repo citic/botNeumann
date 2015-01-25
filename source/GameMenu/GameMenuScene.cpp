@@ -54,26 +54,24 @@ void GameMenuScene::setupButtons()
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createPressed()));
 }
 
-#include <QDebug>
-
 void GameMenuScene::trainingPressed()
 {
-	qDebug() << "Training: not implemented yet!";
+	emit newSceneAsked(SceneId::training);
 }
 
 void GameMenuScene::missionsPressed()
 {
-	qDebug() << "Missions: not implemented yet";
+	emit newSceneAsked(SceneId::missions);
 }
 
 void GameMenuScene::collaborationPressed()
 {
-	qDebug() << "Collaboration: not implemented yet";
+	emit newSceneAsked(SceneId::collaboration);
 }
 
 void GameMenuScene::createPressed()
 {
-	qDebug() << "Create: not implemented yet";
+	emit newSceneAsked(SceneId::create);
 }
 
 void GameMenuScene::resize(qreal width, qreal height)

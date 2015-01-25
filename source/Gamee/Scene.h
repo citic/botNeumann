@@ -1,6 +1,7 @@
 #ifndef BASESCENE_H
 #define BASESCENE_H
 
+#include "Global.h"
 #include <QGraphicsRectItem>
 #include <QObject>
 
@@ -42,6 +43,8 @@ class Scene : public QObject, public QGraphicsRectItem
 	virtual QString getResourcePathFor(const QString& assertName) const;
 
   signals:
+	/// Emitted when player press one of the buttons: Training, Missions, Collaboration or Create
+	void newSceneAsked(SceneId id);
 
   public slots:
 	/// Call this method when the stage room has changed its dimensions

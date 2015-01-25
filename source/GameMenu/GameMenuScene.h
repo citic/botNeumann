@@ -48,6 +48,8 @@ class GameMenuScene : public Scene
 	void collaborationPressed();
 	/// Called when Create button is pressed
 	void createPressed();
+
+  public slots:
 	/// Call this method when the stage room has changed its dimensions
 	virtual void resize(qreal width, qreal height) override;
 };
