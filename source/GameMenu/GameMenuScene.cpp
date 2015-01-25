@@ -1,14 +1,15 @@
 #include "GameMenuScene.h"
 #include "ScenicElement.h"
+#include "Stage.h"
 #include <QGraphicsLinearLayout>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsWidget>
 #include <QPushButton>
 
-GameMenuScene::GameMenuScene(QObject* parent, qreal width, qreal height)
-	: Scene(parent, "game_menu", width, height)
+GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
+	: Scene("game_menu", stage, parent)
 {
-	ScenicElement* gameTitle = new ScenicElement(":/game_title.svg", canvas);
+	ScenicElement* gameTitle = new ScenicElement(":/game_title.svg", this);
 	gameTitle->setPos(25.0, 50.0);
 
 	setupButtons();
@@ -25,6 +26,7 @@ void GameMenuScene::setupButtons()
 	// Default stylesheet for buttons
 	QString styleSheet("QPushButton { color: rgb(25, 212, 207); background-color: rgba(64, 144, 144, 50); font-size: 20px; padding: 15px; border-radius: 15px; border: solid 1px; font: 40px \"Tenby Five\"; }");
 	qApp->setStyleSheet(styleSheet);
+	QGraphicsScene& graphicsScene = stage->getGraphicsScene();
 
 	trainingButton = new QPushButton(tr("&Training"));
 	missionsButton = new QPushButton(tr("&Missions"));
@@ -32,19 +34,19 @@ void GameMenuScene::setupButtons()
 	createButton = new QPushButton(tr("C&reate"));
 
 	QGraphicsLinearLayout* buttonsLayout = new QGraphicsLinearLayout(Qt::Vertical);
-	buttonsLayout->addItem(addWidget(trainingButton));
-	buttonsLayout->addItem(addWidget(missionsButton));
-	buttonsLayout->addItem(addWidget(collaborationButton));
-	buttonsLayout->addItem(addWidget(createButton));
+	buttonsLayout->addItem(graphicsScene.addWidget(trainingButton));
+	buttonsLayout->addItem(graphicsScene.addWidget(missionsButton));
+	buttonsLayout->addItem(graphicsScene.addWidget(collaborationButton));
+	buttonsLayout->addItem(graphicsScene.addWidget(createButton));
 
 	globalLayout = new QGraphicsLinearLayout(Qt::Horizontal);
 	globalLayout->addStretch();
-	globalLayout->setItemSpacing(0, width() * 0.72);
+	globalLayout->setItemSpacing(0, stage->width() * 0.72);
 	globalLayout->addItem(buttonsLayout);
 
 	graphicsWidget = new QGraphicsWidget();
 	graphicsWidget->setLayout(globalLayout);
-	addItem(graphicsWidget);
+	graphicsScene.addItem(graphicsWidget);
 
 	connect(trainingButton, SIGNAL(clicked()), this, SLOT(trainingPressed()));
 	connect(missionsButton, SIGNAL(clicked()), this, SLOT(missionsPressed()));

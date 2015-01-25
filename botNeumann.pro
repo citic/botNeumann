@@ -17,22 +17,26 @@ INCLUDEPATH += \
 
 SOURCES += \
 	source/BotNeumannApp.cpp \
+	source/BotNeumannDirector.cpp \
 	source/Gamee/Actor.cpp \
+	source/Gamee/Director.cpp \
 	source/Gamee/Scene.cpp \
+	source/Gamee/ScenicElement.cpp \
 	source/Gamee/Stage.cpp \
 	source/GameMenu/GameMenuScene.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
-	source/Gamee/ScenicElement.cpp
 
 HEADERS += \
 	source/BotNeumannApp.h \
+	source/BotNeumannDirector.h \
 	source/Gamee/Actor.h \
+	source/Gamee/Director.h \
 	source/Gamee/Scene.h \
+	source/Gamee/ScenicElement.h \
 	source/Gamee/Stage.h \
 	source/GameMenu/GameMenuScene.h \
 	source/MainWindow.h \
-	source/Gamee/ScenicElement.h
 
 RESOURCES += \
 	assets/assets.qrc

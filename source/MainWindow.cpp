@@ -1,4 +1,4 @@
-#include "GameMenuScene.h"
+#include "BotNeumannDirector.h"
 #include "MainWindow.h"
 #include "Stage.h"
 #include <QDockWidget>
@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, stage(nullptr)
 	, codeEditor(nullptr)
+	, director(nullptr)
 {
 	// Set basic properties for the main window
 	setObjectName("MainWindow"); // used to save preferences
@@ -39,12 +40,12 @@ void MainWindow::setupStage()
 	// It will be destroyed by QObject ownership mechanism
 	Q_ASSERT(stage == nullptr);
 	stage = new Stage(this);
-	stage->setObjectName("stageRoom");
 	setCentralWidget(stage);
 
-	// The game menu is the default scene
-	auto scene = new GameMenuScene(stage, stage->width(), stage->height());
-	stage->setScene(scene);
+	// Create the game director
+	Q_ASSERT(director == nullptr);
+	director = new BotNeumannDirector(stage);
+	director->begin();
 }
 
 // ToDo: remove

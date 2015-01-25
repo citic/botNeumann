@@ -1,15 +1,17 @@
 #include "Scene.h"
+#include "Stage.h"
 #include <QGraphicsRectItem>
 #include <QGraphicsSvgItem>
 
-Scene::Scene(QObject* parent, const QString& sceneName, qreal width, qreal height)
-	: QGraphicsScene(parent)
+Scene::Scene(const QString& sceneName, Stage* stage, QGraphicsItem* parent)
+	: QGraphicsRectItem(0.0f, 0.0f, stage->width(), stage->height(), parent)
 	, sceneName(sceneName)
+	, stage(stage)
 {
-	canvas = addRect(0, 0, width, height);
-	canvas->setPen(Qt::NoPen);
-	canvas->setBrush(Qt::NoBrush);
+	setPen(Qt::NoPen);
+	setBrush(Qt::NoBrush);
 	setBackground();
+	stage->getGraphicsScene().addItem(this);
 }
 
 Scene::~Scene()
@@ -18,7 +20,7 @@ Scene::~Scene()
 
 void Scene::setBackground(const QString& filename)
 {
-	background = new QGraphicsSvgItem(getResourcePathFor(filename), canvas);
+	background = new QGraphicsSvgItem(getResourcePathFor(filename), this);
 }
 
 QString Scene::getResourcePathFor(const QString& assertName) const
@@ -28,9 +30,7 @@ QString Scene::getResourcePathFor(const QString& assertName) const
 
 void Scene::resize(qreal width, qreal height)
 {
-	// Update canvas and background
-	setSceneRect(0, 0, width, height);
-	canvas->setRect(0, 0, width, height);
+	setRect(0, 0, width, height);
 
 	qreal sw = width / background->boundingRect().width();
 	qreal sh = height / background->boundingRect().height();

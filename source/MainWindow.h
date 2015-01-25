@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class BotNeumannDirector;
 class Scene;
 class Stage;
 class QDockWidget;
@@ -22,6 +23,8 @@ class MainWindow : public QMainWindow
 	/// Source code editor is shown as a docking widget
 	/// ToDo: implement as a new class inherited from QDockWidget
 	QDockWidget* codeEditor;
+	/// Knows what to do when we need change from one scene to another
+	BotNeumannDirector* director;
 
   public:
 	/// Constructor
