@@ -4,7 +4,7 @@
 #include <QGraphicsSvgItem>
 
 Scene::Scene(const QString& sceneName, Stage* stage, QGraphicsItem* parent)
-	: QGraphicsRectItem(0.0f, 0.0f, stage->width(), stage->height(), parent)
+	: QGraphicsRectItem(0.0, 0.0, stage->width(), stage->height(), parent)
 	, sceneName(sceneName)
 	, stage(stage)
 {

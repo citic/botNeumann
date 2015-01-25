@@ -34,6 +34,8 @@ class GameMenuScene : public Scene
 	explicit GameMenuScene(Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
 	virtual ~GameMenuScene();
+	/// Get the identification number of this scene
+	virtual inline SceneId getSceneId() const override { return SceneId::gameMenu; }
 
   protected:
 	/// Create buttons and layouts

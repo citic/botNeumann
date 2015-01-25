@@ -10,6 +10,7 @@ INCLUDEPATH += \
 	source/Common \
 	source/Dialogs \
 	source/Gamee \
+	source/Gamee/Transitions \
 	source/GameMenu \
 	source/Players \
 	source/UnitPlaying \
@@ -23,6 +24,8 @@ SOURCES += \
 	source/Gamee/Scene.cpp \
 	source/Gamee/ScenicElement.cpp \
 	source/Gamee/Stage.cpp \
+	source/Gamee/Transitions/Transition.cpp \
+	source/Gamee/Transitions/TransitionSlide.cpp \
 	source/GameMenu/GameMenuScene.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
@@ -35,6 +38,8 @@ HEADERS += \
 	source/Gamee/Scene.h \
 	source/Gamee/ScenicElement.h \
 	source/Gamee/Stage.h \
+	source/Gamee/Transitions/Transition.h \
+	source/Gamee/Transitions/TransitionSlide.h \
 	source/GameMenu/GameMenuScene.h \
 	source/Global.h\
 	source/MainWindow.h \

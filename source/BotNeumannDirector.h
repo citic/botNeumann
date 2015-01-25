@@ -28,6 +28,13 @@ class BotNeumannDirector : public Director
 	/// Replaces the current scene for a new scene of the given id
 	/// A transition is automatically applied, according to the direction of the change
 	void replaceScene(SceneId newSceneId);
+
+  protected:
+	/// Creates a new Scene object for the given id
+	/// @return The scene object or nullptr if id is unknown or not implemented yet
+	Scene* createScene(SceneId sceneId);
+	/// Set the new active scene, its conections
+	void setCurrentScene(Scene* newScene);
 };
 
 #endif // BOTNEUMANNDIRECTOR_H

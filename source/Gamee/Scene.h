@@ -41,6 +41,8 @@ class Scene : public QObject, public QGraphicsRectItem
 		@endcode
 	**/
 	virtual QString getResourcePathFor(const QString& assertName) const;
+	/// Get the identification number of this scene
+	virtual inline SceneId getSceneId() const = 0;
 
   signals:
 	/// Emitted when player press one of the buttons: Training, Missions, Collaboration or Create
