@@ -73,6 +73,10 @@ void BotNeumannDirector::setCurrentScene(Scene* newScene)
 	// Each time the stage change its size, the current scene should adapt to the new dimensions
 	connect(stage, SIGNAL(resized(qreal,qreal)), currentScene, SLOT(resize(qreal,qreal)));
 
+	// If there is another scene, the new one will not receive the resize event, at least the
+	// user resizes the window. So, let the new scene to adjust to the actual size of the window
+	if ( previousScene ) currentScene->resize(stage->width(), stage->height());
+
 	// React when a button asking for replacing the scene for a new one
 	connect(currentScene, SIGNAL(newSceneAsked(SceneId)), this, SLOT(replaceScene(SceneId)));
 }

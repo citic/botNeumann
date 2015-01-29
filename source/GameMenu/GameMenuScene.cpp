@@ -1,4 +1,5 @@
 #include "GameMenuScene.h"
+#include "LinearLayout.h"
 #include "ScenicElement.h"
 #include "Stage.h"
 #include <QGraphicsLinearLayout>
@@ -9,9 +10,34 @@
 GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	: Scene("game_menu", stage, parent)
 {
+	LinearLayout* leftLayout = new LinearLayout(Qt::Vertical);
 	ScenicElement* gameTitle = new ScenicElement(":/game_title.svg", this);
-	gameTitle->setPos(25.0, 50.0);
+	gameTitle->setMargins(0.1);
+	leftLayout->addItem(gameTitle, 0.2);
 
+	LinearLayout* centralLayout = new LinearLayout(Qt::Horizontal);
+	leftLayout->addLayout(centralLayout, 0.8);
+	ScenicElement* robot = new ScenicElement(":/game_menu/game_menu/robot.svg", this);
+	robot->setMargins(0.1);
+	centralLayout->addItem(robot, 0.5);
+	robot->makeMaintainAspectRatio(true);
+	robot->makeFloat(true);
+	centralLayout->addStretch(0.5);
+
+	LinearLayout* rightLayout = new LinearLayout(Qt::Vertical);
+
+	LinearLayout* globalLayout1 = new LinearLayout(Qt::Horizontal);
+	globalLayout1->addLayout(leftLayout, 2.0 / 3.0);
+	globalLayout1->addLayout(rightLayout, 1.0 / 3.0);
+	setLayout(globalLayout1);
+
+/*	rightLayout->addItem( createPlayerStatus(), 1.0 / 6.0 );
+	rightLayout->addItem( createButton(tr("Training")), 1.0 / 6.0 );
+	rightLayout->addItem( createButton(tr("Missions")), 1.0 / 6.0 );
+	rightLayout->addItem( createButton(tr("Collaboration")), 1.0 / 6.0 );
+	rightLayout->addItem( createButton(tr("Create")), 1.0 / 6.0 );
+	rightLayout->addLayout( createConfigButtons(), 1.0 / 6.0 );
+*/
 	setupButtons();
 }
 

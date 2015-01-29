@@ -12,6 +12,7 @@
     </qresource>
     <qresource prefix="/game_menu">
         <file>game_menu/background.svg</file>
+        <file>game_menu/robot.svg</file>
     </qresource>
     <qresource prefix="/unit_playing"/>
     <qresource prefix="/unit_playing/data_types"/>
