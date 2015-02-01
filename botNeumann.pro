@@ -29,6 +29,7 @@ SOURCES += \
 	source/Gamee/Scene.cpp \
 	source/Gamee/ScenicElement.cpp \
 	source/Gamee/Stage.cpp \
+	source/Gamee/SvgButton.cpp \
 	source/Gamee/Transitions/Transition.cpp \
 	source/Gamee/Transitions/TransitionSlide.cpp \
 	source/GameMenu/GameMenuScene.cpp \
@@ -47,6 +48,7 @@ HEADERS += \
 	source/Gamee/Scene.h \
 	source/Gamee/ScenicElement.h \
 	source/Gamee/Stage.h \
+	source/Gamee/SvgButton.h \
 	source/Gamee/Transitions/Transition.h \
 	source/Gamee/Transitions/TransitionSlide.h \
 	source/GameMenu/GameMenuScene.h \

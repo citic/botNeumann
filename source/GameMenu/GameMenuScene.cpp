@@ -2,6 +2,7 @@
 #include "LinearLayout.h"
 #include "ScenicElement.h"
 #include "Stage.h"
+#include "SvgButton.h"
 #include <QGraphicsLinearLayout>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsWidget>
@@ -25,59 +26,37 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	centralLayout->addStretch(0.5);
 
 	LinearLayout* rightLayout = new LinearLayout(Qt::Vertical);
+	setupButtons(rightLayout);
 
-	LinearLayout* globalLayout1 = new LinearLayout(Qt::Horizontal);
-	globalLayout1->addLayout(leftLayout, 2.0 / 3.0);
-	globalLayout1->addLayout(rightLayout, 1.0 / 3.0);
-	setLayout(globalLayout1);
-
-/*	rightLayout->addItem( createPlayerStatus(), 1.0 / 6.0 );
-	rightLayout->addItem( createButton(tr("Training")), 1.0 / 6.0 );
-	rightLayout->addItem( createButton(tr("Missions")), 1.0 / 6.0 );
-	rightLayout->addItem( createButton(tr("Collaboration")), 1.0 / 6.0 );
-	rightLayout->addItem( createButton(tr("Create")), 1.0 / 6.0 );
-	rightLayout->addLayout( createConfigButtons(), 1.0 / 6.0 );
-*/
-	setupButtons();
+	LinearLayout* globalLayout = new LinearLayout(Qt::Horizontal);
+	globalLayout->addLayout(leftLayout, 0.7);
+	globalLayout->addLayout(rightLayout, 0.3);
+	setLayout(globalLayout);
 }
 
 GameMenuScene::~GameMenuScene()
 {
 }
 
-#include <QApplication>
-
-void GameMenuScene::setupButtons()
+void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 {
-	// Default stylesheet for buttons
-	QString styleSheet("QPushButton { color: rgb(25, 212, 207); background-color: rgba(64, 144, 144, 50); font-size: 20px; padding: 15px; border-radius: 15px; border: solid 1px; font: 40px \"Tenby Five\"; }");
-	qApp->setStyleSheet(styleSheet);
-	QGraphicsScene& graphicsScene = stage->getGraphicsScene();
+	trainingButton = SvgButton::createLabelButton(tr("Training"), ":/game_menu/game_menu/button_background.svg", this);
+	missionsButton = SvgButton::createLabelButton(tr("Missions"), ":/game_menu/game_menu/button_background.svg", this);
+	collaborationButton = SvgButton::createLabelButton(tr("Collaboration"), ":/game_menu/game_menu/button_background.svg", this);
+	createButton = SvgButton::createLabelButton(tr("Create"), ":/game_menu/game_menu/button_background.svg", this);
 
-	trainingButton = new QPushButton(tr("&Training"));
-	missionsButton = new QPushButton(tr("&Missions"));
-	collaborationButton = new QPushButton(tr("&Collaboration"));
-	createButton = new QPushButton(tr("C&reate"));
+//	rightLayout->addItem( createPlayerStatus(), 1.0 / 6.0 );
+	rightLayout->addItem( trainingButton, 1.0 / 6.0 );
+	rightLayout->addItem( missionsButton, 1.0 / 6.0 );
+	rightLayout->addItem( collaborationButton, 1.0 / 6.0 );
+	rightLayout->addItem( createButton, 1.0 / 6.0 );
+//	rightLayout->addLayout( createConfigButtons(), 1.0 / 6.0 );
 
-	QGraphicsLinearLayout* buttonsLayout = new QGraphicsLinearLayout(Qt::Vertical);
-	buttonsLayout->addItem(graphicsScene.addWidget(trainingButton));
-	buttonsLayout->addItem(graphicsScene.addWidget(missionsButton));
-	buttonsLayout->addItem(graphicsScene.addWidget(collaborationButton));
-	buttonsLayout->addItem(graphicsScene.addWidget(createButton));
-
-	globalLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-	globalLayout->addStretch();
-	globalLayout->setItemSpacing(0, stage->width() * 0.72);
-	globalLayout->addItem(buttonsLayout);
-
-	graphicsWidget = new QGraphicsWidget();
-	graphicsWidget->setLayout(globalLayout);
-	graphicsScene.addItem(graphicsWidget);
-
-	connect(trainingButton, SIGNAL(clicked()), this, SLOT(trainingPressed()));
-	connect(missionsButton, SIGNAL(clicked()), this, SLOT(missionsPressed()));
-	connect(collaborationButton, SIGNAL(clicked()), this, SLOT(collaborationPressed()));
-	connect(createButton, SIGNAL(clicked()), this, SLOT(createPressed()));
+//	QString styleSheet("QPushButton { color: rgb(25, 212, 207); background-color: rgba(64, 144, 144, 50); font-size: 20px; padding: 15px; border-radius: 15px; border: solid 1px; font: 40px \"Tenby Five\"; }");
+	connect(trainingButton, SIGNAL(pressed()), this, SLOT(trainingPressed()));
+	connect(missionsButton, SIGNAL(pressed()), this, SLOT(missionsPressed()));
+	connect(collaborationButton, SIGNAL(pressed()), this, SLOT(collaborationPressed()));
+	connect(createButton, SIGNAL(pressed()), this, SLOT(createPressed()));
 }
 
 void GameMenuScene::trainingPressed()
@@ -98,11 +77,4 @@ void GameMenuScene::collaborationPressed()
 void GameMenuScene::createPressed()
 {
 	emit newSceneAsked(SceneId::create);
-}
-
-void GameMenuScene::resize(qreal width, qreal height)
-{
-	Scene::resize(width, height);
-	globalLayout->setItemSpacing(0, width * 0.72);
-	graphicsWidget->resize(width, height);
 }

@@ -3,9 +3,8 @@
 
 #include "Scene.h"
 
-class QGraphicsLinearLayout;
-class QGraphicsWidget;
-class QPushButton;
+class LinearLayout;
+class SvgButton;
 
 /**
    @brief The first scene where player chooses the game modality to play
@@ -17,17 +16,13 @@ class GameMenuScene : public Scene
 
   protected:
 	/// When pressed moves to the Training mode of the game
-	QPushButton* trainingButton;
+	SvgButton* trainingButton;
 	/// When pressed moves to the Missions mode: difficult challenges, such as ACM contests
-	QPushButton* missionsButton;
+	SvgButton* missionsButton;
 	/// When pressed moves to the Collaboration mode of the game
-	QPushButton* collaborationButton;
+	SvgButton* collaborationButton;
 	/// When pressed moves to the Create new challenges mode
-	QPushButton* createButton;
-	/// GraphicsScene requires a GraphicsWidget to place the buttons on it
-	QGraphicsWidget* graphicsWidget;
-	/// The global layout contains the other layouts
-	QGraphicsLinearLayout* globalLayout;
+	SvgButton* createButton;
 
   public:
 	/// Constructor
@@ -39,7 +34,7 @@ class GameMenuScene : public Scene
 
   protected:
 	/// Create buttons and layouts
-	void setupButtons();
+	void setupButtons(LinearLayout* rightLayout);
 
   protected slots:
 	/// Called when Training button is pressed
@@ -50,10 +45,6 @@ class GameMenuScene : public Scene
 	void collaborationPressed();
 	/// Called when Create button is pressed
 	void createPressed();
-
-  public slots:
-	/// Call this method when the stage room has changed its dimensions
-	virtual void resize(qreal width, qreal height) override;
 };
 
 #endif // GAMEMENUSCENE_H
