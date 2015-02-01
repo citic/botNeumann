@@ -40,23 +40,49 @@ GameMenuScene::~GameMenuScene()
 
 void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 {
-	trainingButton = SvgButton::createLabelButton(tr("Training"), ":/game_menu/game_menu/button_background.svg", this);
-	missionsButton = SvgButton::createLabelButton(tr("Missions"), ":/game_menu/game_menu/button_background.svg", this);
-	collaborationButton = SvgButton::createLabelButton(tr("Collaboration"), ":/game_menu/game_menu/button_background.svg", this);
-	createButton = SvgButton::createLabelButton(tr("Create"), ":/game_menu/game_menu/button_background.svg", this);
+	//	rightLayout->addItem( createPlayerStatus(), 1.0 / 6.0 );
 
-//	rightLayout->addItem( createPlayerStatus(), 1.0 / 6.0 );
+	// Create the buttons for each game mode and configuration
+	QString buttonBackground(":/game_menu/game_menu/button_background.svg");
+	SvgButton* trainingButton = SvgButton::createLabelButton(tr("Training"), buttonBackground, this);
+	SvgButton* missionsButton = SvgButton::createLabelButton(tr("Missions"), buttonBackground, this);
+	SvgButton* collaborationButton = SvgButton::createLabelButton(tr("Collaboration"), buttonBackground, this);
+	SvgButton* createButton = SvgButton::createLabelButton(tr("Create"), buttonBackground, this);
+
+	// Add the menu buttons to the layout
 	rightLayout->addItem( trainingButton, 1.0 / 6.0 );
 	rightLayout->addItem( missionsButton, 1.0 / 6.0 );
 	rightLayout->addItem( collaborationButton, 1.0 / 6.0 );
 	rightLayout->addItem( createButton, 1.0 / 6.0 );
-//	rightLayout->addLayout( createConfigButtons(), 1.0 / 6.0 );
 
-//	QString styleSheet("QPushButton { color: rgb(25, 212, 207); background-color: rgba(64, 144, 144, 50); font-size: 20px; padding: 15px; border-radius: 15px; border: solid 1px; font: 40px \"Tenby Five\"; }");
+	// React to each button change
 	connect(trainingButton, SIGNAL(pressed()), this, SLOT(trainingPressed()));
 	connect(missionsButton, SIGNAL(pressed()), this, SLOT(missionsPressed()));
 	connect(collaborationButton, SIGNAL(pressed()), this, SLOT(collaborationPressed()));
 	connect(createButton, SIGNAL(pressed()), this, SLOT(createPressed()));
+
+	setupConfigButtons(rightLayout);
+}
+
+void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
+{
+	SvgButton* infoButton = SvgButton::createImageButton("://button_information.svg", this);
+	SvgButton* rewardsButton = SvgButton::createImageButton("://button_rewards.svg", this);
+	SvgButton* configButton = SvgButton::createImageButton("://button_config.svg", this);
+
+	LinearLayout* configButtonLayout = new LinearLayout(Qt::Horizontal);
+	configButtonLayout->addItem(infoButton, 1.0 / 3.0);
+	configButtonLayout->addItem(rewardsButton, 1.0 / 3.0);
+	configButtonLayout->addItem(configButton, 1.0 / 3.0);
+	parentLayout->addLayout( configButtonLayout, 1.0 / 6.0 );
+
+	infoButton->setMargins(0.15, 0.0, 0.15, 0.4);
+	rewardsButton->setMargins(0.15, 0.2, 0.15, 0.2);
+	configButton->setMargins(0.15, 0.4, 0.15, 0.0);
+
+	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoPressed()));
+	connect(rewardsButton, SIGNAL(pressed()), this, SLOT(rewardsPressed()));
+	connect(configButton, SIGNAL(pressed()), this, SLOT(configPressed()));
 }
 
 void GameMenuScene::trainingPressed()
@@ -78,3 +104,21 @@ void GameMenuScene::createPressed()
 {
 	emit newSceneAsked(SceneId::create);
 }
+
+#include <QDebug>
+
+void GameMenuScene::infoPressed()
+{
+	qDebug() << "Information asked";
+}
+
+void GameMenuScene::rewardsPressed()
+{
+	qDebug() << "Rewards asked";
+}
+
+void GameMenuScene::configPressed()
+{
+	qDebug() << "Configuration asked";
+}
+

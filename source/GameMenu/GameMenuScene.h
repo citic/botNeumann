@@ -14,16 +14,6 @@ class GameMenuScene : public Scene
 	Q_OBJECT
 	Q_DISABLE_COPY(GameMenuScene)
 
-  protected:
-	/// When pressed moves to the Training mode of the game
-	SvgButton* trainingButton;
-	/// When pressed moves to the Missions mode: difficult challenges, such as ACM contests
-	SvgButton* missionsButton;
-	/// When pressed moves to the Collaboration mode of the game
-	SvgButton* collaborationButton;
-	/// When pressed moves to the Create new challenges mode
-	SvgButton* createButton;
-
   public:
 	/// Constructor
 	explicit GameMenuScene(Stage* stage, QGraphicsItem* parent = nullptr);
@@ -35,6 +25,8 @@ class GameMenuScene : public Scene
   protected:
 	/// Create buttons and layouts
 	void setupButtons(LinearLayout* rightLayout);
+	/// Create config buttons
+	void setupConfigButtons(LinearLayout* parentLayout);
 
   protected slots:
 	/// Called when Training button is pressed
@@ -45,6 +37,12 @@ class GameMenuScene : public Scene
 	void collaborationPressed();
 	/// Called when Create button is pressed
 	void createPressed();
+	/// Called when user press the Information button
+	void infoPressed();
+	/// Called when user press the Rewards button
+	void rewardsPressed();
+	/// Called when user press the Config button
+	void configPressed();
 };
 
 #endif // GAMEMENUSCENE_H
