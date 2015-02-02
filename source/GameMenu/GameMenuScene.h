@@ -4,7 +4,6 @@
 #include "Scene.h"
 
 class LinearLayout;
-class SvgButton;
 
 /**
    @brief The first scene where player chooses the game modality to play
@@ -30,19 +29,19 @@ class GameMenuScene : public Scene
 
   protected slots:
 	/// Called when Training button is pressed
-	void trainingPressed();
+	void trainingButtonPressed();
 	/// Called when Missions button is pressed
-	void missionsPressed();
+	void missionsButtonPressed();
 	/// Called when Collaboration button is pressed
-	void collaborationPressed();
+	void collaborationButtonPressed();
 	/// Called when Create button is pressed
-	void createPressed();
+	void createButtonPressed();
 	/// Called when user press the Information button
-	void infoPressed();
+	void infoButtonPressed();
 	/// Called when user press the Rewards button
-	void rewardsPressed();
+	void rewardsButtonPressed();
 	/// Called when user press the Config button
-	void configPressed();
+	void configButtonPressed();
 };
 
 #endif // GAMEMENUSCENE_H

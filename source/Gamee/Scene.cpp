@@ -33,7 +33,9 @@ QString Scene::getResourcePathFor(const QString& assertName) const
 
 void Scene::setLayout(Layout* layout)
 {
-	delete this->layout;
+	if ( layout != this->layout )
+		delete this->layout;
+
 	this->layout = layout;
 }
 

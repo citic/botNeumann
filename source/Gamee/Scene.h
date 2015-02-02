@@ -1,7 +1,7 @@
 #ifndef BASESCENE_H
 #define BASESCENE_H
 
-#include "Global.h"
+#include "Common.h"
 #include <QGraphicsRectItem>
 #include <QObject>
 

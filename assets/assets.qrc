@@ -1,5 +1,6 @@
 <RCC>
 	<qresource prefix="/">
+		<file>button_back.svg</file>
 		<file>button_config.svg</file>
 		<file>button_information.svg</file>
 		<file>button_rewards.svg</file>

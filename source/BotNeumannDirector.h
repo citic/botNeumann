@@ -2,7 +2,7 @@
 #define BOTNEUMANNDIRECTOR_H
 
 #include "Director.h"
-#include "Global.h"
+#include "Common.h"
 
 class Scene;
 

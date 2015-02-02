@@ -19,7 +19,7 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	LinearLayout* centralLayout = new LinearLayout(Qt::Horizontal);
 	leftLayout->addLayout(centralLayout, 0.8);
 	ScenicElement* robot = new ScenicElement(":/game_menu/game_menu/robot.svg", this);
-	robot->setMargins(0.1);
+	robot->setMargins(0.2);
 	centralLayout->addItem(robot, 0.5);
 	robot->makeMaintainAspectRatio(true);
 	robot->makeFloat(true);
@@ -40,7 +40,8 @@ GameMenuScene::~GameMenuScene()
 
 void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 {
-	//	rightLayout->addItem( createPlayerStatus(), 1.0 / 6.0 );
+//	rightLayout->addItem( createPlayerStatus(), 1.0 / 6.0 );
+	rightLayout->addStretch(1.0 / 6.0);
 
 	// Create the buttons for each game mode and configuration
 	QString buttonBackground(":/game_menu/game_menu/button_background.svg");
@@ -56,10 +57,10 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 	rightLayout->addItem( createButton, 1.0 / 6.0 );
 
 	// React to each button change
-	connect(trainingButton, SIGNAL(pressed()), this, SLOT(trainingPressed()));
-	connect(missionsButton, SIGNAL(pressed()), this, SLOT(missionsPressed()));
-	connect(collaborationButton, SIGNAL(pressed()), this, SLOT(collaborationPressed()));
-	connect(createButton, SIGNAL(pressed()), this, SLOT(createPressed()));
+	connect(trainingButton, SIGNAL(pressed()), this, SLOT(trainingButtonPressed()));
+	connect(missionsButton, SIGNAL(pressed()), this, SLOT(missionsButtonPressed()));
+	connect(collaborationButton, SIGNAL(pressed()), this, SLOT(collaborationButtonPressed()));
+	connect(createButton, SIGNAL(pressed()), this, SLOT(createButtonPressed()));
 
 	setupConfigButtons(rightLayout);
 }
@@ -80,45 +81,44 @@ void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
 	rewardsButton->setMargins(0.15, 0.2, 0.15, 0.2);
 	configButton->setMargins(0.15, 0.4, 0.15, 0.0);
 
-	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoPressed()));
-	connect(rewardsButton, SIGNAL(pressed()), this, SLOT(rewardsPressed()));
-	connect(configButton, SIGNAL(pressed()), this, SLOT(configPressed()));
+	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
+	connect(rewardsButton, SIGNAL(pressed()), this, SLOT(rewardsButtonPressed()));
+	connect(configButton, SIGNAL(pressed()), this, SLOT(configButtonPressed()));
 }
 
-void GameMenuScene::trainingPressed()
+void GameMenuScene::trainingButtonPressed()
 {
 	emit newSceneAsked(SceneId::training);
 }
 
-void GameMenuScene::missionsPressed()
+void GameMenuScene::missionsButtonPressed()
 {
 	emit newSceneAsked(SceneId::missions);
 }
 
-void GameMenuScene::collaborationPressed()
+void GameMenuScene::collaborationButtonPressed()
 {
 	emit newSceneAsked(SceneId::collaboration);
 }
 
-void GameMenuScene::createPressed()
+void GameMenuScene::createButtonPressed()
 {
 	emit newSceneAsked(SceneId::create);
 }
 
 #include <QDebug>
 
-void GameMenuScene::infoPressed()
+void GameMenuScene::infoButtonPressed()
 {
 	qDebug() << "Information asked";
 }
 
-void GameMenuScene::rewardsPressed()
+void GameMenuScene::rewardsButtonPressed()
 {
 	qDebug() << "Rewards asked";
 }
 
-void GameMenuScene::configPressed()
+void GameMenuScene::configButtonPressed()
 {
 	qDebug() << "Configuration asked";
 }
-

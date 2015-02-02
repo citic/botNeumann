@@ -20,6 +20,7 @@ INCLUDEPATH += \
 SOURCES += \
 	source/BotNeumannApp.cpp \
 	source/BotNeumannDirector.cpp \
+	source/Common/GameScene.cpp \
 	source/Gamee/Actor.cpp \
 	source/Gamee/Director.cpp \
 	source/Gamee/Layouts/Layout.cpp \
@@ -35,10 +36,13 @@ SOURCES += \
 	source/GameMenu/GameMenuScene.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
+	source/UnitSelection/UnitSelectionScene.cpp \
 
 HEADERS += \
 	source/BotNeumannApp.h \
 	source/BotNeumannDirector.h \
+	source/Common.h \
+	source/Common/GameScene.h \
 	source/Gamee/Actor.h \
 	source/Gamee/Director.h \
 	source/Gamee/Layouts/Layout.h \
@@ -52,8 +56,8 @@ HEADERS += \
 	source/Gamee/Transitions/Transition.h \
 	source/Gamee/Transitions/TransitionSlide.h \
 	source/GameMenu/GameMenuScene.h \
-	source/Global.h\
 	source/MainWindow.h \
+	source/UnitSelection/UnitSelectionScene.h \
 
 RESOURCES += \
 	assets/assets.qrc

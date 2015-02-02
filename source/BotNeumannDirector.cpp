@@ -2,6 +2,7 @@
 #include "GameMenuScene.h"
 #include "Stage.h"
 #include "TransitionSlide.h"
+#include "UnitSelectionScene.h"
 
 BotNeumannDirector::BotNeumannDirector(Stage* stage, QObject* parent)
 	: Director(stage, parent)
@@ -55,11 +56,10 @@ Scene* BotNeumannDirector::createScene(SceneId sceneId)
 	switch ( sceneId )
 	{
 		case SceneId::gameMenu: return new GameMenuScene(stage);
-		case SceneId::training: return new GameMenuScene(stage); // TrainingScene(stage);
-		//case SceneId::missions: return new MissionsScene(stage);
+		case SceneId::training: return new UnitSelectionScene("training", stage);
+		case SceneId::missions: return new UnitSelectionScene("missions", stage);
 		//case SceneId::collaboration: return new CollaborationScene(stage);
 		//case SceneId::create: return new CreateScene(stage);
-		//case SceneId::unitSelection: return new UnitSelectionScene(stage);
 		//case SceneId::unitPlaying: return new UnitPlayingScene(stage);
 		default: return nullptr;
 	}
