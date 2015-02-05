@@ -13,7 +13,7 @@ SvgButton::SvgButton(const QString& label, const QString& normalForeground, cons
 		this->label->setFont(QFont("Tenby Five"));
 		this->label->setBrush(QBrush(Qt::cyan));
 	}
-	setMargins(0.1);
+	setMargins(0.1); // I am not sure if it is a good margin default for buttons
 	setFlags( flags() | QGraphicsItem::ItemIsSelectable );
 }
 

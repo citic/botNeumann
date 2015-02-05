@@ -27,11 +27,11 @@ class SvgButton : public ScenicElement
 
   public:
 	/// Constructor: creates a simple text button or an image button
-	explicit SvgButton(const QString& label = "", const QString& normalForeground = "", const QString& normalBackground = "", QGraphicsItem* parentItem = nullptr);
+	explicit SvgButton(const QString& label, const QString& normalForeground, const QString& normalBackground, QGraphicsItem* parentItem);
 	/// Convenience method: creates a simple text button
-	static SvgButton* createLabelButton(const QString& label, const QString& normalBackground = "", QGraphicsItem* parentItem = nullptr);
+	static SvgButton* createLabelButton(const QString& label, const QString& normalBackground, QGraphicsItem* parentItem);
 	/// Convenience method: creates a simple image button
-	static SvgButton* createImageButton(const QString& normalForeground, QGraphicsItem* parentItem = nullptr);
+	static SvgButton* createImageButton(const QString& normalForeground, QGraphicsItem* parentItem);
 	/// Destructor
 	virtual ~SvgButton();
 	/// Resize this element
