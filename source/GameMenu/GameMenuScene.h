@@ -1,6 +1,7 @@
 #ifndef GAMEMENUSCENE_H
 #define GAMEMENUSCENE_H
 
+#include "Common.h"
 #include "Scene.h"
 
 class LinearLayout;
@@ -19,7 +20,7 @@ class GameMenuScene : public Scene
 	/// Destructor
 	virtual ~GameMenuScene();
 	/// Get the identification number of this scene
-	virtual inline SceneId getSceneId() const override { return SceneId::gameMenu; }
+	virtual inline SceneId getSceneId() const override { return sceneGameMenu; }
 
   protected:
 	/// Create buttons and layouts

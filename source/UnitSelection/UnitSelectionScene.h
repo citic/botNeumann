@@ -25,7 +25,7 @@ class UnitSelectionScene : public GameScene
 	/// Destructor
 	virtual ~UnitSelectionScene();
 	/// Get the identification number of this scene
-	virtual inline SceneId getSceneId() const override { return SceneId::unitSelection; }
+	virtual inline SceneId getSceneId() const override { return sceneUnitSelection; }
 
   protected slots:
 	/// Called when the Back button is pressed

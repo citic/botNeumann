@@ -22,7 +22,7 @@ UnitSelectionScene::~UnitSelectionScene()
 
 void UnitSelectionScene::backButtonPressed()
 {
-	emit newSceneAsked(SceneId::gameMenu);
+	emit newSceneAsked(sceneGameMenu);
 }
 
 

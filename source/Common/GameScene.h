@@ -1,6 +1,7 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 
+#include "Common.h"
 #include "Scene.h"
 
 class LinearLayout;

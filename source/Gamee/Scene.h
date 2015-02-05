@@ -1,13 +1,16 @@
 #ifndef BASESCENE_H
 #define BASESCENE_H
 
-#include "Common.h"
 #include <QGraphicsRectItem>
 #include <QObject>
 
 class Layout;
 class QGraphicsSvgItem;
 class Stage;
+
+/// All scenes have a unique number that identifies them
+/// Suggestion: create a global enumeration in your game code
+typedef int SceneId;
 
 /**
 	@brief Base class for all the scenes
@@ -45,7 +48,7 @@ class Scene : public QObject, public QGraphicsRectItem
 	**/
 	virtual QString getResourcePathFor(const QString& assertName) const;
 	/// Get the identification number of this scene
-	virtual inline SceneId getSceneId() const = 0;
+	virtual SceneId getSceneId() const = 0;
 	/// Get access to the layout in charge of placing and resizing objects for this scene
 	/// @return A pointer to the layout, nullptr if none
 	inline Layout* getLayout() const { return layout; }

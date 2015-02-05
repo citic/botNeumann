@@ -1,16 +1,16 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-enum class SceneId
+enum
 {
-	  unknown
-	, gameMenu
-	, training
-	, missions
-	, collaboration
-	, create
-	, unitSelection
-	, unitPlaying
+	  sceneUnknown
+	, sceneGameMenu
+	, sceneTraining
+	, sceneMissions
+	, sceneCollaboration
+	, sceneCreate
+	, sceneUnitSelection
+	, sceneUnitPlaying
 };
 
 #endif // GLOBAL_H

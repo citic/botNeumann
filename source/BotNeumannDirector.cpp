@@ -55,12 +55,12 @@ Scene* BotNeumannDirector::createScene(SceneId sceneId)
 {
 	switch ( sceneId )
 	{
-		case SceneId::gameMenu: return new GameMenuScene(stage);
-		case SceneId::training: return new UnitSelectionScene("training", stage);
-		case SceneId::missions: return new UnitSelectionScene("missions", stage);
-		//case SceneId::collaboration: return new CollaborationScene(stage);
-		//case SceneId::create: return new CreateScene(stage);
-		//case SceneId::unitPlaying: return new UnitPlayingScene(stage);
+		case sceneGameMenu: return new GameMenuScene(stage);
+		case sceneTraining: return new UnitSelectionScene("training", stage);
+		case sceneMissions: return new UnitSelectionScene("missions", stage);
+		//case collaboration: return new CollaborationScene(stage);
+		//case create: return new CreateScene(stage);
+		//case unitPlaying: return new UnitPlayingScene(stage);
 		default: return nullptr;
 	}
 }
