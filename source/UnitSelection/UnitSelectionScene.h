@@ -2,6 +2,9 @@
 #define UNITSELECTIONSCENE_H
 
 #include "GameScene.h"
+#include "UnitManager.h"
+
+class LinearLayout;
 
 class UnitSelectionScene : public GameScene
 {
@@ -12,6 +15,8 @@ class UnitSelectionScene : public GameScene
 	/// The context where the units are found. It is a folder where units are to be loaded from
 	/// "Training" or "Missions"
 	QString context;
+	/// Loads the unit list for the given context
+	UnitManager unitManager;
 
   public:
 	/// Constructor
@@ -23,8 +28,20 @@ class UnitSelectionScene : public GameScene
 	virtual inline SceneId getSceneId() const override { return SceneId::unitSelection; }
 
   protected slots:
-	  /// Called when the Back button is pressed
-	  virtual void backButtonPressed() override;
+	/// Called when the Back button is pressed
+	virtual void backButtonPressed() override;
+	/// Called when an unit is selected
+	void unitPressed();
+
+  protected:
+	/// Load and create a chips for each unit (game level)
+	bool createLevelsUnits();
+	/// Animate some air tube carriers/pods representing information flow
+	bool animatePods();
+	/// Create a line of chips for the given level
+	void createLevel(int levelIndex, const UnitLevel& level);
+	/// Create a chip for the given unit
+	void createUnit(int levelIndex, int unitIndex, int unitCountInLevel, const QString& filename, LinearLayout* levelLayout);
 };
 
 #endif // UNITSELECTIONSCENE_H
