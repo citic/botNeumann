@@ -2,7 +2,7 @@
 #define UnitManager_h
 
 #include <QList>
-#include <QObject>
+#include <QStringList>
 
 /** A level has a name and a list of units. Units are grouped in levels
 Levels and their units are numbered automatically, for example:
@@ -20,13 +20,13 @@ median        <-- unit 2-1
 struct UnitLevel
 {
 	QString name;
-	QList<QString> units;
+	QStringList units;
 
 	explicit UnitLevel(const QString& name = "") : name(name) { }
 };
 
 /** Loads the list of units for a given context */
-class UnitManager : public QObject
+class UnitManager
 {
 	Q_DISABLE_COPY(UnitManager)
 
@@ -44,6 +44,8 @@ class UnitManager : public QObject
 	bool load(const QString& context);
 	/// Get access to the levels, be sure to call load() before this method
 	inline const QList<UnitLevel>& getLevels() const { return levels; }
+	/// Returns the count of units of the level with more units, -1 if levels have not been loaded
+	int calculateMaxUnitsPerLevel() const;
 
   protected:
 	/// Loads the given line from the list file

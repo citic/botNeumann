@@ -52,15 +52,22 @@ void UnitSelectionScene::createLevel(int levelIndex, const UnitLevel& level)
 	qDebug() << level.name << ":";
 	LinearLayout* levelLayout = new LinearLayout(Qt::Horizontal);
 
+	// Position the layout a little bit at the left, to create the sensation of
+	// incomplete air tubes at the beginning and the end
+	levelLayout->setMargins(0.0, 0.0, 0.0, -0.01);
+
 	// Calculate the average height proportional percent of the remaining scene for
 	// all the leves. 0.1% is the height of the standard menu
 	// If there are a few unit lines, we keep with a maximum conservative height of 15%
 	qreal averageHeightPercent = (1.0 - 0.1) / unitManager.getLevels().size();
 	this->layout->addLayout(levelLayout, qMin(averageHeightPercent, 0.15));
 
+	// Use the same width for all units
+	int maxUnitCountPerLevel = unitManager.calculateMaxUnitsPerLevel();
+
 	// For each unit in this level, create a chip
 	for (int i = 0, count = level.units.size(); i < count; ++i )
-		createUnit(levelIndex, i, count, level.units[i], levelLayout);
+		createUnit(levelIndex, i, maxUnitCountPerLevel, level.units[i], levelLayout);
 }
 
 void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCountInLevel, const QString& filename, LinearLayout* levelLayout)

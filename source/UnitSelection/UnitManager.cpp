@@ -37,6 +37,16 @@ bool UnitManager::load(const QString& context)
 	return true;
 }
 
+int UnitManager::calculateMaxUnitsPerLevel() const
+{
+	int max = -1;
+	for ( int i = 0; i < levels.size(); ++i )
+		if ( levels[i].units.size() > max )
+			max = levels[i].units.size();
+
+	return max;
+}
+
 bool UnitManager::loadLine(const QString& line)
 {
 	Q_UNUSED(line);
