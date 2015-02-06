@@ -72,8 +72,6 @@ void UnitSelectionScene::createLevel(int levelIndex, const UnitLevel& level)
 
 void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCountInLevel, const QString& filename, LinearLayout* levelLayout)
 {
-	qDebug() << levelIndex + 1 << '-' << unitIndex + 1 << ": " << filename;
-
 	// Calculate the average width of each unit (tube + chip) !for this level?
 	// A more pneumatic tube is added in case the number of units exceed the screen
 	//qreal averageUnitWidth = qMax(1.0 / (unitCountInLevel + tubeWidthPercent), 0.19);
@@ -91,10 +89,13 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 	button->setMargins(0.0);
 	levelLayout->addItem(button, chipWidthPercent * averageUnitWidth);
 
-	// Create the label and center it inside the button sprite
-//	menuItem->setName(filename);
+	// Each button represents an unit. When the button is pressed, the respective unit should be
+	// loaded, pass the filename by a QObject's dynamic property
+	qDebug() << label;
+	button->setObjectName(label);
+	button->setProperty("unitFilename", filename);
+	connect(button, SIGNAL(pressed()), this, SLOT(unitPressed()));
 }
-
 
 bool UnitSelectionScene::animatePods()
 {
@@ -103,9 +104,6 @@ bool UnitSelectionScene::animatePods()
 
 void UnitSelectionScene::unitPressed()
 {
-/*	for (size_t i = 0; i < menuItems.size(); ++i )
-		if ( menuItems[i] == sender )
-			showUnitPlayingScene(context, menuItems[i]->getName());
-			// log("Unit %s was selected", menuItems[i]->getName().c_str() );
-*/
+	QObject* unit = sender();
+	qDebug() << "Unit" << unit->objectName() << "was selected, for file:" << unit->property("unitFilename").toString();
 }

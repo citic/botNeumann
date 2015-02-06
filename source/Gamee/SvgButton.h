@@ -40,6 +40,7 @@ class SvgButton : public ScenicElement
 
   signals:
 	/// Emitted when this button is pressed
+	/// If you need to have a pointer to the SvgButton instance, call sender()
 	void pressed();
 
   protected:
