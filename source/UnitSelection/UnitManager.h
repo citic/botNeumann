@@ -34,6 +34,8 @@ class UnitManager
 	/// The context for loading units: e.g: "Training", "Missions"
 	QString context;
 	/// Units are grouped in levels. Each level has exercises of the same concept
+	/// ToDo: it must be a hierarchy of four levels: :/context/chapter/concept/unit
+	/// for example: :/training/intro/division_operator/temperature1.botnu
 	QList<UnitLevel> levels;
 
   public:
@@ -46,10 +48,6 @@ class UnitManager
 	inline const QList<UnitLevel>& getLevels() const { return levels; }
 	/// Returns the count of units of the level with more units, -1 if levels have not been loaded
 	int calculateMaxUnitsPerLevel() const;
-
-  protected:
-	/// Loads the given line from the list file
-	bool loadLine(const QString& line);
 };
 
 #endif // UnitManager_h

@@ -62,4 +62,5 @@ HEADERS += \
 	source/UnitSelection/UnitSelectionScene.h \
 
 RESOURCES += \
-	assets/assets.qrc
+	assets/assets.qrc \
+    units/training/training.qrc
