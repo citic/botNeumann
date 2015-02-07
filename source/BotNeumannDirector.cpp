@@ -2,6 +2,7 @@
 #include "GameMenuScene.h"
 #include "Stage.h"
 #include "TransitionSlide.h"
+#include "UnitPlayingScene.h"
 #include "UnitSelectionScene.h"
 
 BotNeumannDirector::BotNeumannDirector(Stage* stage, QObject* parent)
@@ -41,6 +42,7 @@ bool BotNeumannDirector::showUnitSelectionScene(const QString& context, bool for
 	if ( isTransitionRunning() ) return false;
 	UnitSelectionScene* newScene = new UnitSelectionScene(context, stage);
 	connect(newScene, SIGNAL(showGameMenuScene()), this, SLOT(showGameMenuScene()));
+	connect(newScene, SIGNAL(showUnitPlayingScene(QString,QString,QString)), this, SLOT(showUnitPlayingScene(QString,QString,QString)));
 	return replaceScene( newScene, forward );
 }
 
@@ -48,8 +50,8 @@ bool BotNeumannDirector::showUnitPlayingScene(const QString& context, const QStr
 {
 	// If a transition is currently running, we can't replace the scene yet
 	if ( isTransitionRunning() ) return false;
-Scene* newScene = nullptr;
-//	UnitPlayingScene* newScene = new UnitPlayingScene(context, levelUnit, filename, stage);
+	UnitPlayingScene* newScene = new UnitPlayingScene(context, levelUnit, filename, stage);
+	connect(newScene, SIGNAL(showUnitSelectionScene(QString,bool)), this, SLOT(showUnitSelectionScene(QString,bool)));
 	return replaceScene( newScene, true );
 }
 

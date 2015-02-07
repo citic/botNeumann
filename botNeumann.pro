@@ -36,6 +36,7 @@ SOURCES += \
 	source/GameMenu/GameMenuScene.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
+	source/UnitPlaying/UnitPlayingScene.cpp \
 	source/UnitSelection/UnitManager.cpp \
 	source/UnitSelection/UnitSelectionScene.cpp \
 
@@ -58,9 +59,10 @@ HEADERS += \
 	source/Gamee/Transitions/TransitionSlide.h \
 	source/GameMenu/GameMenuScene.h \
 	source/MainWindow.h \
+	source/UnitPlaying/UnitPlayingScene.h \
 	source/UnitSelection/UnitManager.h \
 	source/UnitSelection/UnitSelectionScene.h \
 
 RESOURCES += \
 	assets/assets.qrc \
-    units/training/training.qrc
+	units/training/training.qrc
