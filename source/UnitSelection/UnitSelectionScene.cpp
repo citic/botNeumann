@@ -22,7 +22,7 @@ UnitSelectionScene::~UnitSelectionScene()
 
 void UnitSelectionScene::backButtonPressed()
 {
-	emit newSceneAsked(sceneGameMenu);
+	emit showGameMenuScene();
 }
 
 
@@ -41,15 +41,12 @@ bool UnitSelectionScene::createLevelsUnits()
 	return true;
 }
 
-#include <QDebug>
-
 void UnitSelectionScene::createLevel(int levelIndex, const UnitLevel& level)
 {
 	// Separate from game header or previous level
 	this->layout->addStretch(0.05);
 
 	// Create a layout for this level, and add it to the scene global layout
-	qDebug() << level.name << ":";
 	LinearLayout* levelLayout = new LinearLayout(Qt::Horizontal);
 
 	// Position the layout a little bit at the left, to create the sensation of
@@ -91,7 +88,6 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 
 	// Each button represents an unit. When the button is pressed, the respective unit should be
 	// loaded, pass the filename by a QObject's dynamic property
-	qDebug() << label;
 	button->setObjectName(label);
 	button->setProperty("unitFilename", filename);
 	connect(button, SIGNAL(pressed()), this, SLOT(unitPressed()));
@@ -105,5 +101,5 @@ bool UnitSelectionScene::animatePods()
 void UnitSelectionScene::unitPressed()
 {
 	QObject* unit = sender();
-	qDebug() << "Unit" << unit->objectName() << "was selected, for file:" << unit->property("unitFilename").toString();
+	emit showUnitPlayingScene(context, unit->objectName(), unit->property("unitFilename").toString());
 }

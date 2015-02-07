@@ -5,8 +5,6 @@
 
 class Stage;
 
-typedef int SceneId;
-
 class Director : public QObject
 {
 	Q_OBJECT

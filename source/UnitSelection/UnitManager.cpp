@@ -7,17 +7,21 @@ UnitManager::UnitManager()
 
 bool UnitManager::load(const QString& context)
 {
+	// Copy the new context and remove any units from previous loads, if any
 	this->context = context;
+	levels.clear();
 
+	// Traverse the context resource, it contains levels
 	QDir dirContext(":/" + context); // :/training/
 	QFileInfoList contextDirList = dirContext.entryInfoList();
 	for ( int i = 0; i < contextDirList.size(); ++i )
 	{
+		// The level contains units, traverse them and create an entry for each unit found
 		UnitLevel unitLevel( contextDirList[i].fileName() ); // :/training/intro/
 		QDir dirLevel( ":/" + context + '/' + contextDirList[i].fileName() );
 		QFileInfoList unitList = dirLevel.entryInfoList();
 		for ( int j = 0; j < unitList.size(); ++j )
-			unitLevel.units.append( unitList[j].fileName() ); // :/training/intro/sum_xy.botnu
+			unitLevel.units.append( unitList[j].absoluteFilePath() ); // :/training/intro/sum_xy.botnu
 		this->levels.append(unitLevel);
 	}
 	return true;

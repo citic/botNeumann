@@ -8,10 +8,6 @@ class Layout;
 class QGraphicsSvgItem;
 class Stage;
 
-/// All scenes have a unique number that identifies them
-/// Suggestion: create a global enumeration in your game code
-typedef int SceneId;
-
 /**
 	@brief Base class for all the scenes
 	A scene is defined by a rectangle in the screen. The scene is a canvas
@@ -47,17 +43,11 @@ class Scene : public QObject, public QGraphicsRectItem
 		@endcode
 	**/
 	virtual QString getResourcePathFor(const QString& assertName) const;
-	/// Get the identification number of this scene
-	virtual SceneId getSceneId() const = 0;
 	/// Get access to the layout in charge of placing and resizing objects for this scene
 	/// @return A pointer to the layout, nullptr if none
 	inline Layout* getLayout() const { return layout; }
 	/// Set a new layout for this scene. The previous one will be deleted
 	void setLayout(Layout* layout);
-
-  signals:
-	/// Emitted when player press one of the buttons: Training, Missions, Collaboration or Create
-	void newSceneAsked(SceneId id);
 
   public slots:
 	/// Call this method when the stage room has changed its dimensions

@@ -19,14 +19,16 @@ class GameMenuScene : public Scene
 	explicit GameMenuScene(Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
 	virtual ~GameMenuScene();
-	/// Get the identification number of this scene
-	virtual inline SceneId getSceneId() const override { return sceneGameMenu; }
 
   protected:
 	/// Create buttons and layouts
 	void setupButtons(LinearLayout* rightLayout);
 	/// Create config buttons
 	void setupConfigButtons(LinearLayout* parentLayout);
+
+  signals:
+	/// Emitted when a game mode button is pressed
+	void showUnitSelectionScene(const QString& context, bool forward);
 
   protected slots:
 	/// Called when Training button is pressed

@@ -23,52 +23,57 @@ void BotNeumannDirector::begin()
 	// The game menu is the first scene, but it could different in a future, for example, when
 	// resuming the game
 	Q_ASSERT(currentScene == nullptr);
-	setCurrentScene( new GameMenuScene(stage) );
+	showGameMenuScene();
 }
 
-void BotNeumannDirector::replaceScene(SceneId newSceneId)
+bool BotNeumannDirector::showGameMenuScene()
 {
-	// If there are a previous scene, a transition is currently running, wait
-	if ( previousScene != nullptr ) return;
+	// If a transition is currently running, we can't replace the scene yet
+	if ( isTransitionRunning() ) return false;
+	GameMenuScene* newScene = new GameMenuScene(stage);
+	connect(newScene, SIGNAL(showUnitSelectionScene(QString,bool)), this, SLOT(showUnitSelectionScene(QString,bool)));
+	return replaceScene( newScene, false );
+}
 
-	// Create an object for the new asked scene, if not valid, ignore the event
-	Scene* newScene = createScene(newSceneId);
-	if ( newScene == nullptr ) return;
+bool BotNeumannDirector::showUnitSelectionScene(const QString& context, bool forward)
+{
+	// If a transition is currently running, we can't replace the scene yet
+	if ( isTransitionRunning() ) return false;
+	UnitSelectionScene* newScene = new UnitSelectionScene(context, stage);
+	connect(newScene, SIGNAL(showGameMenuScene()), this, SLOT(showGameMenuScene()));
+	return replaceScene( newScene, forward );
+}
 
+bool BotNeumannDirector::showUnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename)
+{
+	// If a transition is currently running, we can't replace the scene yet
+	if ( isTransitionRunning() ) return false;
+Scene* newScene = nullptr;
+//	UnitPlayingScene* newScene = new UnitPlayingScene(context, levelUnit, filename, stage);
+	return replaceScene( newScene, true );
+}
+
+bool BotNeumannDirector::replaceScene(Scene* newScene, bool forward)
+{
 	// Current scene pass to be the previous scene
 	previousScene = currentScene;
 	setCurrentScene(newScene);
 
 	// Run a transition to make the scene replacement more obvious
-	if ( previousScene == nullptr ) return;
-	TransitionSlide::Direction direction = newSceneId > previousScene->getSceneId()
-		? TransitionSlide::Direction::left
-		: TransitionSlide::Direction::right;
+	if ( previousScene == nullptr ) return true;
+	auto direction = forward ? TransitionSlide::Direction::left : TransitionSlide::Direction::right;
 	Transition* transition = new TransitionSlide(direction, previousScene, currentScene, true, this);
 	transition->run(true);
 
 	// The transition will remove the previous scene object
 	previousScene = nullptr;
-}
-
-Scene* BotNeumannDirector::createScene(SceneId sceneId)
-{
-	switch ( sceneId )
-	{
-		case sceneGameMenu: return new GameMenuScene(stage);
-		case sceneTraining: return new UnitSelectionScene("training", stage);
-		case sceneMissions: return new UnitSelectionScene("missions", stage);
-		//case collaboration: return new CollaborationScene(stage);
-		//case create: return new CreateScene(stage);
-		//case unitPlaying: return new UnitPlayingScene(stage);
-		default: return nullptr;
-	}
+	return true;
 }
 
 void BotNeumannDirector::setCurrentScene(Scene* newScene)
 {
 	// Overwrite the current scene pointer
-	currentScene = newScene;
+	this->currentScene = newScene;
 
 	// Each time the stage change its size, the current scene should adapt to the new dimensions
 	connect(stage, SIGNAL(resized(qreal,qreal)), currentScene, SLOT(resize(qreal,qreal)));
@@ -76,7 +81,4 @@ void BotNeumannDirector::setCurrentScene(Scene* newScene)
 	// If there is another scene, the new one will not receive the resize event, at least the
 	// user resizes the window. So, let the new scene to adjust to the actual size of the window
 	if ( previousScene ) currentScene->resize(stage->width(), stage->height());
-
-	// React when a button asking for replacing the scene for a new one
-	connect(currentScene, SIGNAL(newSceneAsked(SceneId)), this, SLOT(replaceScene(SceneId)));
 }

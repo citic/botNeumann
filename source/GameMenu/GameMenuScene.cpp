@@ -88,22 +88,22 @@ void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
 
 void GameMenuScene::trainingButtonPressed()
 {
-	emit newSceneAsked(sceneTraining);
+	emit showUnitSelectionScene("training", true);
 }
 
 void GameMenuScene::missionsButtonPressed()
 {
-	emit newSceneAsked(sceneMissions);
+	emit showUnitSelectionScene("missions", true);
 }
 
 void GameMenuScene::collaborationButtonPressed()
 {
-	emit newSceneAsked(sceneCollaboration);
+	emit showUnitSelectionScene("collaboration", true);
 }
 
 void GameMenuScene::createButtonPressed()
 {
-	emit newSceneAsked(sceneCreate);
+	emit showUnitSelectionScene("create", true);
 }
 
 #include <QDebug>

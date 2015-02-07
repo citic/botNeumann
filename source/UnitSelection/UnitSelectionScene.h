@@ -24,8 +24,12 @@ class UnitSelectionScene : public GameScene
 	explicit UnitSelectionScene(const QString& context, Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
 	virtual ~UnitSelectionScene();
-	/// Get the identification number of this scene
-	virtual inline SceneId getSceneId() const override { return sceneUnitSelection; }
+
+  signals:
+	/// Emitted when Back button is pressed
+	void showGameMenuScene();
+	/// Emitted when a playable unit was pressed
+	void showUnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename);
 
   protected slots:
 	/// Called when the Back button is pressed
