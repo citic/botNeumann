@@ -1,20 +1,26 @@
-#include "GameMenuScene.h"
+#include "BotNeumannDirector.h"
 #include "MainWindow.h"
+#include "Stage.h"
 #include <QDockWidget>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QGraphicsSvgItem>
 #include <QSettings>
-#include "Stage.h"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
+	, stage(nullptr)
+	, codeEditor(nullptr)
+	, director(nullptr)
 {
 	// Set basic properties for the main window
 	setObjectName("MainWindow"); // used to save preferences
 	setWindowTitle("bot Neumann++");
 	resize(1024, 768); // affects only desktop applications
 	setMinimumSize(480, 320);
+  #ifdef Q_OS_LINUX
+	setWindowIcon(QIcon(":/game_logo.svg"));
+  #endif
 
 	// Create each window section
 	setupStage();
@@ -30,14 +36,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupStage()
 {
-	// Create the stage room and make it the central widget
+	// Create the stage room and make it the central widget.
+	// It will be destroyed by QObject ownership mechanism
+	Q_ASSERT(stage == nullptr);
 	stage = new Stage(this);
-	stage->setObjectName("stageRoom");
 	setCentralWidget(stage);
 
-	// The game menu is the default scene
-	auto scene = new GameMenuScene(stage, stage->width(), stage->height());
-	stage->setScene(scene);
+	// Create the game director
+	Q_ASSERT(director == nullptr);
+	director = new BotNeumannDirector(stage);
+	director->begin();
 }
 
 // ToDo: remove
@@ -46,6 +54,7 @@ void MainWindow::setupStage()
 void MainWindow::setupCodeEditor()
 {
 	// Source code editor is only visible in playing scenes, disabled by default
+	Q_ASSERT(codeEditor == nullptr);
 	codeEditor = new QDockWidget(this);
 	codeEditor->setObjectName("codeEditor");
 	codeEditor->setWindowTitle(tr("Program"));
@@ -69,4 +78,3 @@ void MainWindow::restoreSettings()
 	resize( settings.value("MainWindow/Size", sizeHint()).toSize() );
 	restoreState( settings.value("MainWindow/State").toByteArray() );
 }
-

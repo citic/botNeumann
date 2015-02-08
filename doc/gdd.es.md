@@ -87,6 +87,24 @@ El entrenamiento para el primer chip solicita crear un programa que lea repetiti
 Los chips son suficientemente sofisticados y tienen un robot dentro, aunque pueden tener más. El robot (execution thread) sigue las instrucciones que se le programen. El robot comprende un lenguaje llamado C++.
 
 
+# Unit playing
+
+Arrastrar elementos de la máquina hacia el código tiene efectos en el código. FW: ojalá si al posicionar el cursor sobre una oración, una mini-animación en ciclo, muestra el efecto en la máquina.
+
+1. Tubo neumático de entrada. Agrega un `std::cin` al código fuente. Un menú contextual permite escoger entre
+
+	std::cin
+	std::cin >>
+
+2. Tubo neumático de salida. Agrega un `std::cout` al código fuente. Un menú contextual permite escoger entre
+
+	std::cout
+	std::cout <<
+
+3. Tubo neumático de error. Agrega un `std::cerr`.
+
+4. Una variable. Agrega el nombre de la variable.
+
 # Misión / Mission
 
 # Colaboración / Collaboration

@@ -1,38 +1,51 @@
+#include "Layout.h"
 #include "Scene.h"
-#include <QtDebug>
+#include "Stage.h"
 #include <QGraphicsRectItem>
 #include <QGraphicsSvgItem>
 
-Scene::Scene(QObject* parent, const QString& sceneName, qreal width, qreal height)
-	: QGraphicsScene(parent)
+Scene::Scene(const QString& sceneName, Stage* stage, QGraphicsItem* parent)
+	: QGraphicsRectItem(0.0, 0.0, stage->width(), stage->height(), parent)
 	, sceneName(sceneName)
+	, stage(stage)
+	, layout(nullptr)
 {
-	canvas = addRect(0, 0, width, height);
-	canvas->setPen(Qt::NoPen);
-	canvas->setBrush(Qt::NoBrush);
+	setPen(Qt::NoPen);
+	setBrush(Qt::NoBrush);
 	setBackground();
+	stage->getGraphicsScene().addItem(this);
 }
 
 Scene::~Scene()
 {
-	qDebug() << sceneName << "scene deleted";
+	delete layout;
 }
 
 void Scene::setBackground(const QString& filename)
 {
-	const QString& resource = ":/" + sceneName + '/' + sceneName + '/' + filename;
-	background = new QGraphicsSvgItem(resource, canvas);
-	//background->boundingRect().setSize(QSizeF(width, height));
-	//scene.addItem(background);
+	background = new QGraphicsSvgItem(getResourcePathFor(filename), this);
+}
+
+QString Scene::getResourcePathFor(const QString& assertName) const
+{
+	return ":/" + sceneName + '/' + sceneName + '/' + assertName;
+}
+
+void Scene::setLayout(Layout* layout)
+{
+	if ( layout != this->layout )
+		delete this->layout;
+
+	this->layout = layout;
 }
 
 void Scene::resize(qreal width, qreal height)
 {
-	// Update canvas and background
-	setSceneRect(0, 0, width - 1, height - 1);
-	canvas->setRect(0, 0, width - 1, height - 1);
+	setRect(0.0, 0.0, width, height);
 
 	qreal sw = width / background->boundingRect().width();
 	qreal sh = height / background->boundingRect().height();
 	background->setTransform(QTransform().scale(sw, sh));
+
+	if ( layout ) layout->resize(0.0, 0.0, width, height);
 }

@@ -1,7 +1,10 @@
 #ifndef GAMEMENUSCENE_H
 #define GAMEMENUSCENE_H
 
+#include "Common.h"
 #include "Scene.h"
+
+class LinearLayout;
 
 /**
    @brief The first scene where player chooses the game modality to play
@@ -13,13 +16,35 @@ class GameMenuScene : public Scene
 
   public:
 	/// Constructor
-	explicit GameMenuScene(QObject* parent = nullptr, qreal width = 10.0, qreal height = 10.0);
+	explicit GameMenuScene(Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
 	virtual ~GameMenuScene();
 
-  signals:
+  protected:
+	/// Create buttons and layouts
+	void setupButtons(LinearLayout* rightLayout);
+	/// Create config buttons
+	void setupConfigButtons(LinearLayout* parentLayout);
 
-  public slots:
+  signals:
+	/// Emitted when a game mode button is pressed
+	void showUnitSelectionScene(const QString& context, bool forward);
+
+  protected slots:
+	/// Called when Training button is pressed
+	void trainingButtonPressed();
+	/// Called when Missions button is pressed
+	void missionsButtonPressed();
+	/// Called when Collaboration button is pressed
+	void collaborationButtonPressed();
+	/// Called when Create button is pressed
+	void createButtonPressed();
+	/// Called when user press the Information button
+	void infoButtonPressed();
+	/// Called when user press the Rewards button
+	void rewardsButtonPressed();
+	/// Called when user press the Config button
+	void configButtonPressed();
 };
 
 #endif // GAMEMENUSCENE_H

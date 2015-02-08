@@ -13,9 +13,9 @@ class Actor : public ScenicElement
 
   public:
 	/// Constructor
-	explicit Actor(QGraphicsItem* parentItem = 0);
+	explicit Actor(QGraphicsItem* parentItem);
 	/// Creates an actor with the given svg filename
-	explicit Actor(const QString& fileName, QGraphicsItem* parentItem = nullptr);
+	explicit Actor(const QString& fileName, QGraphicsItem* parentItem);
 };
 
 #endif // ACTOR_H
