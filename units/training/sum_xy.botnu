@@ -1,15 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE botnu SYSTEM "http://inciart.com/botneumann/botnu-1.0.dtd">
 
-<botnu name="sum_xy" id="jhc-20150205-205858" version="1.0">
-	<description lang="es">Este chip
-	</description>
+<!-- timeout: in seconds -->
+<botnu name="sum_xy" id="jhc-20150205-205858" version="1.0" ram="512k" timeout="1">
+	<description lang="es"><![CDATA[
+<h1>Sumador simple</h1>
+
+<p>Este chip era un simple sumador de enteros. Nada sofisticado. Quizá por eso poco fue afectado por el atacante. Todo el código lo encontramos legible menos una línea. Lo que logramos recuperar está cargado en el editor de código, y nos sirve, de paso, para entender cómo funciona un chip.</p>
+
+<p>Un chip es una pieza de procesamiento. Es decir, hace una tarea. Este chip en particular es un sumador de enteros, y su tarea es sumar parejas de números.</p>
+
+<p>Los chips no trabajan en solitario, sino que son parte de un gran sistema de chips interconectados. Los chips se comunican unos con otros por tubos neumáticos. Un chip recibe datos de otros chips a través de un tubo de entrada, conocido como <em>entrada estándar</em> (<code>std::cin</code> en C++). El chip hace su tarea y envía el resultado a otros chips a través del tubo de <em>salida estándar</em> (<code>std::cout</code> en C++).</p>
+
+<p>Algunos chips, como este sumador de enteros, se mantienen encendidos procesando largas secuencias de entrada, y se apagan sólo hasta que no haya más entrada. Hay una razón para ello, y es ahorro de energía. Encender y apagar un chip requiere recursos. Por eso el sistema espera que el sumador de enteros no sólo reciba una única pareja de enteros, sino muchas parejas de enteros. Por eso la lectura y procesamiento debe hacerse en un ciclo, como el siguiente:</p>
+
+<pre><code>long a, b;
+while ( std::cin &gt;&gt; a &gt;&gt; b )
+{
+
+}
+</code></pre>
+
+<p>El sistema avisa al chip que ya se ha terminado la entrada y que puede apagarse, enviándole un dato especial, conocido en C++ como <code>EOF</code> (end-of-file). Cuando <code>std::sin</code> ve este dato <code>EOF</code>, rompe el ciclo, el programa termina y el chip se apaga.</p>
+
+<p>Ahora sólo falta recuperar la línea que imprime la suma de los dos números leídos! En la descripción de cada unidad verá las secciones de abajo. La sección <em>Entrada</em> provee ejemplos de datos que recibirá el programa, y la sección <em>Salida</em> su correspondiente resultado.</p>
+
+<h2>Entrada</h2>
+
+<p>Debe recibir parejas de dos enteros separadas por un espacio en blanco. Las parejas se separan entre ellas por cambios de línea. Los enteros son mayores a un millón negativo y menores a un millón positivo.</p>
+
+<pre><code>2 5
+-4 7
+100 -0
+-80 -120
+</code></pre>
+
+<h2>Salida</h2>
+
+<p>Debe imprimir el resultado de la suma de cada pareja. Un resultado por línea.</p>
+
+<pre><code>7
+3
+100
+-200
+</code></pre>
+	]]></description>
 	<restored><![CDATA[
 		#include <iostream>
 
 		int main()
 		{
-			
+			long a, b;
+			while ( std::cin >> a >> b )
+			{
+
+			}
 
 			return 0;
 		}
@@ -21,7 +66,7 @@
 		{
 			while ( true )
 			{
-				double x, y;
+				long x, y;
 				std::cin >> x >> y;
 				std::cout << x + y;
 			}
@@ -29,4 +74,38 @@
 			return 0;
 		}
 	]]></solution>
+	<generator><![CDATA[
+		#include <cstdlib>
+		#include <ctime>
+		#include <iostream>
+
+		long grand(long min, long max)
+		{
+			return rand() % (max - min) + min;
+		}
+
+		int main()
+		{
+			srand(time(0));
+			while ( true )
+				std::cout << grand(-1000000, 1000000) << ' ' << grand(-1000000, 1000000);
+			return 0;
+		}
+	]]></generator>
+	<test-case>
+		<input><![CDATA[0 -0
+2 5
+-4 7
+100 -0
+-80 -120
+-999999 -999999
+]]></input>
+		<output><![CDATA[0
+7
+3
+100
+-200
+-1999998
+]]></output>
+	</test-case>
 </botnu>

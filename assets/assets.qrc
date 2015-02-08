@@ -16,7 +16,9 @@
 		<file>game_menu/button_background.svg</file>
 		<file>game_menu/robot.svg</file>
 	</qresource>
-	<qresource prefix="/unit_playing"/>
+	<qresource prefix="/unit_playing">
+		<file>unit_playing/background.svg</file>
+	</qresource>
 	<qresource prefix="/unit_playing/data_types"/>
 	<qresource prefix="/unit_selection">
 		<file>unit_selection/air_tube_pod.svg</file>
