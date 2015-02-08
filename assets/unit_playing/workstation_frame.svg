@@ -5,17 +5,11 @@
 	 x="0px" y="0px" width="198.807px" height="243.297px" viewBox="0 0 198.807 243.297" enable-background="new 0 0 198.807 243.297"
 	 xml:space="preserve">
 <g>
-	<g>
-		<rect x="8.85" y="66.909" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="182.246" height="11.636"/>
-		<rect x="8.85" y="36.159" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="182.282" height="18.29"/>
-		<rect x="12.757" y="17.628" fill="#5C5C5C" width="173.653" height="18.364"/>
-		<rect x="12.757" y="50.28" fill="#5C5C5C" width="173.653" height="16.895"/>
-		<rect x="6.998" y="3.188" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="184.134" height="20.28"/>
-		<path fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" d="M186.41,16.524H12.757H7.129v31.47v10.765v19.786H6.998v4.992
-			h0.131h5.628H186.41h4.859v-4.992V58.759V47.994v-31.47H186.41z M12.757,25.951H186.41v22.043H12.757V25.951z M12.757,78.545
-			V58.759v-1.338H186.41v1.338v19.786H12.757z"/>
-	</g>
-	<rect x="191.132" y="0.5" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="7.161" height="242.315"/>
-	<rect x="0.516" y="0.5" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="7.161" height="242.315"/>
+	<rect x="191.132" y="0.5" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="7.161" height="242.314"/>
+	<rect x="0.516" y="0.5" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="7.161" height="242.314"/>
+</g>
+<g>
+	<rect x="18.066" y="154.441" fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" width="9.099" height="49.5"/>
+	<rect x="171.64" y="154.441" fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" width="9.102" height="49.5"/>
 </g>
 </svg>
