@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="struct_x5F_right" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="7.708px" height="19.542px" viewBox="0 -0.042 7.708 19.542" enable-background="new 0 -0.042 7.708 19.542"
+	 xml:space="preserve">
+<g>
+	<defs>
+		<rect id="SVGID_1_" width="16.75" height="19.5"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	<g clip-path="url(#SVGID_2_)">
+		<defs>
+			<rect id="SVGID_3_" y="-0.042" width="7.708" height="19.542"/>
+		</defs>
+		<clipPath id="SVGID_4_">
+			<use xlink:href="#SVGID_3_"  overflow="visible"/>
+		</clipPath>
+		<path opacity="0.3" clip-path="url(#SVGID_4_)" fill="#231F20" enable-background="new    " d="M7.688,19.5v-5.518H-40.84
+			c-0.002,0-0.004,0.001-0.005,0.001s-0.003-0.001-0.005-0.001h-48.239c-0.778,0-1.41,1.237-1.41,2.761
+			c0,1.527,0.631,2.764,1.41,2.764h48.239c0.002,0,0.004-0.001,0.005-0.001s0.003,0.001,0.005,0.001H8.404
+			c0.012,0,0.023-0.006,0.035-0.007H7.688z"/>
+		<path opacity="0.4" clip-path="url(#SVGID_4_)" fill="#FFFFFF" enable-background="new    " d="M6.742,0.504h-94.076
+			c-4.694,0-8.5,3.808-8.5,8.5c0,4.694,3.806,8.501,8.5,8.501H6.742V0.504z"/>
+		<rect x="-13.584" y="-0.038" clip-path="url(#SVGID_4_)" fill="none" width="39.996" height="19.541"/>
+		<rect x="-10.943" y="-0.038" clip-path="url(#SVGID_4_)" fill="none" width="39.996" height="19.541"/>
+		
+			<rect x="-88.501" y="1.584" opacity="0.3" clip-path="url(#SVGID_4_)" fill="#FFFFFF" enable-background="new    " width="95.243" height="0.655"/>
+		
+			<path clip-path="url(#SVGID_4_)" fill="none" stroke="#8EC0D1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M6.742,0.504h-94.076c-4.694,0-8.5,3.808-8.5,8.5c0,4.694,3.806,8.501,8.5,8.501H6.742V0.504z"/>
+		<path clip-path="url(#SVGID_4_)" fill="#CAA95A" stroke="#936440" stroke-miterlimit="10" d="M7.219,16.891
+			c0,0.389-0.315,0.703-0.703,0.703l0,0c-0.388,0-0.703-0.314-0.703-0.703V1.047c0-0.388,0.315-0.703,0.703-0.703l0,0
+			c0.388,0,0.703,0.315,0.703,0.703V16.891z"/>
+	</g>
+</g>
+</svg>
