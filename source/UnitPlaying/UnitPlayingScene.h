@@ -2,6 +2,7 @@
 #define UNITPLAYINGSCENE_H
 
 #include "GameScene.h"
+#include "Unit.h"
 
 class UnitPlayingScene : public GameScene
 {
@@ -15,6 +16,8 @@ class UnitPlayingScene : public GameScene
 	QString levelUnit;
 	/// he full resource path of the .botnu unit with details of the unit
 	QString filename;
+	/// Loads the unit from the .botnu xml file
+	Unit unit;
 
   public:
 	/// Constructor

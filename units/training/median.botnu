@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE botnu SYSTEM "http://inciart.com/botneumann/botnu-1.0.dtd">
 
-<botnu name="sum_xy" id="jhc-20150205-205858" version="1.0">
+<botnu name="median" id="jhc-20150205-205858" version="1.0">
 	<description lang="es">Este chip
 	</description>
-	<restored><![CDATA[
+	<initial-code><![CDATA[
 		#include <iostream>
 
 		int main()
@@ -13,7 +13,7 @@
 
 			return 0;
 		}
-	]]></restored>
+	]]></initial-code>
 	<solution><![CDATA[
 		#include <iostream>
 

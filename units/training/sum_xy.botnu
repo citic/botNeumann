@@ -45,7 +45,7 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 -200
 </code></pre>
 	]]></description>
-	<restored><![CDATA[
+	<initial-code><![CDATA[
 		#include <iostream>
 
 		int main()
@@ -58,7 +58,7 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 
 			return 0;
 		}
-	]]></restored>
+	]]></initial-code>
 	<solution><![CDATA[
 		#include <iostream>
 
@@ -93,19 +93,19 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 		}
 	]]></generator>
 	<test-case>
-		<input><![CDATA[0 -0
+		<input>0 -0
 2 5
 -4 7
 100 -0
 -80 -120
 -999999 -999999
-]]></input>
-		<output><![CDATA[0
+</input>
+		<output>0
 7
 3
 100
 -200
 -1999998
-]]></output>
+</output>
 	</test-case>
 </botnu>
