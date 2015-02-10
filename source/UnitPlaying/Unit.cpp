@@ -32,10 +32,11 @@ bool Unit::load(const QString& filename)
 void Unit::print()
 {
 	qDebug() << "name:" << name << "id:" << id << "version:" << version << "ram:" << ram << "timeout:" << timeout;
-	for ( QHash<QString, QString>::const_iterator itr = descriptions.begin(); itr != descriptions.end(); ++itr )
+	for ( Descriptions::const_iterator itr = descriptions.begin(); itr != descriptions.end(); ++itr )
 		qDebug() << "description lang:" << itr.key() << "value:" << itr.value();
 	qDebug() << "initial-code:" << initialCode;
-	qDebug() << "solution:" << solution;
+	for ( int i = 0; i < solutions.size(); ++i )
+		qDebug() << "solution:" << solutions[i];
 	qDebug() << "generator:" << generator;
 	for ( int i = 0; i < testCases.size(); ++i )
 		qDebug() << "test case input:" << testCases[i].first << "test case output:" << testCases[i].second;
@@ -65,7 +66,7 @@ bool Unit::loadDocument(QXmlStreamReader& xmlReader)
 				else if ( xmlReader.name() == "initial-code" )
 					initialCode = xmlReader.readElementText();
 				else if ( xmlReader.name() == "solution" )
-					solution = xmlReader.readElementText();
+					solutions.append( xmlReader.readElementText() );
 				else if ( xmlReader.name() == "generator" )
 					generator = xmlReader.readElementText();
 				else if ( xmlReader.name() == "test-case" )
