@@ -3,7 +3,17 @@
 #include <QFile>
 #include <QXmlStreamReader>
 
-Unit::Unit(QObject *parent) : QObject(parent)
+/// If not ram size is specified in .botnu file, this constant will be assumed
+static const int defaultRamSize = 1024; // bytes
+/// If not cpu-cores is specified in .botnu file, this constant will be assumed
+static const int defaultCpuCores = 1; // bytes
+
+Unit::Unit(QObject* parent)
+	: QObject(parent)
+	, ramSize(defaultRamSize)
+	, heapSegment(false)
+	, cpuCores(defaultCpuCores)
+	, timeout(0)
 {
 }
 
@@ -31,7 +41,7 @@ bool Unit::load(const QString& filename)
 
 void Unit::print()
 {
-	qDebug() << "name:" << name << "id:" << id << "version:" << version << "ram:" << ram << "timeout:" << timeout;
+	qDebug() << "name:" << name << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "timeout:" << timeout;
 	for ( Descriptions::const_iterator itr = descriptions.begin(); itr != descriptions.end(); ++itr )
 		qDebug() << "description lang:" << itr.key() << "value:" << itr.value();
 	qDebug() << "initial-code:" << initialCode;
@@ -48,36 +58,52 @@ bool Unit::loadDocument(QXmlStreamReader& xmlReader)
 	// <botnu name="sum_xy" id="jhc-20150205-205858" version="1.0" ram="512k" timeout="1">
 	if ( xmlReader.readNextStartElement() )
 	{
-		if ( xmlReader.name() == "botnu" )
-		{
-			// Load attributes for <botnu> root element
-			name = xmlReader.attributes().value("name").toString();
-			id = xmlReader.attributes().value("id").toString();
-			version = xmlReader.attributes().value("version").toString();
-			ram = xmlReader.attributes().value("ram").toString();
-			timeout = xmlReader.attributes().value("timeout").toInt();
-
-			// Root element is done. Load the child elements
-			while ( xmlReader.readNextStartElement() )
-			{
-				// xmlREader has found a new element, load it according to its tag name
-				if ( xmlReader.name() == "description" )
-					descriptions.insert(xmlReader.attributes().value("lang").toString(), xmlReader.readElementText());
-				else if ( xmlReader.name() == "initial-code" )
-					initialCode = xmlReader.readElementText();
-				else if ( xmlReader.name() == "solution" )
-					solutions.append( xmlReader.readElementText() );
-				else if ( xmlReader.name() == "generator" )
-					generator = xmlReader.readElementText();
-				else if ( xmlReader.name() == "test-case" )
-					loadTestCase(xmlReader);
-				else
-					qDebug() << "Unit: ignoring element:" << xmlReader.name();
-			}
-		}
-		else
+		if ( xmlReader.name() != "botnu" )
 			return false;
+
+		// Load attributes for <botnu> root element
+		loadDocumentAttributes(xmlReader);
+
+		// Root element is done. Load the child elements
+		while ( xmlReader.readNextStartElement() )
+			if ( ! loadDocumentChild(xmlReader)  )
+				qDebug() << "Unit: ignoring element:" << xmlReader.name();
 	}
+	return true;
+}
+
+bool Unit::loadDocumentAttributes(QXmlStreamReader& xmlReader)
+{
+	name = xmlReader.attributes().value("name").toString();
+	id = xmlReader.attributes().value("id").toString();
+	version = xmlReader.attributes().value("version").toString();
+	ramSize = xmlReader.attributes().value("ram").toInt();
+	if ( ramSize <= 0 ) ramSize = defaultRamSize;
+	heapSegment = xmlReader.attributes().value("heap-segment") == "yes";
+	cpuCores = xmlReader.attributes().value("cpu-cores").toInt();
+	if ( cpuCores <= 0 ) cpuCores = defaultCpuCores;
+	timeout = xmlReader.attributes().value("timeout").toInt();
+
+	// ToDo: validate the attributes values
+	return true;
+}
+
+bool Unit::loadDocumentChild(QXmlStreamReader& xmlReader)
+{
+	// xmlREader has found a new element, load it according to its tag name
+	if ( xmlReader.name() == "description" )
+		descriptions.insert(xmlReader.attributes().value("lang").toString(), xmlReader.readElementText());
+	else if ( xmlReader.name() == "initial-code" )
+		initialCode = xmlReader.readElementText();
+	else if ( xmlReader.name() == "solution" )
+		solutions.append( xmlReader.readElementText() );
+	else if ( xmlReader.name() == "generator" )
+		generator = xmlReader.readElementText();
+	else if ( xmlReader.name() == "test-case" )
+		loadTestCase(xmlReader);
+	else
+		return false;
+
 	return true;
 }
 

@@ -27,9 +27,18 @@ class Unit : public QObject
 	QString id;
 	/// Version of this unit. It is not botnu xml notation version
 	QString version;
-	/// RAM memory limit to run
-	QString ram; // must be changed to integer
+	/// RAM memory limit to run. It's a size in bytes
+	int ramSize;
+	/// True if this unit/exercise requires heap-segment (dynamic memory), therefore, player is
+	/// supposed to use new/delete operators or malloc/free functions. By default is false, to
+	/// avoid showing the heap segment to trainees
+	bool heapSegment;
+	/// Number of CPU or cores required to resolve this unit. It affects the number of workstations
+	/// available in the stage set. Robots represent execution threads. A program can have less or
+	/// more threads than CPU cores, but it is not wise. Default value is 1 cpu
+	int cpuCores;
 	/// Maximum number of seconds to consider an solution valid
+	/// a value <= 0 stands for infinite
 	int timeout;
 	/// Task description in one or several languages
 	Descriptions descriptions;
@@ -57,7 +66,11 @@ class Unit : public QObject
 	/// Version of this unit. It is not botnu xml notation version
 	inline const QString& getVersion() const { return version; }
 	/// RAM memory limit to run
-	inline const QString& getRam() const { return ram; }
+	inline int getRamSize() const { return ramSize; }
+	/// True if this unit/exercise requires heap-segment (dynamic memory)
+	inline bool requiresHeapSegment() const { return heapSegment; }
+	/// Number of CPU or cores required to resolve this unit.
+	inline int getCpuCores() const { return cpuCores; }
 	/// Maximum number of seconds to consider an solution valid
 	inline int getTimeout() const { return timeout; }
 	/// Task description in one or several languages
@@ -76,6 +89,11 @@ class Unit : public QObject
   protected:
 	/// Load the document element (root node) and direct descendants
 	bool loadDocument(QXmlStreamReader& xmlReader);
+	/// The document element has lots of attributes, and a dedicated method to load them
+	bool loadDocumentAttributes(QXmlStreamReader& xmlReader);
+	/// All botnu elements are direct children of the document root element, this method loads
+	/// the next child. Returns true on success, false if the child is unknown
+	bool loadDocumentChild(QXmlStreamReader& xmlReader);
 	/// Load a test case pair of input/ouput data
 	bool loadTestCase(QXmlStreamReader& xmlReader);
 };
