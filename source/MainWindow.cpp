@@ -1,4 +1,5 @@
 #include "BotNeumannDirector.h"
+#include "CodeEditorDockWidget.h"
 #include "MainWindow.h"
 #include "Stage.h"
 #include <QDockWidget>
@@ -48,21 +49,13 @@ void MainWindow::setupStage()
 	director->begin();
 }
 
-// ToDo: remove
-#include <QTextEdit>
-
 void MainWindow::setupCodeEditor()
 {
 	// Source code editor is only visible in playing scenes, disabled by default
 	Q_ASSERT(codeEditor == nullptr);
-	codeEditor = new QDockWidget(this);
-	codeEditor->setObjectName("codeEditor");
-	codeEditor->setWindowTitle(tr("Program"));
+	codeEditor = new CodeEditorDockWidget(this);
 	codeEditor->setVisible(false);
 	addDockWidget(Qt::RightDockWidgetArea, codeEditor);
-
-	// ToDo: only for testing: an empty widget
-	codeEditor->setWidget(new QTextEdit());
 }
 
 void MainWindow::saveSettings()

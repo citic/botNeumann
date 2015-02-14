@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class BotNeumannDirector;
+class CodeEditorDockWidget;
 class Scene;
 class Stage;
 class QDockWidget;
@@ -22,7 +23,7 @@ class MainWindow : public QMainWindow
 	Stage* stage;
 	/// Source code editor is shown as a docking widget
 	/// ToDo: implement as a new class inherited from QDockWidget
-	QDockWidget* codeEditor;
+	CodeEditorDockWidget* codeEditor;
 	/// Knows what to do when we need change from one scene to another
 	BotNeumannDirector* director;
 
@@ -31,6 +32,8 @@ class MainWindow : public QMainWindow
 	explicit MainWindow(QWidget* parent = nullptr);
 	/// Destructor
 	virtual ~MainWindow();
+	/// Get access to the CodeEditor, required by UnitPlayingScene
+	inline CodeEditorDockWidget* getCodeEditorDockWidget() const { return codeEditor; }
 
   protected:
 	/// Create the control where scenes are shown and shows the first scene

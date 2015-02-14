@@ -1,3 +1,6 @@
+#include "CodeEditorDockWidget.h"
+#include "MainWindow.h"
+#include "Stage.h"
 #include "UnitPlayingScene.h"
 #include <QDebug>
 
@@ -10,12 +13,27 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	createStandardMenu(context + ' ' + levelUnit);
 	if ( ! unit.load(filename) )
 		qDebug() << "Error: unit not loaded" << filename;
-	else
-		unit.print();
+	// else unit.print();
+
+	// Get a pointer to the code editor
+	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
+	Q_ASSERT(mainWindow);
+	codeEditorDockWidget = mainWindow->getCodeEditorDockWidget();
+	Q_ASSERT(codeEditorDockWidget);
 }
 
 UnitPlayingScene::~UnitPlayingScene()
 {
+}
+
+void UnitPlayingScene::startLeavingStage()
+{
+	codeEditorDockWidget->setVisible(false);
+}
+
+void UnitPlayingScene::finishedEnteringStage()
+{
+	codeEditorDockWidget->setVisible(true);
 }
 
 void UnitPlayingScene::backButtonPressed()

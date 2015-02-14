@@ -48,6 +48,14 @@ class Scene : public QObject, public QGraphicsRectItem
 	inline Layout* getLayout() const { return layout; }
 	/// Set a new layout for this scene. The previous one will be deleted
 	void setLayout(Layout* layout);
+	/// Called when a transition starts, indicating this scene is leaving the stage
+	virtual void startLeavingStage() { }
+	/// Called when a transition starts, indicating this scene is entering into the stage
+	virtual void startEnteringStage() { }
+	/// Called when a transition has finished, indicating this scene leaved the stage
+	virtual void finishedLeavingStage() { }
+	/// Called when a transition has finished, indicating this scene entered into the stage
+	virtual void finishedEnteringStage() { }
 
   public slots:
 	/// Call this method when the stage room has changed its dimensions

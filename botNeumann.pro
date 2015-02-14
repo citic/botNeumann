@@ -36,6 +36,7 @@ SOURCES += \
 	source/GameMenu/GameMenuScene.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
+	source/UnitPlaying/CodeEditorDockWidget.cpp \
 	source/UnitPlaying/Unit.cpp \
 	source/UnitPlaying/UnitPlayingScene.cpp \
 	source/UnitSelection/UnitManager.cpp \
@@ -60,6 +61,7 @@ HEADERS += \
 	source/Gamee/Transitions/TransitionSlide.h \
 	source/GameMenu/GameMenuScene.h \
 	source/MainWindow.h \
+	source/UnitPlaying/CodeEditorDockWidget.h \
 	source/UnitPlaying/Unit.h \
 	source/UnitPlaying/UnitPlayingScene.h \
 	source/UnitSelection/UnitManager.h \

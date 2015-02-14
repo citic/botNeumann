@@ -21,6 +21,10 @@ void Transition::start(int duration, int frames)
 	timeLine.setFrameRange(0, frames ? frames : defaultFrameCount);
 	timeLine.setCurveShape(QTimeLine::EaseInCurve);
 
+	// Notify both scenes that they will be transitioned
+	if ( previousScene ) previousScene->startLeavingStage();
+	if ( nextScene ) nextScene->startEnteringStage();
+
 	connect(&timeLine, SIGNAL(frameChanged(int)), SLOT(animate(int)));
 
 	timeLine.start();
@@ -36,6 +40,10 @@ void Transition::run(bool deleteAfterFinish, int duration, int frames)
 
 void Transition::transitionFinished()
 {
+	// Notify both scenes that the transition finished
+	if ( previousScene ) previousScene->finishedLeavingStage();
+	if ( nextScene ) nextScene->finishedEnteringStage();
+
 	// Delete the previous scene if it was asked
 	if ( deletePreviousScene )
 	{

@@ -4,6 +4,8 @@
 #include "GameScene.h"
 #include "Unit.h"
 
+class CodeEditorDockWidget;
+
 class UnitPlayingScene : public GameScene
 {
 	Q_OBJECT
@@ -18,6 +20,8 @@ class UnitPlayingScene : public GameScene
 	QString filename;
 	/// Loads the unit from the .botnu xml file
 	Unit unit;
+	/// This class is tied to the code editor, i.e: to make it visible or not
+	CodeEditorDockWidget* codeEditorDockWidget;
 
   public:
 	/// Constructor
@@ -27,6 +31,10 @@ class UnitPlayingScene : public GameScene
 	explicit UnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename, Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
 	virtual ~UnitPlayingScene();
+	/// Called when a transition starts, indicating this scene is leaving the stage
+	virtual void startLeavingStage() override;
+	/// Called when a transition has finished, indicating this scene entered into the stage
+	virtual void finishedEnteringStage() override;
 
   signals:
 	/// Emitted when a game mode button is pressed
