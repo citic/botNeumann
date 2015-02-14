@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
 	setupStage();
 	setupCodeEditor();
 	restoreSettings();
+	// Sometimes settings restore the codeEditor, but it must be invisible at the beginning
+	codeEditor->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -54,7 +56,6 @@ void MainWindow::setupCodeEditor()
 	// Source code editor is only visible in playing scenes, disabled by default
 	Q_ASSERT(codeEditor == nullptr);
 	codeEditor = new CodeEditorDockWidget(this);
-	codeEditor->setVisible(false);
 	addDockWidget(Qt::RightDockWidgetArea, codeEditor);
 }
 

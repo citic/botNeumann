@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE botnu SYSTEM "http://inciart.com/botneumann/botnu-1.0.dtd">
 
+
 <!-- ram is in bytes, timeout: in seconds -->
 <botnu name="sum_xy" id="jhc-20150205-205858" version="1.0" ram="1024" heap-segment="no" cpu-cores="1" robots="1" timeout="1">
-	<description lang="es"><![CDATA[
+
+
+
+<description lang="es"><![CDATA[
 <h1>Sumador simple</h1>
 
 <p>Este chip era un simple sumador de enteros. Nada sofisticado. Quizá por eso poco fue afectado por el atacante. Todo el código lo encontramos legible menos una línea. Lo que logramos recuperar está cargado en el editor de código, y nos sirve, de paso, para entender cómo funciona un chip.</p>
@@ -44,68 +48,81 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 100
 -200
 </code></pre>
-	]]></description>
-	<initial-code><![CDATA[
-		#include <iostream>
+]]></description>
 
-		int main()
-		{
-			long a, b;
-			while ( std::cin >> a >> b )
-			{
 
-			}
 
-			return 0;
-		}
-	]]></initial-code>
-	<solution><![CDATA[
-		#include <iostream>
+<initial-code><![CDATA[#include <iostream>
 
-		int main()
-		{
-			while ( true )
-			{
-				long x, y;
-				std::cin >> x >> y;
-				std::cout << x + y;
-			}
+int main()
+{
+	long a, b;
+	while ( std::cin >> a >> b )
+	{
 
-			return 0;
-		}
-	]]></solution>
-	<generator><![CDATA[
-		#include <cstdlib>
-		#include <ctime>
-		#include <iostream>
+	}
 
-		long grand(long min, long max)
-		{
-			return rand() % (max - min) + min;
-		}
+	return 0;
+}
+]]></initial-code>
 
-		int main()
-		{
-			srand(time(0));
-			while ( true )
-				std::cout << grand(-1000000, 1000000) << ' ' << grand(-1000000, 1000000);
-			return 0;
-		}
-	]]></generator>
-	<test-case>
-		<input>0 -0
+
+
+<solution><![CDATA[#include <iostream>
+
+int main()
+{
+	while ( true )
+	{
+		long x, y;
+		std::cin >> x >> y;
+		std::cout << x + y;
+	}
+
+	return 0;
+}
+]]></solution>
+
+
+
+<generator><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+long grand(long min, long max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand(time(0));
+	while ( true )
+		std::cout << grand(-1000000, 1000000) << ' ' << grand(-1000000, 1000000);
+	return 0;
+}
+]]></generator>
+
+
+
+<test-case>
+<input>0 -0
 2 5
 -4 7
 100 -0
 -80 -120
 -999999 -999999
 </input>
-		<output>0
+
+<output>0
 7
 3
 100
 -200
 -1999998
 </output>
-	</test-case>
+</test-case>
+
+
+
 </botnu>

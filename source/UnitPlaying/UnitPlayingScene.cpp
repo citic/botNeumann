@@ -34,6 +34,11 @@ void UnitPlayingScene::startLeavingStage()
 void UnitPlayingScene::finishedEnteringStage()
 {
 	codeEditorDockWidget->setVisible(true);
+
+	// ToDo: Implement player information
+	QString code;// = player->codeForUnit(unit.getId());
+	if ( code.isEmpty() ) code = unit.getInitialCode();
+	codeEditorDockWidget->setCode(code);
 }
 
 void UnitPlayingScene::backButtonPressed()
