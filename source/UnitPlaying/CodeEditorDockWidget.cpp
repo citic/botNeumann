@@ -1,3 +1,4 @@
+#include "BotNeumannApp.h"
 #include "CodeEditorDockWidget.h"
 #include "SyntaxHighlighter.h"
 #include <QTextEdit>
@@ -34,7 +35,7 @@ void CodeEditorDockWidget::setupCodeEditor()
 
 	// Set the default monospaced font of the operating system
 //	QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-	QFont font("Liberation Mono");
+	QFont font(BotNeumannApp::getMonospacedFontName());
 	font.setPointSize(11);
 	font.setStyleHint(QFont::TypeWriter);
 	font.setFixedPitch(true);

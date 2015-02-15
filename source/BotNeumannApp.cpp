@@ -2,6 +2,11 @@
 #include <QFontDatabase>
 #include <QIcon>
 
+// Static variables
+QString BotNeumannApp::robotFontName;
+QString BotNeumannApp::monospacedFontName;
+
+
 BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	: QApplication(argc, argv)
 {
@@ -16,5 +21,18 @@ BotNeumannApp::BotNeumannApp(int argc, char *argv[])
   #endif
 
 	// Default font for the game
-	QFontDatabase::addApplicationFont(":/fonts/tenby_five.otf");
+	robotFontName = loadFont(":/fonts/fonts/tenby_five.otf");
+	monospacedFontName = loadFont(":/fonts/fonts/liberation_mono_regular.ttf");
+}
+
+QString BotNeumannApp::loadFont(const QString& fileName)
+{
+	// Add the font as an application exclusive font
+	int id = QFontDatabase::addApplicationFont(fileName);
+	Q_ASSERT( id != -1 );
+
+	// Retrieve its name. If the font has several names, retrieves only the first one
+	const QStringList& list = QFontDatabase::applicationFontFamilies(id);
+	Q_ASSERT(list.size() > 0);
+	return list[0];
 }

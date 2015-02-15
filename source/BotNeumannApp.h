@@ -11,11 +11,21 @@ class BotNeumannApp : public QApplication
   public:
 	/// Constructor
 	explicit BotNeumannApp(int argc, char *argv[]);
+	/// Family name of the font used for buttons
+	static inline const QString& getRobotFontName() { return robotFontName; }
+	/// Family name of the mono-spaced font for text editor
+	static inline const QString& getMonospacedFontName() { return monospacedFontName; }
 
-  signals:
+  protected:
+	/// Family name of the font used for buttons
+	static QString robotFontName;
+	/// Family name of the mono-spaced font for text editor
+	static QString monospacedFontName;
 
-  public slots:
-
+  protected:
+	/// Adds the font from the given resource name to the font database
+	/// @return The family name of the loaded font, empty on error
+	QString loadFont(const QString& fileName);
 };
 
 #endif // BOTNEUMANNAPP_H

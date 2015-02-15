@@ -1,3 +1,4 @@
+#include "BotNeumannApp.h"
 #include "SvgButton.h"
 #include <QBrush>
 #include <QFont>
@@ -10,7 +11,7 @@ SvgButton::SvgButton(const QString& label, const QString& normalForeground, cons
 	if ( ! label.isEmpty() )
 	{
 		this->label = new QGraphicsSimpleTextItem(label, parentItem);
-		this->label->setFont(QFont("Tenby Five"));
+		this->label->setFont(QFont(BotNeumannApp::getRobotFontName()));
 		this->label->setBrush(QBrush(Qt::cyan));
 	}
 	setMargins(0.1); // I am not sure if it is a good margin default for buttons
