@@ -27,6 +27,8 @@ SOURCES += \
 	source/Gamee/Layouts/LayoutItem.cpp \
 	source/Gamee/Layouts/LinearLayout.cpp \
 	source/Gamee/Layouts/Spacer.cpp \
+	source/Gamee/Player.cpp \
+	source/Gamee/PlayerManager.cpp \
 	source/Gamee/Scene.cpp \
 	source/Gamee/ScenicElement.cpp \
 	source/Gamee/Stage.cpp \
@@ -54,6 +56,8 @@ HEADERS += \
 	source/Gamee/Layouts/LayoutItem.h \
 	source/Gamee/Layouts/LinearLayout.h \
 	source/Gamee/Layouts/Spacer.h \
+	source/Gamee/Player.h \
+	source/Gamee/PlayerManager.h \
 	source/Gamee/Scene.h \
 	source/Gamee/ScenicElement.h \
 	source/Gamee/Stage.h \

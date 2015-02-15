@@ -43,6 +43,12 @@ class SvgButton : public ScenicElement
 	/// If you need to have a pointer to the SvgButton instance, call sender()
 	void pressed();
 
+  public slots:
+	/// When disabled, the button becomes semi-transparent
+	/// @remarks This method is not virtual at QGraphicsItem
+	void setEnabled(bool enabled) /*override*/;
+
+
   protected:
 	/// Called when this element is selected
 	virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;

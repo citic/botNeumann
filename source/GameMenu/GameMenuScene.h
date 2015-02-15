@@ -5,6 +5,8 @@
 #include "Scene.h"
 
 class LinearLayout;
+class Player;
+class SvgButton;
 
 /**
    @brief The first scene where player chooses the game modality to play
@@ -13,6 +15,13 @@ class GameMenuScene : public Scene
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(GameMenuScene)
+
+  protected:
+	/// Game mode buttons
+	SvgButton* trainingButton;
+	SvgButton* missionsButton;
+	SvgButton* collaborationButton;
+	SvgButton* createButton;
 
   public:
 	/// Constructor
@@ -45,6 +54,8 @@ class GameMenuScene : public Scene
 	void rewardsButtonPressed();
 	/// Called when user press the Config button
 	void configButtonPressed();
+	/// Called when there is a player change. For example when a new player is created
+	void playerChanged(Player* newPlayer);
 };
 
 #endif // GAMEMENUSCENE_H

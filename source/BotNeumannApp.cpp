@@ -1,11 +1,11 @@
 #include "BotNeumannApp.h"
+#include "PlayerManager.h"
 #include <QFontDatabase>
 #include <QIcon>
 
-// Static variables
+// Static member variables
 QString BotNeumannApp::robotFontName;
 QString BotNeumannApp::monospacedFontName;
-
 
 BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	: QApplication(argc, argv)
@@ -23,6 +23,16 @@ BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	// Default font for the game
 	robotFontName = loadFont(":/fonts/fonts/tenby_five.otf");
 	monospacedFontName = loadFont(":/fonts/fonts/liberation_mono_regular.ttf");
+
+	// Reload the configuration of the last player who was playing with this game
+	this->playerManager = new PlayerManager(this);
+	this->playerManager->reloadLastPlayer();
+}
+
+Player* BotNeumannApp::getCurrentPlayer() const
+{
+	Q_ASSERT(playerManager);
+	return playerManager->getCurrentPlayer();
 }
 
 QString BotNeumannApp::loadFont(const QString& fileName)

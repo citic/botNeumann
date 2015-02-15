@@ -44,6 +44,14 @@ void SvgButton::resize(qreal left, qreal top, qreal width, qreal height)
 	}
 }
 
+void SvgButton::setEnabled(bool enabled)
+{
+	qreal transparency = enabled ? 1.0 : 0.15;
+	setOpacity(transparency);
+	if ( label ) label->setOpacity(transparency);
+	QGraphicsItem::setEnabled(enabled);
+}
+
 
 QVariant SvgButton::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {

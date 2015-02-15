@@ -1,3 +1,4 @@
+#include "BotNeumannApp.h"
 #include "GameMenuScene.h"
 #include "LinearLayout.h"
 #include "ScenicElement.h"
@@ -10,6 +11,10 @@
 
 GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	: Scene("game_menu", stage, parent)
+	, trainingButton(nullptr)
+	, missionsButton(nullptr)
+	, collaborationButton(nullptr)
+	, createButton(nullptr)
 {
 	LinearLayout* leftLayout = new LinearLayout(Qt::Vertical);
 	ScenicElement* gameTitle = new ScenicElement(":/game_title.svg", this);
@@ -45,10 +50,10 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 
 	// Create the buttons for each game mode and configuration
 	QString buttonBackground(":/game_menu/game_menu/button_background.svg");
-	SvgButton* trainingButton = SvgButton::createLabelButton(tr("Training"), buttonBackground, this);
-	SvgButton* missionsButton = SvgButton::createLabelButton(tr("Missions"), buttonBackground, this);
-	SvgButton* collaborationButton = SvgButton::createLabelButton(tr("Collaboration"), buttonBackground, this);
-	SvgButton* createButton = SvgButton::createLabelButton(tr("Create"), buttonBackground, this);
+	trainingButton = SvgButton::createLabelButton(tr("Training"), buttonBackground, this);
+	missionsButton = SvgButton::createLabelButton(tr("Missions"), buttonBackground, this);
+	collaborationButton = SvgButton::createLabelButton(tr("Collaboration"), buttonBackground, this);
+	createButton = SvgButton::createLabelButton(tr("Create"), buttonBackground, this);
 
 	// Add the menu buttons to the layout
 	rightLayout->addItem( trainingButton, 1.0 / 6.0 );
@@ -61,6 +66,9 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 	connect(missionsButton, SIGNAL(pressed()), this, SLOT(missionsButtonPressed()));
 	connect(collaborationButton, SIGNAL(pressed()), this, SLOT(collaborationButtonPressed()));
 	connect(createButton, SIGNAL(pressed()), this, SLOT(createButtonPressed()));
+
+	// Disable if there is not an active player
+	playerChanged( static_cast<BotNeumannApp*>(qApp)->getCurrentPlayer() );
 
 	setupConfigButtons(rightLayout);
 }
@@ -121,4 +129,14 @@ void GameMenuScene::rewardsButtonPressed()
 void GameMenuScene::configButtonPressed()
 {
 	qDebug() << "Configuration asked";
+}
+
+void GameMenuScene::playerChanged(Player* newPlayer)
+{
+	// Enable the game mode buttons only when there is a actual player
+	bool activePlayer = newPlayer != nullptr;
+	if (trainingButton) trainingButton->setEnabled(activePlayer);
+	if (missionsButton) missionsButton->setEnabled(activePlayer);
+	if (collaborationButton) collaborationButton->setEnabled(activePlayer);
+	if (createButton) createButton->setEnabled(activePlayer);
 }
