@@ -4,6 +4,7 @@
 #include <QDockWidget>
 
 class QTextEdit;
+class SyntaxHighlighter;
 
 class CodeEditorDockWidget : public QDockWidget
 {
@@ -13,6 +14,8 @@ class CodeEditorDockWidget : public QDockWidget
   protected:
 	/// Object where the actual source code is shown and edited
 	QTextEdit* codeEditor;
+	/// Store formatting rules for C++
+	SyntaxHighlighter* highlighter;
 
   public:
 	/// Constructor

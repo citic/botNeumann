@@ -1,8 +1,9 @@
 #include "CodeEditorDockWidget.h"
+#include "SyntaxHighlighter.h"
 #include <QTextEdit>
 
-const int tabStop = 4;  // A tab is visualized as 4 space characters
-
+// A tab is visualized as 3 space characters because screen size is reduced in the game
+const int tabStop = 3;
 
 CodeEditorDockWidget::CodeEditorDockWidget(QWidget *parent, Qt::WindowFlags flags)
 	: QDockWidget(tr("Program"), parent, flags)
@@ -28,18 +29,24 @@ void CodeEditorDockWidget::setupToolbar()
 
 void CodeEditorDockWidget::setupCodeEditor()
 {
+	// The code editor is a QTextEdit object
 	codeEditor = new QTextEdit(this);
 
-	QFont font("Courier", 10);
+	// Set the default monospaced font of the operating system
+//	QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+	QFont font("Liberation Mono");
+	font.setPointSize(11);
+	font.setStyleHint(QFont::TypeWriter);
 	font.setFixedPitch(true);
-	font.setStyleHint(QFont::Monospace);
 	codeEditor->setFont(font);
 
 	// Make tabs the same size than 4 spaces
 	QFontMetrics metrics(font);
 	codeEditor->setTabStopWidth(tabStop * metrics.width(' '));
 
-//	highlighter = new Highlighter(editor->document());
+	// Create the object that will provide color to C++ code within the editor
+	highlighter = new SyntaxHighlighter(codeEditor->document());
 
+	// Place the code editor as the central widget of this dock widget
 	setWidget(codeEditor);
 }

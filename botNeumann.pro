@@ -37,6 +37,7 @@ SOURCES += \
 	source/main.cpp \
 	source/MainWindow.cpp \
 	source/UnitPlaying/CodeEditorDockWidget.cpp \
+	source/UnitPlaying/SyntaxHighlighter.cpp \
 	source/UnitPlaying/Unit.cpp \
 	source/UnitPlaying/UnitPlayingScene.cpp \
 	source/UnitSelection/UnitManager.cpp \
@@ -62,6 +63,7 @@ HEADERS += \
 	source/GameMenu/GameMenuScene.h \
 	source/MainWindow.h \
 	source/UnitPlaying/CodeEditorDockWidget.h \
+	source/UnitPlaying/SyntaxHighlighter.h \
 	source/UnitPlaying/Unit.h \
 	source/UnitPlaying/UnitPlayingScene.h \
 	source/UnitSelection/UnitManager.h \
