@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE botnu SYSTEM "http://inciart.com/botneumann/botnu-1.0.dtd">
 
-<botnu name="abs_diff.botnu" id="jhc-20150205-205858" version="1.0">
+<botnu id="abs_diff" version="1.0">
 	<description lang="es">Este chip
 	</description>
 	<initial-code><![CDATA[

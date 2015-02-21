@@ -2,8 +2,8 @@
 <!DOCTYPE botnu SYSTEM "http://inciart.com/botneumann/botnu-1.0.dtd">
 
 
-<!-- ram is in bytes, timeout: in seconds -->
-<botnu name="sum_xy" id="jhc-20150205-205858" version="1.0" ram="1024" heap-segment="no" cpu-cores="1" robots="1" timeout="1">
+<!-- id must unique in the world, file must be named as same as id, ram is in bytes, timeout: in seconds -->
+<botnu id="sum_xy" version="1.0" ram="1024" heap-segment="no" cpu-cores="1" robots="1" timeout="1">
 
 
 

@@ -41,7 +41,7 @@ bool Unit::load(const QString& filename)
 
 void Unit::print()
 {
-	qDebug() << "name:" << name << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "timeout:" << timeout;
+	qDebug() << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "timeout:" << timeout;
 	for ( Descriptions::const_iterator itr = descriptions.begin(); itr != descriptions.end(); ++itr )
 		qDebug() << "description lang:" << itr.key() << "value:" << itr.value();
 	qDebug() << "initial-code:" << initialCode;
@@ -74,7 +74,6 @@ bool Unit::loadDocument(QXmlStreamReader& xmlReader)
 
 bool Unit::loadDocumentAttributes(QXmlStreamReader& xmlReader)
 {
-	name = xmlReader.attributes().value("name").toString();
 	id = xmlReader.attributes().value("id").toString();
 	version = xmlReader.attributes().value("version").toString();
 	ramSize = xmlReader.attributes().value("ram").toInt();

@@ -21,9 +21,7 @@ class Unit : public QObject
 	typedef QList< QPair<QString, QString> > TestCases;
 
   protected:
-	/// Name of the unit, for example "sum_xy". It is not required to be unique in the world
-	QString name;
-	/// Unique identifier of this unit on the world
+	/// Unique identifier of this unit on the world, for example "sum_xy"
 	QString id;
 	/// Version of this unit. It is not botnu xml notation version
 	QString version;
@@ -59,8 +57,6 @@ class Unit : public QObject
 	/// Loads the unit from the given .botnu xml filename
 	/// @return true on success, false otherwise
 	bool load(const QString& filename);
-	/// Name of the unit, for example "sum_xy". It is not required to be unique in the world
-	inline const QString& getName() const { return name; }
 	/// Unique identifier of this unit on the world
 	inline const QString& getId() const { return id; }
 	/// Version of this unit. It is not botnu xml notation version
