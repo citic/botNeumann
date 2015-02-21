@@ -2,6 +2,7 @@
 #define SVGBUTTON_H
 
 #include "ScenicElement.h"
+#include <QGraphicsSvgItem>
 
 class QGraphicsSimpleTextItem;
 
@@ -16,7 +17,7 @@ class QGraphicsSimpleTextItem;
 	|2| Foreground | Image  | NormalForeground | PressedForeground | NA    |
 	|3| Background | Image  | NormalBackground | PressedBackground | NA    |
  */
-class SvgButton : public ScenicElement
+class SvgButton : public ScenicElement<QGraphicsSvgItem>
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(SvgButton)

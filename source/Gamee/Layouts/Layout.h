@@ -4,9 +4,6 @@
 #include "LayoutItem.h"
 #include <QList>
 
-class QGraphicsItem;
-class ScenicElement;
-
 /** Base class for layouts */
 class Layout : public LayoutItem
 {

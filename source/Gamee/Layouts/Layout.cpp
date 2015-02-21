@@ -10,7 +10,7 @@ Layout::~Layout()
 {
 	// Delete all layout items execpt scenic elements, because they are children of the Scene
 	for ( int i = 0; i < items.size(); ++i )
-		if ( ! dynamic_cast<ScenicElement*>(items[i]) )
+		if ( ! items[i]->isScenicElement() )
 			delete items[i];
 }
 

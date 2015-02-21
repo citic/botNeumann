@@ -1,4 +1,5 @@
 #include "LinearLayout.h"
+#include "Prop.h"
 #include "SvgButton.h"
 #include "UnitSelectionScene.h"
 
@@ -75,7 +76,7 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 	qreal averageUnitWidth = 1.0 / (unitCountInLevel);
 
 	// Add a pneumatic tube
-	ScenicElement* pneumaticTube = new ScenicElement(":/unit_selection/unit_selection/air_tube_short.svg", this);
+	Prop* pneumaticTube = new Prop(":/unit_selection/unit_selection/air_tube_short.svg", this);
 	pneumaticTube->setMargins(0.3, 0.0, 0.3);
 	levelLayout->addItem(pneumaticTube, tubeWidthPercent * averageUnitWidth);
 

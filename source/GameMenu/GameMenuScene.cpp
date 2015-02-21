@@ -1,7 +1,7 @@
 #include "BotNeumannApp.h"
 #include "GameMenuScene.h"
 #include "LinearLayout.h"
-#include "ScenicElement.h"
+#include "Prop.h"
 #include "Stage.h"
 #include "SvgButton.h"
 #include <QGraphicsLinearLayout>
@@ -17,13 +17,13 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	, createButton(nullptr)
 {
 	LinearLayout* leftLayout = new LinearLayout(Qt::Vertical);
-	ScenicElement* gameTitle = new ScenicElement(":/game_title.svg", this);
+	Prop* gameTitle = new Prop(":/game_title.svg", this);
 	gameTitle->setMargins(0.1);
 	leftLayout->addItem(gameTitle, 0.2);
 
 	LinearLayout* centralLayout = new LinearLayout(Qt::Horizontal);
 	leftLayout->addLayout(centralLayout, 0.8);
-	ScenicElement* robot = new ScenicElement(":/game_menu/game_menu/robot.svg", this);
+	Prop* robot = new Prop(":/game_menu/game_menu/robot.svg", this);
 	robot->setMargins(0.2);
 	centralLayout->addItem(robot, 0.5);
 	robot->makeMaintainAspectRatio(true);
@@ -68,7 +68,7 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 	connect(createButton, SIGNAL(pressed()), this, SLOT(createButtonPressed()));
 
 	// Disable if there is not an active player
-	playerChanged( static_cast<BotNeumannApp*>(qApp)->getCurrentPlayer() );
+//	playerChanged( static_cast<BotNeumannApp*>(qApp)->getCurrentPlayer() );
 
 	setupConfigButtons(rightLayout);
 }

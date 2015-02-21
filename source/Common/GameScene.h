@@ -5,7 +5,7 @@
 #include "Scene.h"
 
 class LinearLayout;
-class ScenicElement;
+class Prop;
 class SvgButton;
 
 class GameScene : public Scene
@@ -17,7 +17,7 @@ class GameScene : public Scene
 	/// Button to return to the previous screen
 	SvgButton* backButton;
 	/// Sprite containing the name of the scene
-	ScenicElement* gameTitle;
+	Prop* gameTitle;
 	/// Button to show info about this scene, e.g: the task description on unit playing scene
 	SvgButton* infoButton;
 	/// A label showing the title of the scene, e.g: "Training" or "Challenges"

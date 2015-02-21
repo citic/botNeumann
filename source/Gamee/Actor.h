@@ -2,11 +2,12 @@
 #define ACTOR_H
 
 #include "ScenicElement.h"
+#include <QGraphicsSvgItem>
 
 /**
    @brief Any graphic object that moves or reacts on the scene
  */
-class Actor : public ScenicElement
+class Actor : public ScenicElement<QGraphicsSvgItem>
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(Actor)

@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "LinearLayout.h"
+#include "Prop.h"
 #include "SvgButton.h"
 
 GameScene::GameScene(const QString& sceneName, Stage* stage, QGraphicsItem* parent)
@@ -34,7 +35,7 @@ void GameScene::createStandardMenu(const QString& title)
 	connect(backButton, SIGNAL(pressed()), this, SLOT(backButtonPressed()));
 
 	// Game title
-	this->gameTitle = new ScenicElement(":/game_title.svg", this);
+	this->gameTitle = new Prop(":/game_title.svg", this);
 	menuLayout->addItem(gameTitle, 0.32);
 	menuLayout->addStretch(0.084);
 

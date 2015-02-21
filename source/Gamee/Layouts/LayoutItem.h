@@ -25,6 +25,8 @@ class LayoutItem
 	explicit LayoutItem(qreal proportion = 1.0);
 	/// Destructor
 	virtual ~LayoutItem();
+	/// Used to differentiate between pure-layout items and scenic elements
+	virtual bool isScenicElement() const { return false; }
 	/// Resize this item and all its child items
 	/// This method is called each time the Stage and Scene has been resized
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) = 0;
