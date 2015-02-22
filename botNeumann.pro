@@ -21,6 +21,7 @@ SOURCES += \
 	source/BotNeumannApp.cpp \
 	source/BotNeumannDirector.cpp \
 	source/Common/GameScene.cpp \
+	source/Common/PlayerStatus.cpp \
 	source/Gamee/Actor.cpp \
 	source/Gamee/Director.cpp \
 	source/Gamee/LabelButton.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
 	source/Gamee/Transitions/Transition.cpp \
 	source/Gamee/Transitions/TransitionSlide.cpp \
 	source/GameMenu/GameMenuScene.cpp \
+	source/GameMenu/PlayerManagerDialog.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
 	source/UnitPlaying/CodeEditorDockWidget.cpp \
@@ -52,6 +54,7 @@ HEADERS += \
 	source/BotNeumannDirector.h \
 	source/Common.h \
 	source/Common/GameScene.h \
+	source/Common/PlayerStatus.h \
 	source/Gamee/Actor.h \
 	source/Gamee/Director.h \
 	source/Gamee/LabelButton.h \
@@ -69,6 +72,7 @@ HEADERS += \
 	source/Gamee/Transitions/Transition.h \
 	source/Gamee/Transitions/TransitionSlide.h \
 	source/GameMenu/GameMenuScene.h \
+	source/GameMenu/PlayerManagerDialog.h \
 	source/MainWindow.h \
 	source/UnitPlaying/CodeEditorDockWidget.h \
 	source/UnitPlaying/SyntaxHighlighter.h \
@@ -80,3 +84,6 @@ HEADERS += \
 RESOURCES += \
 	assets/assets.qrc \
 	units/training/training.qrc
+
+FORMS += \
+	source/GameMenu/PlayerManagerDialog.ui

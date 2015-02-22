@@ -6,6 +6,7 @@
 
 class LinearLayout;
 class Player;
+class PlayerStatus;
 class SvgButton;
 
 /**
@@ -22,6 +23,8 @@ class GameMenuScene : public Scene
 	SvgButton* missionsButton;
 	SvgButton* collaborationButton;
 	SvgButton* createButton;
+	/// A label showing the current player and allows to change the player
+	PlayerStatus* playerStatus;
 
   public:
 	/// Constructor
@@ -40,6 +43,8 @@ class GameMenuScene : public Scene
 	void showUnitSelectionScene(const QString& context, bool forward);
 
   protected slots:
+	/// Called when the player control is pressed
+	void playerControlPressed();
 	/// Called when Training button is pressed
 	void trainingButtonPressed();
 	/// Called when Missions button is pressed
