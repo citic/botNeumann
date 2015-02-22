@@ -16,6 +16,12 @@ class QGraphicsSimpleTextItem;
 	|1| Label      | String | NormalStyle      | PressedStyle      | NA    |
 	|2| Foreground | Image  | NormalForeground | PressedForeground | NA    |
 	|3| Background | Image  | NormalBackground | PressedBackground | NA    |
+
+	But... QtGraphicsSvgItem does not support to change the image. Therefore only one image can
+	be shown while the object exists. For this reason only the NormalBackground image is supported
+	and optionally a Label.
+
+	If you need only a label, @see LabelButton class.
  */
 class SvgButton : public ScenicElement<QGraphicsSvgItem>
 {
@@ -27,12 +33,11 @@ class SvgButton : public ScenicElement<QGraphicsSvgItem>
 	QGraphicsSimpleTextItem* label;
 
   public:
-	/// Constructor: creates a simple text button or an image button
-	explicit SvgButton(const QString& label, const QString& normalForeground, const QString& normalBackground, QGraphicsItem* parentItem);
-	/// Convenience method: creates a simple text button
-	static SvgButton* createLabelButton(const QString& label, const QString& normalBackground, QGraphicsItem* parentItem);
-	/// Convenience method: creates a simple image button
-	static SvgButton* createImageButton(const QString& normalForeground, QGraphicsItem* parentItem);
+	/// Constructor: creates a graphical button
+	/// @param imageFileName Mandatory file name of the image to be used as button
+	/// @param parentItem Mandatory graphic item where this button will be shown
+	/// @param label An optional text to be drawn on top of the image (i.e., background image)
+	explicit SvgButton(const QString& imageFileName, QGraphicsItem* parentItem, const QString& label = "");
 	/// Destructor
 	virtual ~SvgButton();
 	/// Resize this element
@@ -49,9 +54,8 @@ class SvgButton : public ScenicElement<QGraphicsSvgItem>
 	/// @remarks This method is not virtual at QGraphicsItem
 	void setEnabled(bool enabled) /*override*/;
 
-
   protected:
-	/// Called when this element is selected
+	/// Called when this element is selected or deselected
 	virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 };
 

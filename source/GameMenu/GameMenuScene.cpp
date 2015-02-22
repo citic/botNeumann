@@ -50,10 +50,10 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 
 	// Create the buttons for each game mode and configuration
 	QString buttonBackground(":/game_menu/game_menu/button_background.svg");
-	trainingButton = SvgButton::createLabelButton(tr("Training"), buttonBackground, this);
-	missionsButton = SvgButton::createLabelButton(tr("Missions"), buttonBackground, this);
-	collaborationButton = SvgButton::createLabelButton(tr("Collaboration"), buttonBackground, this);
-	createButton = SvgButton::createLabelButton(tr("Create"), buttonBackground, this);
+	trainingButton = new SvgButton(buttonBackground, this, tr("Training"));
+	missionsButton = new SvgButton(buttonBackground, this, tr("Missions"));
+	collaborationButton = new SvgButton(buttonBackground, this, tr("Collaboration"));
+	createButton = new SvgButton(buttonBackground, this, tr("Create"));
 
 	// Add the menu buttons to the layout
 	rightLayout->addItem( trainingButton, 1.0 / 6.0 );
@@ -75,9 +75,9 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 
 void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
 {
-	SvgButton* infoButton = SvgButton::createImageButton("://button_information.svg", this);
-	SvgButton* rewardsButton = SvgButton::createImageButton("://button_rewards.svg", this);
-	SvgButton* configButton = SvgButton::createImageButton("://button_config.svg", this);
+	SvgButton* infoButton = new SvgButton("://button_information.svg", this);
+	SvgButton* rewardsButton = new SvgButton("://button_rewards.svg", this);
+	SvgButton* configButton = new SvgButton("://button_config.svg", this);
 
 	LinearLayout* configButtonLayout = new LinearLayout(Qt::Horizontal);
 	configButtonLayout->addItem(infoButton, 1.0 / 3.0);

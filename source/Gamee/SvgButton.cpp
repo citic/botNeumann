@@ -4,8 +4,8 @@
 #include <QFont>
 #include <QGraphicsSimpleTextItem>
 
-SvgButton::SvgButton(const QString& label, const QString& normalForeground, const QString& normalBackground, QGraphicsItem* parentItem)
-	: ScenicElement( ! normalForeground.isEmpty() ? normalForeground : normalBackground, parentItem)
+SvgButton::SvgButton(const QString& imageFileName, QGraphicsItem* parentItem, const QString& label)
+	: ScenicElement(imageFileName, parentItem)
 	, label(nullptr)
 {
 	if ( ! label.isEmpty() )
@@ -20,16 +20,6 @@ SvgButton::SvgButton(const QString& label, const QString& normalForeground, cons
 
 SvgButton::~SvgButton()
 {
-}
-
-SvgButton* SvgButton::createLabelButton(const QString& label, const QString& normalBackground, QGraphicsItem* parentItem)
-{
-	return new SvgButton(label, "", normalBackground, parentItem);
-}
-
-SvgButton* SvgButton::createImageButton(const QString& normalForeground, QGraphicsItem* parentItem)
-{
-	return new SvgButton("", normalForeground, "", parentItem);
 }
 
 void SvgButton::resize(qreal left, qreal top, qreal width, qreal height)
@@ -52,14 +42,11 @@ void SvgButton::setEnabled(bool enabled)
 	QGraphicsItem::setEnabled(enabled);
 }
 
-
 QVariant SvgButton::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
-	if (change == QGraphicsItem::ItemSelectedChange)
-	{
-		bool newState = value.toBool();
-		if ( newState )
-			emit pressed();
-	}
+	// If the seletion of this element changed and now it is selected, alert other objects
+	if (change == QGraphicsItem::ItemSelectedChange && value.toBool() )
+		emit pressed();
+
 	return ScenicElement::itemChange(change, value);
 }

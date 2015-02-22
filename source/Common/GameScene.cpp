@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "LabelButton.h"
 #include "LinearLayout.h"
 #include "Prop.h"
 #include "SvgButton.h"
@@ -30,7 +31,7 @@ void GameScene::createStandardMenu(const QString& title)
 	const qreal buttonWidthPercent = 0.06;
 
 	// Back button
-	this->backButton = SvgButton::createImageButton(":/button_back.svg", this);
+	this->backButton = new SvgButton(":/button_back.svg", this);
 	menuLayout->addItem(backButton, buttonWidthPercent);
 	connect(backButton, SIGNAL(pressed()), this, SLOT(backButtonPressed()));
 
@@ -40,12 +41,12 @@ void GameScene::createStandardMenu(const QString& title)
 	menuLayout->addStretch(0.084);
 
 	// Info button
-	this->infoButton = SvgButton::createImageButton("://button_information.svg", this);
+	this->infoButton = new SvgButton("://button_information.svg", this);
 	menuLayout->addItem(infoButton, buttonWidthPercent);
 	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
 
 	// Scene title
-	this->sceneTitle = SvgButton::createLabelButton(title, "", this);
+	this->sceneTitle = new LabelButton(title, this);
 	menuLayout->addItem(sceneTitle, 0.17);
 	connect(sceneTitle, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
 	menuLayout->addStretch(0.084);
@@ -57,7 +58,7 @@ void GameScene::createStandardMenu(const QString& title)
 	menuLayout->addStretch(0.17);
 
 	// Config button
-	this->configButton = SvgButton::createImageButton("://button_config.svg", this);
+	this->configButton = new SvgButton("://button_config.svg", this);
 	menuLayout->addItem(configButton, buttonWidthPercent);
 	connect(configButton, SIGNAL(pressed()), this, SLOT(configButtonPressed()));
 

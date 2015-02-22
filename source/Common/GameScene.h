@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Scene.h"
 
+class LabelButton;
 class LinearLayout;
 class Prop;
 class SvgButton;
@@ -21,7 +22,7 @@ class GameScene : public Scene
 	/// Button to show info about this scene, e.g: the task description on unit playing scene
 	SvgButton* infoButton;
 	/// A label showing the title of the scene, e.g: "Training" or "Challenges"
-	SvgButton* sceneTitle;
+	LabelButton* sceneTitle;
 	/// A gauge showing the name of the player, his/her score, and level
 //	PlayerStatus* playerStatus;
 	/// Gear button to configure the game
