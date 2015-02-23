@@ -1,6 +1,7 @@
 #include "BotNeumannApp.h"
 #include "GameMenuScene.h"
 #include "LinearLayout.h"
+#include "PlayerManager.h"
 #include "PlayerManagerDialog.h"
 #include "PlayerStatus.h"
 #include "Prop.h"
@@ -52,6 +53,8 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 	playerStatus->setMargins(0.2);
 	rightLayout->addItem(playerStatus, 1.0 / 6.0);
 	connect(playerStatus, SIGNAL(pressed()), this, SLOT(playerControlPressed()));
+	PlayerManager* playerManager = static_cast<BotNeumannApp*>(qApp)->getPlayerManager();
+	connect(playerManager, SIGNAL(playerChanged(Player*)), this, SLOT(playerChanged(Player*)));
 
 	// Create the buttons for each game mode and configuration
 	QString buttonBackground(":/game_menu/game_menu/button_background.svg");
@@ -101,10 +104,9 @@ void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
 
 void GameMenuScene::playerControlPressed()
 {
-	// Show the PlayerManagerDialog
-	PlayerManagerDialog dialog( stage->parentWidget() );
-	if ( dialog.exec() ) // ToDo: connect this slot to the signal emitted by PlayerManager instead of call it directly
-		playerChanged( static_cast<BotNeumannApp*>(qApp)->getCurrentPlayer() );
+	// Show the PlayerManagerDialog. It will inform the PlayerManager, and the latter emits
+	// playerChanged() which is connected with this scene
+	PlayerManagerDialog( stage->parentWidget() ).exec();
 }
 
 void GameMenuScene::trainingButtonPressed()

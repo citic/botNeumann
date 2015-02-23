@@ -24,7 +24,9 @@ class PlayerManagerDialog : public QDialog
 	void addPlayerClicked();
 	void removePlayerClicked();
 	void renamePlayerClicked();
-	void changedPlayerClicked();
+	void changePlayerClicked();
+	void nicknameLineEditChanged(const QString& text);
+	void selectedPlayerChanged();
 };
 
 #endif // PLAYERMANAGERDIALOG_H

@@ -19,6 +19,8 @@ class Player : public QObject
 	~Player();
 	/// Get access to the nickname
 	inline const QString& getNickname() const { return nickname; }
+	/// Save an entry for this player on settings
+	bool save();
 };
 
 #endif // PLAYER_H

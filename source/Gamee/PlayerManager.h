@@ -4,6 +4,7 @@
 #include <QObject>
 
 class Player;
+class QStringList;
 
 /** Manages the list of players on this device or network players */
 class PlayerManager : public QObject
@@ -29,6 +30,9 @@ class PlayerManager : public QObject
 	void saveLastPlayer();
 	/// Get access to the current active player on this device
 	inline Player* getCurrentPlayer() const { return currentPlayer; }
+	/// Set the current active player by its nickname
+	/// @return A reference to the new player object, nullptr on error
+	Player* setCurrentPlayer(const QString& nickname);
 	/// Creates a new player
 	/// @param nickname Identifier of the player
 	/// @param network If true @a nickname must be unique on the world and player will be added to
@@ -44,6 +48,12 @@ class PlayerManager : public QObject
 	bool removePlayer(const QString& nickname, bool network);
 	/// Syncronize data of the current player between this device and the network database
 	bool syncCurrentPlayer();
+	/// Loads and returns the list of nicknames of local players
+	QStringList fetchLocalPlayerNicknames();
+
+  signals:
+	/// Emitted when the player is changed
+	void playerChanged(Player* newPlayer);
 };
 
 #endif // PLAYERMANAGER_H
