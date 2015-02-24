@@ -53,7 +53,7 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 	playerStatus->setMargins(0.2);
 	rightLayout->addItem(playerStatus, 1.0 / 6.0);
 	connect(playerStatus, SIGNAL(pressed()), this, SLOT(playerControlPressed()));
-	PlayerManager* playerManager = static_cast<BotNeumannApp*>(qApp)->getPlayerManager();
+	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
 	connect(playerManager, SIGNAL(playerChanged(Player*)), this, SLOT(playerChanged(Player*)));
 
 	// Create the buttons for each game mode and configuration
@@ -76,7 +76,7 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 	connect(createButton, SIGNAL(pressed()), this, SLOT(createButtonPressed()));
 
 	// Disable if there is not an active player
-	playerChanged( static_cast<BotNeumannApp*>(qApp)->getCurrentPlayer() );
+	playerChanged( BotNeumannApp::getInstance()->getCurrentPlayer() );
 
 	setupConfigButtons(rightLayout);
 }

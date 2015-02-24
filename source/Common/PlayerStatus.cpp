@@ -6,7 +6,7 @@
 PlayerStatus::PlayerStatus(QGraphicsItem* parentItem)
 	: LabelButton("", parentItem)
 {
-	BotNeumannApp* app = static_cast<BotNeumannApp*>(qApp);
+	BotNeumannApp* app = BotNeumannApp::getInstance();
 	connect(app->getPlayerManager(), SIGNAL(playerChanged(Player*)), this, SLOT(playerChanged(Player*)));
 	playerChanged( app->getCurrentPlayer() );
 }

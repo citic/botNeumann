@@ -11,7 +11,7 @@ PlayerManagerDialog::PlayerManagerDialog(QWidget *parent)
 	ui->setupUi(this);
 
 	// Fill the list widget with the player list stored in this device
-	PlayerManager* playerManager = static_cast<BotNeumannApp*>(qApp)->getPlayerManager();
+	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
 	Q_ASSERT(playerManager);
 	ui->playerListWidget->addItems(playerManager->fetchLocalPlayerNicknames());
 
@@ -66,7 +66,7 @@ void PlayerManagerDialog::changePlayerClicked()
 	QListWidgetItem* selectedItem = ui->playerListWidget->selectedItems()[0];
 	Q_ASSERT(selectedItem);
 
-	PlayerManager* playerManager = static_cast<BotNeumannApp*>(qApp)->getPlayerManager();
+	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
 	Q_ASSERT(playerManager);
 	playerManager->setCurrentPlayer(selectedItem->text());
 }
