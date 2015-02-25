@@ -55,8 +55,8 @@ class SvgButton : public ScenicElement<QGraphicsSvgItem>
 	void setEnabled(bool enabled) /*override*/;
 
   protected:
-	/// Called when this element is selected or deselected
-	virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+	/// Overriden to manage click or tap events
+	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif // SVGBUTTON_H

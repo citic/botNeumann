@@ -15,12 +15,8 @@ LabelButton::~LabelButton()
 {
 }
 
-// ToDo: Remove code redundancy, see SvgButton::itemChange()
-QVariant LabelButton::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+void LabelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-	// If the seletion of this element changed and now it is selected, alert other objects
-	if (change == QGraphicsItem::ItemSelectedChange && value.toBool() )
-		emit pressed();
-
-	return ScenicElement::itemChange(change, value);
+	emit pressed();
+	QGraphicsItem::mouseReleaseEvent(event);
 }

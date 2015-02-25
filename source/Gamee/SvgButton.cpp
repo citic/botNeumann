@@ -42,11 +42,8 @@ void SvgButton::setEnabled(bool enabled)
 	QGraphicsItem::setEnabled(enabled);
 }
 
-QVariant SvgButton::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+void SvgButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-	// If the seletion of this element changed and now it is selected, alert other objects
-	if (change == QGraphicsItem::ItemSelectedChange && value.toBool() )
-		emit pressed();
-
-	return ScenicElement::itemChange(change, value);
+	emit pressed();
+	QGraphicsItem::mouseReleaseEvent(event);
 }
