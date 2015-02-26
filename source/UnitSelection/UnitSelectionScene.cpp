@@ -16,7 +16,7 @@ UnitSelectionScene::UnitSelectionScene(const QString& context, Stage* stage, QGr
 	, context(context)
 	, currentUnitEnabled(true)
 {
-	createStandardMenu(context);
+	createStandardMenu(context, false);
 	createLevelsUnits();
 	animatePods();
 }

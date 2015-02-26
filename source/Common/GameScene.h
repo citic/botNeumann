@@ -29,6 +29,8 @@ class GameScene : public Scene
 	SvgButton* configButton;
 	/// Button for accessing the rewards
 //	SvgButton* rewardsButton;
+	/// When pressed, shows or hiddes the code editor
+	SvgButton* codeEditorToggle;
 
   public:
 	/// Constructor
@@ -40,7 +42,7 @@ class GameScene : public Scene
 	/// Creates a standard menu with common buttons: configure, back/exit, player...
 	/// Adds it to the scene's layout. If a scene's layout does not exist, it creates
 	/// a global vertical linear layout
-	void createStandardMenu(const QString& title);
+	void createStandardMenu(const QString& title, bool enableCodeEditorToggle);
 
   protected slots:
 	/// Called when the Back button is pressed
@@ -53,6 +55,8 @@ class GameScene : public Scene
 	void rewardsButtonPressed();
 	/// Called when user press the Config button
 	void configButtonPressed();
+	/// Called when user press the code editor toggle button
+	void codeEditorTogglePressed();
 };
 
 #endif // GAMESCENE_H

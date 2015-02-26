@@ -24,9 +24,9 @@ bool Player::save()
 	return true;
 }
 
-bool Player::hasCompletedUnit(const QString& filename)
+bool Player::hasCompletedUnit(const QString& unitId)
 {
 	QSettings settings;
-	const QString& key = "Players/" + nickname + '/' + filename + "Completed";
+	const QString& key = "Players/" + nickname + '/' + unitId + "Completed";
 	return settings.value(key, false).toBool();
 }

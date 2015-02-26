@@ -1,7 +1,10 @@
+#include "CodeEditorDockWidget.h"
 #include "GameScene.h"
 #include "LabelButton.h"
 #include "LinearLayout.h"
+#include "MainWindow.h"
 #include "Prop.h"
+#include "Stage.h"
 #include "SvgButton.h"
 
 GameScene::GameScene(const QString& sceneName, Stage* stage, QGraphicsItem* parent)
@@ -13,6 +16,7 @@ GameScene::GameScene(const QString& sceneName, Stage* stage, QGraphicsItem* pare
 //	, playerStatus(nullptr)
 	, configButton(nullptr)
 //	, rewardsButton(nullptr)
+	, codeEditorToggle(nullptr)
 {
 }
 
@@ -20,7 +24,7 @@ GameScene::~GameScene()
 {
 }
 
-void GameScene::createStandardMenu(const QString& title)
+void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorToggle)
 {
 	// A global layout is required
 	if ( this->layout == nullptr ) layout = new LinearLayout(Qt::Vertical);
@@ -41,7 +45,7 @@ void GameScene::createStandardMenu(const QString& title)
 	menuLayout->addStretch(0.084);
 
 	// Info button
-	this->infoButton = new SvgButton("://button_information.svg", this);
+	this->infoButton = new SvgButton(":/button_information.svg", this);
 	menuLayout->addItem(infoButton, buttonWidthPercent);
 	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
 
@@ -55,10 +59,18 @@ void GameScene::createStandardMenu(const QString& title)
 //	this->playerStatus = new PlayerStatus(this);
 //	menuLayout->addItem(playerStatus, 0.17);
 //	connect(playerStatus, SIGNAL(pressed()), this, SLOT(playerStatusPressed()));
-	menuLayout->addStretch(0.17);
+	menuLayout->addStretch(0.16 - enableCodeEditorToggle * buttonWidthPercent);
+
+	// Code editor
+	if ( enableCodeEditorToggle )
+	{
+		this->codeEditorToggle = new SvgButton(":/button_code_editor.svg", this);
+		menuLayout->addItem(codeEditorToggle, buttonWidthPercent);
+		connect(codeEditorToggle, SIGNAL(pressed()), this, SLOT(codeEditorTogglePressed()));
+	}
 
 	// Config button
-	this->configButton = new SvgButton("://button_config.svg", this);
+	this->configButton = new SvgButton(":/button_config.svg", this);
 	menuLayout->addItem(configButton, buttonWidthPercent);
 	connect(configButton, SIGNAL(pressed()), this, SLOT(configButtonPressed()));
 
@@ -83,6 +95,15 @@ void GameScene::playerStatusPressed()
 void GameScene::configButtonPressed()
 {
 	qDebug() << "Configuration asked";
+}
+
+void GameScene::codeEditorTogglePressed()
+{
+	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
+	Q_ASSERT(mainWindow);
+	CodeEditorDockWidget* codeEditorDockWidget = mainWindow->getCodeEditorDockWidget();
+	Q_ASSERT(codeEditorDockWidget);
+	codeEditorDockWidget->setVisible( ! codeEditorDockWidget->isVisible() );
 }
 
 void GameScene::rewardsButtonPressed()

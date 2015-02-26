@@ -6,6 +6,7 @@
 | game_logo | logotipo del juego para iconos | ![game_logo](game_logo.svg) |
 | game_title | nombre del juego para pantalla principal | ![game_title](game_title.svg) |
 | button_back | retornar a la escena anterior | ![button_back](button_back.svg) |
+| button_code_editor | show/hide code editor | ![button_code_editor](button_code_editor.svg) |
 | button_config | player configuration/preferences | ![button_config](button_config.svg) |
 | button_information | botón de información. | ![button_information](button_information.svg) |
 | button_rewards | rewards | ![button_rewards](button_rewards.svg) |

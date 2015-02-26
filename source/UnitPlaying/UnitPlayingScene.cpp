@@ -10,7 +10,7 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	, levelUnit(levelUnit)
 	, filename(filename)
 {
-	createStandardMenu(context + ' ' + levelUnit);
+	createStandardMenu(context + ' ' + levelUnit, true);
 	if ( ! unit.load(filename) )
 		qDebug() << "Error: unit not loaded" << filename;
 	// else unit.print();
