@@ -4,6 +4,9 @@
 #include "LayoutItem.h"
 #include <QGraphicsItem>
 
+/// Some disabled elements are shown transparent, this is the default opacity
+const qreal defaultDisabledOpacity = 0.2;
+
 template <typename GraphicsType>
 class ScenicElement : public GraphicsType, public LayoutItem
 {

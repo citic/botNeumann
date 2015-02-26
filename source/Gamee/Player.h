@@ -21,6 +21,8 @@ class Player : public QObject
 	inline const QString& getNickname() const { return nickname; }
 	/// Save an entry for this player on settings
 	bool save();
+	/// Returns true if this player completed the unit with the given id (or filename)
+	bool hasCompletedUnit(const QString& filename);
 };
 
 #endif // PLAYER_H

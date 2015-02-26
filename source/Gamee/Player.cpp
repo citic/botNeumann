@@ -23,3 +23,10 @@ bool Player::save()
 	}
 	return true;
 }
+
+bool Player::hasCompletedUnit(const QString& filename)
+{
+	QSettings settings;
+	const QString& key = "Players/" + nickname + '/' + filename + "Completed";
+	return settings.value(key, false).toBool();
+}

@@ -17,6 +17,8 @@ class UnitSelectionScene : public GameScene
 	QString context;
 	/// Loads the unit list for the given context
 	UnitManager unitManager;
+	/// Used to set enable the first no completed unit during the load of the scene
+	bool currentUnitEnabled;
 
   public:
 	/// Constructor

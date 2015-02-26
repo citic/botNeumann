@@ -1,7 +1,10 @@
+#include "BotNeumannApp.h"
 #include "LinearLayout.h"
+#include "Player.h"
 #include "Prop.h"
 #include "SvgButton.h"
 #include "UnitSelectionScene.h"
+#include <QFileInfo>
 
 // Default width percent of the pneumatic tube of the whole unit
 const qreal tubeWidthPercent = 0.43;
@@ -11,6 +14,7 @@ const qreal chipWidthPercent = 1.0 - tubeWidthPercent;
 UnitSelectionScene::UnitSelectionScene(const QString& context, Stage* stage, QGraphicsItem* parent)
 	: GameScene("unit_selection", stage, parent)
 	, context(context)
+	, currentUnitEnabled(true)
 {
 	createStandardMenu(context);
 	createLevelsUnits();
@@ -75,17 +79,26 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 	//qreal averageUnitWidth = qMax(1.0 / (unitCountInLevel + tubeWidthPercent), 0.19);
 	qreal averageUnitWidth = 1.0 / (unitCountInLevel);
 
+	// The chip and its state depends on the status the current player has reached for it
+	const QString& unitId = QFileInfo(filename).baseName();
+	bool playerCompletedUnit = BotNeumannApp::getInstance()->getCurrentPlayer()->hasCompletedUnit(unitId);
+
 	// Add a pneumatic tube
 	Prop* pneumaticTube = new Prop(":/unit_selection/unit_selection/air_tube_short.svg", this);
 	pneumaticTube->setMargins(0.3, 0.0, 0.3);
 	levelLayout->addItem(pneumaticTube, tubeWidthPercent * averageUnitWidth);
+	if ( ! currentUnitEnabled ) pneumaticTube->setOpacity(defaultDisabledOpacity);
 
 	// Add the chip
 	const QString& label = QString("%1-%2").arg(levelIndex + 1).arg(unitIndex + 1);
-	QString buttonBackground(":/unit_selection/unit_selection/chip_damaged.svg");
+	QString buttonBackground(playerCompletedUnit ? ":/unit_selection/unit_selection/chip_restored.svg" : ":/unit_selection/unit_selection/chip_damaged.svg");
 	SvgButton* button = new SvgButton(buttonBackground, this, label);
 	button->setMargins(0.0);
 	levelLayout->addItem(button, chipWidthPercent * averageUnitWidth);
+
+	// The button will be enabled if player completed the unit it or it is the first not completed
+	button->setEnabled(currentUnitEnabled);
+	if ( ! playerCompletedUnit ) currentUnitEnabled = false;
 
 	// Each button represents an unit. When the button is pressed, the respective unit should be
 	// loaded, pass the filename by a QObject's dynamic property
