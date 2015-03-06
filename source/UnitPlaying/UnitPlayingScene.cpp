@@ -41,6 +41,15 @@ void UnitPlayingScene::finishedEnteringStage()
 	codeEditorDockWidget->setCode(code);
 }
 
+void UnitPlayingScene::infoButtonPressed()
+{
+	// Create a dialog showing information about this level
+	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
+	Q_ASSERT(mainWindow);
+	// ToDo: get active language
+	mainWindow->toggleInfoDialog( unit.getId(), unit.getDescription("es") );
+}
+
 void UnitPlayingScene::backButtonPressed()
 {
 	emit showUnitSelectionScene(context, false);

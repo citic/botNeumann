@@ -5,6 +5,7 @@
 
 class BotNeumannDirector;
 class CodeEditorDockWidget;
+class InfoDialog;
 class Scene;
 class Stage;
 class QDockWidget;
@@ -26,6 +27,8 @@ class MainWindow : public QMainWindow
 	CodeEditorDockWidget* codeEditor;
 	/// Knows what to do when we need change from one scene to another
 	BotNeumannDirector* director;
+	/// The same info dialog is used in several scenes of the game
+	InfoDialog* infoDialog;
 
   public:
 	/// Constructor
@@ -34,6 +37,12 @@ class MainWindow : public QMainWindow
 	virtual ~MainWindow();
 	/// Get access to the CodeEditor, required by UnitPlayingScene
 	inline CodeEditorDockWidget* getCodeEditorDockWidget() const { return codeEditor; }
+	/// Shows the info dialog with the given information
+	void showInfoDialog(const QString& title, const QString& htmlInfo);
+	/// Hides the info dialog
+	void hideInfoDialog();
+	/// Shows or hides the info dialog
+	void toggleInfoDialog(const QString& title, const QString& htmlInfo);
 
   protected:
 	/// Create the control where scenes are shown and shows the first scene

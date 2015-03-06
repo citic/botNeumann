@@ -21,6 +21,7 @@ SOURCES += \
 	source/BotNeumannApp.cpp \
 	source/BotNeumannDirector.cpp \
 	source/Common/GameScene.cpp \
+	source/Common/InfoDialog.cpp \
 	source/Common/PlayerStatus.cpp \
 	source/Gamee/Actor.cpp \
 	source/Gamee/Director.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
 	source/BotNeumannDirector.h \
 	source/Common.h \
 	source/Common/GameScene.h \
+	source/Common/InfoDialog.h \
 	source/Common/PlayerStatus.h \
 	source/Gamee/Actor.h \
 	source/Gamee/Director.h \
@@ -86,4 +88,5 @@ RESOURCES += \
 	units/training/training.qrc
 
 FORMS += \
-	source/GameMenu/PlayerManagerDialog.ui
+	source/GameMenu/PlayerManagerDialog.ui \
+	source/Common/InfoDialog.ui

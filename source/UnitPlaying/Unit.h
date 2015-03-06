@@ -71,6 +71,8 @@ class Unit : public QObject
 	inline int getTimeout() const { return timeout; }
 	/// Task description in one or several languages
 	inline const Descriptions& getDescriptions() const { return descriptions; }
+	/// Get the description for the given language, it it does not exist, returns the default
+	const QString getDescription(const QString& language) const;
 	/// Partial solution or initial code provided in botnu xml file
 	inline const QString& getInitialCode() const { return initialCode; }
 	/// A solution to the problem asked

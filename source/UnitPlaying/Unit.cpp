@@ -39,6 +39,15 @@ bool Unit::load(const QString& filename)
 	return xmlReader.error() == false;
 }
 
+const QString Unit::getDescription(const QString& language) const
+{
+	if ( descriptions.contains(language) )
+		return descriptions.value(language);
+	if ( descriptions.size() > 0 )
+		return descriptions.constBegin().value();
+	return QString();
+}
+
 void Unit::print()
 {
 	qDebug() << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "timeout:" << timeout;

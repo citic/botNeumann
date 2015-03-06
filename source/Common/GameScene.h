@@ -50,7 +50,7 @@ class GameScene : public Scene
 	/// Called when the Player section is pressed
 	void playerStatusPressed();
 	/// Called when user press the Information button
-	void infoButtonPressed();
+	virtual void infoButtonPressed();
 	/// Called when user press the Rewards button
 	void rewardsButtonPressed();
 	/// Called when user press the Config button

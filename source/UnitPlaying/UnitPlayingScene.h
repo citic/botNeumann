@@ -41,6 +41,8 @@ class UnitPlayingScene : public GameScene
 	void showUnitSelectionScene(const QString& context, bool forward);
 
   protected slots:
+	/// Called when user press the Information button
+	virtual void infoButtonPressed() override;
 	/// Called when the Back button is pressed
 	virtual void backButtonPressed() override;
 };

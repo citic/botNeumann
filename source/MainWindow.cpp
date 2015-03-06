@@ -1,5 +1,6 @@
 #include "BotNeumannDirector.h"
 #include "CodeEditorDockWidget.h"
+#include "InfoDialog.h"
 #include "MainWindow.h"
 #include "Stage.h"
 #include <QDockWidget>
@@ -13,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 	, stage(nullptr)
 	, codeEditor(nullptr)
 	, director(nullptr)
+	, infoDialog(nullptr)
 {
 	// Set basic properties for the main window
 	setObjectName("MainWindow"); // used to save preferences
@@ -35,6 +37,27 @@ MainWindow::~MainWindow()
 {
 	// Store dimensions for next time
 	saveSettings();
+}
+
+void MainWindow::showInfoDialog(const QString& title, const QString& htmlInfo)
+{
+	if ( ! infoDialog )
+		infoDialog = new InfoDialog(title, htmlInfo, this);
+	infoDialog->show();
+}
+
+void MainWindow::hideInfoDialog()
+{
+	if ( infoDialog )
+		infoDialog->hide();
+}
+
+void MainWindow::toggleInfoDialog(const QString& title, const QString& htmlInfo)
+{
+	if ( ! infoDialog )
+		return showInfoDialog(title, htmlInfo);
+	infoDialog->setInfo(title, htmlInfo);
+	infoDialog->isVisible() ? infoDialog->hide() : infoDialog->show();
 }
 
 void MainWindow::setupStage()
