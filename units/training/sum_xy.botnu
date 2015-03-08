@@ -3,7 +3,7 @@
 
 
 <!-- id must unique in the world, file must be named as same as id, ram is in bytes, timeout: in seconds -->
-<botnu id="sum_xy" version="1.0" ram="1024" heap-segment="no" cpu-cores="1" robots="1" timeout="1">
+<botnu id="sum_xy" version="1.0" ram="512" heap-segment="no" cpu-cores="1" robots="1" timeout="1">
 
 
 

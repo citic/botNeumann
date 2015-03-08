@@ -33,6 +33,7 @@
 | image | description | preview |
 |---|---|---|
 | background | fondo del laboratorio | ![background](unit_playing/background.svg) |
+| shelves_closed | Heap segment hidden to avoid cognitive overload at first levels. | ![shelves_closed](unit_playing/shelves_closed.svg) |
 | shelf_left | extremo izquierdo del estante. | ![shelf_left](unit_playing/shelf_left.svg) |
 | shelf_middle | parte interna/del medio del estante. Se repite en mosaico para generar el ancho del estante. | ![shelf_middle](unit_playing/shelf_middle.svg) |
 | shelf_right | parte derecha del estante. | ![shelf_right](unit_playing/shelf_right.svg) |
