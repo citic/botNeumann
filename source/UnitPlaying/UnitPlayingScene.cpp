@@ -1,5 +1,6 @@
 #include "CodeEditorDockWidget.h"
 #include "CpuCores.h"
+#include "DataSegment.h"
 #include "HeapSegment.h"
 #include "MainWindow.h"
 #include "Stage.h"
@@ -100,6 +101,6 @@ void UnitPlayingScene::createDataSegment()
 	// Cpu cores are represented as available workstations
 	Q_ASSERT(layout);
 	Q_ASSERT(dataSegment == nullptr);
-//	dataSegment = new DataSegment(unit.getRamSize(), this);
-//	this->layout->addLayout(dataSegment, 0.119791667);
+	dataSegment = new DataSegment(unit.getRamSize(), this);
+	this->layout->addLayout(dataSegment, 0.119791667);
 }

@@ -46,6 +46,7 @@ SOURCES += \
 	source/UnitPlaying/CodeEditorDockWidget.cpp \
 	source/UnitPlaying/CpuCore.cpp \
 	source/UnitPlaying/CpuCores.cpp \
+	source/UnitPlaying/DataSegment.cpp \
 	source/UnitPlaying/HeapSegment.cpp \
 	source/UnitPlaying/SyntaxHighlighter.cpp \
 	source/UnitPlaying/Unit.cpp \
@@ -82,6 +83,7 @@ HEADERS += \
 	source/UnitPlaying/CodeEditorDockWidget.h \
 	source/UnitPlaying/CpuCore.h \
 	source/UnitPlaying/CpuCores.h \
+	source/UnitPlaying/DataSegment.h \
 	source/UnitPlaying/HeapSegment.h \
 	source/UnitPlaying/SyntaxHighlighter.h \
 	source/UnitPlaying/Unit.h \
