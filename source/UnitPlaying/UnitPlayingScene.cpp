@@ -79,7 +79,7 @@ void UnitPlayingScene::createHeapSegment()
 	Q_ASSERT(layout);
 	Q_ASSERT(heapSegment == nullptr);
 	heapSegment = new HeapSegment(unit.requiresHeapSegment(), unit.getRamSize(), this);
-	this->layout->addLayout(heapSegment, 0.38);
+	this->layout->addLayout(heapSegment, 0.463);
 }
 
 void UnitPlayingScene::createCpuCores()
