@@ -31,10 +31,12 @@ class Unit : public QObject
 	/// supposed to use new/delete operators or malloc/free functions. By default is false, to
 	/// avoid showing the heap segment to trainees
 	bool heapSegment;
-	/// Number of CPU or cores required to resolve this unit. It affects the number of workstations
+	/// Number of CPU or cores available to resolve this unit. It affects the number of workstations
 	/// available in the stage set. Robots represent execution threads. A program can have less or
 	/// more threads than CPU cores, but it is not wise. Default value is 1 cpu
 	int cpuCores;
+	/// The number of execution threads (robots) required to solve the problem
+	int minThreads;
 	/// Maximum number of seconds to consider an solution valid
 	/// a value <= 0 stands for infinite
 	int timeout;
@@ -65,8 +67,10 @@ class Unit : public QObject
 	inline int getRamSize() const { return ramSize; }
 	/// True if this unit/exercise requires heap-segment (dynamic memory)
 	inline bool requiresHeapSegment() const { return heapSegment; }
-	/// Number of CPU or cores required to resolve this unit.
+	/// Number of CPU or cores available to resolve this unit.
 	inline int getCpuCores() const { return cpuCores; }
+	/// Mininum number of execution threads (robots) required to resolve this unit.
+	inline int getMinThreads() const { return minThreads; }
 	/// Maximum number of seconds to consider an solution valid
 	inline int getTimeout() const { return timeout; }
 	/// Task description in one or several languages

@@ -20,6 +20,7 @@
 	<qresource prefix="/unit_playing">
 		<file>unit_playing/background.svg</file>
 		<file>unit_playing/shelves_closed.svg</file>
+		<file>unit_playing/workstation.svg</file>
 	</qresource>
 	<qresource prefix="/unit_playing/data_types"/>
 	<qresource prefix="/unit_selection">

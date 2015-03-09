@@ -13,7 +13,7 @@ class HeapSegment : public LinearLayout
 	/// If false the Heap Segment is not required for the current unit. It will be
 	/// hidden to avoid cognitive load
 	bool inUse;
-	/// Size of this Heap Segment in bytes. It is specified by the .botnu unit
+	/// Size of this Heap Segment in bytes. It is derived from the .botnu unit
 	size_t size;
 	/// To reparent children to this scene
 	Scene* scene;

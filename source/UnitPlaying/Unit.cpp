@@ -6,13 +6,16 @@
 /// If not ram size is specified in .botnu file, this constant will be assumed
 static const int defaultRamSize = 1024; // bytes
 /// If not cpu-cores is specified in .botnu file, this constant will be assumed
-static const int defaultCpuCores = 1; // bytes
+static const int defaultCpuCores = 4;
+/// If not 'threads' is specified in .botnu file, this constant will be assumed
+static const int defaultMinThreads = 1;
 
 Unit::Unit(QObject* parent)
 	: QObject(parent)
 	, ramSize(defaultRamSize)
 	, heapSegment(false)
 	, cpuCores(defaultCpuCores)
+	, minThreads(defaultMinThreads)
 	, timeout(0)
 {
 }
@@ -50,7 +53,7 @@ const QString Unit::getDescription(const QString& language) const
 
 void Unit::print()
 {
-	qDebug() << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "timeout:" << timeout;
+	qDebug() << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "min-theads:" << minThreads << "timeout:" << timeout;
 	for ( Descriptions::const_iterator itr = descriptions.begin(); itr != descriptions.end(); ++itr )
 		qDebug() << "description lang:" << itr.key() << "value:" << itr.value();
 	qDebug() << "initial-code:" << initialCode;
@@ -90,6 +93,8 @@ bool Unit::loadDocumentAttributes(QXmlStreamReader& xmlReader)
 	heapSegment = xmlReader.attributes().value("heap-segment") == "yes";
 	cpuCores = xmlReader.attributes().value("cpu-cores").toInt();
 	if ( cpuCores <= 0 ) cpuCores = defaultCpuCores;
+	minThreads = xmlReader.attributes().value("min-threads").toInt();
+	if ( minThreads <= 0 ) minThreads = defaultMinThreads;
 	timeout = xmlReader.attributes().value("timeout").toInt();
 
 	// ToDo: validate the attributes values

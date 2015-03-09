@@ -1,4 +1,5 @@
 #include "CodeEditorDockWidget.h"
+#include "CpuCores.h"
 #include "HeapSegment.h"
 #include "MainWindow.h"
 #include "Stage.h"
@@ -84,6 +85,14 @@ void UnitPlayingScene::createHeapSegment()
 
 void UnitPlayingScene::createCpuCores()
 {
+	// Cpu cores are represented as available workstations
+	Q_ASSERT(layout);
+	Q_ASSERT(cpuCores == nullptr);
+	cpuCores = new CpuCores(unit.getCpuCores(), unit.getMinThreads(), unit.getRamSize(), this);
+	this->layout->addLayout(cpuCores, 0.463);
+
+	// Leave a small separation to generate a sensation of space (the floor can be seen)
+	this->layout->addStretch(0.019);
 }
 
 void UnitPlayingScene::createDataSegment()
