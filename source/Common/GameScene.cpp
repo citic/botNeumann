@@ -31,7 +31,7 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 
 	// Create an exclusive layout for the standard menu
 	LinearLayout* menuLayout = new LinearLayout(Qt::Horizontal);
-	this->layout->addLayout(menuLayout, 0.09);
+	this->layout->addLayout(menuLayout, 0.08333333333333);
 	const qreal buttonWidthPercent = 0.06;
 
 	// Back button

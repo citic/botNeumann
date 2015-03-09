@@ -5,9 +5,9 @@
 #include "Unit.h"
 
 class CodeEditorDockWidget;
+class CpuCores;
 class DataSegment;
 class HeapSegment;
-class CpuCores;
 
 class UnitPlayingScene : public GameScene
 {
