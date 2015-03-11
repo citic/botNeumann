@@ -1,22 +1,34 @@
+#include "Common.h"
 #include "Unit.h"
 #include <QDebug>
 #include <QFile>
 #include <QXmlStreamReader>
 
-/// If not ram size is specified in .botnu file, this constant will be assumed
-static const int defaultRamSize = 1024; // bytes
+/// If not architecture is specified in .botnu file, this constant will be assumed
+static const int defaultArchitecture = 32; // bits
+/// Supported architectures by botNeumann
+static const int supportedArchitectures[] = {16, 32, 64};
 /// If not cpu-cores is specified in .botnu file, this constant will be assumed
 static const int defaultCpuCores = 4;
-/// If not 'threads' is specified in .botnu file, this constant will be assumed
+/// If not ram size is specified in .botnu file, this constant will be assumed
+static const size_t defaultRamSize = 4096; // bytes
+/// If not 'min-threads' is specified in .botnu file, this constant will be assumed
 static const int defaultMinThreads = 1;
+/// If not 'max-threads' is specified in .botnu file, this constant will be assumed
+static const int defaultMaxThreads = 0;
+/// If not 'timeout' is specified in .botnu file, this constant will be assumed
+static const int defaultTimeout = 1; // seconds
 
 Unit::Unit(QObject* parent)
 	: QObject(parent)
+	, architecture(defaultArchitecture)
+	, cpuCores(defaultCpuCores)
 	, ramSize(defaultRamSize)
 	, heapSegment(false)
-	, cpuCores(defaultCpuCores)
 	, minThreads(defaultMinThreads)
+	, maxThreads(defaultMaxThreads)
 	, timeout(0)
+	, ignoreWhitespace(true)
 {
 }
 
@@ -49,6 +61,15 @@ const QString Unit::getDescription(const QString& language) const
 	if ( descriptions.size() > 0 )
 		return descriptions.constBegin().value();
 	return QString();
+}
+
+bool Unit::isArchitectureSupported(int bits)
+{
+	for (size_t i = 0; i < sizeof(supportedArchitectures)/sizeof(supportedArchitectures[0]); ++i)
+		if ( bits == supportedArchitectures[i] )
+			return true;
+
+	return false;
 }
 
 void Unit::print()
@@ -86,16 +107,43 @@ bool Unit::loadDocument(QXmlStreamReader& xmlReader)
 
 bool Unit::loadDocumentAttributes(QXmlStreamReader& xmlReader)
 {
+	// Id and versions
 	id = xmlReader.attributes().value("id").toString();
 	version = xmlReader.attributes().value("version").toString();
-	ramSize = xmlReader.attributes().value("ram").toInt();
-	if ( ramSize <= 0 ) ramSize = defaultRamSize;
-	heapSegment = xmlReader.attributes().value("heap-segment") == "yes";
+	botnuVersion = xmlReader.attributes().value("botnu-version").toString();
+
+	// Architecture
+	architecture = xmlReader.attributes().value("architecture").toInt();
+	if ( ! isArchitectureSupported(architecture) ) architecture = defaultArchitecture;
+
+	// CPU cores
 	cpuCores = xmlReader.attributes().value("cpu-cores").toInt();
 	if ( cpuCores <= 0 ) cpuCores = defaultCpuCores;
+
+	// RAM size, it must be at least 2^(7 + cores) bytes
+	size_t requiredRam = ipow(2, 7 + cpuCores);
+	ramSize = xmlReader.attributes().value("ram").toULongLong();
+	if ( ramSize < requiredRam )
+	{
+		qDebug() << QString("%1.botnu: insufficient RAM %2B, assumed %3B").arg(id).arg(ramSize).arg(requiredRam);
+		ramSize = requiredRam;
+	}
+
+	// Use heap segment?
+	heapSegment = xmlReader.attributes().value("heap-segment") != "no";
+
+	// Execution threads
 	minThreads = xmlReader.attributes().value("min-threads").toInt();
 	if ( minThreads <= 0 ) minThreads = defaultMinThreads;
+	maxThreads = xmlReader.attributes().value("max-threads").toInt();
+	if ( maxThreads < 0 ) maxThreads = defaultMaxThreads;
+
+	// Timeout
 	timeout = xmlReader.attributes().value("timeout").toInt();
+	if ( timeout < 0 ) timeout = defaultTimeout;
+
+	// Ignore whitespace when comparing output
+	ignoreWhitespace = xmlReader.attributes().value("ignore-whitespace") != "no";
 
 	// ToDo: validate the attributes values
 	return true;
