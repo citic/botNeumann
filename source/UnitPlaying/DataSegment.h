@@ -1,23 +1,15 @@
 #ifndef DATASEGMENT_H
 #define DATASEGMENT_H
 
-#include "LinearLayout.h"
+#include "MemorySegment.h"
 
-class Scene;
-
-class DataSegment : public LinearLayout
+class DataSegment : public MemorySegment
 {
 	Q_DISABLE_COPY(DataSegment)
 
-  protected:
-	/// Size in bytes of this segment. It is derived from the .botnu unit
-	size_t dataSegmentSize;
-	/// To reparent children to this scene
-	Scene* scene;
-
   public:
 	/// Constructor
-	explicit DataSegment(size_t dataSegmentSize, Scene* scene);
+	explicit DataSegment(Unit& unit, Scene* scene);
 	/// Destructor
 	~DataSegment();
 

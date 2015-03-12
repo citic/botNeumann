@@ -80,7 +80,7 @@ void UnitPlayingScene::createHeapSegment()
 {
 	Q_ASSERT(layout);
 	Q_ASSERT(heapSegment == nullptr);
-	heapSegment = new HeapSegment(unit.requiresHeapSegment(), unit.getRamSize(), this);
+	heapSegment = new HeapSegment(unit, this);
 	this->layout->addLayout(heapSegment, 0.463541667);
 }
 
@@ -89,7 +89,7 @@ void UnitPlayingScene::createCpuCores()
 	// Cpu cores are represented as available workstations
 	Q_ASSERT(layout);
 	Q_ASSERT(cpuCores == nullptr);
-	cpuCores = new CpuCores(unit.getCpuCores(), unit.getMinThreads(), unit.getRamSize(), this);
+	cpuCores = new CpuCores(unit, this);
 	this->layout->addLayout(cpuCores, 0.315104167);
 
 	// Leave a small separation to generate a sensation of space (the floor can be seen)
@@ -101,6 +101,6 @@ void UnitPlayingScene::createDataSegment()
 	// Cpu cores are represented as available workstations
 	Q_ASSERT(layout);
 	Q_ASSERT(dataSegment == nullptr);
-	dataSegment = new DataSegment(unit.getRamSize(), this);
+	dataSegment = new DataSegment(unit, this);
 	this->layout->addLayout(dataSegment, 0.119791667);
 }

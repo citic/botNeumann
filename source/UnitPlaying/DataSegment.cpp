@@ -2,10 +2,8 @@
 #include "Prop.h"
 #include "Scene.h"
 
-DataSegment::DataSegment(size_t dataSegmentSize, Scene* scene)
-	: LinearLayout(Qt::Vertical)
-	, dataSegmentSize(dataSegmentSize)
-	, scene(scene)
+DataSegment::DataSegment(Unit& unit, Scene* scene)
+	: MemorySegment(unit, scene, Qt::Vertical)
 {
 	buildDataSegment();
 	buildStandardInOut();

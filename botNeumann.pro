@@ -48,6 +48,7 @@ SOURCES += \
 	source/UnitPlaying/CpuCores.cpp \
 	source/UnitPlaying/DataSegment.cpp \
 	source/UnitPlaying/HeapSegment.cpp \
+	source/UnitPlaying/MemorySegment.cpp \
 	source/UnitPlaying/SyntaxHighlighter.cpp \
 	source/UnitPlaying/Unit.cpp \
 	source/UnitPlaying/UnitPlayingScene.cpp \
@@ -85,6 +86,7 @@ HEADERS += \
 	source/UnitPlaying/CpuCores.h \
 	source/UnitPlaying/DataSegment.h \
 	source/UnitPlaying/HeapSegment.h \
+	source/UnitPlaying/MemorySegment.h \
 	source/UnitPlaying/SyntaxHighlighter.h \
 	source/UnitPlaying/Unit.h \
 	source/UnitPlaying/UnitPlayingScene.h \

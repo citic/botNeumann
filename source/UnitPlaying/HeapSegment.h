@@ -1,28 +1,17 @@
 #ifndef HEAPSEGMENT_H
 #define HEAPSEGMENT_H
 
-#include "LinearLayout.h"
+#include "MemorySegment.h"
 
-class Scene;
-
-class HeapSegment : public LinearLayout
+class HeapSegment : public MemorySegment
 {
 	Q_DISABLE_COPY(HeapSegment)
-
-  protected:
-	/// If false the Heap Segment is not required for the current unit. It will be
-	/// hidden to avoid cognitive load
-	bool inUse;
-	/// Size of this Heap Segment in bytes. It is derived from the .botnu unit
-	size_t size;
-	/// To reparent children to this scene
-	Scene* scene;
 
   public:
 	/// Constructor
 	/// @param inUse if false the Heap Segment is not required for the current unit. It will be
 	/// hidden to avoid cognitive load
-	explicit HeapSegment(bool inUse, size_t ramSize, Scene* scene);
+	explicit HeapSegment(Unit& unit, Scene* scene);
 	/// Destructor
 	~HeapSegment();
 
@@ -30,6 +19,7 @@ class HeapSegment : public LinearLayout
 	/// Builds the segment with space to store variables (shelves)
 	void buildSegment();
 	/// Closes the doors of the segment, because it is not used by the current unit
+	/// It will be hidden to avoid cognitive load
 	void hideSegment();
 };
 

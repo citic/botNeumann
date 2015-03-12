@@ -1,14 +1,12 @@
 #include "HeapSegment.h"
 #include "Prop.h"
 #include "Scene.h"
+#include "Unit.h"
 
-HeapSegment::HeapSegment(bool inUse, size_t ramSize, Scene* scene)
-	: LinearLayout(Qt::Vertical)
-	, inUse(inUse)
-	, size(ramSize * 0.58) // Heap Segment is 58% of total RAM due to screen space limitations
-	, scene(scene)
+HeapSegment::HeapSegment(Unit& unit, Scene* scene)
+	: MemorySegment(unit, scene, Qt::Vertical)
 {
-	inUse ? buildSegment() : hideSegment();
+	unit.requiresHeapSegment() ? buildSegment() : hideSegment();
 }
 
 HeapSegment::~HeapSegment()

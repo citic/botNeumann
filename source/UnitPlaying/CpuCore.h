@@ -1,24 +1,19 @@
 #ifndef CPUCORE_H
 #define CPUCORE_H
 
-#include "LinearLayout.h"
+#include "MemorySegment.h"
 
-class Scene;
-
-class CpuCore : public LinearLayout
+class CpuCore : public MemorySegment
 {
 	Q_DISABLE_COPY(CpuCore)
 
   protected:
-	/// Size in bytes of stack segments that will be hold in this CPU core.
-	/// It is derived from the .botnu unit
-	size_t stackSegmentSize;
-	/// To reparent children to this scene
-	Scene* scene;
+	/// Number or index of this CPU core, starting from 0
+	int cpuCoreNumber;
 
   public:
 	/// Constructor
-	explicit CpuCore(size_t stackSegmentSize, Scene* scene);
+	explicit CpuCore(int cpuCoreNumber, Unit& unit, Scene* scene);
 	/// Destructor
 	~CpuCore();
 
