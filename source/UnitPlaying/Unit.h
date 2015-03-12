@@ -60,11 +60,11 @@ class Unit : public QObject
 	/// Task description in one or several languages
 	Descriptions descriptions;
 	/// Partial solution or initial code provided in botnu xml file
-	QString initialCode;
+	QStringList initialCodes;
 	/// A solution to the problem asked
 	QStringList solutions;
 	/// Code to generate test cases
-	QString generator;
+	QStringList generators;
 	/// Test cases provided in .botnu file, they are pairs of input/ouput text
 	TestCases testCases;
 
@@ -84,6 +84,8 @@ class Unit : public QObject
 	inline const QString& getBotnuVersion() const { return botnuVersion; }
 	/// Get the number of bits of the simulated architecture (32 or 64)
 	inline int getArchitecture() const { return architecture; }
+	/// Returns true if the architecture of the given number of bits are supported by botNeumann
+	static bool isArchitectureSupported(int bits);
 	/// RAM memory limit to run
 	inline int getRamSize() const { return ramSize; }
 	/// True if this unit/exercise requires heap-segment (dynamic memory)
@@ -96,20 +98,26 @@ class Unit : public QObject
 	inline int getTimeout() const { return timeout; }
 	/// True if player solution output must be compared ignoring whitespace against the answer
 	inline bool shouldIgnoreWhitespace() const { return ignoreWhitespace; }
+
+  public:
 	/// Task description in one or several languages
 	inline const Descriptions& getDescriptions() const { return descriptions; }
 	/// Get the description for the given language, it it does not exist, returns the default
 	const QString getDescription(const QString& language) const;
 	/// Partial solution or initial code provided in botnu xml file
-	inline const QString& getInitialCode() const { return initialCode; }
+	inline const QStringList& getInitialCodes() const { return initialCodes; }
+	/// Gets a random selected initial code
+	QString getARandomInitialCode() const;
 	/// A solution to the problem asked
 	inline const QStringList& getSolutions() const { return solutions; }
+	/// Gets a random selected solution
+	QString getARandomSolution() const;
 	/// Code to generate test cases
-	inline const QString& getGenerator() const { return generator; }
+	inline const QStringList& getGenerators() const { return generators; }
+	/// Gets a random selected generator
+	QString getARandomGenerator() const;
 	/// Test cases provided in .botnu file, they are pairs of input/ouput text
 	inline const TestCases& getTestCases() const { return testCases; }
-	/// Returns true if the architecture of the given number of bits are supported by botNeumann
-	static bool isArchitectureSupported(int bits);
 	/// For debugging purposes
 	void print();
 

@@ -20,6 +20,9 @@ BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	setWindowIcon(QIcon(":/game_logo.svg"));
   #endif
 
+	// Set the seed for generating random numbers. ToDo: change it for <random>
+	qsrand(time(nullptr));
+
 	// Default font for the game
 	robotFontName = loadFont(":/fonts/fonts/tenby_five.otf");
 	monospacedFontName = loadFont(":/fonts/fonts/liberation_mono_regular.ttf");

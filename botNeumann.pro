@@ -98,3 +98,7 @@ RESOURCES += \
 FORMS += \
 	source/GameMenu/PlayerManagerDialog.ui \
 	source/Common/InfoDialog.ui
+
+OTHER_FILES += \
+	units/botnu-1.0.dtd \
+

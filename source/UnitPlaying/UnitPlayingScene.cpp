@@ -48,7 +48,7 @@ void UnitPlayingScene::finishedEnteringStage()
 
 	// ToDo: Implement player information
 	QString code;// = player->codeForUnit(unit.getId());
-	if ( code.isEmpty() ) code = unit.getInitialCode();
+	if ( code.isEmpty() ) code = unit.getARandomInitialCode();
 	codeSegment->setCode(code);
 }
 

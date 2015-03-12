@@ -56,15 +56,6 @@ bool Unit::load(const QString& filename)
 	return xmlReader.error() == false;
 }
 
-const QString Unit::getDescription(const QString& language) const
-{
-	if ( descriptions.contains(language) )
-		return descriptions.value(language);
-	if ( descriptions.size() > 0 )
-		return descriptions.constBegin().value();
-	return QString();
-}
-
 bool Unit::isArchitectureSupported(int bits)
 {
 	for (size_t i = 0; i < sizeof(supportedArchitectures)/sizeof(supportedArchitectures[0]); ++i)
@@ -74,15 +65,39 @@ bool Unit::isArchitectureSupported(int bits)
 	return false;
 }
 
+const QString Unit::getDescription(const QString& language) const
+{
+	if ( descriptions.contains(language) )
+		return descriptions.value(language);
+	if ( descriptions.size() > 0 )
+		return descriptions.constBegin().value();
+	return QString();
+}
+
+QString Unit::getARandomInitialCode() const
+{
+	return initialCodes.size() > 0 ? initialCodes[qrand() % initialCodes.size()] : QString();
+}
+
+QString Unit::getARandomSolution() const
+{
+	return solutions.size() > 0 ? solutions[qrand() % solutions.size()] : QString();
+}
+
+QString Unit::getARandomGenerator() const
+{
+	return generators.size() > 0 ? generators[qrand() % generators.size()] : QString();
+}
+
 void Unit::print()
 {
 	qDebug() << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "min-theads:" << minThreads << "timeout:" << timeout;
 	for ( Descriptions::const_iterator itr = descriptions.begin(); itr != descriptions.end(); ++itr )
 		qDebug() << "description lang:" << itr.key() << "value:" << itr.value();
-	qDebug() << "initial-code:" << initialCode;
+	qDebug() << "initial-code:" << initialCodes;
 	for ( int i = 0; i < solutions.size(); ++i )
 		qDebug() << "solution:" << solutions[i];
-	qDebug() << "generator:" << generator;
+	qDebug() << "generator:" << generators;
 	for ( int i = 0; i < testCases.size(); ++i )
 		qDebug() << "test case input:" << testCases[i].first << "test case output:" << testCases[i].second;
 }
@@ -158,11 +173,11 @@ bool Unit::loadDocumentChild(QXmlStreamReader& xmlReader)
 	if ( xmlReader.name() == "description" )
 		descriptions.insert(xmlReader.attributes().value("lang").toString(), xmlReader.readElementText());
 	else if ( xmlReader.name() == "initial-code" )
-		initialCode = xmlReader.readElementText();
+		initialCodes.append( xmlReader.readElementText() );
 	else if ( xmlReader.name() == "solution" )
 		solutions.append( xmlReader.readElementText() );
 	else if ( xmlReader.name() == "generator" )
-		generator = xmlReader.readElementText();
+		generators.append( xmlReader.readElementText() );
 	else if ( xmlReader.name() == "test-case" )
 		loadTestCase(xmlReader);
 	else
