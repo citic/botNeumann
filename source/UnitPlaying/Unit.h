@@ -9,6 +9,10 @@
 
 class QXmlStreamReader;
 
+/// The size in bytes of the largest data type. It must not be sliced in visualization
+/// It is represented by 'a' in the math model. The default is a double value (8 bytes)
+static const int largestDataTypeSize = sizeof(double); // bytes
+
 class Unit : public QObject
 {
 	Q_OBJECT
@@ -67,6 +71,11 @@ class Unit : public QObject
 	QStringList generators;
 	/// Test cases provided in .botnu file, they are pairs of input/ouput text
 	TestCases testCases;
+	/// Number of columns in the memory distribution model (k). It is calculated after loading the
+	/// unit from the botnu xml file
+	size_t columns;
+	/// Visible rows of the stack segment (sv)
+	size_t stackSegmentVisibleRows;
 
   public:
 	/// Constructor
@@ -121,6 +130,74 @@ class Unit : public QObject
 	/// For debugging purposes
 	void print();
 
+  public: // Memory distribution model
+	/// Rv: bytes
+	inline size_t getVisibleRam() const { return 7 * ramSize / 15; }
+	/// Ri: bytes
+	inline size_t getInvisibleRam() const { return 8 * ramSize / 15; }
+	/// a: bytes
+	inline size_t getLargestDataType() const { return largestDataTypeSize; }
+	/// k: columns
+	inline size_t getColums() const { return columns; }
+	/// kc: colums/core
+	inline size_t getColumsPerCore() const { return columns / cpuCores; }
+	/// r: rows
+	inline size_t getRows() const { return 15 * stackSegmentVisibleRows / 2; }
+	/// rv: rows
+	inline size_t getVisibleRows() const { return 7 * stackSegmentVisibleRows / 2; }
+	/// ri: rows
+	inline size_t getInvisibleRows() const { return 4 * stackSegmentVisibleRows; }
+	/// Converts complete rows to bytes
+	inline size_t rowsToBytes(size_t rows) const { return rows * columns * largestDataTypeSize; }
+
+	/// h
+	inline size_t getHeapSegmentRows() const { return 2 * stackSegmentVisibleRows; }
+	/// hb
+	inline size_t getHeapSegmentStartRow() const { return 0; }
+	/// H
+	inline size_t getHeapSegmentSize() const { return rowsToBytes(getHeapSegmentRows()); }
+	/// Hb
+	inline size_t getHeapSegmentStartByte() const { return 0; }
+
+	/// s: rows
+	inline size_t getStackSegmentEntireRows() const { return getStackSegmentVisibleRows() + getStackSegmentInvisibleRows(); }
+	/// S: bytes
+	inline size_t getStackSegmentEntireSize() const { return rowsToBytes(getStackSegmentEntireRows()); }
+	/// Sb: byte
+	inline size_t getStackSegmentStartByte() const { return getHeapSegmentSize(); }
+	/// sv: rows
+	inline size_t getStackSegmentVisibleRows() const { return stackSegmentVisibleRows; }
+	/// Sv: bytes
+	inline size_t getStackSegmentVisibleSize() const { return rowsToBytes(getStackSegmentVisibleRows()); }
+	/// svb: byte
+	inline size_t getStackSegmentVisibleStartRow() const { return getHeapSegmentRows(); }
+	/// si: rows
+	inline size_t getStackSegmentInvisibleRows() const { return 4 * stackSegmentVisibleRows; }
+	/// Si: bytes
+	inline size_t getStackSegmentInvisibleSize() const { return rowsToBytes(getStackSegmentInvisibleRows()); }
+
+	/// Sc: bytes
+	inline size_t getCoreEntireSize() const { return getStackSegmentEntireSize() / cpuCores; }
+	/// Scb: byte
+	inline size_t getCoreStartByte(int core) const { return getStackSegmentStartByte() + core * getCoreEntireSize(); }
+	/// Svc: bytes
+	inline size_t getCoreVisibleSize() const { return getStackSegmentVisibleSize() / cpuCores; }
+	/// Svcb: byte
+	inline size_t getCoreVisibleStartByte(int core) const { return getCoreStartByte(core); }
+	/// Sic: bytes
+	inline size_t getCoreInvisibleSize() const { return getStackSegmentInvisibleSize() / cpuCores; }
+	/// Sicb: byte
+	inline size_t getCoreInvisibleStartByte(int core) const { return getCoreStartByte(core) + getCoreVisibleSize(); }
+
+	/// d: rows. Data segment has sv/2 rows, but if sv is 1, data segment should have a least 1 row
+	inline size_t getDataSegmentRows() const { return stackSegmentVisibleRows % 2 ? (stackSegmentVisibleRows + 1) / 2 : stackSegmentVisibleRows / 2; }
+	/// db: row
+	inline size_t getDataSegmentStartRow() const { return getStackSegmentVisibleStartRow() + getStackSegmentVisibleRows(); }
+	/// D: bytes
+	inline size_t getDataSegmentSize() const { return rowsToBytes(getDataSegmentRows()); }
+	/// Db: byte
+	inline size_t getDataSegmentStartByte() const { return getStackSegmentStartByte() + getStackSegmentEntireSize(); }
+
   protected:
 	/// Load the document element (root node) and direct descendants
 	bool loadDocument(QXmlStreamReader& xmlReader);
@@ -131,6 +208,8 @@ class Unit : public QObject
 	bool loadDocumentChild(QXmlStreamReader& xmlReader);
 	/// Load a test case pair of input/ouput data
 	bool loadTestCase(QXmlStreamReader& xmlReader);
+	/// Distributes the memory among the memory segments
+	void distributeMemory();
 };
 
 #endif // UNIT_H

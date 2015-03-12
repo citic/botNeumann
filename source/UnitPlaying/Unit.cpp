@@ -1,13 +1,11 @@
 #include "Unit.h"
+#include <cmath>
 #include <QDebug>
 #include <QFile>
 #include <QXmlStreamReader>
 
 /// If not architecture is specified in .botnu file, this constant will be assumed
 static const int defaultArchitecture = 32; // bits
-/// The size in bytes of the largest data type. It must not be sliced in visualization
-/// It is represented by 'a' in the math model. The default is a double value (8 bytes)
-static const int largestDataType = sizeof(double); // bytes
 /// Supported architectures by botNeumann
 static const int supportedArchitectures[] = {16, 32, 64};
 /// If not cpu-cores is specified in .botnu file, this constant will be assumed
@@ -31,6 +29,8 @@ Unit::Unit(QObject* parent)
 	, maxThreads(defaultMaxThreads)
 	, timeout(0)
 	, ignoreWhitespace(true)
+	, columns(0)
+	, stackSegmentVisibleRows(0)
 {
 }
 
@@ -52,6 +52,7 @@ bool Unit::load(const QString& filename)
 	xmlReader.setDevice(&file);
 
 	loadDocument(xmlReader);
+	distributeMemory();
 
 	return xmlReader.error() == false;
 }
@@ -138,7 +139,7 @@ bool Unit::loadDocumentAttributes(QXmlStreamReader& xmlReader)
 	if ( cpuCores <= 0 ) cpuCores = defaultCpuCores;
 
 	// RAM size, it must be at least max(45/28*a*c^2, 256) bytes
-	size_t requiredRam = 45 * largestDataType * cpuCores * cpuCores / 28 + 1;
+	size_t requiredRam = 45 * largestDataTypeSize * cpuCores * cpuCores / 28 + 1;
 	if ( requiredRam < 256 ) requiredRam = 256;
 	ramSize = xmlReader.attributes().value("ram").toULongLong();
 	if ( ramSize < requiredRam )
@@ -202,4 +203,14 @@ bool Unit::loadTestCase(QXmlStreamReader& xmlReader)
 
 	testCases.append( QPair<QString, QString>(input, output) );
 	return true;
+}
+
+void Unit::distributeMemory()
+{
+	// Number of columns
+	double k = sqrt(28.0 * ramSize / (45.0 * largestDataTypeSize));
+	columns = size_t(k / cpuCores) * cpuCores;
+
+	// Visible rows of the stack segment
+	stackSegmentVisibleRows = sqrt(ramSize / (35.0 * largestDataTypeSize));
 }
