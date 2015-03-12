@@ -1,4 +1,3 @@
-#include "Common.h"
 #include "Unit.h"
 #include <QDebug>
 #include <QFile>
@@ -6,12 +5,15 @@
 
 /// If not architecture is specified in .botnu file, this constant will be assumed
 static const int defaultArchitecture = 32; // bits
+/// The size in bytes of the largest data type. It must not be sliced in visualization
+/// It is represented by 'a' in the math model. The default is a double value (8 bytes)
+static const int largestDataType = sizeof(double); // bytes
 /// Supported architectures by botNeumann
 static const int supportedArchitectures[] = {16, 32, 64};
 /// If not cpu-cores is specified in .botnu file, this constant will be assumed
 static const int defaultCpuCores = 4;
 /// If not ram size is specified in .botnu file, this constant will be assumed
-static const size_t defaultRamSize = 4096; // bytes
+static const size_t defaultRamSize = 1024; // bytes
 /// If not 'min-threads' is specified in .botnu file, this constant will be assumed
 static const int defaultMinThreads = 1;
 /// If not 'max-threads' is specified in .botnu file, this constant will be assumed
@@ -120,8 +122,9 @@ bool Unit::loadDocumentAttributes(QXmlStreamReader& xmlReader)
 	cpuCores = xmlReader.attributes().value("cpu-cores").toInt();
 	if ( cpuCores <= 0 ) cpuCores = defaultCpuCores;
 
-	// RAM size, it must be at least 2^(7 + cores) bytes
-	size_t requiredRam = ipow(2, 7 + cpuCores);
+	// RAM size, it must be at least max(45/28*a*c^2, 256) bytes
+	size_t requiredRam = 45 * largestDataType * cpuCores * cpuCores / 28 + 1;
+	if ( requiredRam < 256 ) requiredRam = 256;
 	ramSize = xmlReader.attributes().value("ram").toULongLong();
 	if ( ramSize < requiredRam )
 	{
