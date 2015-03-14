@@ -20,6 +20,8 @@ class ScenicElement : public GraphicsType, public LayoutItem
 		: GraphicsType(textOrFilename, parentItem) { }
 	/// Used to differentiate between pure-layout items and scenic elements
 	virtual bool isScenicElement() const override { return true; }
+	/// Forwards the z-value used by layout items to QGraphicItem family
+	virtual void setZ(qreal z) override { GraphicsType::setZValue(z); }
 	/// Resize this element
 	/// This method is called each time the Stage and Scene has been resized
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) override

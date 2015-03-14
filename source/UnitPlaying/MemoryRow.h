@@ -49,6 +49,8 @@ class MemoryRow : public LinearLayout
   protected:
 	/// Build the shelves and labels
 	void buildMemoryRow();
+	/// Build labels for memory addresses
+	void buildMemoryAddresses();
 };
 
 #endif // MEMORYROW_H

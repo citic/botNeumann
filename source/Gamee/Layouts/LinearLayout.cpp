@@ -16,20 +16,30 @@ void LinearLayout::resize(qreal left, qreal top, qreal width, qreal height)
 
 	if ( orientation == Qt::Horizontal )
 	{
-		for ( int i = 0; i < items.size(); ++i )
+		qreal reset = left;
+		for (ItemsType::iterator itr = items.begin(); itr != items.end(); ++itr )
 		{
-			qreal extend = width * items[i]->getProportion();
-			items[i]->resize(left, top, extend, height);
-			left += extend;
+			left = reset;
+			for ( int i = 0; i < itr.value().size(); ++i )
+			{
+				qreal extend = width * itr.value()[i]->getProportion();
+				itr.value()[i]->resize(left, top, extend, height);
+				left += extend;
+			}
 		}
 	}
 	else
 	{
-		for ( int i = 0; i < items.size(); ++i )
+		qreal reset = top;
+		for (ItemsType::iterator itr = items.begin(); itr != items.end(); ++itr )
 		{
-			qreal extend = height * items[i]->getProportion();
-			items[i]->resize(left, top, width, extend);
-			top += extend;
+			top = reset;
+			for ( int i = 0; i < itr.value().size(); ++i )
+			{
+				qreal extend = height * itr.value()[i]->getProportion();
+				itr.value()[i]->resize(left, top, width, extend);
+				top += extend;
+			}
 		}
 	}
 }

@@ -17,16 +17,16 @@ HeapSegment::~HeapSegment()
 #include <QDebug>
 void HeapSegment::buildSegment()
 {
-	size_t rows = unit.getHeapSegmentRows();
-	size_t rowStart = unit.getHeapSegmentStartByte();
-	size_t rowSize = unit.getHeapSegmentSize() / rows;
+	size_t rowCount = unit.getHeapSegmentRows();
+	size_t rowStartByte = unit.getHeapSegmentStartByte();
+	size_t rowSize = unit.getHeapSegmentSize() / rowCount;
 
-	qDebug() << "Heap segment rows:" << rows << "size:" << unit.getHeapSegmentSize();
-	for (size_t i = 0; i < rows; ++i)
+	qDebug() << "Heap segment rows:" << rowCount << "size:" << rowSize;
+	for (size_t i = 0; i < rowCount; ++i)
 	{
-		MemoryRow* memoryRow = new MemoryRow(rowStart, rowSize, scene);
-		addItem(memoryRow, 1.0 / rows);
-		rowStart += rowSize;
+		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene);
+		addItem(memoryRow, 1.0 / rowCount);
+		rowStartByte += rowSize;
 	}
 }
 
