@@ -26,6 +26,7 @@ class ScenicElement : public GraphicsType, public LayoutItem
 	{
 		applyMargins(left, top, width, height);
 		GraphicsType::setPos(left, top);
+		GraphicsType::prepareGeometryChange();
 		qreal sw = width / GraphicsType::boundingRect().width();
 		qreal sh = height / GraphicsType::boundingRect().height();
 		GraphicsType::setTransform(QTransform().scale(sw, sh));
