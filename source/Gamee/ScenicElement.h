@@ -31,6 +31,7 @@ class ScenicElement : public GraphicsType, public LayoutItem
 		GraphicsType::prepareGeometryChange();
 		qreal sw = width / GraphicsType::boundingRect().width();
 		qreal sh = height / GraphicsType::boundingRect().height();
+		if ( maintainAspectRatio ) sw = sh = qMin(sw, sh);
 		GraphicsType::setTransform(QTransform().scale(sw, sh));
 	}
 };

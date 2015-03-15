@@ -97,6 +97,10 @@ void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
 	rewardsButton->setMargins(0.15, 0.2, 0.15, 0.2);
 	configButton->setMargins(0.15, 0.4, 0.15, 0.0);
 
+	infoButton->makeMaintainAspectRatio(true);
+	rewardsButton->makeMaintainAspectRatio(true);
+	configButton->makeMaintainAspectRatio(true);
+
 	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
 	connect(rewardsButton, SIGNAL(pressed()), this, SLOT(rewardsButtonPressed()));
 	connect(configButton, SIGNAL(pressed()), this, SLOT(configButtonPressed()));
