@@ -3,7 +3,6 @@
 LayoutItem::LayoutItem(qreal proportion)
 	: proportion(proportion)
 	, margins{0}
-	, maintainAspectRatio(false)
 	, floating(false)
 {
 }

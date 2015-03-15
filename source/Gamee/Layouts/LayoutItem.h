@@ -15,8 +15,6 @@ class LayoutItem
 	qreal proportion;
 	/// Percent of extension of each margin of this item
 	qreal margins[marginCount];
-	/// True if this item must maintain aspect ratio when resized
-	bool maintainAspectRatio;
 	/// True if this item is floating over other items
 	bool floating;
 
@@ -51,9 +49,6 @@ class LayoutItem
 	inline qreal getMarginRight() const { return margins[marginRight]; }
 	inline qreal getMarginBottom() const { return margins[marginBottom]; }
 	inline qreal getMarginLeft() const { return margins[marginLeft]; }
-	/// Locks the aspect ratio of this item
-	inline bool isMaintainingAspectRatio() const { return maintainAspectRatio; }
-	inline void makeMaintainAspectRatio(bool newState = true) { maintainAspectRatio = newState; }
 	/// True if the item can float over other items
 	inline bool isFloating() const { return floating; }
 	inline void makeFloat(bool newState = true) { floating = newState; }
