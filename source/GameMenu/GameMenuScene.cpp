@@ -29,7 +29,7 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	Prop* robot = new Prop(":/game_menu/game_menu/robot.svg", this);
 	robot->setMargins(0.2);
 	centralLayout->addItem(robot, 0.5);
-	robot->makeMaintainAspectRatio(true);
+	robot->alignCenter();
 	robot->makeFloat(true);
 	centralLayout->addStretch(0.5);
 
@@ -97,9 +97,9 @@ void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
 	rewardsButton->setMargins(0.15, 0.2, 0.15, 0.2);
 	configButton->setMargins(0.15, 0.4, 0.15, 0.0);
 
-	infoButton->makeMaintainAspectRatio(true);
-	rewardsButton->makeMaintainAspectRatio(true);
-	configButton->makeMaintainAspectRatio(true);
+	infoButton->alignCenter();
+	rewardsButton->alignCenter();
+	configButton->alignCenter();
 
 	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
 	connect(rewardsButton, SIGNAL(pressed()), this, SLOT(rewardsButtonPressed()));

@@ -13,8 +13,6 @@ class ScenicElement : public GraphicsType, public LayoutItem
 	Q_DISABLE_COPY(ScenicElement)
 
   protected:
-	/// True if this item must maintain aspect ratio when resized
-	bool maintainAspectRatio;
 	/// Aligns the contents of this item adjusting its left or right margins automatically
 	Qt::Alignment alignment;
 
@@ -22,14 +20,12 @@ class ScenicElement : public GraphicsType, public LayoutItem
 	/// Constructor
 	explicit ScenicElement(QGraphicsItem* parentItem)
 		: GraphicsType(parentItem)
-		, maintainAspectRatio(false)
 		, alignment(Qt::AlignJustify)
 	{
 	}
 	/// Creates an actor with the given svg filename
 	explicit ScenicElement(const QString& textOrFilename, QGraphicsItem* parentItem)
 		: GraphicsType(textOrFilename, parentItem)
-		, maintainAspectRatio(false)
 		, alignment(Qt::AlignJustify)
 	{
 	}
@@ -37,17 +33,12 @@ class ScenicElement : public GraphicsType, public LayoutItem
 	virtual bool isScenicElement() const override { return true; }
 	/// Forwards the z-value used by layout items to QGraphicItem family
 	virtual void setZ(qreal z) override { GraphicsType::setZValue(z); }
-	/// Locks the aspect ratio of this item
-	inline bool isMaintainingAspectRatio() const { return maintainAspectRatio; }
-	void makeMaintainAspectRatio(bool newState = true, bool centerInField = true)
-	{
-		maintainAspectRatio = newState;
-		if ( centerInField ) center();
-	}
 	/// Aligns the contents of this item adjusting its left or right margins automatically
 	inline void setAlignment(Qt::Alignment alignment) { this->alignment = alignment; }
 	inline const Qt::Alignment& getAlignment() const { return alignment; }
-	inline void center() { this->alignment = Qt::AlignHCenter | Qt::AlignVCenter; }
+	inline void alignLeft() { this->alignment = Qt::AlignLeft | Qt::AlignVCenter; }
+	inline void alignCenter() { this->alignment = Qt::AlignHCenter | Qt::AlignVCenter; }
+	inline void alignRight() { this->alignment = Qt::AlignRight | Qt::AlignVCenter; }
 	/// Resize this element
 	/// This method is called each time the Stage and Scene has been resized
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) override

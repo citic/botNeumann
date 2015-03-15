@@ -36,25 +36,25 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 
 	// Back button
 	this->backButton = new SvgButton(":/button_back.svg", this);
-	this->backButton->makeMaintainAspectRatio(true);
+	this->backButton->alignCenter();
 	menuLayout->addItem(backButton, buttonWidthPercent);
 	connect(backButton, SIGNAL(pressed()), this, SLOT(backButtonPressed()));
 
 	// Game title
 	this->gameTitle = new Prop(":/game_title.svg", this);
-	this->gameTitle->makeMaintainAspectRatio(true);
+	this->gameTitle->alignLeft();
 	menuLayout->addItem(gameTitle, 0.32);
 	menuLayout->addStretch(0.084);
 
 	// Info button
 	this->infoButton = new SvgButton(":/button_information.svg", this);
-	this->infoButton->makeMaintainAspectRatio(true);
+	this->infoButton->alignCenter();
 	menuLayout->addItem(infoButton, buttonWidthPercent);
 	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
 
 	// Scene title
 	this->sceneTitle = new LabelButton(title, this);
-	this->sceneTitle->makeMaintainAspectRatio(true);
+	this->sceneTitle->alignLeft();
 	menuLayout->addItem(sceneTitle, 0.17);
 	connect(sceneTitle, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
 	menuLayout->addStretch(0.084);
@@ -69,14 +69,14 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 	if ( enableCodeEditorToggle )
 	{
 		this->codeEditorToggle = new SvgButton(":/button_code_editor.svg", this);
-		this->codeEditorToggle->makeMaintainAspectRatio(true);
+		this->codeEditorToggle->alignCenter();
 		menuLayout->addItem(codeEditorToggle, buttonWidthPercent);
 		connect(codeEditorToggle, SIGNAL(pressed()), this, SLOT(codeEditorTogglePressed()));
 	}
 
 	// Config button
 	this->configButton = new SvgButton(":/button_config.svg", this);
-	this->configButton->makeMaintainAspectRatio(true);
+	this->configButton->alignCenter();
 	menuLayout->addItem(configButton, buttonWidthPercent);
 	connect(configButton, SIGNAL(pressed()), this, SLOT(configButtonPressed()));
 
