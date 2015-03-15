@@ -25,6 +25,8 @@
 		<file>unit_playing/shelf_middle.svg</file>
 		<file>unit_playing/shelf_right.svg</file>
 		<file>unit_playing/shelves_closed.svg</file>
+		<file>unit_playing/tube_in.svg</file>
+		<file>unit_playing/tube_out.svg</file>
 		<file>unit_playing/workstation.svg</file>
 	</qresource>
 	<qresource prefix="/unit_playing/data_types"/>
