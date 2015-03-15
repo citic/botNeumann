@@ -20,6 +20,7 @@
 	<qresource prefix="/unit_playing">
 		<file>unit_playing/background.svg</file>
 		<file>unit_playing/shared_table.svg</file>
+		<file>unit_playing/shelf_interface.svg</file>
 		<file>unit_playing/shelf_left.svg</file>
 		<file>unit_playing/shelf_middle.svg</file>
 		<file>unit_playing/shelf_right.svg</file>

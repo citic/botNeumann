@@ -14,20 +14,27 @@ HeapSegment::~HeapSegment()
 {
 }
 
-#include <QDebug>
 void HeapSegment::buildSegment()
 {
 	size_t rowCount = unit.getHeapSegmentRows();
 	size_t rowStartByte = unit.getHeapSegmentStartByte();
 	size_t rowSize = unit.getHeapSegmentSize() / rowCount;
 
-	qDebug() << "Heap segment rows:" << rowCount << "size:" << rowSize;
+	// Each memory row requires a 1 complete row, and the interface 0.5 of these height
+	const double memoryRowProportion = 1.0 / (rowCount + 0.5);
+	const double interfaceProportion = 0.5 / (rowCount + 0.5);
+
+	// Create the memory rows
 	for (size_t i = 0; i < rowCount; ++i)
 	{
 		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene);
-		addItem(memoryRow, 1.0 / rowCount);
+		addItem(memoryRow, memoryRowProportion);
 		rowStartByte += rowSize;
 	}
+
+	// Create the heap segment interface that robots will use to access it
+	Prop* heapInterface = new Prop(":/unit_playing/unit_playing/shelf_interface.svg", scene);
+	addItem(heapInterface, interfaceProportion);
 }
 
 void HeapSegment::hideSegment()
