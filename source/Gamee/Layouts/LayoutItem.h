@@ -37,10 +37,20 @@ class LayoutItem
 	/// This is dirty hack, it is no implemented by other LayoutItems
 	virtual void setZ(qreal) { }
 	/// Set the percent of margin for all the margins
-	void setMargins(qreal sameForAll);
-	void setMargins(qreal topBottom, qreal leftRight);
-	void setMargins(qreal top, qreal leftRight, qreal bottom);
+	inline void setMargins(qreal sameForAll) { setMargins(sameForAll, sameForAll); }
+	inline void setMargins(qreal topBottom, qreal leftRight) { setMargins(topBottom, leftRight, topBottom, leftRight); }
+	inline void setMargins(qreal top, qreal leftRight, qreal bottom) { setMargins(top, leftRight, bottom, leftRight); }
 	void setMargins(qreal top, qreal right, qreal bottom, qreal left);
+	/// Set individual margins
+	inline void setMarginTop(qreal value) { margins[marginTop] = value; }
+	inline void setMarginRight(qreal value) { margins[marginRight] = value; }
+	inline void setMarginBottom(qreal value) { margins[marginBottom] = value; }
+	inline void setMarginLeft(qreal value) { margins[marginLeft] = value; }
+	/// Get access to each margin
+	inline qreal getMarginTop() const { return margins[marginTop]; }
+	inline qreal getMarginRight() const { return margins[marginRight]; }
+	inline qreal getMarginBottom() const { return margins[marginBottom]; }
+	inline qreal getMarginLeft() const { return margins[marginLeft]; }
 	/// Locks the aspect ratio of this item
 	inline bool isMaintainingAspectRatio() const { return maintainAspectRatio; }
 	inline void makeMaintainAspectRatio(bool newState = true) { maintainAspectRatio = newState; }

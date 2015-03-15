@@ -21,6 +21,6 @@ void CpuCores::createCpuCores()
 		CpuCore* cpuCore = new CpuCore(i, unit, scene);
 		this->addLayout( cpuCore, 1.0 / coreCount );
 		// Overlap the workstation separator with the previous one
-		if ( i ) cpuCore->setMargins(0.0, 0.0, 0.0, -0.04105605779343);
+		if ( i ) cpuCore->setMarginLeft(-0.04105605779343);
 	}
 }

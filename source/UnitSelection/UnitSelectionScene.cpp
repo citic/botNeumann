@@ -56,7 +56,7 @@ void UnitSelectionScene::createLevel(int levelIndex, const UnitLevel& level)
 
 	// Position the layout a little bit at the left, to create the sensation of
 	// incomplete air tubes at the beginning and the end
-	levelLayout->setMargins(0.0, 0.0, 0.0, -0.01);
+	levelLayout->setMarginLeft(-0.01);
 
 	// Calculate the average height proportional percent of the remaining scene for
 	// all the leves. 0.1% is the height of the standard menu
