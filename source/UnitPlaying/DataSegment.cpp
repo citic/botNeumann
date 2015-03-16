@@ -23,7 +23,7 @@ void DataSegment::buildDataSegment()
 
 	// Memory rows are over the table
 	size_t rowCount = unit.getDataSegmentRows();
-	size_t rowStartByte = unit.getHeapSegmentStartByte();
+	size_t rowStartByte = unit.getDataSegmentStartByte();
 	size_t rowSize = unit.getDataSegmentSize() / rowCount;
 
 	// Each memory row requires a 1 complete row, and the tubes 1/3 of these height

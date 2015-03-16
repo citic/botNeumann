@@ -5,13 +5,13 @@
 	 width="768.531px" height="92px" viewBox="0 0 768.531 92" enable-background="new 0 0 768.531 92" xml:space="preserve">
 <g id="mesa_comun">
 	<g>
-		<rect x="740.048" y="55.091" fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" width="9.099" height="36.418"/>
-		<rect x="554.113" y="55.091" fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" width="9.099" height="36.418"/>
-		<rect x="359.848" y="55.091" fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" width="9.101" height="36.418"/>
-		<rect x="18.656" y="55.091" fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" width="9.099" height="36.418"/>
-		<rect x="172.23" y="55.091" fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" width="9.099" height="36.418"/>
-		<rect x="0.516" y="18.64" fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" width="767.52" height="64.101"/>
-		<rect x="0.516" y="0.5" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="767.52" height="75.111"/>
+		<rect x="740.048" y="55.091" fill="#909090" stroke="#000000" stroke-miterlimit="10" width="9.099" height="36.418"/>
+		<rect x="554.113" y="55.091" fill="#909090" stroke="#000000" stroke-miterlimit="10" width="9.099" height="36.418"/>
+		<rect x="359.848" y="55.091" fill="#909090" stroke="#000000" stroke-miterlimit="10" width="9.101" height="36.418"/>
+		<rect x="18.656" y="55.091" fill="#909090" stroke="#000000" stroke-miterlimit="10" width="9.099" height="36.418"/>
+		<rect x="172.23" y="55.091" fill="#909090" stroke="#000000" stroke-miterlimit="10" width="9.099" height="36.418"/>
+		<rect x="0.516" y="18.64" fill="#909090" stroke="#000000" stroke-miterlimit="10" width="767.52" height="64.101"/>
+		<rect x="0.516" y="0.5" fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" width="767.52" height="75.111"/>
 	</g>
 </g>
 </svg>
