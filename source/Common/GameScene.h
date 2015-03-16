@@ -9,6 +9,9 @@ class LinearLayout;
 class Prop;
 class SvgButton;
 
+/// The standard menu will require this percent of vertical space on the scene
+const double standardMenuProportion = 0.08333333333333;
+
 class GameScene : public Scene
 {
 	Q_OBJECT

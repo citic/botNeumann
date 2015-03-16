@@ -23,11 +23,14 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	if ( ! unit.load(filename) )
 		qDebug() << "Error: unit not loaded" << filename;
 
+	// Distribute the screen space between each segment according to the number of rows they require
+	double heapSegmentProportion = 0.0, cpuCoresProportion = 0.0, dataSegmentProportion;
+	distributeScreenSpace(heapSegmentProportion, cpuCoresProportion, dataSegmentProportion);
 	// Set up each component of the process/unit
 	createCodeSegment();
-	createHeapSegment();
-	createCpuCores();
-	createDataSegment();
+	createHeapSegment(heapSegmentProportion);
+	createCpuCores(cpuCoresProportion);
+	createDataSegment(dataSegmentProportion);
 }
 
 UnitPlayingScene::~UnitPlayingScene()
@@ -66,6 +69,19 @@ void UnitPlayingScene::backButtonPressed()
 	emit showUnitSelectionScene(context, false);
 }
 
+void UnitPlayingScene::distributeScreenSpace(double& heapSegmentProportion, double& cpuCoresProportion, double& dataSegmentProportion)
+{
+	double heapSegmentRows = unit.getHeapSegmentRows() + 0.5; // 0.5 because the HS interface
+	double cpuCoresRows = unit.getStackSegmentVisibleRows() + 1.1; // 1 robot + space
+	double dataSegmentRows = unit.getDataSegmentRows() + 0.5; // 0.5 = 0.3 in/out tubes + 0.2 table
+	double totalRows = heapSegmentRows + cpuCoresRows + dataSegmentRows;
+	double availableProportion = 1.0 - standardMenuProportion;
+
+	heapSegmentProportion = heapSegmentRows / totalRows * availableProportion;
+	cpuCoresProportion = cpuCoresRows / totalRows * availableProportion;
+	dataSegmentProportion = dataSegmentRows / totalRows * availableProportion;
+}
+
 void UnitPlayingScene::createCodeSegment()
 {
 	// The Code Editor also behaves as the code segment, it is already created by the main window
@@ -76,31 +92,31 @@ void UnitPlayingScene::createCodeSegment()
 	Q_ASSERT(codeSegment);
 }
 
-void UnitPlayingScene::createHeapSegment()
+void UnitPlayingScene::createHeapSegment(double heapSegmentProportion)
 {
 	Q_ASSERT(layout);
 	Q_ASSERT(heapSegment == nullptr);
 	heapSegment = new HeapSegment(unit, this);
-	this->layout->addLayout(heapSegment, 0.463541667);
+	this->layout->addLayout(heapSegment, heapSegmentProportion);
 }
 
-void UnitPlayingScene::createCpuCores()
+void UnitPlayingScene::createCpuCores(double cpuCoresProportion)
 {
 	// Cpu cores are represented as available workstations
 	Q_ASSERT(layout);
 	Q_ASSERT(cpuCores == nullptr);
 	cpuCores = new CpuCores(unit, this);
-	this->layout->addLayout(cpuCores, 0.315104167);
+	this->layout->addLayout(cpuCores, cpuCoresProportion * 0.98);
 
 	// Leave a small separation to generate a sensation of space (the floor can be seen)
-	this->layout->addStretch(0.018229167);
+	this->layout->addStretch(cpuCoresProportion * 0.02);
 }
 
-void UnitPlayingScene::createDataSegment()
+void UnitPlayingScene::createDataSegment(double dataSegmentProportion)
 {
 	// Cpu cores are represented as available workstations
 	Q_ASSERT(layout);
 	Q_ASSERT(dataSegment == nullptr);
 	dataSegment = new DataSegment(unit, this);
-	this->layout->addLayout(dataSegment, 0.119791667);
+	this->layout->addLayout(dataSegment, dataSegmentProportion);
 }

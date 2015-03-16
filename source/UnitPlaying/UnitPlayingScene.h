@@ -66,14 +66,17 @@ class UnitPlayingScene : public GameScene
 	virtual void backButtonPressed() override;
 
   protected:
+	/// Distribute the screen space between each segment according to the number of rows they
+	/// require. The result is the proportion each segment requires
+	void distributeScreenSpace(double& heapSegmentProportion, double& cpuCoresProportion, double& dataSegmentProportion);
 	/// Shows the Code Editor, which switches to Code Segment in run time
 	void createCodeSegment();
 	/// Creates the object in charge of managing the heap segment
-	void createHeapSegment();
+	void createHeapSegment(double heapSegmentProportion);
 	/// Creates the object in charge of managing cpu cores, threads, and stack segments
-	void createCpuCores();
+	void createCpuCores(double cpuCoresProportion);
 	/// Creates the object in charge of managing the two Data Segments
-	void createDataSegment();
+	void createDataSegment(double dataSegmentProportion);
 };
 
 #endif // UNITPLAYINGSCENE_H

@@ -207,10 +207,11 @@ bool Unit::loadTestCase(QXmlStreamReader& xmlReader)
 
 void Unit::distributeMemory()
 {
-	// Number of columns
+	// Total number of columns. It is the same for all segments
 	double k = sqrt(28.0 * ramSize / (45.0 * largestDataTypeSize));
 	columns = size_t(k / cpuCores) * cpuCores;
 
 	// Visible rows of the stack segment
 	stackSegmentVisibleRows = sqrt(ramSize / (35.0 * largestDataTypeSize));
+	qDebug() << "Stack segment visible rows" << stackSegmentVisibleRows << "of" << columns / cpuCores << "columns each";
 }
