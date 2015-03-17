@@ -56,6 +56,10 @@ class LayoutItem
   protected:
 	/// Adjust the given variables reducing the margins
 	void applyMargins(qreal& left, qreal& top, qreal& width, qreal& height);
+	/// Given a margin and the size of the edge it applies, this method returns the actual amount
+	/// of pixels that margin requires. This function considers a margin m between -1 < m < 1 as
+	/// a percentage. Otherwise as an absolute amount of pixels
+	qreal getPixelsForMargin(int margin, qreal edge) const;
 };
 
 #endif // LAYOUTITEM_H

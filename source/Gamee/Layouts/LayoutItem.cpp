@@ -23,13 +23,20 @@ void LayoutItem::applyMargins(qreal& left, qreal& top, qreal& width, qreal& heig
 {
 	// ToDo: avoid reducing margins when there are not enough space
 
-	qreal marginTopHeight = margins[marginTop] * height;
-	qreal marginRightWidth = margins[marginRight] * width;
-	qreal marginBottomHeight = margins[marginBottom] * height;
-	qreal marginLeftWidth = margins[marginLeft] * width;
+	// Calculate each margin in pixes and store the results because they are used twice below
+	qreal marginTopHeight = getPixelsForMargin(marginTop, height);
+	qreal marginRightWidth = getPixelsForMargin(marginRight, width);
+	qreal marginBottomHeight = getPixelsForMargin(marginBottom, height);
+	qreal marginLeftWidth = getPixelsForMargin(marginLeft, width);
 
+	// Reduce the available space according to the number of pixels for each margin
 	left += marginLeftWidth;
 	top += marginTopHeight;
 	width -= marginLeftWidth + marginRightWidth;
 	height -= marginTopHeight + marginBottomHeight;
+}
+
+qreal LayoutItem::getPixelsForMargin(int margin, qreal edge) const
+{
+	return margins[margin] > -1.0 && margins[margin] < 1.0 ? margins[margin] * edge : margins[margin];
 }

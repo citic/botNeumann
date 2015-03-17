@@ -19,7 +19,7 @@ void DataSegment::buildDataSegment()
 	// The background: a shared table
 	Q_ASSERT(scene);
 	Prop* sharedTable = new Prop(":/unit_playing/unit_playing/shared_table.svg", scene);
-	addItem(sharedTable, 1);
+	addItem(sharedTable, 1.0);
 
 	// Memory rows are over the table
 	size_t rowCount = unit.getDataSegmentRows();
@@ -31,25 +31,31 @@ void DataSegment::buildDataSegment()
 	const double sumRowsTubes = (rowCount + stdInOutHeight);
 	const double memoryRowProportion = 1.0 * 74 / 92 / sumRowsTubes;
 	const double stdInOutProportion = stdInOutHeight * 74 / 92 / sumRowsTubes;
-	const double zOverTable = 0.1;
+	const double zContents = 0.1;
+
+	// The background requires the whole segment area, but memory rows and stdin/out pipes must
+	// occupy the content area, that is, they should not cover the border of the background
+	LinearLayout* contentsLayout = new LinearLayout(Qt::Vertical);
+	contentsLayout->setMargins(2.0, 1.0, -3.0, 1.0); // px each
+	addLayout(contentsLayout, 1.0, zContents);
 
 	// Create the memory rows
 	for (size_t i = 0; i < rowCount; ++i)
 	{
 		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene);
-		addItem(memoryRow, memoryRowProportion, zOverTable);
+		contentsLayout->addItem(memoryRow, memoryRowProportion, zContents);
 		rowStartByte += rowSize;
 	}
 
 	// Create the stdin and stdout pipes
-	buildStandardInOut(stdInOutProportion, zOverTable);
+	buildStandardInOut(contentsLayout, stdInOutProportion, zContents);
 }
 
-void DataSegment::buildStandardInOut(const double stdInOutProportion, const double zStdInOut)
+void DataSegment::buildStandardInOut(LinearLayout* contentsLayout, const double stdInOutProportion, const double zStdInOut)
 {
 	// Create an exclusive layout for the standard menu
 	LinearLayout* stdInOutLayout = new LinearLayout(Qt::Horizontal);
-	addLayout(stdInOutLayout, stdInOutProportion, zStdInOut);
+	contentsLayout->addLayout(stdInOutLayout, stdInOutProportion, zStdInOut);
 
 	// First stdin tube. ToDo: swap tube images
 	Prop* inTube = new Prop(":/unit_playing/unit_playing/tube_out.svg", scene);
