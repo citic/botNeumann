@@ -53,6 +53,7 @@ dist/
 build/
 
 # Backup files
+*.backup
 *~.nib
 \#*#
 .#*
@@ -80,3 +81,4 @@ tmp
 assets/*.pdf
 assets/*.png
 assets/game_logo/
+installer/license.xml

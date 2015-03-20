@@ -1,5 +1,6 @@
 #include "BotNeumannApp.h"
 #include "PlayerManager.h"
+#include <ctime>
 #include <QFontDatabase>
 #include <QIcon>
 
