@@ -81,4 +81,7 @@ tmp
 assets/*.pdf
 assets/*.png
 assets/game_logo/
+
+# BitRock installer
 installer/license.xml
+installer/windows/
