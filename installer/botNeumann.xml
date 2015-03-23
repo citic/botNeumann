@@ -1,11 +1,14 @@
 <project>
     <shortName>botNeumann</shortName>
     <fullName>botNeumann</fullName>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <installerFilename>${product_shortname}-${product_version}-${platform_name}.${platform_exec_suffix}</installerFilename>
-    <readmeFile>../README.md</readmeFile>
     <licenseFile>../doc/LICENSE.txt</licenseFile>
-    <logoImage>../doc/img/game_title.png</logoImage>
+    <wrapLicenseFileText>0</wrapLicenseFileText>
+    <leftImage>../assets/game_menu/robot.png</leftImage>
+    <logoImage>../assets/game_logo.png</logoImage>
+	<windowsExecutableIcon>../assets/game_logo.ico</windowsExecutableIcon>
+	<disableSplashScreen>1</disableSplashScreen>
     <componentList>
         <component>
             <name>default</name>

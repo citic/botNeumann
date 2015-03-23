@@ -64,17 +64,17 @@ ignore-whitespace={yes|no}
 -->
 <!ELEMENT botnu (description+, initial-code*, solution*, (generator|test-case)+) >
 <!ATTLIST botnu
-	id					ID			#REQUIRED
-	version				CDATA		"1.0"
-	botnu-version		CDATA		"1.0"
-	architecture    	(32|64)		"32"
-	cpu-cores			CDATA		"4"
-	ram					CDATA		"1024"
-	heap-segment		(yes|no)	"yes"
-	min-threads			CDATA		"1"
-	max-threads			CDATA		"0"
-	timeout				CDATA		"1"
-	ignore-whitespace	(yes|no)	"yes">
+	id                  ID          #REQUIRED
+	version             CDATA       "1.0"
+	botnu-version       CDATA       "1.0"
+	architecture        (32|64)     "32"
+	cpu-cores           CDATA       "4"
+	ram                 CDATA       "1024"
+	heap-segment        (yes|no)    "yes"
+	min-threads         CDATA       "1"
+	max-threads         CDATA       "0"
+	timeout             CDATA       "1"
+	ignore-whitespace   (yes|no)    "yes">
 
 
 <!--

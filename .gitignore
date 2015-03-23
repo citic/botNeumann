@@ -80,6 +80,7 @@ Release.win32/
 tmp
 assets/*.pdf
 assets/*.png
+assets/game_menu/*.png
 assets/game_logo/
 
 # BitRock installer
