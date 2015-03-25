@@ -6,36 +6,13 @@
 	 xml:space="preserve">
 <g>
 	<g>
-		<g>
-			<defs>
-				<rect id="SVGID_1_" x="0" width="15.258" height="47.375"/>
-			</defs>
-			<clipPath id="SVGID_2_">
-				<use xlink:href="#SVGID_1_"  overflow="visible"/>
-			</clipPath>
-			<g id="estante_1_" clip-path="url(#SVGID_2_)">
-				<g>
-					<g>
-						<rect x="7.519" y="-69.026" fill="#5C5C5C" width="753.888" height="273.346"/>
-						<rect x="7.519" y="-28.71" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.133"/>
-						<rect x="7.519" y="19.008" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.135"/>
-						<rect x="7.519" y="66.747" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.022"/>
-						<rect x="7.519" y="114.178" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.225"/>
-						<rect x="7.519" y="160.473" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.232"/>
-					</g>
-					<g>
-						<g id="estante">
-							<path fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" d="M768.01-54.334H0.491v1.773v6.267v40.681v7.117v40.68v7.114
-								v40.681v7.117v40.678v7.119v40.678v7.115v20.271H7.52v-16.574h753.461v16.574h7.028V-53.409V-54.334L768.01-54.334z
-								 M7.52,185.57v-37.905h753.461v37.905H7.52L7.52,185.57z M7.52,136.85v0.924v-37.086h753.461v36.162H7.52L7.52,136.85z
-								 M7.52,89.898v-37.01h753.461l0.097,37.01H7.52L7.52,89.898z M7.52,42.184V5.295h753.461v36.889H7.52L7.52,42.184z
-								 M7.52-5.614v-37.908h753.461v37.908H7.52L7.52-5.614z"/>
-							<rect x="0.49" y="-85.782" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="767.854" height="31.449"/>
-						</g>
-					</g>
-				</g>
-			</g>
-		</g>
+		<rect x="7.566" y="19.188" fill="#F0ECEC" width="7.691" height="22.938"/>
+		<rect x="7.482" y="5.313" fill="#5C5C5C" width="7.775" height="13.563"/>
+		<polygon fill="#C7C7C7" points="15.258,5.313 15.258,0 7.504,0 4.816,0 0,0 0,47.375 4.816,47.375 7.504,47.375 15.258,47.375 
+			15.258,42.063 7.504,42.063 7.504,5.313 		"/>
+		<rect width="1.004" height="47.375"/>
 	</g>
+	<polygon points="15.258,5.783 15.258,4.779 7.971,4.779 7.971,4.779 6.967,4.779 6.967,42.658 7.971,42.658 7.971,42.658 
+		15.258,42.658 15.258,41.654 7.971,41.654 7.971,19.533 15.258,19.533 15.258,18.529 7.971,18.529 7.971,5.783 	"/>
 </g>
 </svg>

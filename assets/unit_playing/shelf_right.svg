@@ -2,36 +2,17 @@
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="shelf_x5F_right" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="15.259px" height="47.375px" viewBox="0 0 15.259 47.375" enable-background="new 0 0 15.259 47.375"
+	 y="0px" width="15.258px" height="47.375px" viewBox="0 0 15.258 47.375" enable-background="new 0 0 15.258 47.375"
 	 xml:space="preserve">
 <g>
-	<defs>
-		<rect id="SVGID_1_" width="15.259" height="47.375"/>
-	</defs>
-	<clipPath id="SVGID_2_">
-		<use xlink:href="#SVGID_1_"  overflow="visible"/>
-	</clipPath>
-	<g id="estante_1_" clip-path="url(#SVGID_2_)">
-		<g>
-			<g>
-				<rect x="-746.148" y="-69.026" fill="#5C5C5C" width="753.888" height="273.346"/>
-				<rect x="-746.148" y="-28.71" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.133"/>
-				<rect x="-746.148" y="19.008" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.135"/>
-				<rect x="-746.148" y="66.747" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.022"/>
-				<rect x="-746.148" y="114.178" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.225"/>
-				<rect x="-746.148" y="160.473" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="753.888" height="31.232"/>
-			</g>
-			<g>
-				<g id="estante">
-					<path fill="#C7C7C7" stroke="#000000" stroke-miterlimit="10" d="M-752.751-54.333v0.924v266.366h7.029v-16.574H7.739v16.574
-						h7.029v-20.271v-7.116v-40.678v-7.118V97.096v-7.117V49.298v-7.115V1.504v-7.117v-40.681v-6.267v-1.773H-752.751z
-						 M7.739,185.57h-753.462v-37.905H7.739V185.57L7.739,185.57z M7.739,136.85h-753.462v-36.162H7.739v37.086V136.85L7.739,136.85
-						z M7.739,89.898h-753.558l0.096-37.009H7.739V89.898L7.739,89.898z M7.739,42.183h-753.462V5.295H7.739V42.183L7.739,42.183z
-						 M7.739-5.614h-753.462v-37.908H7.739V-5.614L7.739-5.614z"/>
-					<rect x="-753.086" y="-85.782" fill="#F0ECEC" stroke="#000000" stroke-miterlimit="10" width="767.855" height="31.449"/>
-				</g>
-			</g>
-		</g>
+	<g>
+		<rect x="0" y="19.188" fill="#F0ECEC" width="7.691" height="22.938"/>
+		<rect x="0" y="5.313" fill="#5C5C5C" width="7.775" height="13.563"/>
+		<polygon fill="#C7C7C7" points="0,5.313 0,0 7.754,0 10.442,0 15.258,0 15.258,47.375 10.442,47.375 7.754,47.375 0,47.375 
+			0,42.063 7.754,42.063 7.754,5.313 		"/>
+		<rect x="14.254" width="1.004" height="47.375"/>
 	</g>
+	<polygon points="0,5.783 0,4.779 7.288,4.779 7.288,4.779 8.292,4.779 8.292,42.658 7.288,42.658 7.288,42.658 0,42.658 0,41.654 
+		7.288,41.654 7.288,19.533 0,19.533 0,18.529 7.288,18.529 7.288,5.783 	"/>
 </g>
 </svg>

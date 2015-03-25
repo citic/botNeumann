@@ -1,83 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   version="1.1"
-   width="15.258"
-   height="47.375"
-   viewBox="0 0 15.258 47.375"
-   id="shelf_x5F_middle"
-   xml:space="preserve"><metadata
-   id="metadata18507"><rdf:RDF><cc:Work
-       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
-   id="defs18505">
-	<defs
-   id="defs18473">
-		<rect
-   width="15.258"
-   height="47.375"
-   x="0"
-   y="0"
-   id="SVGID_1_" />
-	</defs>
-	<clipPath
-   id="SVGID_2_">
-		<use
-   id="use18477"
-   style="overflow:visible"
-   x="0"
-   y="0"
-   width="15.258"
-   height="47.375"
-   xlink:href="#SVGID_1_" />
-	</clipPath>
-	
-
-		
-	</defs>
-
-<g
-   id="layer8" /><path
-   d="m 0,42.194045 15.262814,0"
-   id="path18661"
-   style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /><rect
-   width="15.26"
-   height="4.6768608"
-   x="-1.8692016e-07"
-   y="42.698139"
-   id="rect19171"
-   style="fill:#c7c7c7;fill-opacity:1;stroke:none" /><path
-   d="m 0,19.007 15.262814,0"
-   id="path19173"
-   style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /><rect
-   width="15.26"
-   height="22.185434"
-   x="-1.8692016e-07"
-   y="19.507757"
-   id="rect19175"
-   style="fill:#f0ecec;fill-opacity:1;stroke:none" /><path
-   d="m 0,5.3385916 15.262814,0"
-   id="path19177"
-   style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /><rect
-   width="15.26"
-   height="4.7940454"
-   x="-1.8692016e-07"
-   y="0.0036512166"
-   id="rect19179"
-   style="fill:#c7c7c7;fill-opacity:1;stroke:none" /><rect
-   width="15.26"
-   height="12.707561"
-   x="-1.8692016e-07"
-   y="5.7974396"
-   id="rect19181"
-   style="fill:#5c5c5c;fill-opacity:1;stroke:none" /><path
-   d="m 0,5.2981658 15.262814,0"
-   id="path19183"
-   style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="shelf_x5F_middle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="15.26px" height="47.375px" viewBox="7.63 0 15.26 47.375" enable-background="new 7.63 0 15.26 47.375"
+	 xml:space="preserve">
+<g>
+	<rect x="7.63" fill="#C7C7C7" width="15.26" height="5.25"/>
+	<rect x="7.63" y="42.125" fill="#C7C7C7" width="15.26" height="5.25"/>
+	<rect x="7.63" y="5.344" fill="#5C5C5C" width="15.26" height="13.625"/>
+	<rect x="7.63" y="19.01" fill="#F0ECEC" width="15.26" height="23.208"/>
+	<rect x="7.63" y="4.792" width="15.26" height="0.984"/>
+	<rect x="7.63" y="18.531" width="15.26" height="1"/>
+	<rect x="7.63" y="41.656" width="15.26" height="1"/>
+</g>
+</svg>
