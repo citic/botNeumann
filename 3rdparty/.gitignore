@@ -1,2 +1,5 @@
+*.7z
+*.gz
 *.xz
+*.zip
 llvm*

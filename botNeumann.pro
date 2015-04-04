@@ -2,7 +2,11 @@ QT += core gui svg widgets
 TARGET = botNeumann
 TEMPLATE = app
 CONFIG += c++11
+
+# Application icon. Affects only Mac OS X
 ICON = assets/game_logo.icns
+
+# Executable icon on Microsoft Windows
 RC_ICONS = assets/game_logo.ico
 
 INCLUDEPATH += \
