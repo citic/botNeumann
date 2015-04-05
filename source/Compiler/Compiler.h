@@ -5,6 +5,7 @@
 #include <QStringList>
 
 struct ClangData;
+class Diagnostic;
 
 /**
 	@brief Represents the LLVM compiler. This object receives source files, compiles them and
@@ -19,12 +20,16 @@ class Compiler : public QObject
 	/// Stores the internal structures used by LLVM and Clang to avoid making
 	/// this header dependent of the CLang headers
 	ClangData* clangData;
+	/// List of warnings and errors generated when compiling a piece of code
+	QList<Diagnostic*> diagnostics;
 
   public:
 	/// Constructor
 	explicit Compiler(QObject *parent = nullptr);
 	/// Destructor
 	~Compiler();
+	/// Get access to the list of diagnostics (warnings and errors)
+	inline const QList<Diagnostic*>& getDiagnostics() const { return diagnostics; }
 
   signals:
 	/// Emitted when a compilation process has finished
@@ -38,6 +43,8 @@ class Compiler : public QObject
 	/// Compiles the given set of source files
 	/// @see compile(const QString&)
 	void compile(const QStringList& filenames);
+	/// Erases all information about a compiling. This method is automatically called by compile()
+	void clear();
 };
 
 #endif // COMPILER_H

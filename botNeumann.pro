@@ -28,7 +28,9 @@ SOURCES += \
 	source/Common/GameScene.cpp \
 	source/Common/InfoDialog.cpp \
 	source/Common/PlayerStatus.cpp \
+	source/Compiler/ClangData.cpp \
 	source/Compiler/Compiler.cpp \
+	source/Compiler/Diagnostic.cpp \
 	source/Gamee/Actor.cpp \
 	source/Gamee/Director.cpp \
 	source/Gamee/LabelButton.cpp \
@@ -69,7 +71,9 @@ HEADERS += \
 	source/Common/GameScene.h \
 	source/Common/InfoDialog.h \
 	source/Common/PlayerStatus.h \
+	source/Compiler/ClangData.h \
 	source/Compiler/Compiler.h \
+	source/Compiler/Diagnostic.h \
 	source/Gamee/Actor.h \
 	source/Gamee/Director.h \
 	source/Gamee/LabelButton.h \
