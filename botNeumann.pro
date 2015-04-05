@@ -67,7 +67,7 @@ SOURCES += \
 HEADERS += \
 	source/BotNeumannApp.h \
 	source/BotNeumannDirector.h \
-	source/Common.h \
+	source/Common/Common.h \
 	source/Common/GameScene.h \
 	source/Common/InfoDialog.h \
 	source/Common/PlayerStatus.h \

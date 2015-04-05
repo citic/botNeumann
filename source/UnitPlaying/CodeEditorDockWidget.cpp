@@ -3,6 +3,7 @@
 #include "SyntaxHighlighter.h"
 #include <QAction>
 #include <QMainWindow>
+#include <QSlider>
 #include <QTextEdit>
 #include <QToolBar>
 
@@ -74,6 +75,18 @@ void CodeEditorDockWidget::setupToolbar()
 	stopAction->setEnabled(false);
 	connect(stopAction, SIGNAL(triggered()), this, SLOT(stopTriggered()));
 	toolBar->addAction(stopAction);
+
+	// Create the control that allows user to set the speed of the visualization
+	visualizationSpeedSlider = new QSlider(Qt::Horizontal, this);
+	visualizationSpeedSlider->setToolTip(tr("Visualization speed"));
+	visualizationSpeedSlider->setFocusPolicy(Qt::WheelFocus);
+	visualizationSpeedSlider->setTickPosition(QSlider::TicksBelow);
+	visualizationSpeedSlider->setTickInterval(20);
+	visualizationSpeedSlider->setValue(50);
+	visualizationSpeedSlider->setSingleStep(1);
+	visualizationSpeedSlider->setPageStep(10);
+	connect(visualizationSpeedSlider, SIGNAL(valueChanged(int)), this, SLOT(visualizationSpeedChanged(int)));
+	toolBar->addWidget(visualizationSpeedSlider);
 }
 
 void CodeEditorDockWidget::setupCodeEditor()
@@ -120,4 +133,9 @@ void CodeEditorDockWidget::stepOutTriggered()
 void CodeEditorDockWidget::stopTriggered()
 {
 	qDebug() << "Stop triggered";
+}
+
+void CodeEditorDockWidget::visualizationSpeedChanged(int speed)
+{
+	qDebug() << "Visualization speed" << speed;
 }

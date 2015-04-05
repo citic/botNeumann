@@ -5,6 +5,7 @@
 
 class QAction;
 class QMainWindow;
+class QSlider;
 class QTextEdit;
 class SyntaxHighlighter;
 
@@ -29,6 +30,8 @@ class CodeEditorDockWidget : public QDockWidget
 	QAction* stepOutAction;
 	/// Stops the visualisation of the code, if it is running
 	QAction* stopAction;
+	/// Allows user to set the speed of the visualization
+	QSlider* visualizationSpeedSlider;
 
   public:
 	/// Constructor
@@ -58,6 +61,8 @@ class CodeEditorDockWidget : public QDockWidget
 	void stepOutTriggered();
 	/// Called when the stop button is pressed
 	void stopTriggered();
+	/// Called when the visualization speed is changed by user
+	void visualizationSpeedChanged(int speed);
 };
 
 #endif // CODEEDITORDOCKWIDGET_H
