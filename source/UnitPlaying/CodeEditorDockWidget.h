@@ -3,6 +3,8 @@
 
 #include <QDockWidget>
 
+class QAction;
+class QMainWindow;
 class QTextEdit;
 class SyntaxHighlighter;
 
@@ -12,10 +14,21 @@ class CodeEditorDockWidget : public QDockWidget
 	Q_DISABLE_COPY(CodeEditorDockWidget)
 
   protected:
+	/// In order to have a toolbar, the widget of this code editor must be a main window
+	QMainWindow* innerMainWindow;
 	/// Object where the actual source code is shown and edited
 	QTextEdit* codeEditor;
 	/// Store formatting rules for C++
 	SyntaxHighlighter* highlighter;
+	/// Executes and animates the code or pauses it if already running
+	QAction* runOrPauseAction;
+	/// If visualisation is paused, executes the next code statement entering in functions if they
+	/// are defined by user
+	QAction* stepIntoAction;
+	/// If visualisation is paused, executes the next code statement in the current function
+	QAction* stepOutAction;
+	/// Stops the visualisation of the code, if it is running
+	QAction* stopAction;
 
   public:
 	/// Constructor
@@ -28,10 +41,23 @@ class CodeEditorDockWidget : public QDockWidget
 	void setCode(const QString& code);
 
   protected:
+	/// Set up the inner main window
+	void setupInnerWidget();
 	/// Create and set up the tool bar with undo, copy, run, debug and other actions
 	void setupToolbar();
 	/// Create and configure the text editor object
 	void setupCodeEditor();
+
+  protected slots:
+	// ToDo: Move these slots to an Interpreter class
+	/// Called when the run or pause button is pressed
+	void runOrPauseTriggered();
+	/// Called when the step into button is pressed
+	void stepIntoTriggered();
+	/// Called when the step out button is pressed
+	void stepOutTriggered();
+	/// Called when the stop button is pressed
+	void stopTriggered();
 };
 
 #endif // CODEEDITORDOCKWIDGET_H

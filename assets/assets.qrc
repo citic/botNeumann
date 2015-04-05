@@ -19,6 +19,11 @@
 	</qresource>
 	<qresource prefix="/unit_playing">
 		<file>unit_playing/background.svg</file>
+		<!-- <file>unit_playing/button_pause.svg</file> -->
+		<file>unit_playing/button_run.svg</file>
+		<file>unit_playing/button_step_into.svg</file>
+		<!-- <file>unit_playing/button_step_out.svg</file> -->
+		<file>unit_playing/button_stop.svg</file>
 		<file>unit_playing/shared_table.svg</file>
 		<file>unit_playing/shelf_interface.svg</file>
 		<file>unit_playing/shelf_left.svg</file>
