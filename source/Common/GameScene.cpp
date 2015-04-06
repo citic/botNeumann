@@ -1,4 +1,4 @@
-#include "CodeEditorDockWidget.h"
+#include "CodeSegment.h"
 #include "GameScene.h"
 #include "LabelButton.h"
 #include "LinearLayout.h"
@@ -107,9 +107,9 @@ void GameScene::codeEditorTogglePressed()
 {
 	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
 	Q_ASSERT(mainWindow);
-	CodeEditorDockWidget* codeEditorDockWidget = mainWindow->getCodeEditorDockWidget();
-	Q_ASSERT(codeEditorDockWidget);
-	codeEditorDockWidget->setVisible( ! codeEditorDockWidget->isVisible() );
+	CodeSegment* codeSegment = mainWindow->getCodeSegment();
+	Q_ASSERT(codeSegment);
+	codeSegment->setVisible( ! codeSegment->isVisible() );
 }
 
 void GameScene::rewardsButtonPressed()

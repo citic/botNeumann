@@ -1,6 +1,6 @@
 #include "BotNeumannApp.h"
 #include "CodeEditor.h"
-#include "CodeEditorDockWidget.h"
+#include "CodeSegment.h"
 #include "Player.h"
 #include "Unit.h"
 #include <QAction>
@@ -8,7 +8,7 @@
 #include <QSlider>
 #include <QToolBar>
 
-CodeEditorDockWidget::CodeEditorDockWidget(QWidget *parent, Qt::WindowFlags flags)
+CodeSegment::CodeSegment(QWidget *parent, Qt::WindowFlags flags)
 	: QDockWidget(tr("Program"), parent, flags)
 	, innerMainWindow( new QMainWindow(this) )
 {
@@ -19,11 +19,11 @@ CodeEditorDockWidget::CodeEditorDockWidget(QWidget *parent, Qt::WindowFlags flag
 	setupCodeEditor();
 }
 
-CodeEditorDockWidget::~CodeEditorDockWidget()
+CodeSegment::~CodeSegment()
 {
 }
 
-void CodeEditorDockWidget::setupInnerWidget()
+void CodeSegment::setupInnerWidget()
 {
 	// Ask the main window to behave as normal widget, instead of a real main window
 	innerMainWindow->setWindowFlags(Qt::Widget);
@@ -32,7 +32,7 @@ void CodeEditorDockWidget::setupInnerWidget()
 	setWidget(innerMainWindow);
 }
 
-void CodeEditorDockWidget::setupToolbar()
+void CodeSegment::setupToolbar()
 {
 	// Create the toolbar
 	QToolBar* toolBar = innerMainWindow->addToolBar("code");
@@ -82,7 +82,7 @@ void CodeEditorDockWidget::setupToolbar()
 	toolBar->addWidget(visualizationSpeedSlider);
 }
 
-void CodeEditorDockWidget::setupCodeEditor()
+void CodeSegment::setupCodeEditor()
 {
 	// The code editor is a QTextEdit object
 	codeEditor = new CodeEditor(this);
@@ -91,7 +91,7 @@ void CodeEditorDockWidget::setupCodeEditor()
 	innerMainWindow->setCentralWidget(codeEditor);
 }
 
-void CodeEditorDockWidget::loadCodeForUnit(Unit* unit)
+void CodeSegment::loadCodeForUnit(Unit* unit)
 {
 	// ToDo: load from player's preferences the last edited source file for this unit
 	// for this version, only main.cpp is assumed
@@ -102,44 +102,44 @@ void CodeEditorDockWidget::loadCodeForUnit(Unit* unit)
 	codeEditor->loadCodeForUnit(unit, lastEditedFilepath);
 }
 
-void CodeEditorDockWidget::reset()
+void CodeSegment::reset()
 {
 	codeEditor->reset();
 }
 
-QString CodeEditorDockWidget::getPlayerUnitPath(Player* player, Unit* unit)
+QString CodeSegment::getPlayerUnitPath(Player* player, Unit* unit)
 {
 	return player->getLocalDataPath() + '/' + unit->getId();
 }
 
-QString CodeEditorDockWidget::getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename)
+QString CodeSegment::getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename)
 {
 	return getPlayerUnitPath(player, unit) + '/' + basename;
 }
 
 #include <QDebug>
 
-void CodeEditorDockWidget::runOrPauseTriggered()
+void CodeSegment::runOrPauseTriggered()
 {
 	qDebug() << "Run or pause triggered";
 }
 
-void CodeEditorDockWidget::stepIntoTriggered()
+void CodeSegment::stepIntoTriggered()
 {
 	qDebug() << "Step into triggered";
 }
 
-void CodeEditorDockWidget::stepOutTriggered()
+void CodeSegment::stepOutTriggered()
 {
 	qDebug() << "Step out triggered";
 }
 
-void CodeEditorDockWidget::stopTriggered()
+void CodeSegment::stopTriggered()
 {
 	qDebug() << "Stop triggered";
 }
 
-void CodeEditorDockWidget::visualizationSpeedChanged(int speed)
+void CodeSegment::visualizationSpeedChanged(int speed)
 {
 	qDebug() << "Visualization speed" << speed;
 }

@@ -1,5 +1,5 @@
-#ifndef CODEEDITORDOCKWIDGET_H
-#define CODEEDITORDOCKWIDGET_H
+#ifndef CODESEGMENT_H
+#define CODESEGMENT_H
 
 #include <QDockWidget>
 
@@ -21,10 +21,10 @@ class Unit;
 	edit only one of these files at time. Therefore, this class deals with some source files at
 	time, whereas CodeEditor must be notified when the current file has changed.
  */
-class CodeEditorDockWidget : public QDockWidget
+class CodeSegment : public QDockWidget
 {
 	Q_OBJECT
-	Q_DISABLE_COPY(CodeEditorDockWidget)
+	Q_DISABLE_COPY(CodeSegment)
 
   protected:
 	/// In order to have a toolbar, the widget of this code editor must be a main window
@@ -45,9 +45,9 @@ class CodeEditorDockWidget : public QDockWidget
 
   public:
 	/// Constructor
-	explicit CodeEditorDockWidget(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+	explicit CodeSegment(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	/// Destructor
-	virtual ~CodeEditorDockWidget();
+	virtual ~CodeSegment();
 	/// Get access to the code editor
 	inline CodeEditor* getCodeEditor() const { return codeEditor; }
 	/// Restores the last code made by player for the given unit, or the default unit's code if
@@ -87,4 +87,4 @@ class CodeEditorDockWidget : public QDockWidget
 	void visualizationSpeedChanged(int speed);
 };
 
-#endif // CODEEDITORDOCKWIDGET_H
+#endif // CODESEGMENT_H

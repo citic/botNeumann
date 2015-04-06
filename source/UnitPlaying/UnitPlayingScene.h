@@ -4,7 +4,7 @@
 #include "GameScene.h"
 #include "Unit.h"
 
-class CodeEditorDockWidget;
+class CodeSegment;
 class CpuCores;
 class DataSegment;
 class HeapSegment;
@@ -25,7 +25,7 @@ class UnitPlayingScene : public GameScene
 	Unit unit;
 	/// The code editor, allows player to input program code in editing time. At runtime it
 	/// represents the text segment (aka code segment)
-	CodeEditorDockWidget* codeSegment;
+	CodeSegment* codeSegment;
 	/// Segment for storing variables that persist after a function is call. These variables are
 	/// allocated dynamically with new operator or malloc() function family. It is represented in
 	/// botNeumann by shelves at the top of the robot's office

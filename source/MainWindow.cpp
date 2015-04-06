@@ -1,5 +1,5 @@
 #include "BotNeumannDirector.h"
-#include "CodeEditorDockWidget.h"
+#include "CodeSegment.h"
 #include "InfoDialog.h"
 #include "MainWindow.h"
 #include "Stage.h"
@@ -12,7 +12,7 @@
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, stage(nullptr)
-	, codeEditor(nullptr)
+	, codeSegment(nullptr)
 	, director(nullptr)
 	, infoDialog(nullptr)
 {
@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 	setupCodeEditor();
 	restoreSettings();
 	// Sometimes settings restore the codeEditor, but it must be invisible at the beginning
-	codeEditor->setVisible(false);
+	codeSegment->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -77,9 +77,9 @@ void MainWindow::setupStage()
 void MainWindow::setupCodeEditor()
 {
 	// Source code editor is only visible in playing scenes, disabled by default
-	Q_ASSERT(codeEditor == nullptr);
-	codeEditor = new CodeEditorDockWidget(this);
-	addDockWidget(Qt::RightDockWidgetArea, codeEditor);
+	Q_ASSERT(codeSegment == nullptr);
+	codeSegment = new CodeSegment(this);
+	addDockWidget(Qt::RightDockWidgetArea, codeSegment);
 }
 
 void MainWindow::saveSettings()

@@ -1,4 +1,4 @@
-#include "CodeEditorDockWidget.h"
+#include "CodeSegment.h"
 #include "CpuCores.h"
 #include "DataSegment.h"
 #include "HeapSegment.h"
@@ -87,7 +87,7 @@ void UnitPlayingScene::createCodeSegment()
 	// Get a pointer to it, and store for future use
 	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
 	Q_ASSERT(mainWindow);
-	codeSegment = mainWindow->getCodeEditorDockWidget();
+	codeSegment = mainWindow->getCodeSegment();
 	Q_ASSERT(codeSegment);
 }
 

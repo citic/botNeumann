@@ -4,7 +4,7 @@
 #include <QMainWindow>
 
 class BotNeumannDirector;
-class CodeEditorDockWidget;
+class CodeSegment;
 class InfoDialog;
 class Scene;
 class Stage;
@@ -24,7 +24,7 @@ class MainWindow : public QMainWindow
 	Stage* stage;
 	/// Source code editor is shown as a docking widget
 	/// ToDo: implement as a new class inherited from QDockWidget
-	CodeEditorDockWidget* codeEditor;
+	CodeSegment* codeSegment;
 	/// Knows what to do when we need change from one scene to another
 	BotNeumannDirector* director;
 	/// The same info dialog is used in several scenes of the game
@@ -36,7 +36,7 @@ class MainWindow : public QMainWindow
 	/// Destructor
 	virtual ~MainWindow();
 	/// Get access to the CodeEditor, required by UnitPlayingScene
-	inline CodeEditorDockWidget* getCodeEditorDockWidget() const { return codeEditor; }
+	inline CodeSegment* getCodeSegment() const { return codeSegment; }
 	/// Shows the info dialog with the given information
 	void showInfoDialog(const QString& title, const QString& htmlInfo);
 	/// Hides the info dialog
