@@ -51,6 +51,7 @@ SOURCES += \
 	source/GameMenu/PlayerManagerDialog.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
+	source/UnitPlaying/CodeEditor.cpp \
 	source/UnitPlaying/CodeEditorDockWidget.cpp \
 	source/UnitPlaying/CpuCore.cpp \
 	source/UnitPlaying/CpuCores.cpp \
@@ -93,6 +94,7 @@ HEADERS += \
 	source/GameMenu/GameMenuScene.h \
 	source/GameMenu/PlayerManagerDialog.h \
 	source/MainWindow.h \
+	source/UnitPlaying/CodeEditor.h \
 	source/UnitPlaying/CodeEditorDockWidget.h \
 	source/UnitPlaying/CpuCore.h \
 	source/UnitPlaying/CpuCores.h \

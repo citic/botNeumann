@@ -41,6 +41,7 @@ UnitPlayingScene::~UnitPlayingScene()
 void UnitPlayingScene::startLeavingStage()
 {
 	// Hide the code editor when the scene is leaving the stage
+	codeSegment->reset();
 	codeSegment->setVisible(false);
 }
 
@@ -49,10 +50,8 @@ void UnitPlayingScene::finishedEnteringStage()
 	// The scene is ready in the stage after the transition, show the code editor (code segment)
 	codeSegment->setVisible(true);
 
-	// ToDo: Implement player information
-	QString code;// = player->codeForUnit(unit.getId());
-	if ( code.isEmpty() ) code = unit.getARandomInitialCode();
-	codeSegment->setCode(code);
+	// Loads or restore the code for this unit
+	codeSegment->loadCodeForUnit( &unit );
 }
 
 void UnitPlayingScene::infoButtonPressed()

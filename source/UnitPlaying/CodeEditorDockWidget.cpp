@@ -1,14 +1,12 @@
 #include "BotNeumannApp.h"
+#include "CodeEditor.h"
 #include "CodeEditorDockWidget.h"
-#include "SyntaxHighlighter.h"
+#include "Player.h"
+#include "Unit.h"
 #include <QAction>
 #include <QMainWindow>
 #include <QSlider>
-#include <QTextEdit>
 #include <QToolBar>
-
-// A tab is visualized as 3 space characters because screen size is reduced in the game
-const int tabStop = 3;
 
 CodeEditorDockWidget::CodeEditorDockWidget(QWidget *parent, Qt::WindowFlags flags)
 	: QDockWidget(tr("Program"), parent, flags)
@@ -23,11 +21,6 @@ CodeEditorDockWidget::CodeEditorDockWidget(QWidget *parent, Qt::WindowFlags flag
 
 CodeEditorDockWidget::~CodeEditorDockWidget()
 {
-}
-
-void CodeEditorDockWidget::setCode(const QString& code)
-{
-	codeEditor->setPlainText(code);
 }
 
 void CodeEditorDockWidget::setupInnerWidget()
@@ -92,25 +85,36 @@ void CodeEditorDockWidget::setupToolbar()
 void CodeEditorDockWidget::setupCodeEditor()
 {
 	// The code editor is a QTextEdit object
-	codeEditor = new QTextEdit(this);
-
-	// Set the default monospaced font of the operating system
-//	QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-	QFont font(BotNeumannApp::getMonospacedFontName());
-	font.setPointSize(11);
-	font.setStyleHint(QFont::TypeWriter);
-	font.setFixedPitch(true);
-	codeEditor->setFont(font);
-
-	// Make tabs the same size than 4 spaces
-	QFontMetrics metrics(font);
-	codeEditor->setTabStopWidth(tabStop * metrics.width(' '));
-
-	// Create the object that will provide color to C++ code within the editor
-	highlighter = new SyntaxHighlighter(codeEditor->document());
+	codeEditor = new CodeEditor(this);
 
 	// Place the code editor as the central widget of this dock widget
 	innerMainWindow->setCentralWidget(codeEditor);
+}
+
+void CodeEditorDockWidget::loadCodeForUnit(Unit* unit)
+{
+	// ToDo: load from player's preferences the last edited source file for this unit
+	// for this version, only main.cpp is assumed
+	Player* player = BotNeumannApp::getInstance()->getCurrentPlayer();
+	const QString& lastEditedFilepath = getPlayerUnitSourcePath(player, unit, "main.cpp");
+
+	// Ask the editor to show this source
+	codeEditor->loadCodeForUnit(unit, lastEditedFilepath);
+}
+
+void CodeEditorDockWidget::reset()
+{
+	codeEditor->reset();
+}
+
+QString CodeEditorDockWidget::getPlayerUnitPath(Player* player, Unit* unit)
+{
+	return player->getLocalDataPath() + '/' + unit->getId();
+}
+
+QString CodeEditorDockWidget::getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename)
+{
+	return getPlayerUnitPath(player, unit) + '/' + basename;
 }
 
 #include <QDebug>
