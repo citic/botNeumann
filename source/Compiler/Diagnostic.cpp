@@ -5,6 +5,16 @@ extern "C"
 #include <clang-c/Index.h>
 }
 
+// User friendly text maps to the severity codes in English
+static const char* diagnosticSeverityText[] =
+{
+	"ignored",
+	"note",
+	"warning",
+	"error",
+	"fatal"
+};
+
 inline QString clangStringToQt(CXString cxString)
 {
 	QString result( clang_getCString(cxString) );
@@ -32,4 +42,9 @@ Diagnostic::Diagnostic(CXDiagnostic diagnostic)
 
 Diagnostic::~Diagnostic()
 {
+}
+
+QString Diagnostic::getSeverityText() const
+{
+	return diagnosticSeverityText[static_cast<int>(severity)];
 }

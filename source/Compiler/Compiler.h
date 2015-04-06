@@ -39,7 +39,8 @@ class Compiler : public QObject
 	/// Compiles the given source file. It starts a separate thread. When it finishes, the
 	/// @a compilationFinished() signal is emitted. The result and products of the compilation
 	/// (diagnostics, intermediate representation) can be get using accesor methods
-	void compile(const QString& filename);
+	/// @return true if the solution can be run, false if it has errors
+	bool compile(const QString& filename);
 	/// Compiles the given set of source files
 	/// @see compile(const QString&)
 	void compile(const QStringList& filenames);

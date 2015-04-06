@@ -41,6 +41,7 @@ void CodeSegment::setupToolbar()
 	runOrPauseAction = new QAction(QIcon(":/unit_playing/unit_playing/button_run.svg"), tr("&Run or pause"), this);
 	runOrPauseAction->setShortcut(QKeySequence("Ctrl+R"));
 	runOrPauseAction->setStatusTip(tr("Compiles the code and starts its visualization"));
+	runOrPauseAction->setEnabled(false);
 	connect(runOrPauseAction, SIGNAL(triggered()), this, SLOT(runOrPauseTriggered()));
 	toolBar->addAction(runOrPauseAction);
 
@@ -93,13 +94,24 @@ void CodeSegment::setupCodeEditor()
 
 void CodeSegment::loadCodeForUnit(Unit* unit)
 {
+	// Close files from previous units
+	sourceFiles.clear();
+
+	// ToDo: load the list of files from the player's source
+	// ToDo: implement a PlayerSolution class in charge of this task
+
 	// ToDo: load from player's preferences the last edited source file for this unit
 	// for this version, only main.cpp is assumed
 	Player* player = BotNeumannApp::getInstance()->getCurrentPlayer();
 	const QString& lastEditedFilepath = getPlayerUnitSourcePath(player, unit, "main.cpp");
 
+	sourceFiles.append(lastEditedFilepath);
+
 	// Ask the editor to show this source
 	codeEditor->loadCodeForUnit(unit, lastEditedFilepath);
+
+	// Now the run button can be triggered
+	runOrPauseAction->setEnabled(true);
 }
 
 void CodeSegment::reset()
@@ -118,10 +130,32 @@ QString CodeSegment::getPlayerUnitSourcePath(Player* player, Unit* unit, const Q
 }
 
 #include <QDebug>
+#include "Compiler.h"
+#include "Diagnostic.h"
 
 void CodeSegment::runOrPauseTriggered()
 {
-	qDebug() << "Run or pause triggered";
+	// If there are not files, ignore the call
+	if ( sourceFiles.size() <= 0 ) return;
+
+	// Compile and run the player solution
+	// ToDo: playerSolution.compileAndRun();
+
+	Compiler compiler;
+	bool canBeRun = compiler.compile(sourceFiles[0]);
+
+	// Show diagnostics in terminal
+	const QList<Diagnostic*>& diagnostics = compiler.getDiagnostics();
+	for ( int i = 0; i < diagnostics.size(); ++i )
+	{
+		const Diagnostic* diagnostic = diagnostics[i];
+		qCritical() << diagnostic->getSeverityText()
+					<< diagnostic->getLine() << ':' << diagnostic->getColumn()
+					<< "::" << diagnostic->getMessage();
+	}
+
+	if ( canBeRun ) qDebug() << "Code can be run/interpreted";
+		// interpret code
 }
 
 void CodeSegment::stepIntoTriggered()

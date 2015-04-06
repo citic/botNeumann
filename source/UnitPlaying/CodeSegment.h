@@ -2,6 +2,7 @@
 #define CODESEGMENT_H
 
 #include <QDockWidget>
+#include <QStringList>
 
 class CodeEditor;
 class QAction;
@@ -42,6 +43,10 @@ class CodeSegment : public QDockWidget
 	QAction* stopAction;
 	/// Allows user to set the speed of the visualization
 	QSlider* visualizationSpeedSlider;
+	/// The list of source file full paths that compound the player's solution to the current unit
+	/// These files are being edited, but just one at time is shown. A drop down (combo box) control
+	/// allows player to choose the source to edit
+	QStringList sourceFiles;
 
   public:
 	/// Constructor

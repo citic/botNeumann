@@ -13,7 +13,7 @@ Compiler::~Compiler()
 	clear();
 }
 
-void Compiler::compile(const QString& filename)
+bool Compiler::compile(const QString& filename)
 {
 	// Clear old compilation contexts
 	clear();
@@ -38,18 +38,27 @@ void Compiler::compile(const QString& filename)
 	unsigned diagnosticCount = clang_getNumDiagnostics(clangData->translationUnit);
 	diagnostics.reserve(diagnosticCount);
 
+	// Assume there are not errors and the code can be run
+	bool canBeRun = true;
+
 	// Iterate through all warnings and errors found by Clang and fill the diagnostics container
 	for (unsigned i = 0; i < diagnosticCount; ++i)
 	{
 		// Get the diagnostic created in dynamic memory
-		CXDiagnostic diagnostic = clang_getDiagnostic(clangData->translationUnit, i);
+		CXDiagnostic clangDiagnostic = clang_getDiagnostic(clangData->translationUnit, i);
 
 		// Create an object Diagnostic and extract information from the Clang diagnostic
-		diagnostics.append( new Diagnostic(diagnostic) );
+		Diagnostic* objDiagnotic = new Diagnostic(clangDiagnostic);
+		diagnostics.append( objDiagnotic );
+
+		if ( objDiagnotic->getSeverity() >= DiagnosticSeverity::error )
+			canBeRun = false;
 
 		// Release the dynamic memory required by the Clang diagnostic
-		clang_disposeDiagnostic(diagnostic);
+		clang_disposeDiagnostic(clangDiagnostic);
 	}
+
+	return canBeRun;
 }
 
 void Compiler::compile(const QStringList& filenames)
