@@ -3,6 +3,7 @@
 
 #include <QTextEdit>
 
+class QTimer;
 class SyntaxHighlighter;
 class Unit;
 
@@ -11,6 +12,8 @@ class Unit;
 */
 class CodeEditor : public QTextEdit
 {
+	Q_OBJECT
+
   protected:
 	/// Store formatting rules for C++
 	SyntaxHighlighter* highlighter;
@@ -18,6 +21,9 @@ class CodeEditor : public QTextEdit
 	Unit* unit;
 	/// The full path to the source file being edited
 	QString filepath;
+	/// Fires a short time after the last made change in the document, in order to do some tasks
+	/// such as auto save() and auto compile()
+	QTimer* autoSaveTimer;
 
   public:
 	/// Constructor
@@ -47,6 +53,12 @@ class CodeEditor : public QTextEdit
 	bool loadUnitInitialCode();
 	/// Load the file contents of the file which full path is stored in @a filepath member data
 	bool loadFileContents();
+
+  protected slots:
+	/// Called each time the document is changed
+	void documentChanged();
+	/// Saves the changes of the editor to the @a filepath document in secondary memory
+	bool save();
 };
 
 #endif // CODEEDITOR_H
