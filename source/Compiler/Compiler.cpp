@@ -25,7 +25,8 @@ bool Compiler::compile(const QString& filename)
 	const char* cxxArgs[] =
 	{
 		"-I/usr/include",
-		"-I."
+		"-I.",
+		"-stdlib=libstdc++"
 	};
 
 	// Number of command line arguments to be sent to the compiler
