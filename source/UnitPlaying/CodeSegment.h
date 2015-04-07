@@ -2,13 +2,13 @@
 #define CODESEGMENT_H
 
 #include <QDockWidget>
-#include <QStringList>
 
 class CodeEditor;
 class QAction;
 class QMainWindow;
 class QSlider;
 class Player;
+class PlayerSolution;
 class Unit;
 
 /**
@@ -43,14 +43,12 @@ class CodeSegment : public QDockWidget
 	QAction* stopAction;
 	/// Allows user to set the speed of the visualization
 	QSlider* visualizationSpeedSlider;
-	/// The list of source file full paths that compound the player's solution to the current unit
-	/// These files are being edited, but just one at time is shown. A drop down (combo box) control
-	/// allows player to choose the source to edit
-	QStringList sourceFiles;
+	/// Manages the list of source files that compound the player's solution to an unit
+	PlayerSolution* playerSolution;
 
   public:
 	/// Constructor
-	explicit CodeSegment(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+	explicit CodeSegment(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
 	/// Destructor
 	virtual ~CodeSegment();
 	/// Get access to the code editor
@@ -61,14 +59,6 @@ class CodeSegment : public QDockWidget
 	/// Called when the player stopped playing the current unit, clear the code editor for being
 	/// reused again for a new unit
 	void reset();
-	/// Get the player's directory to store source files for this unit. E.g: in Mac OS X:
-	/// /Users/<user>/Library/Application Support/botNeumann/<player>/<unit>
-	static QString getPlayerUnitPath(Player* player, Unit* unit);
-	/// Get the full path of a source file in the player's directory for this unit. E.g: in MacOSX:
-	/// /Users/<user>/Library/Application Support/botNeumann/<player>/<unit>/main.cpp
-	/// @param basename The base name of the attempted C/C++ file, for example, main.cpp. This file
-	/// is part of the solution created by the player
-	static QString getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename);
 
   protected:
 	/// Set up the inner main window

@@ -1,7 +1,6 @@
-#include "BotNeumannApp.h"
 #include "CodeEditor.h"
 #include "CodeSegment.h"
-#include "Player.h"
+#include "PlayerSolution.h"
 #include "Unit.h"
 #include <QAction>
 #include <QMainWindow>
@@ -11,6 +10,7 @@
 CodeSegment::CodeSegment(QWidget *parent, Qt::WindowFlags flags)
 	: QDockWidget(tr("Program"), parent, flags)
 	, innerMainWindow( new QMainWindow(this) )
+	, playerSolution(nullptr)
 {
 	setObjectName("codeEditor");
 
@@ -94,21 +94,15 @@ void CodeSegment::setupCodeEditor()
 
 void CodeSegment::loadCodeForUnit(Unit* unit)
 {
-	// Close files from previous units
-	sourceFiles.clear();
+	// If there is an old player solution, replace it
+	delete playerSolution;
+	playerSolution = new PlayerSolution(this);
 
-	// ToDo: load the list of files from the player's source
-	// ToDo: implement a PlayerSolution class in charge of this task
-
-	// ToDo: load from player's preferences the last edited source file for this unit
-	// for this version, only main.cpp is assumed
-	Player* player = BotNeumannApp::getInstance()->getCurrentPlayer();
-	const QString& lastEditedFilepath = getPlayerUnitSourcePath(player, unit, "main.cpp");
-
-	sourceFiles.append(lastEditedFilepath);
+	// Load the source file list that compounds the player's solution
+	playerSolution->loadSolutionForUnit(unit);
 
 	// Ask the editor to show this source
-	codeEditor->loadCodeForUnit(unit, lastEditedFilepath);
+	codeEditor->loadFile(unit, playerSolution->getLastEditedFilepath());
 
 	// Now the run button can be triggered
 	runOrPauseAction->setEnabled(true);
@@ -119,41 +113,15 @@ void CodeSegment::reset()
 	codeEditor->reset();
 }
 
-QString CodeSegment::getPlayerUnitPath(Player* player, Unit* unit)
-{
-	return player->getLocalDataPath() + '/' + unit->getId();
-}
-
-QString CodeSegment::getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename)
-{
-	return getPlayerUnitPath(player, unit) + '/' + basename;
-}
-
 #include <QDebug>
-#include "Compiler.h"
-#include "Diagnostic.h"
 
 void CodeSegment::runOrPauseTriggered()
 {
-	// If there are not files, ignore the call
-	if ( sourceFiles.size() <= 0 ) return;
-
 	// Compile and run the player solution
-	// ToDo: playerSolution.compileAndRun();
+	Q_ASSERT(playerSolution);
+	bool canBeRun = playerSolution->compile();
 
-	Compiler compiler;
-	bool canBeRun = compiler.compile(sourceFiles[0]);
-
-	// Show diagnostics in terminal
-	const QList<Diagnostic*>& diagnostics = compiler.getDiagnostics();
-	for ( int i = 0; i < diagnostics.size(); ++i )
-	{
-		const Diagnostic* diagnostic = diagnostics[i];
-		qCritical() << diagnostic->getSeverityText()
-					<< diagnostic->getLine() << ':' << diagnostic->getColumn()
-					<< "::" << diagnostic->getMessage();
-	}
-
+	// ToDo: run logic
 	if ( canBeRun ) qDebug() << "Code can be run/interpreted";
 		// interpret code
 }

@@ -59,6 +59,7 @@ SOURCES += \
 	source/UnitPlaying/HeapSegment.cpp \
 	source/UnitPlaying/MemoryRow.cpp \
 	source/UnitPlaying/MemorySegment.cpp \
+	source/UnitPlaying/PlayerSolution.cpp \
 	source/UnitPlaying/SyntaxHighlighter.cpp \
 	source/UnitPlaying/Unit.cpp \
 	source/UnitPlaying/UnitPlayingScene.cpp \
@@ -102,6 +103,7 @@ HEADERS += \
 	source/UnitPlaying/HeapSegment.h \
 	source/UnitPlaying/MemoryRow.h \
 	source/UnitPlaying/MemorySegment.h \
+	source/UnitPlaying/PlayerSolution.h \
 	source/UnitPlaying/SyntaxHighlighter.h \
 	source/UnitPlaying/Unit.h \
 	source/UnitPlaying/UnitPlayingScene.h \

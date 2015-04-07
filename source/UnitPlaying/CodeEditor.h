@@ -40,7 +40,7 @@ class CodeEditor : public QTextEdit
 	/// player changes the code, the autosave function will active and it will use this filename
 	/// to store the changes
 	/// @return true on success, false otherwise. ToDo: decide how to report errors?
-	bool loadCodeForUnit(Unit* unit, const QString& filepath);
+	bool loadFile(Unit* unit, const QString& filepath);
 	/// Loads a file given for its full path
 	bool loadFile(const QString& filepath);
 	/// Called when the player stopped playing the current unit, clear the code editor for being

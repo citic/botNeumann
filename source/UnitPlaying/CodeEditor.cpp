@@ -46,7 +46,7 @@ CodeEditor::~CodeEditor()
 {
 }
 
-bool CodeEditor::loadCodeForUnit(Unit* unit, const QString& filepath)
+bool CodeEditor::loadFile(Unit* unit, const QString& filepath)
 {
 	// Store the active unit and the filepath for future use
 	this->unit = unit;
@@ -71,6 +71,7 @@ void CodeEditor::reset()
 
 bool CodeEditor::loadUnitInitialCode()
 {
+	Q_ASSERT(unit);
 	setPlainText( unit->getARandomInitialCode() );
 	document()->setModified(false);
 
