@@ -13,7 +13,7 @@ BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 {
 	// Properties for the whole application
 	setApplicationName("botNeumann");
-	setOrganizationName("citic-ucr");
+	setOrganizationName("Citic-Ucr");
 	setOrganizationDomain("citic.ucr.ac.cr");
 	setApplicationDisplayName("bot Neumann++");
 	setApplicationVersion("1.0.0");

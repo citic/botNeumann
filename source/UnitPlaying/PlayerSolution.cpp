@@ -120,6 +120,12 @@ int PlayerSolution::loadFileList()
 	// If the folder does not exist, the player has not trid to solve it (in this machine)
 	if ( ! dir.exists() ) return -1;
 
+	// Only load C/C++ code
+	QStringList filters;
+	filters << "*.h" << "*.H" << "*.hpp" << ".hh"
+			<< "*.c" << "*.C" << "*.cpp" << "*.CPP" << "*.cxx" << "*.cc" << "*.c++" << "*.cp";
+	dir.setNameFilters(filters);
+
 	// There are source files, load its list
 	dir.setFilter(QDir::Files | QDir::NoSymLinks);
 	sourceFiles = dir.entryInfoList();
