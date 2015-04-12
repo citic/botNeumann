@@ -85,7 +85,8 @@
 | struct_left | el tubo para agrupar tipos de datos diferentes (el tubo que contiene otros tubos), debe ser transparente y sus bordes ocupar el menor espacio posible | ![struct_left](unit_playing/data_types/struct_left.svg) |
 | struct_middle | parte central del tubo que puede extenderse | ![struct_middle](unit_playing/data_types/struct_middle.svg) |
 | struct_right | extremo derecho del tubo | ![struct_right](unit_playing/data_types/struct_right.svg) |
-| array_union | unión rosca para pegar dos tubos de struct | ![array_union](unit_playing/data_types/array_union.svg) |
+| array_struct_left | unión rosca para pegar dos tubos de struct (left) | ![array_struct_left](unit_playing/data_types/array_struct_left.svg) |
+| array_struct_right | unión rosca para pegar dos tubos de struct (right) | ![array_struct_right](unit_playing/data_types/array_struct_right.svg) |
 | waste1 | basura, escombro dibujo 1 | ![waste1](unit_playing/data_types/waste1.svg) |
 | waste2 | basura, escombro dibujo 2 | ![waste2](unit_playing/data_types/waste2.svg) |
 | waste3 | basura, escombro dibujo 3 | ![waste3](unit_playing/data_types/waste3.svg) |

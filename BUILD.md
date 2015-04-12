@@ -46,6 +46,17 @@ botNeumann requires a LLVM/Clang compiler 3.4.2. To download and compile it run 
 
 ### Mac OS X
 
+Install XCode and its Command Line Tools
+
+Install `swig` for Python. It is required by LLDB
+
+	$ sudo port install swig-python
+
+Get, compile and build LLVM, Clang and LLDB:
+
+	$ cd 3rdparty
+	$ make
+
 In order to edit the source code and run the executable from Qt Creator, it should be configured. The `botNeumann` executable is generated inside a bundle (i.e. `botNeuman.app`) folder. When it is run from Qt Creator, the Clang dynamic library is not found. Steps to configure:
 
 1. Open `botNeuman.pro` in Qt Creator.
