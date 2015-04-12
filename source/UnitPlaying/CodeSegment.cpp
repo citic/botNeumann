@@ -53,7 +53,6 @@ void CodeSegment::setupToolbar()
 	connect(stepIntoAction, SIGNAL(triggered()), this, SLOT(stepIntoTriggered()));
 	toolBar->addAction(stepIntoAction);
 
-/* Svg missing for the moment
 	// Create the step out button
 	stepOutAction = new QAction(QIcon(":/unit_playing/unit_playing/button_step_out.svg"), tr("Step &out"), this);
 	stepOutAction->setShortcut(QKeySequence("Ctrl+O"));
@@ -61,7 +60,7 @@ void CodeSegment::setupToolbar()
 	stepOutAction->setEnabled(false);
 	connect(stepOutAction, SIGNAL(triggered()), this, SLOT(stepOutTriggered()));
 	toolBar->addAction(stepOutAction);
-*/
+
 	// Create the stop button
 	stopAction = new QAction(QIcon(":/unit_playing/unit_playing/button_stop.svg"), tr("S&top"), this);
 	stopAction->setShortcut(QKeySequence("Ctrl+T"));
