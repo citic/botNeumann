@@ -1,6 +1,8 @@
 #ifndef CLANGDATA_H
 #define CLANGDATA_H
 
+#ifdef CLANG_INTEGRATED
+
 extern "C"
 {
 #include <clang-c/Index.h>
@@ -21,5 +23,13 @@ struct ClangData
 	/// Destructor
 	~ClangData();
 };
+
+#else // CLANG_INTEGRATED
+
+struct ClangData
+{
+};
+
+#endif // CLANG_INTEGRATED
 
 #endif // CLANGDATA_H

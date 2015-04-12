@@ -15,6 +15,7 @@ Compiler::~Compiler()
 
 bool Compiler::compile(const QString& filename)
 {
+  #ifdef CLANG_INTEGRATED
 	// Clear old compilation contexts
 	clear();
 	// Create a compilation context for this file
@@ -60,6 +61,13 @@ bool Compiler::compile(const QString& filename)
 	}
 
 	return canBeRun;
+
+  #else // CLANG_INTEGRATED
+
+	Q_UNUSED(filename);
+	return false;
+
+  #endif // CLANG_INTEGRATED
 }
 
 void Compiler::compile(const QStringList& filenames)

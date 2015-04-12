@@ -121,7 +121,12 @@ FORMS += \
 OTHER_FILES += \
 	units/botnu-1.0.dtd \
 
+# Defines if Clang is integrated in botNeumann executable, or this is a TCP client or TCP server
+#DEFINES += CLANG_INTEGRATED
+#DEFINES += CLANG_CLIENT
+#DEFINES += CLANG_SERVER
+
 # Third party library: LLVM/Clang
-LLVM_PATH = $${PWD}/3rdparty/llvm
-INCLUDEPATH += $${LLVM_PATH}/tools/clang/include
-LIBS += -L$${LLVM_PATH}/build/Release+Asserts/lib -lclang
+#LLVM_PATH = $${PWD}/3rdparty/llvm
+#INCLUDEPATH += $${LLVM_PATH}/tools/clang/include
+#LIBS += -L$${LLVM_PATH}/build/Release+Asserts/lib -lclang

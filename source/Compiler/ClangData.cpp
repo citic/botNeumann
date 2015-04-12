@@ -1,5 +1,7 @@
 #include "ClangData.h"
 
+#ifdef CLANG_INTEGRATED
+
 ClangData::ClangData()
 	: index(clang_createIndex(false, false))
 	, translationUnit(nullptr)
@@ -12,3 +14,5 @@ ClangData::~ClangData()
 	clang_disposeTranslationUnit(translationUnit);
 	clang_disposeIndex(index);
 }
+
+#endif // CLANG_INTEGRATED
