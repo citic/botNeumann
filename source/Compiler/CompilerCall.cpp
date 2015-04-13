@@ -1,19 +1,16 @@
 #include "CompilerCall.h"
 #include "Diagnostic.h"
-#include <QDateTime>
 #include <QDir>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QTextStream>
 
 CompilerCall::CompilerCall(const QFileInfo& sourcePath, QObject* parent)
-	: QObject(parent)
+	: ToolCall(parent)
 	, sourcePath(sourcePath)
 	, targetPath(getTargetPathFor(sourcePath))
-	, state( CompilationState::unknown )
 	, errorCount(0)
 	, warningCount(0)
-	, process(nullptr)
 {
 	updateState();
 }
@@ -26,9 +23,9 @@ void CompilerCall::updateState()
 {
 	// If there exists the object file, and it is updated avoid to compile it again
 	if ( targetPath.exists() && isFileNewerThan(targetPath, sourcePath) )
-		state = CompilationState::finished; // No compilation required
+		state = ToolCallState::finished; // No compilation required
 	else
-		state = CompilationState::scheduled; // Schedule this file for compilation
+		state = ToolCallState::scheduled; // Schedule this file for compilation
 }
 
 QFileInfo CompilerCall::getTargetPathFor(const QFileInfo& sourceFilePath)
@@ -42,11 +39,6 @@ void CompilerCall::clear()
 		delete diagnostics[i];
 
 	diagnostics.clear();
-}
-
-bool CompilerCall::isFileNewerThan(const QFileInfo& file1, const QFileInfo& file2)
-{
-	return file1.lastModified() > file2.lastModified();
 }
 
 #include <QDebug>
@@ -71,34 +63,7 @@ void CompilerCall::compile()
 	// Start the process
 	process->start(getCxxCompiler(), arguments);
 	qDebug() << process->program() << process->arguments().join(" ");
-	state = CompilationState::started;
-}
-
-QString CompilerCall::getCxxCompiler()
-{
-  #if defined(Q_OS_MACX)
-	return "clang++";
-  #else
-	return "g++";
-  #endif
-}
-
-QStringList CompilerCall::getDefaultCompilerArguments()
-{
-	QStringList arguments;
-	arguments << "-g" << "-Wall" << "-Wextra" << "-std=c++11";
-	if ( getCxxCompiler() == "clang++" )
-		arguments << "-fdiagnostics-parseable-fixits";
-	return arguments;
-}
-
-QStringList CompilerCall::getDefaultLinkerArguments()
-{
-	QStringList arguments;
-  #if ! defined(Q_OS_WIN)
-	arguments << "-lm";
-  #endif
-	return arguments;
+	state = ToolCallState::started;
 }
 
 void CompilerCall::processFinished()
@@ -148,6 +113,6 @@ void CompilerCall::processFinished()
 	}
 
 	// All the compiler output was processed. This source file has finished its compiling process
-	state = CompilationState::finished;
+	state = ToolCallState::finished;
 	emit finished();
 }

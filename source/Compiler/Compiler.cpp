@@ -63,7 +63,7 @@ void Compiler::scheduleCompilerCalls(const QFileInfoList& filepaths)
 			shouldLinkExecutable = true;
 
 		// If the file must be compiled, schedule it, else, remove it
-		if ( compilerCall->getState() != CompilationState::finished )
+		if ( compilerCall->getState() != ToolCallState::finished )
 			compilerCalls.append(compilerCall);
 		else
 			delete compilerCall;

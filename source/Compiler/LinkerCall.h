@@ -1,12 +1,12 @@
 #ifndef LINKERCALL_H
 #define LINKERCALL_H
 
-#include <QObject>
+#include "ToolCall.h"
 
 /**
 	@brief Calls the linker with a buch of object files to generate an executable
  */
-class LinkerCall : public QObject
+class LinkerCall : public ToolCall
 {
 	Q_OBJECT
 

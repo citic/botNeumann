@@ -1,7 +1,7 @@
 #include "LinkerCall.h"
 
 LinkerCall::LinkerCall(QObject *parent)
-	: QObject(parent)
+	: ToolCall(parent)
 {
 }
 
