@@ -117,7 +117,7 @@ void PlayerSolution::compilerFinished()
 		qDebug() << "Solution can be run";
 		return;
 	}
-
+/*
 	// Show diagnostics in terminal
 	const QList<Diagnostic*>& diagnostics = compiler->getDiagnostics();
 	for ( int i = 0; i < diagnostics.size(); ++i )
@@ -128,7 +128,7 @@ void PlayerSolution::compilerFinished()
 					<< "::" << diagnostic->getMessage();
 	}
 	emit compilationFinished();
-
+*/
 	// Compilation has finished, remove the object for that compilation
 	compiler->deleteLater();
 	compiler = nullptr;

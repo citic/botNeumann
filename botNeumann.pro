@@ -28,6 +28,7 @@ SOURCES += \
 	source/Common/GameScene.cpp \
 	source/Common/InfoDialog.cpp \
 	source/Common/PlayerStatus.cpp \
+	source/Compiler/CompilationUnit.cpp \
 	source/Compiler/Compiler.cpp \
 	source/Compiler/Diagnostic.cpp \
 	source/Gamee/Actor.cpp \
@@ -72,6 +73,7 @@ HEADERS += \
 	source/Common/GameScene.h \
 	source/Common/InfoDialog.h \
 	source/Common/PlayerStatus.h \
+	source/Compiler/CompilationUnit.h \
 	source/Compiler/Compiler.h \
 	source/Compiler/Diagnostic.h \
 	source/Gamee/Actor.h \

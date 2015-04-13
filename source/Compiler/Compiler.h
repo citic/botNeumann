@@ -3,9 +3,9 @@
 
 #include <QObject>
 #include <QFileInfoList>
+#include <QStringList>
 
-class Diagnostic;
-class QProcess;
+class CompilationUnit;
 
 /**
 	@brief Frontent to the command line compiler
@@ -24,35 +24,30 @@ class Compiler : public QObject
 	Q_OBJECT
 
   private:
-	/// List of warnings and errors generated when compiling a piece of code
-	QList<Diagnostic*> diagnostics;
+	/// For each .c/.cpp source file a compilation task is scheduled to be compiled
+	QList<CompilationUnit*> compilationUnits;
+	/// True if the executable is scheduled to be compiled
+	bool shouldLinkExecutable;
 	/// Indicates the number of error collected during the compilation process. If value is 0
 	/// the solution can be run, even it would have warnings. This value is valid only
 	/// after a compilation process has finished.
 	int errorCount;
 	/// Path of the target executable file. It will be linked only if it is out-dated
 	QFileInfo executablePath;
+	/// The list of objectfiles to link
+	QStringList objectFiles;
+	/// Index of the current compilation unit being compiled
+	int currentCompilationUnit;
 
   public:
 	/// Constructor
 	explicit Compiler(QObject *parent = nullptr);
 	/// Destructor
 	~Compiler();
-	/// Get access to the list of diagnostics (warnings and errors)
-	inline const QList<Diagnostic*>& getDiagnostics() const { return diagnostics; }
 	/// Indicates the number of error collected during the compilation process. If value is 0
 	/// the solution can be run, even it would have warnings. This value is valid only
 	/// after a compilation process has finished. If called before, it will return -1
 	inline int getErrorCount() const { return errorCount; }
-	/// Get the name of the default C++ compiler for this platform
-	static QString getCxxCompiler();
-	/// Default parameters: all warnings enabled (-Wall), C++11 enabled (-std=c++11),
-	/// debug information enabled (-g), and so on
-	static QStringList getDefaultCompilerArguments();
-	/// Default linker arguments
-	static QStringList getDefaultLinkerArguments();
-	/// Given a source file, returns its .o object file
-	static QFileInfo getObjectFileFor(const QFileInfo& sourceFilePath);
 
   signals:
 	/// Emitted when a compilation process has finished
@@ -69,17 +64,16 @@ class Compiler : public QObject
 	/// Erases all information about a compiling. This method is automatically called by compile()
 	void clear();
 
-  protected:
-	/// Compiles the given .cpp file and generates its respective .o in the same folder
-	/// @param newerThanExecutable if a boolean value is given, sets it to true if the generated
-	/// .o is newer than the executable, and therefore, the executable is out-dated and should be
-	/// linked again
-	/// @return the file path of the generated .o file. If there already is an updated .o, the
-	/// source files is not compiled again, to avoid wasting of resources
-	QFileInfo generateObjectFile(const QFileInfo& sourceFilePath, bool *newerThanExecutable = nullptr);
+  protected slots:
+	/// Compiles the next scheduled .cpp file and generates its respective .o in the same folder
+	void compileNextUnit();
 	/// Call the compilers to generate the executable or update it
 	/// @param The complete list of object files that will compound the executable
-	void linkExecutable(const QStringList& objectFiles);
+	void linkExecutable();
+
+  protected:
+	/// Fills the compilationUnits with the list of source files that must be compiled
+	void scheduleCompilationUnits(const QFileInfoList& filepaths);
 };
 
 #endif // COMPILER_H
