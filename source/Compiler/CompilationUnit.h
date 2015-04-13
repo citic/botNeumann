@@ -38,6 +38,8 @@ class CompilationUnit : public QObject
 	CompilationState state;
 	/// List of warnings and errors generated when compiling this source file
 	QList<Diagnostic*> diagnostics;
+	/// Number of errors found in this source file. If > 0, code cannot be run
+	int errorCount;
 	/// The compiler executable is called in a separate process
 	QProcess* process;
 

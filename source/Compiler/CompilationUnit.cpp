@@ -3,12 +3,15 @@
 #include <QDateTime>
 #include <QDir>
 #include <QProcess>
+#include <QRegularExpression>
+#include <QTextStream>
 
 CompilationUnit::CompilationUnit(const QFileInfo& sourcePath, QObject* parent)
 	: QObject(parent)
 	, sourcePath(sourcePath)
 	, targetPath(getObjectFileFor(sourcePath))
 	, state( CompilationState::unknown )
+	, errorCount(0)
 	, process(nullptr)
 {
 	updateState();
@@ -76,7 +79,7 @@ QString CompilationUnit::getCxxCompiler()
 	return "clang++";
   #else
 	return "g++";
-#endif
+  #endif
 }
 
 QStringList CompilationUnit::getDefaultCompilerArguments()
@@ -100,9 +103,48 @@ QStringList CompilationUnit::getDefaultLinkerArguments()
 void CompilationUnit::processFinished()
 {
 	qDebug() << "Compilation finished with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
-	qDebug() << "stdout [" << process->readAllStandardOutput() << "]";
-	qDebug() << "stderr {" << process->readAllStandardError() << "}";
 
+	// Compilers does not send data to the standard output, but if there are something, print it
+	const QString& compilerStandarOutput = process->readAllStandardOutput();
+	if (compilerStandarOutput.length() > 0 )
+		qDebug() << "stdout [" << compilerStandarOutput << "]";
+
+	// Expression to know if a line starts a new error/warning:
+	// "/path/to/sourcefile.cpp:line:col: severity: short diagnostic message"
+	QRegularExpression diagnosticStartLine("^(\\w?:?[^:]+):(\\d+):(\\d+): (\\w+): (.+)$");
+
+	// Each time a diagnostic start line is found, a new diagnostic object is created
+	// This pointer refers to the last one, the active one
+	Diagnostic* currentDiagnostic = nullptr;
+
+	// Warnings and errors are sent to the standard error by compilers, not standard output
+	QTextStream errorOutput( process->readAllStandardError() );
+	while ( ! errorOutput.atEnd() )
+	{
+		// Get a line and compare it against the pattern to find the start of a diagnostic
+		const QString& line = errorOutput.readLine();
+		QRegularExpressionMatch match = diagnosticStartLine.match(line);
+
+		// If the line matches the begin of a diagnostic, create one and read it
+		if ( match.hasMatch() )
+		{
+			// Create the new diagnostic and extract its parts from the regular expression match
+			currentDiagnostic = new Diagnostic(match);
+			diagnostics.append(currentDiagnostic);
+
+			// If the diagnostic is a normal or fatal error, increase its number
+			if ( currentDiagnostic->isError() )
+				++errorCount;
+		}
+		// If the line is not the begin of a diagnostic, append the line to the active diagnostic
+		else if ( currentDiagnostic )
+			currentDiagnostic->appendExplanation(line);
+		// Some lines may be ignored
+		else
+			qDebug() << "ignored stderr line {" << line << "}";
+	}
+
+	// All the compiler output was processed. This source file has finished its compiling process
 	state = CompilationState::finished;
 	emit finished();
 }

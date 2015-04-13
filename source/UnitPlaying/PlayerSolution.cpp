@@ -113,10 +113,7 @@ void PlayerSolution::compilerFinished()
 	Q_ASSERT(compiler);
 
 	if ( compiler->getErrorCount() == 0 )
-	{
 		qDebug() << "Solution can be run";
-		return;
-	}
 /*
 	// Show diagnostics in terminal
 	const QList<Diagnostic*>& diagnostics = compiler->getDiagnostics();

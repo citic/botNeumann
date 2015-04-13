@@ -1,4 +1,5 @@
 #include "Diagnostic.h"
+#include <QRegularExpressionMatch>
 
 // User friendly text maps to the severity codes in English
 static const char* diagnosticSeverityText[] =
@@ -7,39 +8,22 @@ static const char* diagnosticSeverityText[] =
 	"note",
 	"warning",
 	"error",
-	"fatal"
+	"fatal",
+	"unknown"
 };
 
-#ifdef CLANG_INTEGRATED
-
-Diagnostic::Diagnostic(CXDiagnostic diagnostic)
-	: severity{ static_cast<DiagnosticSeverity>( clang_getDiagnosticSeverity(diagnostic) ) }
-	, line{0}
-	, column{0}
-	, message{ clangStringToQt( clang_getDiagnosticSpelling(diagnostic) ) }
-	, category{ clangStringToQt( clang_getDiagnosticCategoryText(diagnostic) ) }
+Diagnostic::Diagnostic(const QRegularExpressionMatch& match)
+	: severity{ mapSeverityText( match.captured(4) ) }
+	, filename{ match.captured(1) }
+	, line{ match.captured(2).toUInt() }
+	, column{ match.captured(3).toUInt() }
+	, brief{ match.captured(5) }
 {
-	// The file, line number and character number where the warning/error seems to be produced
-	CXSourceLocation location = clang_getDiagnosticLocation(diagnostic);
-
-	// Extract each part from the location structure
-	CXString sourceFilename;
-	clang_getPresumedLocation(location, &sourceFilename, &line, &column);
-
-	// Convert the filename to Qt string and release the Clang string memory
-	filename = clangStringToQt(sourceFilename);
+	// The expression used to know if a line starts a new error/warning was:
+	// " (1filepath)   (2lin) (3col)  (4sev)  (5br)
+	// "^(\\w?:?[^:]+):(\\d+):(\\d+): (\\w+): (.+)$"
+	// "/path/to/sourcefile.cpp:line:col: severity: short diagnostic message"
 }
-
-#else // CLANG_INTEGRATED
-
-Diagnostic::Diagnostic()
-	: severity{ DiagnosticSeverity::ignored }
-	, line{0}
-	, column{0}
-{
-}
-
-#endif // CLANG_INTEGRATED
 
 Diagnostic::~Diagnostic()
 {
@@ -48,4 +32,19 @@ Diagnostic::~Diagnostic()
 QString Diagnostic::getSeverityText() const
 {
 	return diagnosticSeverityText[static_cast<int>(severity)];
+}
+
+DiagnosticSeverity Diagnostic::mapSeverityText(const QString& text)
+{
+	int count = sizeof(diagnosticSeverityText) / sizeof(diagnosticSeverityText[0]);
+	for ( int i = 0; i < count; ++i )
+		if ( text == diagnosticSeverityText[i] )
+			return static_cast<DiagnosticSeverity>(i);
+
+	return DiagnosticSeverity::unknown;
+}
+
+void Diagnostic::appendExplanation(const QString& text)
+{
+	explanation.append(text);
 }

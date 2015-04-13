@@ -58,6 +58,8 @@ void Compiler::compileNextUnit()
 	}
 	else if ( shouldLinkExecutable )
 		linkExecutable();
+	else // Compilation process finished
+		emit finished();
 }
 
 #include <QDebug>
@@ -74,6 +76,7 @@ void Compiler::linkExecutable()
 	// Call the linker
 	// CALL COMPILER
 	qDebug() << CompilationUnit::getCxxCompiler() << arguments;
+	emit finished(); // for the moment
 }
 
 void Compiler::scheduleCompilationUnits(const QFileInfoList& filepaths)
