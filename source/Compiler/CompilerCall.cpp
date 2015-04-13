@@ -43,7 +43,7 @@ void CompilerCall::clear()
 
 #include <QDebug>
 
-void CompilerCall::compile()
+void CompilerCall::start()
 {
 	// Ensambles a command, something such as
 	// c++ -Wall -std=c++11 -c /path/player/unit/main.cpp -o /path/player/unit/main.o

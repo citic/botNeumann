@@ -1,6 +1,6 @@
-#include "CompilerCall.h"
 #include "Compiler.h"
-#include "Diagnostic.h"
+#include "CompilerCall.h"
+#include "LinkerCall.h"
 #include <QStringList>
 
 Compiler::Compiler(QObject *parent)
@@ -8,6 +8,7 @@ Compiler::Compiler(QObject *parent)
 	, errorCount(-1)
 	, warningCount(-1)
 	, currentCompilerCall(-1)
+	, linkerCall(nullptr)
 {
 }
 
@@ -34,6 +35,8 @@ void Compiler::compile(const QFileInfoList& filepaths, const QFileInfo& executab
 	this->executablePath = executablePath;
 
 	// If there is not executable, it must be linked/created
+	// If there is executable and in the process we find an object file that is newer than the
+	// executable, this variable will become true
 	shouldLinkExecutable = ! executablePath.exists();
 
 	// Fill the list of source files that require be compiled
@@ -58,7 +61,7 @@ void Compiler::scheduleCompilerCalls(const QFileInfoList& filepaths)
 		// Regardless this file should be compiled or not, it must be included in the linking phase
 		objectFiles.append( compilerCall->getTargetPath().absoluteFilePath() );
 
-		// If this .cpp file, it is is newer than the executable, the executable must be updated
+		// If this .cpp file is newer than the executable, the executable must be updated
 		if ( shouldLinkExecutable == false && compilerCall->isTargetNewerThan(executablePath) )
 			shouldLinkExecutable = true;
 
@@ -80,7 +83,7 @@ void Compiler::compileNextSourceFile()
 		connect(compilerCall, SIGNAL(finished()), this, SLOT(compilerCallFinished()) );
 
 		// Start the compilation process
-		compilerCall->compile();
+		compilerCall->start();
 	}
 	else if ( shouldLinkExecutable )
 		linkExecutable();
@@ -106,19 +109,29 @@ void Compiler::compilerCallFinished()
 	compileNextSourceFile();
 }
 
-#include <QDebug>
-
 void Compiler::linkExecutable()
 {
-	// Ensambles a command, something such as
-	// c++ -Wall -std=c++11 /path/player/unit/main.o /path/player/unit/MyClass.o -o /path/player/unit/unit
-	QStringList arguments( CompilerCall::getDefaultCompilerArguments() );
-	arguments << CompilerCall::getDefaultLinkerArguments();
-	arguments << objectFiles;
-	arguments << "-o" << executablePath.absoluteFilePath();
+	// This object is in charge of calling the linker in background
+	linkerCall = new LinkerCall(objectFiles, executablePath, this);
 
-	// Call the linker
-	// CALL COMPILER
-	qDebug() << CompilerCall::getCxxCompiler() << arguments;
-	emit finished(); // for the moment
+	// When the linker has finished its execution, get our linkerCallFinished() method called
+	connect(linkerCall, SIGNAL(finished()), this, SLOT(linkerCallFinished()) );
+
+	// Start the compilation process, and cross the fingers
+	linkerCall->start();
+}
+
+void Compiler::linkerCallFinished()
+{
+	Q_ASSERT(linkerCall);
+
+	// Update the record of warnings and errors
+//	errorCount += compilerCall->getErrorCount();
+//	warningCount += compilerCall->getWarningCount();
+
+	// The linking phase is due
+	shouldLinkExecutable = false;
+
+	// Pass to the next pending task, or finish the execution if nothing is pending
+	compileNextSourceFile();
 }

@@ -56,8 +56,8 @@ class CompilerCall : public ToolCall
 	inline bool isTargetNewerThan(const QFileInfo& fileInfo) const { return isFileNewerThan(targetPath, fileInfo); }
 	/// Launch a compiler process to compile this unit
 	/// Emits finished() when it has finished. The result (success, error, or warnings) can be
-	/// consulted after the finished() signals has been emitted
-	void compile();
+	/// consulted after the finished() signal has been emitted
+	void start();
 
   protected slots:
 	/// Called when the compiling process of this unit finished

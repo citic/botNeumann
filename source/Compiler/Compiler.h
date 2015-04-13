@@ -6,6 +6,7 @@
 #include <QStringList>
 
 class CompilerCall;
+class LinkerCall;
 
 /**
 	@brief Frontent to the command line compiler
@@ -41,6 +42,8 @@ class Compiler : public QObject
 	QStringList objectFiles;
 	/// Index of the current compiler call being executed
 	int currentCompilerCall;
+	/// Pointer to the linker call, if it is being called
+	LinkerCall* linkerCall;
 
   public:
 	/// Constructor
@@ -70,6 +73,8 @@ class Compiler : public QObject
   protected slots:
 	/// Called when the current compilation unit has finished its compiling process
 	void compilerCallFinished();
+	/// Called when the linker call has finished
+	void linkerCallFinished();
 
   protected:
 	/// Compiles the next scheduled .cpp file and generates its respective .o in the same folder
