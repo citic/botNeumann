@@ -5,7 +5,7 @@
 #include <QFileInfoList>
 #include <QStringList>
 
-class CompilationUnit;
+class CompilerCall;
 
 /**
 	@brief Frontent to the command line compiler
@@ -24,8 +24,8 @@ class Compiler : public QObject
 	Q_OBJECT
 
   protected:
-	/// For each .c/.cpp source file a compilation task is scheduled to be compiled
-	QList<CompilationUnit*> compilationUnits;
+	/// For each .c/.cpp source file a compiler call is scheduled in this list
+	QList<CompilerCall*> compilerCalls;
 	/// True if the executable is scheduled to be compiled
 	bool shouldLinkExecutable;
 	/// Indicates the number of error collected during the compilation process. If value is 0
@@ -39,8 +39,8 @@ class Compiler : public QObject
 	QFileInfo executablePath;
 	/// The list of objectfiles to link
 	QStringList objectFiles;
-	/// Index of the current compilation unit being compiled
-	int currentCompilationUnit;
+	/// Index of the current compiler call being executed
+	int currentCompilerCall;
 
   public:
 	/// Constructor
@@ -69,16 +69,16 @@ class Compiler : public QObject
 
   protected slots:
 	/// Called when the current compilation unit has finished its compiling process
-	void compilationUnitFinished();
+	void compilerCallFinished();
 
   protected:
 	/// Compiles the next scheduled .cpp file and generates its respective .o in the same folder
-	void compileNextUnit();
+	void compileNextSourceFile();
 	/// Call the compilers to generate the executable or update it
 	/// @param The complete list of object files that will compound the executable
 	void linkExecutable();
 	/// Fills the compilationUnits with the list of source files that must be compiled
-	void scheduleCompilationUnits(const QFileInfoList& filepaths);
+	void scheduleCompilerCalls(const QFileInfoList& filepaths);
 };
 
 #endif // COMPILER_H

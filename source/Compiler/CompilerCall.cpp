@@ -1,4 +1,4 @@
-#include "CompilationUnit.h"
+#include "CompilerCall.h"
 #include "Diagnostic.h"
 #include <QDateTime>
 #include <QDir>
@@ -6,10 +6,10 @@
 #include <QRegularExpression>
 #include <QTextStream>
 
-CompilationUnit::CompilationUnit(const QFileInfo& sourcePath, QObject* parent)
+CompilerCall::CompilerCall(const QFileInfo& sourcePath, QObject* parent)
 	: QObject(parent)
 	, sourcePath(sourcePath)
-	, targetPath(getObjectFileFor(sourcePath))
+	, targetPath(getTargetPathFor(sourcePath))
 	, state( CompilationState::unknown )
 	, errorCount(0)
 	, warningCount(0)
@@ -18,11 +18,11 @@ CompilationUnit::CompilationUnit(const QFileInfo& sourcePath, QObject* parent)
 	updateState();
 }
 
-CompilationUnit::~CompilationUnit()
+CompilerCall::~CompilerCall()
 {
 }
 
-void CompilationUnit::updateState()
+void CompilerCall::updateState()
 {
 	// If there exists the object file, and it is updated avoid to compile it again
 	if ( targetPath.exists() && isFileNewerThan(targetPath, sourcePath) )
@@ -31,12 +31,12 @@ void CompilationUnit::updateState()
 		state = CompilationState::scheduled; // Schedule this file for compilation
 }
 
-QFileInfo CompilationUnit::getObjectFileFor(const QFileInfo& sourceFilePath)
+QFileInfo CompilerCall::getTargetPathFor(const QFileInfo& sourceFilePath)
 {
 	return sourceFilePath.absolutePath() + QDir::separator() + sourceFilePath.completeBaseName() + ".o";
 }
 
-void CompilationUnit::clear()
+void CompilerCall::clear()
 {
 	for (int i = 0; i < diagnostics.size(); ++i)
 		delete diagnostics[i];
@@ -44,14 +44,14 @@ void CompilationUnit::clear()
 	diagnostics.clear();
 }
 
-bool CompilationUnit::isFileNewerThan(const QFileInfo& file1, const QFileInfo& file2)
+bool CompilerCall::isFileNewerThan(const QFileInfo& file1, const QFileInfo& file2)
 {
 	return file1.lastModified() > file2.lastModified();
 }
 
 #include <QDebug>
 
-void CompilationUnit::compile()
+void CompilerCall::compile()
 {
 	// Ensambles a command, something such as
 	// c++ -Wall -std=c++11 -c /path/player/unit/main.cpp -o /path/player/unit/main.o
@@ -74,7 +74,7 @@ void CompilationUnit::compile()
 	state = CompilationState::started;
 }
 
-QString CompilationUnit::getCxxCompiler()
+QString CompilerCall::getCxxCompiler()
 {
   #if defined(Q_OS_MACX)
 	return "clang++";
@@ -83,7 +83,7 @@ QString CompilationUnit::getCxxCompiler()
   #endif
 }
 
-QStringList CompilationUnit::getDefaultCompilerArguments()
+QStringList CompilerCall::getDefaultCompilerArguments()
 {
 	QStringList arguments;
 	arguments << "-g" << "-Wall" << "-Wextra" << "-std=c++11";
@@ -92,7 +92,7 @@ QStringList CompilationUnit::getDefaultCompilerArguments()
 	return arguments;
 }
 
-QStringList CompilationUnit::getDefaultLinkerArguments()
+QStringList CompilerCall::getDefaultLinkerArguments()
 {
 	QStringList arguments;
   #if ! defined(Q_OS_WIN)
@@ -101,7 +101,7 @@ QStringList CompilationUnit::getDefaultLinkerArguments()
 	return arguments;
 }
 
-void CompilationUnit::processFinished()
+void CompilerCall::processFinished()
 {
 	qDebug() << "Compilation finished with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
 
