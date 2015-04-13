@@ -28,7 +28,6 @@ SOURCES += \
 	source/Common/GameScene.cpp \
 	source/Common/InfoDialog.cpp \
 	source/Common/PlayerStatus.cpp \
-	source/Compiler/ClangData.cpp \
 	source/Compiler/Compiler.cpp \
 	source/Compiler/Diagnostic.cpp \
 	source/Gamee/Actor.cpp \
@@ -73,7 +72,6 @@ HEADERS += \
 	source/Common/GameScene.h \
 	source/Common/InfoDialog.h \
 	source/Common/PlayerStatus.h \
-	source/Compiler/ClangData.h \
 	source/Compiler/Compiler.h \
 	source/Compiler/Diagnostic.h \
 	source/Gamee/Actor.h \
@@ -120,15 +118,3 @@ FORMS += \
 
 OTHER_FILES += \
 	units/botnu-1.0.dtd \
-
-# Third party library: LLVM/Clang
-macx {
-	# Defines if Clang is integrated in botNeumann executable, or this is a TCP client or TCP server
-	DEFINES += CLANG_INTEGRATED
-	#DEFINES += CLANG_CLIENT
-	#DEFINES += CLANG_SERVER
-
-	LLVM_PATH = $${PWD}/3rdparty/llvm
-	INCLUDEPATH += $${LLVM_PATH}/tools/clang/include
-	LIBS += -L$${LLVM_PATH}/build/Release+Asserts/lib -lclang
-}

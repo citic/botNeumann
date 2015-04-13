@@ -3,9 +3,6 @@
 
 #include <QString>
 
-// Taken from <clang-c/Index.h>
-typedef void *CXDiagnostic;
-
 // Adapted from <clang-c/Index.h>
 enum class DiagnosticSeverity
 {
@@ -37,7 +34,7 @@ class Diagnostic
 
   public:
 	/// Constructor
-	explicit Diagnostic(CXDiagnostic diagnostic);
+	explicit Diagnostic();
 	/// Destructor
 	~Diagnostic();
 	/// A enum value indicating if it is a warning, error or fatal error

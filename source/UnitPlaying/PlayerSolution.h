@@ -6,6 +6,7 @@
 
 class Player;
 class Unit;
+class Compiler;
 
 /**
 @brief Manages the list of source files that compound the player's solution to an unit
@@ -27,6 +28,9 @@ class PlayerSolution : public QObject
 	/// These files are being edited, but just one at time is shown. A drop down (combo box) control
 	/// allows player to choose the source to edit
 	QFileInfoList sourceFiles;
+	/// If a compilation process is running, this object is not nullptr. Only a compilation
+	/// process is started at time, in this version
+	Compiler* compiler;
 
   public:
 	/// Constructor
@@ -67,10 +71,14 @@ class PlayerSolution : public QObject
   public slots:
 	/// Starts the compilation process. It is done in background. When the compilation is finished
 	/// the @a compilationFinished() signal is emitted.
-	/// @return false if there is not files to compile in the solution, true otherwise
+	/// @return false if there is not files to compile in the solution, if a compiler installation
+	/// cannot be found in the system or it cannot connect to the compiler server by TCP. Returns
+	/// true if the compilation process has begun
 	bool compile();
+	/// Called when the compiler has finished compiling files
+	void compilerFinished();
 	/// ToDo:
-	bool interpret();
+	bool debug();
 
   protected:
 	/// Loads the list of existing files in the unit solution directory for this player

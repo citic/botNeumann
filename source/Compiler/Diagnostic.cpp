@@ -1,14 +1,5 @@
 #include "Diagnostic.h"
 
-#ifdef CLANG_INTEGRATED
-
-extern "C"
-{
-#include <clang-c/Index.h>
-}
-
-#endif // CLANG_INTEGRATED
-
 // User friendly text maps to the severity codes in English
 static const char* diagnosticSeverityText[] =
 {
@@ -20,13 +11,6 @@ static const char* diagnosticSeverityText[] =
 };
 
 #ifdef CLANG_INTEGRATED
-
-inline QString clangStringToQt(CXString cxString)
-{
-	QString result( clang_getCString(cxString) );
-	clang_disposeString(cxString);
-	return result;
-}
 
 Diagnostic::Diagnostic(CXDiagnostic diagnostic)
 	: severity{ static_cast<DiagnosticSeverity>( clang_getDiagnosticSeverity(diagnostic) ) }
@@ -48,12 +32,11 @@ Diagnostic::Diagnostic(CXDiagnostic diagnostic)
 
 #else // CLANG_INTEGRATED
 
-Diagnostic::Diagnostic(CXDiagnostic diagnostic)
+Diagnostic::Diagnostic()
 	: severity{ DiagnosticSeverity::ignored }
 	, line{0}
 	, column{0}
 {
-	Q_UNUSED(diagnostic);
 }
 
 #endif // CLANG_INTEGRATED

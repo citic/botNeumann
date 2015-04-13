@@ -1,10 +1,13 @@
 #include "Compiler.h"
-#include "ClangData.h"
 #include "Diagnostic.h"
+#include <QDateTime>
+#include <QDir>
+#include <QStringList>
+#include <QProcess>
 
 Compiler::Compiler(QObject *parent)
 	: QObject(parent)
-	, clangData(nullptr)
+	, errorCount(-1)
 {
 }
 
@@ -13,25 +16,41 @@ Compiler::~Compiler()
 	clear();
 }
 
-bool Compiler::compile(const QString& filename)
+QString Compiler::getCxxCompiler()
 {
-  #ifdef CLANG_INTEGRATED
+  #if defined(Q_OS_MACX)
+	return "clang++";
+  #else
+	return "g++";
+#endif
+}
+
+QStringList Compiler::getDefaultCompilerArguments()
+{
+	QStringList arguments;
+	arguments << "-g" << "-Wall" << "-Wextra" << "-std=c++11";
+	return arguments;
+}
+
+QStringList Compiler::getDefaultLinkerArguments()
+{
+	QStringList arguments;
+  #if ! defined(Q_OS_WIN)
+	arguments << "-lm";
+  #endif
+	return arguments;
+}
+
+QFileInfo Compiler::getObjectFileFor(const QFileInfo& sourceFilePath)
+{
+	return sourceFilePath.absolutePath() + QDir::separator() + sourceFilePath.completeBaseName() + ".o";
+}
+
+#if 0
+bool Compiler::compile(const QString& filename, const QFileInfo& executablePath)
+{
 	// Clear old compilation contexts
 	clear();
-	// Create a compilation context for this file
-	clangData = new ClangData();
-
-	// The given file by parameter will be compiled as any other file. We can pass compiler
-	// arguments using an C-style array. We send default include directories as an example
-	const char* cxxArgs[] =
-	{
-		"-I/usr/include",
-		"-I.",
-		"-stdlib=libstdc++"
-	};
-
-	// Number of command line arguments to be sent to the compiler
-	const int cxxArgCount = sizeof(cxxArgs) / sizeof(cxxArgs[0]);
 
 	// Compile the given file, a CLang translation unit will be generated in dynamic memory
 	clangData->translationUnit = clang_parseTranslationUnit(clangData->index, filename.toStdString().c_str(), cxxArgs, cxxArgCount, nullptr, 0, CXTranslationUnit_None);
@@ -61,20 +80,32 @@ bool Compiler::compile(const QString& filename)
 	}
 
 	return canBeRun;
-
-  #else // CLANG_INTEGRATED
-
-	Q_UNUSED(filename);
-	return false;
-
-  #endif // CLANG_INTEGRATED
 }
+#endif
 
-void Compiler::compile(const QStringList& filenames)
+void Compiler::compile(const QFileInfoList& filepaths, const QFileInfo& executablePath)
 {
-	// Not implemented yet
-	Q_ASSERT(false);
-	Q_UNUSED(filenames);
+	// Copy the executable file path
+	this->executablePath = executablePath;
+
+	// The list of objectfiles to link
+	QStringList objectFiles;
+
+	// True if the executable must be linked
+	bool shouldLinkExecutable = false;
+
+	// For each file, generate its object file
+	foreach ( QFileInfo fileInfo, filepaths )
+	{
+		// Compile this .cpp file, it is is newer than the executable, the executable must be updated
+		bool newerThanExecutable = false;
+		objectFiles.append( generateObjectFile(fileInfo, &newerThanExecutable).absoluteFilePath() );
+		shouldLinkExecutable |= newerThanExecutable;
+	}
+
+	// Generate the executable
+	if ( shouldLinkExecutable )
+		linkExecutable(objectFiles);
 }
 
 void Compiler::clear()
@@ -83,6 +114,57 @@ void Compiler::clear()
 		delete diagnostics[i];
 
 	diagnostics.clear();
-	delete clangData;
-	clangData = nullptr;
+}
+
+#include <QDebug>
+
+QFileInfo Compiler::generateObjectFile(const QFileInfo& sourceFilePath, bool* newerThanExecutable)
+{
+	// Assume the executable must be updated, at least we find an updated .o file
+	if ( newerThanExecutable ) *newerThanExecutable = true;
+
+	// Ensambles a command, something such as
+	// c++ -Wall -std=c++11 -c /path/player/unit/main.cpp -o /path/player/unit/main.o
+	QStringList arguments( getDefaultCompilerArguments() );
+	arguments << "-c" << sourceFilePath.absoluteFilePath();
+
+	// The object file is the same source chaging its extension to .o
+	QFileInfo objectFilepath( getObjectFileFor(sourceFilePath) );
+	arguments << "-o" << objectFilepath.absoluteFilePath();
+
+	// If there exists the object file, it could be updated
+	if ( objectFilepath.exists() )
+	{
+		// If the object file is updated, avoid to compile it again
+		if ( objectFilepath.lastModified() > sourceFilePath.lastModified() )
+		{
+			// If the executable is newer than this object file, executable may be updated
+			if ( newerThanExecutable && executablePath.exists() && executablePath.lastModified() > objectFilepath.lastModified() )
+				*newerThanExecutable = false;
+
+			// No compilation required
+			return objectFilepath;
+		}
+	}
+
+	// Compilation is required, call the compiler
+	// CALL COMPILER
+	qDebug() << getCxxCompiler() << arguments;
+
+	// Done
+	return objectFilepath;
+}
+
+void Compiler::linkExecutable(const QStringList& objectFiles)
+{
+	// Ensambles a command, something such as
+	// c++ -Wall -std=c++11 /path/player/unit/main.o /path/player/unit/MyClass.o -o /path/player/unit/unit
+	QStringList arguments( getDefaultCompilerArguments() );
+	arguments << getDefaultLinkerArguments();
+	arguments << objectFiles;
+	arguments << "-o" << executablePath.absoluteFilePath();
+
+	// Call the linker
+	// CALL COMPILER
+	qDebug() << getCxxCompiler() << arguments;
 }

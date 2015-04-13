@@ -4,7 +4,6 @@ botNeumann requires the following tools:
 
 * All
 	* [Qt](http://www.qt.io/) (>5.4)
-	* [LLVM/Clang](http://llvm.org/releases/) (=3.4.2)
 	* [Inkscape](https://inkscape.org/)
 	* [Doxygen](http://doxygen.org) (optional)
 * Windows
@@ -12,7 +11,7 @@ botNeumann requires the following tools:
 * Mac OS X
 	* [XCode](https://developer.apple.com/xcode/)
 * Linux
-	* []()
+	* [GCC](https://gcc.gnu.org/) or [Clang](http://clang.llvm.org/) command line tools
 
 
 
@@ -36,40 +35,14 @@ To compile and generate an installer run a command interpreter. Add the followin
 Finally run `build.bat`.
 
 
-## Unix-like
+## Linux
 
-botNeumann requires a LLVM/Clang compiler 3.4.2. To download and compile it run the Makefile in the `3rdparty` folder. It may last several minutes according to your computer speed.
-
-	$ cd 3rdparty
-	$ make
+A GCC or Clang compiler/debugger is required, to be installed and accesible in $PATH
 
 
-### Mac OS X
+## Mac OS X
 
-Install XCode and its Command Line Tools
-
-Install `swig` for Python. It is required by LLDB
-
-	$ sudo port install swig-python
-
-Get, compile and build LLVM, Clang and LLDB:
-
-	$ cd 3rdparty
-	$ make
-
-In order to edit the source code and run the executable from Qt Creator, it should be configured. The `botNeumann` executable is generated inside a bundle (i.e. `botNeuman.app`) folder. When it is run from Qt Creator, the Clang dynamic library is not found. Steps to configure:
-
-1. Open `botNeuman.pro` in Qt Creator.
-2. Projects | Build environment | Details
-3. Add a environment variable
-
-	DYLD_LIBRARY_PATH = /full/path/to/botNeumann/3rdparty/llvm/build/Release+Asserts/lib
-
-
-
-### Linux
-
-[Not tested yet]
+Install XCode and its Command Line Tools. A compiler/debugger is also required in player's computer.
 
 
 ## Android

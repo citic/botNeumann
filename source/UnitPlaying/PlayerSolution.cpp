@@ -11,6 +11,7 @@ PlayerSolution::PlayerSolution(QObject *parent)
 	: QObject(parent)
 	, player(nullptr)
 	, unit(nullptr)
+	, compiler(nullptr)
 {
 }
 
@@ -52,7 +53,7 @@ QString PlayerSolution::getLastEditedFilepath() const
 	// If there is only one file, we dont' have to compare modification dates
 	if ( sourceFiles.size() == 1 ) return sourceFiles[0].absoluteFilePath();
 
-	// There are files, compare its modification dates
+	// There are files, compare its modification dates, and select the latest modified
 	int lastModifiedIndex = 0;
 	QDateTime lastModifiedDate = sourceFiles[0].lastModified();
 	for (int i = 1; i < sourceFiles.size(); ++i )
@@ -80,19 +81,45 @@ QString PlayerSolution::getPlayerUnitSourcePath(Player* player, Unit* unit, cons
 	return getPlayerUnitPath(player, unit) + '/' + basename;
 }
 
-#include <QDebug>
-
 bool PlayerSolution::compile()
 {
 	// If there are not files, ignore the call
 	if ( sourceFiles.size() <= 0 ) return false;
 
-	// ToDo: this process in background (a thread). Issue #50
-	Compiler compiler;
-	bool canBeRun = compiler.compile( sourceFiles[0].absoluteFilePath() );
+	// If there is an active compiling process, do not start a new one
+	if ( compiler ) return false;
+
+	// Create an object in charge of compiling the solution files
+	compiler = new Compiler(this);
+
+	// We do not wait until compilation process finishes. The compiler will emit signals while
+	// the process is running, react to these signals
+	connect( compiler, SIGNAL(finished()), this, SLOT(compilerFinished()));
+
+	// The name of the executable file is the same id of the unit
+	const QString& executablePath = getPlayerUnitSourcePath(unit->getId());
+
+	// Start the compiling process
+	compiler->compile(sourceFiles, executablePath);
+
+	// Done
+	return true;
+}
+
+#include <QDebug>
+
+void PlayerSolution::compilerFinished()
+{
+	Q_ASSERT(compiler);
+
+	if ( compiler->getErrorCount() == 0 )
+	{
+		qDebug() << "Solution can be run";
+		return;
+	}
 
 	// Show diagnostics in terminal
-	const QList<Diagnostic*>& diagnostics = compiler.getDiagnostics();
+	const QList<Diagnostic*>& diagnostics = compiler->getDiagnostics();
 	for ( int i = 0; i < diagnostics.size(); ++i )
 	{
 		const Diagnostic* diagnostic = diagnostics[i];
@@ -102,11 +129,12 @@ bool PlayerSolution::compile()
 	}
 	emit compilationFinished();
 
-	// Done
-	return canBeRun;
+	// Compilation has finished, remove the object for that compilation
+	compiler->deleteLater();
+	compiler = nullptr;
 }
 
-bool PlayerSolution::interpret()
+bool PlayerSolution::debug()
 {
 	// ToDo:
 	return false;
