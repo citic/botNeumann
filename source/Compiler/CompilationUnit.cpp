@@ -12,6 +12,7 @@ CompilationUnit::CompilationUnit(const QFileInfo& sourcePath, QObject* parent)
 	, targetPath(getObjectFileFor(sourcePath))
 	, state( CompilationState::unknown )
 	, errorCount(0)
+	, warningCount(0)
 	, process(nullptr)
 {
 	updateState();
@@ -135,6 +136,8 @@ void CompilationUnit::processFinished()
 			// If the diagnostic is a normal or fatal error, increase its number
 			if ( currentDiagnostic->isError() )
 				++errorCount;
+			else
+				++warningCount;
 		}
 		// If the line is not the begin of a diagnostic, append the line to the active diagnostic
 		else if ( currentDiagnostic )

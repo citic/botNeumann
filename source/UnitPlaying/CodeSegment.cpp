@@ -121,11 +121,13 @@ void CodeSegment::runOrPauseTriggered()
 
 	// Compile and run the player solution
 	Q_ASSERT(playerSolution);
-	bool canBeRun = playerSolution->compile();
+	connect(playerSolution, SIGNAL(compilationFinished()), this, SLOT(playerSolutionCompiled()));
+	playerSolution->compile();
+}
 
-	// ToDo: run logic
-	if ( canBeRun ) qDebug() << "Code can be run/interpreted";
-		// interpret code
+void CodeSegment::playerSolutionCompiled()
+{
+	qDebug() << "Player solution compiled. ToDo: check for errors before start debugging";
 }
 
 void CodeSegment::stepIntoTriggered()

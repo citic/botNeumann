@@ -23,7 +23,7 @@ class Compiler : public QObject
 {
 	Q_OBJECT
 
-  private:
+  protected:
 	/// For each .c/.cpp source file a compilation task is scheduled to be compiled
 	QList<CompilationUnit*> compilationUnits;
 	/// True if the executable is scheduled to be compiled
@@ -32,6 +32,9 @@ class Compiler : public QObject
 	/// the solution can be run, even it would have warnings. This value is valid only
 	/// after a compilation process has finished.
 	int errorCount;
+	/// The number of warnings collected during the compilation process. -1 if no compilation
+	/// has been done This value is valid only after a compilation process has finished.
+	int warningCount;
 	/// Path of the target executable file. It will be linked only if it is out-dated
 	QFileInfo executablePath;
 	/// The list of objectfiles to link
@@ -48,30 +51,32 @@ class Compiler : public QObject
 	/// the solution can be run, even it would have warnings. This value is valid only
 	/// after a compilation process has finished. If called before, it will return -1
 	inline int getErrorCount() const { return errorCount; }
+	/// The number of warnings collected during the compilation process. -1 if no compilation
+	/// has been done This value is valid only after a compilation process has finished.
+	inline int getWarningCount() const { return warningCount; }
 
   signals:
 	/// Emitted when a compilation process has finished
 	void finished();
 
   public slots:
-	/// Compiles the given source file. It starts a separate thread. When it finishes, the
-	/// @a compilationFinished() signal is emitted. The result and products of the compilation
+	/// Compiles the given source files. It starts a separate thread. When it finishes, the
+	/// @a finished() signal is emitted. The result and products of the compilation
 	/// (diagnostics, intermediate representation) can be get using accesor methods
-//	bool compile(const QString& filename, const QFileInfo& executablePath);
-	/// Compiles the given set of source files
-	/// @see compile(const QString&)
 	void compile(const QFileInfoList& filepaths, const QFileInfo& executablePath);
 	/// Erases all information about a compiling. This method is automatically called by compile()
 	void clear();
 
   protected slots:
+	/// Called when the current compilation unit has finished its compiling process
+	void compilationUnitFinished();
+
+  protected:
 	/// Compiles the next scheduled .cpp file and generates its respective .o in the same folder
 	void compileNextUnit();
 	/// Call the compilers to generate the executable or update it
 	/// @param The complete list of object files that will compound the executable
 	void linkExecutable();
-
-  protected:
 	/// Fills the compilationUnits with the list of source files that must be compiled
 	void scheduleCompilationUnits(const QFileInfoList& filepaths);
 };

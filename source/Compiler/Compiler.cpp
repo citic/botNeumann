@@ -6,6 +6,7 @@
 Compiler::Compiler(QObject *parent)
 	: QObject(parent)
 	, errorCount(-1)
+	, warningCount(-1)
 	, currentCompilationUnit(-1)
 {
 }
@@ -13,6 +14,15 @@ Compiler::Compiler(QObject *parent)
 Compiler::~Compiler()
 {
 	clear();
+}
+
+void Compiler::clear()
+{
+	for (int i = 0; i < compilationUnits.size(); ++i)
+		delete compilationUnits[i];
+
+	compilationUnits.clear();
+	objectFiles.clear();
 }
 
 void Compiler::compile(const QFileInfoList& filepaths, const QFileInfo& executablePath)
@@ -29,54 +39,12 @@ void Compiler::compile(const QFileInfoList& filepaths, const QFileInfo& executab
 	// Fill the list of source files that require be compiled
 	scheduleCompilationUnits(filepaths);
 
+	// Reset the number of warnings and errors found
+	errorCount = warningCount = 0;
+
 	// Start to compile the first scheduled unit
 	currentCompilationUnit = 0;
 	compileNextUnit();
-}
-
-void Compiler::clear()
-{
-	for (int i = 0; i < compilationUnits.size(); ++i)
-		delete compilationUnits[i];
-
-	compilationUnits.clear();
-	objectFiles.clear();
-}
-
-void Compiler::compileNextUnit()
-{
-	// If there are pending scheduled units, compile the next one
-	if ( currentCompilationUnit < compilationUnits.size() )
-	{
-		// When this compilation unit has finished, call this method to compile the next one
-		CompilationUnit* compilationUnit = compilationUnits[currentCompilationUnit];
-		connect(compilationUnit, SIGNAL(finished()), this, SLOT(compileNextUnit()) );
-
-		// Start the compilation process and move to the next one
-		compilationUnit->compile();
-		++currentCompilationUnit;
-	}
-	else if ( shouldLinkExecutable )
-		linkExecutable();
-	else // Compilation process finished
-		emit finished();
-}
-
-#include <QDebug>
-
-void Compiler::linkExecutable()
-{
-	// Ensambles a command, something such as
-	// c++ -Wall -std=c++11 /path/player/unit/main.o /path/player/unit/MyClass.o -o /path/player/unit/unit
-	QStringList arguments( CompilationUnit::getDefaultCompilerArguments() );
-	arguments << CompilationUnit::getDefaultLinkerArguments();
-	arguments << objectFiles;
-	arguments << "-o" << executablePath.absoluteFilePath();
-
-	// Call the linker
-	// CALL COMPILER
-	qDebug() << CompilationUnit::getCxxCompiler() << arguments;
-	emit finished(); // for the moment
 }
 
 void Compiler::scheduleCompilationUnits(const QFileInfoList& filepaths)
@@ -100,4 +68,57 @@ void Compiler::scheduleCompilationUnits(const QFileInfoList& filepaths)
 		else
 			delete compilationUnit;
 	}
+}
+
+void Compiler::compileNextUnit()
+{
+	// If there are pending scheduled units, compile the next one
+	if ( currentCompilationUnit < compilationUnits.size() )
+	{
+		// When this compilation unit has finished, call this method to compile the next one
+		CompilationUnit* compilationUnit = compilationUnits[currentCompilationUnit];
+		connect(compilationUnit, SIGNAL(finished()), this, SLOT(compilationUnitFinished()) );
+
+		// Start the compilation process
+		compilationUnit->compile();
+	}
+	else if ( shouldLinkExecutable )
+		linkExecutable();
+	else // Compilation process finished
+		emit finished();
+}
+
+void Compiler::compilationUnitFinished()
+{
+	// Get the compilation unit that finished
+	CompilationUnit* compilationUnit = compilationUnits[currentCompilationUnit];
+
+	// Update the record of warnings and errors
+	errorCount += compilationUnit->getErrorCount();
+	warningCount += compilationUnit->getWarningCount();
+
+	// If there are errors, an object file was not generated therefore executable cannot be linked
+	if ( errorCount > 0 )
+		shouldLinkExecutable = false;
+
+	// Continue compiling the next compilation unit
+	++currentCompilationUnit;
+	compileNextUnit();
+}
+
+#include <QDebug>
+
+void Compiler::linkExecutable()
+{
+	// Ensambles a command, something such as
+	// c++ -Wall -std=c++11 /path/player/unit/main.o /path/player/unit/MyClass.o -o /path/player/unit/unit
+	QStringList arguments( CompilationUnit::getDefaultCompilerArguments() );
+	arguments << CompilationUnit::getDefaultLinkerArguments();
+	arguments << objectFiles;
+	arguments << "-o" << executablePath.absoluteFilePath();
+
+	// Call the linker
+	// CALL COMPILER
+	qDebug() << CompilationUnit::getCxxCompiler() << arguments;
+	emit finished(); // for the moment
 }

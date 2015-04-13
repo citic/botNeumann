@@ -83,7 +83,7 @@ QString PlayerSolution::getPlayerUnitSourcePath(Player* player, Unit* unit, cons
 
 bool PlayerSolution::compile()
 {
-	// If there are not files, ignore the call
+	// If there are not files to compile, ignore the call
 	if ( sourceFiles.size() <= 0 ) return false;
 
 	// If there is an active compiling process, do not start a new one
@@ -92,12 +92,12 @@ bool PlayerSolution::compile()
 	// Create an object in charge of compiling the solution files
 	compiler = new Compiler(this);
 
-	// We do not wait until compilation process finishes. The compiler will emit signals while
-	// the process is running, react to these signals
+	// We do not wait until the entire compilation process finishes. The compiler will emit signals
+	// while the process is running, react to these signals
 	connect( compiler, SIGNAL(finished()), this, SLOT(compilerFinished()));
 
 	// The name of the executable file is the same id of the unit
-	const QString& executablePath = getPlayerUnitSourcePath(unit->getId());
+	const QString& executablePath = getPlayerUnitSourcePath( unit->getId() );
 
 	// Start the compiling process
 	compiler->compile(sourceFiles, executablePath);
@@ -112,6 +112,7 @@ void PlayerSolution::compilerFinished()
 {
 	Q_ASSERT(compiler);
 
+	qDebug("Compilation finished: %i error(s), %i warning(s)", compiler->getErrorCount(), compiler->getWarningCount());
 	if ( compiler->getErrorCount() == 0 )
 		qDebug() << "Solution can be run";
 /*

@@ -40,6 +40,8 @@ class CompilationUnit : public QObject
 	QList<Diagnostic*> diagnostics;
 	/// Number of errors found in this source file. If > 0, code cannot be run
 	int errorCount;
+	/// Number of warnings found in this source file. Solution may still run
+	int warningCount;
 	/// The compiler executable is called in a separate process
 	QProcess* process;
 
@@ -60,6 +62,10 @@ class CompilationUnit : public QObject
 	inline const QList<Diagnostic*>& getDiagnostics() const { return diagnostics; }
 	/// Erases all dignostics
 	void clear();
+	/// Number of errors found in this source file. If > 0, code cannot be run
+	inline int getErrorCount() const { return errorCount; }
+	/// Number of warnings found in this source file. Solution may still run
+	inline int getWarningCount() const { return warningCount; }
 	/// Returns true if the source file is newer than the given one
 	inline bool isSourceNewerThan(const QFileInfo& fileInfo) const { return isFileNewerThan(sourcePath, fileInfo); }
 	/// Returns true if the object file is newer than the given one

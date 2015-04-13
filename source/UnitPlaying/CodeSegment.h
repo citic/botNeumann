@@ -69,6 +69,8 @@ class CodeSegment : public QDockWidget
 	void setupCodeEditor();
 
   protected slots:
+	/// Called when the player solution has finished to compile and link
+	void playerSolutionCompiled();
 	// ToDo: Move these slots to an Interpreter class
 	/// Called when the run or pause button is pressed
 	void runOrPauseTriggered();
