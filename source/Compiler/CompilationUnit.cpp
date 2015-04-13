@@ -83,6 +83,8 @@ QStringList CompilationUnit::getDefaultCompilerArguments()
 {
 	QStringList arguments;
 	arguments << "-g" << "-Wall" << "-Wextra" << "-std=c++11";
+	if ( getCxxCompiler() == "clang++" )
+		arguments << "-fdiagnostics-parseable-fixits";
 	return arguments;
 }
 

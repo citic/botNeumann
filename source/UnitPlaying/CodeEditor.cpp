@@ -39,11 +39,12 @@ CodeEditor::CodeEditor(QWidget* parent)
 	// The idle timer always work in single shot basics
 	autoSaveTimer->setSingleShot(true);
 	autoSaveTimer->setInterval(autoSaveWait);
-	connect(autoSaveTimer, SIGNAL(timeout()), this, SLOT(save()));
+	connect(autoSaveTimer, SIGNAL(timeout()), this, SLOT(saveChanges()));
 }
 
 CodeEditor::~CodeEditor()
 {
+	saveChanges();
 }
 
 bool CodeEditor::loadFile(Unit* unit, const QString& filepath)
@@ -106,6 +107,11 @@ bool CodeEditor::loadFileContents()
 void CodeEditor::documentChanged()
 {
 	autoSaveTimer->start();
+}
+
+bool CodeEditor::saveChanges()
+{
+	return document()->isModified() ? save() : true;
 }
 
 bool CodeEditor::save()

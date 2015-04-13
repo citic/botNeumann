@@ -116,6 +116,9 @@ void CodeSegment::reset()
 
 void CodeSegment::runOrPauseTriggered()
 {
+	// If there is unsaved changes, save them
+	codeEditor->saveChanges();
+
 	// Compile and run the player solution
 	Q_ASSERT(playerSolution);
 	bool canBeRun = playerSolution->compile();
