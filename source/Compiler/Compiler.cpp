@@ -2,7 +2,6 @@
 #include "Compiler.h"
 #include "Diagnostic.h"
 #include <QStringList>
-#include <QProcess>
 
 Compiler::Compiler(QObject *parent)
 	: QObject(parent)

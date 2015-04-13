@@ -4,14 +4,14 @@
 #include <QFileInfo>
 
 class Diagnostic;
+class QProcess;
 
 /// The different states of the compilation process
 enum class CompilationState
 {
 	unknown,
 	scheduled,
-	starting,
-	running,
+	started,
 	finished
 };
 
@@ -38,6 +38,8 @@ class CompilationUnit : public QObject
 	CompilationState state;
 	/// List of warnings and errors generated when compiling this source file
 	QList<Diagnostic*> diagnostics;
+	/// The compiler executable is called in a separate process
+	QProcess* process;
 
   public:
 	/// Constructor
@@ -79,6 +81,10 @@ class CompilationUnit : public QObject
   signals:
 	/// Emitted when the compiling process has finished for whatever reason
 	void finished();
+
+  protected slots:
+	/// Called when the compiling process of this unit finished
+	void processFinished();
 
   protected:
 	/// Determines if this source file must be or not compiled. It depends if the dates of the

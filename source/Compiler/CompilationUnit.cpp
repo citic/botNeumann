@@ -2,12 +2,14 @@
 #include "Diagnostic.h"
 #include <QDateTime>
 #include <QDir>
+#include <QProcess>
 
 CompilationUnit::CompilationUnit(const QFileInfo& sourcePath, QObject* parent)
 	: QObject(parent)
 	, sourcePath(sourcePath)
 	, targetPath(getObjectFileFor(sourcePath))
 	, state( CompilationState::unknown )
+	, process(nullptr)
 {
 	updateState();
 }
@@ -55,10 +57,17 @@ void CompilationUnit::compile()
 	// The object file is the same source chaging its extension to .o
 	arguments << "-o" << targetPath.absoluteFilePath();
 
-	// Compilation is required, call the compiler
-	// CALL COMPILER
-	qDebug() << getCxxCompiler() << arguments;
+	// Call the compiler in another process
+	Q_ASSERT(process == nullptr);
+	process = new QProcess(this);
 
+	// When compilation finishes, call a method of this class
+	connect(process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished()));
+
+	// Start the process
+	process->start(getCxxCompiler(), arguments);
+	qDebug() << process->program() << process->arguments().join(" ");
+	state = CompilationState::started;
 }
 
 QString CompilationUnit::getCxxCompiler()
@@ -84,4 +93,14 @@ QStringList CompilationUnit::getDefaultLinkerArguments()
 	arguments << "-lm";
   #endif
 	return arguments;
+}
+
+void CompilationUnit::processFinished()
+{
+	qDebug() << "Compilation finished with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
+	qDebug() << "stdout [" << process->readAllStandardOutput() << "]";
+	qDebug() << "stderr {" << process->readAllStandardError() << "}";
+
+	state = CompilationState::finished;
+	emit finished();
 }
