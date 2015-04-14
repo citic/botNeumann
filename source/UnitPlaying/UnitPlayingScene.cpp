@@ -3,6 +3,7 @@
 #include "DataSegment.h"
 #include "HeapSegment.h"
 #include "MainWindow.h"
+#include "MessagesDockWidget.h"
 #include "Stage.h"
 #include "UnitPlayingScene.h"
 #include <QDebug>
@@ -15,6 +16,7 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	, heapSegment(nullptr)
 	, cpuCores(nullptr)
 	, dataSegment(nullptr)
+	, messagesDockWidget(nullptr)
 {
 	// Create the standar menu with back button, title, code editor toggle, config, and so on
 	createStandardMenu(context + ' ' + levelUnit, true);
@@ -31,6 +33,7 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	createHeapSegment(heapSegmentProportion);
 	createCpuCores(cpuCoresProportion);
 	createDataSegment(dataSegmentProportion);
+	createMessagesDockWidget();
 }
 
 UnitPlayingScene::~UnitPlayingScene()
@@ -43,12 +46,15 @@ void UnitPlayingScene::startLeavingStage()
 	// Hide the code editor when the scene is leaving the stage
 	codeSegment->reset();
 	codeSegment->setVisible(false);
+	messagesDockWidget->setVisible(false);
+	messagesDockWidget->deleteLater();
 }
 
 void UnitPlayingScene::finishedEnteringStage()
 {
 	// The scene is ready in the stage after the transition, show the code editor (code segment)
 	codeSegment->setVisible(true);
+	messagesDockWidget->setVisible(true);
 
 	// Loads or restore the code for this unit
 	codeSegment->loadCodeForUnit( &unit );
@@ -118,4 +124,15 @@ void UnitPlayingScene::createDataSegment(double dataSegmentProportion)
 	Q_ASSERT(dataSegment == nullptr);
 	dataSegment = new DataSegment(unit, this);
 	this->layout->addLayout(dataSegment, dataSegmentProportion);
+}
+
+void UnitPlayingScene::createMessagesDockWidget()
+{
+	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
+	Q_ASSERT(mainWindow);
+
+	// Create a dock widget for the messages
+	messagesDockWidget = new MessagesDockWidget(mainWindow);
+	messagesDockWidget->setVisible(false);
+	mainWindow->addDockWidget(Qt::BottomDockWidgetArea, messagesDockWidget);
 }

@@ -6,7 +6,6 @@
 class BotNeumannDirector;
 class CodeSegment;
 class InfoDialog;
-class Scene;
 class Stage;
 class QDockWidget;
 
@@ -48,7 +47,7 @@ class MainWindow : public QMainWindow
 	/// Create the control where scenes are shown and shows the first scene
 	void setupStage();
 	/// Create the source code editor control
-	void setupCodeEditor();
+	void setupCodeSegment();
 	/// Save the window dimensions to be used later
 	void saveSettings();
 	/// Restore (apply) the saved window dimensions

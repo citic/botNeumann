@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// Create each window section
 	setupStage();
-	setupCodeEditor();
+	setupCodeSegment();
 	restoreSettings();
 	// Sometimes settings restore the codeEditor, but it must be invisible at the beginning
 	codeSegment->setVisible(false);
@@ -74,7 +74,7 @@ void MainWindow::setupStage()
 	director->begin();
 }
 
-void MainWindow::setupCodeEditor()
+void MainWindow::setupCodeSegment()
 {
 	// Source code editor is only visible in playing scenes, disabled by default
 	Q_ASSERT(codeSegment == nullptr);

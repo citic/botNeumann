@@ -24,6 +24,7 @@ INCLUDEPATH += \
 	source/UnitPlaying/CodeSegment \
 	source/UnitPlaying/DataSegment \
 	source/UnitPlaying/HeapSegment \
+	source/UnitPlaying/Messages \
 	source/UnitPlaying/Threads \
 	source/UnitSelection \
 
@@ -66,6 +67,7 @@ SOURCES += \
 	source/UnitPlaying/Common/MemorySegment.cpp \
 	source/UnitPlaying/DataSegment/DataSegment.cpp \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
+	source/UnitPlaying/Messages/MessagesDockWidget.cpp \
 	source/UnitPlaying/Threads/CpuCore.cpp \
 	source/UnitPlaying/Threads/CpuCores.cpp \
 	source/UnitPlaying/Unit.cpp \
@@ -112,6 +114,7 @@ HEADERS += \
 	source/UnitPlaying/Common/MemorySegment.h \
 	source/UnitPlaying/DataSegment/DataSegment.h \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
+	source/UnitPlaying/Messages/MessagesDockWidget.h \
 	source/UnitPlaying/Threads/CpuCore.h \
 	source/UnitPlaying/Threads/CpuCores.h \
 	source/UnitPlaying/Unit.h \
