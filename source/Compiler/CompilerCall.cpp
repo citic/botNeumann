@@ -57,8 +57,9 @@ void CompilerCall::start()
 	Q_ASSERT(process == nullptr);
 	process = new QProcess(this);
 
-	// When compilation finishes, call a method of this class
+	// When compilation finishes, for success or error, call a method of this class
 	connect(process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished()));
+	connect(process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(processFailed()));
 
 	// Start the process
 	process->start(getCxxCompiler(), arguments);
@@ -115,4 +116,24 @@ void CompilerCall::processFinished()
 	// All the compiler output was processed. This source file has finished its compiling process
 	state = ToolCallState::finished;
 	emit finished();
+}
+
+void CompilerCall::processFailed()
+{
+	qDebug() << "Compilation failed with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
+
+	// The compilation fails when the compiler executable is not found or when user has not
+	// permissions to execute it. The most common scenery is in Windows, when the compiler is
+	// not installed or not included in PATH variable. Ask user the installation directory.
+	if ( askPlayerCompilerDirectory() )
+	{
+		// User provided the directory, retry
+		start();
+	}
+	else
+	{
+		// User did not provided the compiler installation directory. Stop the compilation process
+		++errorCount;
+		emit finished();
+	}
 }

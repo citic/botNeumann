@@ -62,6 +62,8 @@ class CompilerCall : public ToolCall
   protected slots:
 	/// Called when the compiling process of this unit finished
 	void processFinished();
+	/// Called when the compiler call failed, for example, the linker is not found
+	void processFailed();
 
   protected:
 	/// Determines if this source file must be or not compiled. It depends if the dates of the

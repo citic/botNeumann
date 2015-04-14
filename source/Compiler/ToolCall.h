@@ -46,6 +46,13 @@ class ToolCall : public QObject
 	static QStringList getDefaultCompilerArguments();
 	/// Default linker arguments
 	static QStringList getDefaultLinkerArguments();
+	/// Asks to the player the installation directory of a GCC compatible compiler
+	/// The compilation fails when the compiler executable is not found or when user has not
+	/// permissions to execute it. The most common scenery is in Windows, when the compiler is
+	/// not installed or not included in PATH variable. The given directory is stored in an
+	/// user setting, so it will be reused in future executions of botNeumann
+	/// @return true if player set the directory, false if player does not provide one
+	bool askPlayerCompilerDirectory();
 
   signals:
 	/// Emitted when the compiling process has finished for whatever reason

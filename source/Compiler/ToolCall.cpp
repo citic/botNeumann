@@ -1,6 +1,10 @@
 #include "ToolCall.h"
 #include <QDateTime>
+#include <QDir>
+#include <QFileDialog>
+#include <QMessageBox>
 #include <QProcess>
+#include <QSettings>
 
 ToolCall::ToolCall(QObject* parent)
 	: QObject(parent)
@@ -20,10 +24,16 @@ bool ToolCall::isFileNewerThan(const QFileInfo& file1, const QFileInfo& file2)
 
 QString ToolCall::getCxxCompiler()
 {
+	// Get installation directory from preferences
+	QSettings settings;
+	QString installationDirectory = settings.value("Compiler/InstallationDirectory", "").toString();
+	if ( installationDirectory.length() > 0 )
+		installationDirectory.append( QDir::separator() );
+
   #if defined(Q_OS_MACX)
-	return "clang++";
+	return dir + "clang++";
   #else
-	return "g++";
+	return installationDirectory + "g++";
   #endif
 }
 
@@ -43,4 +53,47 @@ QStringList ToolCall::getDefaultLinkerArguments()
 	arguments << "-lm";
   #endif
 	return arguments;
+}
+
+#include <QDebug>
+
+bool ToolCall::askPlayerCompilerDirectory()
+{
+	// A first dialog informs players about the problem and let them decide if they want to
+	// choose the compiler's installation directory or cancel everything
+	QString message(tr("A GCC compatible compiler is required to be installed on your system in "
+		"order to build and run your solution. If you already have installed a compiler that is "
+		"not included in your PATH environment variable, press 'Choose directory' to select it. "
+		"You should provide the 'bin' subdirectory of your compiler.\n\n"
+		"If you do not have a compiler installed, consider the following suggestion:\n\n"));
+
+  #if defined(Q_OS_WIN)
+	message.append(tr("TDM-GCC or MinGW"));
+  #elif defined(Q_OS_MAC)
+	message.append(tr("XCode and Command Line Tools\n"));
+  #else //elif defined(Q_OS_UNIX)
+	message.append(tr("GCC or Clang\n"));
+  #endif
+
+	// Ask the question to the user
+	if ( QMessageBox::question(nullptr, tr("Compiler not found"), message, tr("Choose directory"), tr("Cancel")) == 0 )
+	{
+		// User decided to choose a directory, present a file chooser dialog
+		QFileDialog dirDialog;
+		dirDialog.setFileMode(QFileDialog::DirectoryOnly);
+		dirDialog.setOption(QFileDialog::ShowDirsOnly);
+
+		// Launch the file selector dialog
+		if ( dirDialog.exec() )
+		{
+			// ToDo: check the directory actually has a compiler
+			// ToDo: set the PATH enviroment variable to include that directory
+
+			// Store the directory in the user configuration
+			QSettings settings;
+			settings.setValue("Compiler/InstallationDirectory", dirDialog.selectedFiles()[0] );
+			return true;
+		}
+	}
+	return false;
 }
