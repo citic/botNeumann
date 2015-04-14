@@ -31,7 +31,7 @@ QString ToolCall::getCxxCompiler()
 		installationDirectory.append( QDir::separator() );
 
   #if defined(Q_OS_MACX)
-	return dir + "clang++";
+	return installationDirectory + "clang++";
   #else
 	return installationDirectory + "g++";
   #endif

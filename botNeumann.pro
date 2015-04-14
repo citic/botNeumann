@@ -20,6 +20,11 @@ INCLUDEPATH += \
 	source/GameMenu \
 	source/Players \
 	source/UnitPlaying \
+	source/UnitPlaying/Common \
+	source/UnitPlaying/CodeSegment \
+	source/UnitPlaying/DataSegment \
+	source/UnitPlaying/HeapSegment \
+	source/UnitPlaying/Threads \
 	source/UnitSelection \
 
 SOURCES += \
@@ -53,16 +58,16 @@ SOURCES += \
 	source/GameMenu/PlayerManagerDialog.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
-	source/UnitPlaying/CodeEditor.cpp \
-	source/UnitPlaying/CodeSegment.cpp \
-	source/UnitPlaying/CpuCore.cpp \
-	source/UnitPlaying/CpuCores.cpp \
-	source/UnitPlaying/DataSegment.cpp \
-	source/UnitPlaying/HeapSegment.cpp \
-	source/UnitPlaying/MemoryRow.cpp \
-	source/UnitPlaying/MemorySegment.cpp \
-	source/UnitPlaying/PlayerSolution.cpp \
-	source/UnitPlaying/SyntaxHighlighter.cpp \
+	source/UnitPlaying/CodeSegment/CodeEditor.cpp \
+	source/UnitPlaying/CodeSegment/CodeSegment.cpp \
+	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
+	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
+	source/UnitPlaying/Common/MemoryRow.cpp \
+	source/UnitPlaying/Common/MemorySegment.cpp \
+	source/UnitPlaying/DataSegment/DataSegment.cpp \
+	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
+	source/UnitPlaying/Threads/CpuCore.cpp \
+	source/UnitPlaying/Threads/CpuCores.cpp \
 	source/UnitPlaying/Unit.cpp \
 	source/UnitPlaying/UnitPlayingScene.cpp \
 	source/UnitSelection/UnitManager.cpp \
@@ -99,16 +104,16 @@ HEADERS += \
 	source/GameMenu/GameMenuScene.h \
 	source/GameMenu/PlayerManagerDialog.h \
 	source/MainWindow.h \
-	source/UnitPlaying/CodeEditor.h \
-	source/UnitPlaying/CodeSegment.h \
-	source/UnitPlaying/CpuCore.h \
-	source/UnitPlaying/CpuCores.h \
-	source/UnitPlaying/DataSegment.h \
-	source/UnitPlaying/HeapSegment.h \
-	source/UnitPlaying/MemoryRow.h \
-	source/UnitPlaying/MemorySegment.h \
-	source/UnitPlaying/PlayerSolution.h \
-	source/UnitPlaying/SyntaxHighlighter.h \
+	source/UnitPlaying/CodeSegment/CodeEditor.h \
+	source/UnitPlaying/CodeSegment/CodeSegment.h \
+	source/UnitPlaying/CodeSegment/PlayerSolution.h \
+	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
+	source/UnitPlaying/Common/MemoryRow.h \
+	source/UnitPlaying/Common/MemorySegment.h \
+	source/UnitPlaying/DataSegment/DataSegment.h \
+	source/UnitPlaying/HeapSegment/HeapSegment.h \
+	source/UnitPlaying/Threads/CpuCore.h \
+	source/UnitPlaying/Threads/CpuCores.h \
 	source/UnitPlaying/Unit.h \
 	source/UnitPlaying/UnitPlayingScene.h \
 	source/UnitSelection/UnitManager.h \
