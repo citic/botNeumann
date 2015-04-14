@@ -32,6 +32,11 @@ To compile and generate an installer run a command interpreter. Add the followin
 3. Your MinGW bin (where `mingw32-make` is)
 4. Your BitRock Install Builder bin (where `builder-cli` is)
 
+or you may create a `buildpath.bat` in the root directory of `botNeumann`. This file only requires to add the previous directories to the PATH enviroment variable, something like:
+
+	@echo off
+	PATH=%PATH%;C:\Qt\Qt5.4.0\5.4\mingw491_32\bin;C:\Qt\Qt5.4.0\Tools\mingw491_32\bin;C:\Program Files (x86)\BitRock InstallBuilder for Qt 9.5.5\bin;C:\Program Files\Inkscape
+
 Finally run `build.bat`.
 
 

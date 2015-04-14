@@ -1,7 +1,7 @@
 <project>
     <shortName>botNeumann</shortName>
     <fullName>botNeumann</fullName>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <installerFilename>${product_shortname}-${product_version}-${platform_name}.${platform_exec_suffix}</installerFilename>
     <licenseFile>../doc/LICENSE.txt</licenseFile>
     <wrapLicenseFileText>0</wrapLicenseFileText>

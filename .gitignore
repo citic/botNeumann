@@ -77,11 +77,13 @@ Debug.win32/
 Release.win32/
 
 # Project specific
+*.tmp
 tmp
 assets/*.pdf
 assets/*.png
 assets/game_menu/*.png
 assets/game_logo/
+/buildpath.bat
 
 # BitRock installer
 installer/license.xml

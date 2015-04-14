@@ -6,6 +6,9 @@ rem   BitRock InstallBuilder
 rem   Inkscape
 rem   Doxygen
 
+rem If exists a file setting the paths to the previous tools, run it
+if exist buildpath.bat call buildpath.bat
+
 :png
 echo Exporting vector images to png...
 inkscape -w 200 -h 270 -f assets/game_menu/robot.svg -C -e assets/game_menu/robot.png
