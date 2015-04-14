@@ -69,11 +69,9 @@ void UnitPlayingScene::finishedEnteringStage()
 
 void UnitPlayingScene::infoButtonPressed()
 {
-	// Create a dialog showing information about this level
-	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
-	Q_ASSERT(mainWindow);
 	// ToDo: get active language
-	mainWindow->toggleInfoDialog( unit.getId(), unit.getDescription("es") );
+	Q_ASSERT(messagesDockWidget);
+	messagesDockWidget->setVisible( ! messagesDockWidget->isVisible() );
 }
 
 void UnitPlayingScene::backButtonPressed()
@@ -151,5 +149,6 @@ void UnitPlayingScene::createMessagesDockWidget()
 	// Create a dock widget for the messages
 	messagesDockWidget = new MessagesDockWidget(mainWindow);
 	messagesDockWidget->setVisible(false);
+	messagesDockWidget->setUnitDescription( unit.getDescription("es"), false );
 	mainWindow->addDockWidget(Qt::BottomDockWidgetArea, messagesDockWidget);
 }
