@@ -12,7 +12,6 @@
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, stage(nullptr)
-	, codeSegment(nullptr)
 	, director(nullptr)
 	, infoDialog(nullptr)
 {
@@ -27,10 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// Create each window section
 	setupStage();
-	setupCodeSegment();
 	restoreSettings();
-	// Sometimes settings restore the codeEditor, but it must be invisible at the beginning
-	codeSegment->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -72,14 +68,6 @@ void MainWindow::setupStage()
 	Q_ASSERT(director == nullptr);
 	director = new BotNeumannDirector(stage);
 	director->begin();
-}
-
-void MainWindow::setupCodeSegment()
-{
-	// Source code editor is only visible in playing scenes, disabled by default
-	Q_ASSERT(codeSegment == nullptr);
-	codeSegment = new CodeSegment(this);
-	addDockWidget(Qt::RightDockWidgetArea, codeSegment);
 }
 
 void MainWindow::saveSettings()

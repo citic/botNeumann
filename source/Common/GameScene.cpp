@@ -71,7 +71,7 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 		this->codeEditorToggle = new SvgButton(":/button_code_editor.svg", this);
 		this->codeEditorToggle->alignCenter();
 		menuLayout->addItem(codeEditorToggle, buttonWidthPercent);
-		connect(codeEditorToggle, SIGNAL(pressed()), this, SLOT(codeEditorTogglePressed()));
+		connect(codeEditorToggle, SIGNAL(pressed()), this, SLOT(codeSegmentTogglePressed()));
 	}
 
 	// Config button
@@ -103,13 +103,9 @@ void GameScene::configButtonPressed()
 	qDebug() << "Configuration asked";
 }
 
-void GameScene::codeEditorTogglePressed()
+void GameScene::codeSegmentTogglePressed()
 {
-	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
-	Q_ASSERT(mainWindow);
-	CodeSegment* codeSegment = mainWindow->getCodeSegment();
-	Q_ASSERT(codeSegment);
-	codeSegment->setVisible( ! codeSegment->isVisible() );
+	qDebug() << "Code Editor toggled";
 }
 
 void GameScene::rewardsButtonPressed()

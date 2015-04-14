@@ -13,6 +13,7 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	, context(context)
 	, levelUnit(levelUnit)
 	, filename(filename)
+	, codeSegment(nullptr)
 	, heapSegment(nullptr)
 	, cpuCores(nullptr)
 	, dataSegment(nullptr)
@@ -29,10 +30,10 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	double heapSegmentProportion = 0.0, cpuCoresProportion = 0.0, dataSegmentProportion;
 	distributeScreenSpace(heapSegmentProportion, cpuCoresProportion, dataSegmentProportion);
 	// Set up each component of the process/unit
-	createCodeSegment();
 	createHeapSegment(heapSegmentProportion);
 	createCpuCores(cpuCoresProportion);
 	createDataSegment(dataSegmentProportion);
+	createCodeSegment();
 	createMessagesDockWidget();
 }
 
@@ -43,16 +44,22 @@ UnitPlayingScene::~UnitPlayingScene()
 
 void UnitPlayingScene::startLeavingStage()
 {
-	// Hide the code editor when the scene is leaving the stage
-	codeSegment->reset();
+	// The Unit Playing scene is leaving the stage
+
+	// Hide and remove the the code editor
 	codeSegment->setVisible(false);
+	codeSegment->deleteLater();
+
+	// Hide and remove the messages area
 	messagesDockWidget->setVisible(false);
 	messagesDockWidget->deleteLater();
 }
 
 void UnitPlayingScene::finishedEnteringStage()
 {
-	// The scene is ready in the stage after the transition, show the code editor (code segment)
+	// The scene is ready in the stage after the transition
+
+	// Show the code segment and the messages area
 	codeSegment->setVisible(true);
 	messagesDockWidget->setVisible(true);
 
@@ -74,6 +81,12 @@ void UnitPlayingScene::backButtonPressed()
 	emit showUnitSelectionScene(context, false);
 }
 
+void UnitPlayingScene::codeSegmentTogglePressed()
+{
+	Q_ASSERT(codeSegment);
+	codeSegment->setVisible( ! codeSegment->isVisible() );
+}
+
 void UnitPlayingScene::distributeScreenSpace(double& heapSegmentProportion, double& cpuCoresProportion, double& dataSegmentProportion)
 {
 	double heapSegmentRows = unit.getHeapSegmentRows() + 0.5; // 0.5 because the HS interface
@@ -85,16 +98,6 @@ void UnitPlayingScene::distributeScreenSpace(double& heapSegmentProportion, doub
 	heapSegmentProportion = heapSegmentRows / totalRows * availableProportion;
 	cpuCoresProportion = cpuCoresRows / totalRows * availableProportion;
 	dataSegmentProportion = dataSegmentRows / totalRows * availableProportion;
-}
-
-void UnitPlayingScene::createCodeSegment()
-{
-	// The Code Editor also behaves as the code segment, it is already created by the main window
-	// Get a pointer to it, and store for future use
-	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
-	Q_ASSERT(mainWindow);
-	codeSegment = mainWindow->getCodeSegment();
-	Q_ASSERT(codeSegment);
 }
 
 void UnitPlayingScene::createHeapSegment(double heapSegmentProportion)
@@ -124,6 +127,20 @@ void UnitPlayingScene::createDataSegment(double dataSegmentProportion)
 	Q_ASSERT(dataSegment == nullptr);
 	dataSegment = new DataSegment(unit, this);
 	this->layout->addLayout(dataSegment, dataSegmentProportion);
+}
+
+void UnitPlayingScene::createCodeSegment()
+{
+	// The Code Editor also behaves as the code segment, it is already created by the main window
+	// Get a pointer to it, and store for future use
+	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
+	Q_ASSERT(mainWindow);
+
+	// Source code editor is only visible in playing scenes, disabled by default
+	Q_ASSERT(codeSegment == nullptr);
+	codeSegment = new CodeSegment(mainWindow);
+	codeSegment->setVisible(false);
+	mainWindow->addDockWidget(Qt::RightDockWidgetArea, codeSegment);
 }
 
 void UnitPlayingScene::createMessagesDockWidget()

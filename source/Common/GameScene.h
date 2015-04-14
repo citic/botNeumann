@@ -59,7 +59,7 @@ class GameScene : public Scene
 	/// Called when user press the Config button
 	void configButtonPressed();
 	/// Called when user press the code editor toggle button
-	void codeEditorTogglePressed();
+	virtual void codeSegmentTogglePressed();
 };
 
 #endif // GAMESCENE_H
