@@ -1,5 +1,6 @@
 #include "CodeEditor.h"
 #include "CodeSegment.h"
+#include "Compiler.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
 #include <QAction>
@@ -11,6 +12,7 @@ CodeSegment::CodeSegment(QWidget *parent, Qt::WindowFlags flags)
 	: QDockWidget(tr("Program"), parent, flags)
 	, innerMainWindow( new QMainWindow(this) )
 	, playerSolution(nullptr)
+	, compiler(nullptr)
 {
 	setObjectName("codeEditor");
 
@@ -39,6 +41,7 @@ void CodeSegment::setupToolbar()
 
 	// Create the Run or pause action
 	runOrPauseAction = new QAction(QIcon(":/unit_playing/unit_playing/button_run.svg"), tr("&Run or pause"), this);
+	runOrPauseAction->setObjectName("Run");
 	runOrPauseAction->setShortcut(QKeySequence("Ctrl+R"));
 	runOrPauseAction->setStatusTip(tr("Compiles the code and starts its visualization"));
 	runOrPauseAction->setEnabled(false);
@@ -107,27 +110,91 @@ void CodeSegment::loadCodeForUnit(Unit* unit)
 	runOrPauseAction->setEnabled(true);
 }
 
-void CodeSegment::reset()
-{
-	codeEditor->reset();
-}
-
 #include <QDebug>
 
 void CodeSegment::runOrPauseTriggered()
 {
+	runOrPauseAction->objectName() == "Run" ? startBuild() : pauseVisualization();
+}
+
+void CodeSegment::startBuild()
+{
+	// This method must be only called if there is a player solution with files
+	Q_ASSERT(playerSolution);
+	Q_ASSERT( playerSolution->hasFiles() );
+
+	// Avoid to call two or more times to the compiler
+	runOrPauseAction->setEnabled(false);
+
 	// If there is unsaved changes, save them
 	codeEditor->saveChanges();
 
-	// Compile and run the player solution
-	Q_ASSERT(playerSolution);
-	connect(playerSolution, SIGNAL(compilationFinished()), this, SLOT(playerSolutionCompiled()));
-	playerSolution->compile();
+	// Alert other objects that a new compilation process has begun
+	emit buildStarted();
+
+	// ToDo: If there is an active compiling process, stop it
+	//if ( compiler && compiler->isRunning() ) compiler->stop();
+	if ( compiler ) compiler->deleteLater();
+
+	// Create an object in charge of compiling the solution files
+	compiler = new Compiler(this);
+
+	// Compile and run the player solution. It requires some time and we do not wait until it
+	// finishes. When the compilation and linking process has finished, our compilerFinished()
+	// is called and we continue processing the results there
+	connect(compiler, SIGNAL(finished()), this, SLOT(compilerFinished()));
+
+	// Start the compiling process with the files in the solution and the expected executable file
+	compiler->compile(playerSolution->getSourceFiles(), playerSolution->getExecutablePath());
 }
 
-void CodeSegment::playerSolutionCompiled()
+void CodeSegment::startVisualization()
 {
-	qDebug() << "Player solution compiled. ToDo: check for errors before start debugging";
+	// ToDo: Call the debugger here
+
+	// If it is successful, enable the stop button
+	stopAction->setEnabled(true);
+}
+
+void CodeSegment::compilerFinished()
+{
+	// Get the compiler and its results
+	Q_ASSERT(compiler);
+
+	// Alert other object the compilation process finished
+	emit buildFinished(compiler);
+
+	// Show diagnostics in messages output
+
+/*
+	const QList<Diagnostic*>& diagnostics = compiler->getDiagnostics();
+	for ( int i = 0; i < diagnostics.size(); ++i )
+	{
+		const Diagnostic* diagnostic = diagnostics[i];
+		qCritical() << diagnostic->getSeverityText()
+					<< diagnostic->getLine() << ':' << diagnostic->getColumn()
+					<< "::" << diagnostic->getMessage();
+	}
+	emit compilationFinished();
+*/
+	qDebug("Compilation finished: %i error(s), %i warning(s)", compiler->getErrorCount(), compiler->getWarningCount());
+
+	// If there are not errors, the player's solution can be run. Start the visualization
+	if ( compiler->getErrorCount() == 0 )
+	{
+		startVisualization();
+		runOrPauseAction->setObjectName("Pause");
+		runOrPauseAction->setIcon(QIcon(":/unit_playing/unit_playing/button_pause.svg"));
+		runOrPauseAction->setStatusTip(tr("Pauses the visualization"));
+		runOrPauseAction->setEnabled(false);
+	}
+	else
+		runOrPauseAction->setEnabled(true);
+}
+
+void CodeSegment::pauseVisualization()
+{
+	// Pause the visualization code here
 }
 
 void CodeSegment::stepIntoTriggered()

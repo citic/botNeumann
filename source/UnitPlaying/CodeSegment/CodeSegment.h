@@ -4,6 +4,7 @@
 #include <QDockWidget>
 
 class CodeEditor;
+class Compiler;
 class QAction;
 class QMainWindow;
 class QSlider;
@@ -45,6 +46,8 @@ class CodeSegment : public QDockWidget
 	QSlider* visualizationSpeedSlider;
 	/// Manages the list of source files that compound the player's solution to an unit
 	PlayerSolution* playerSolution;
+	/// Object in charge of compiling the player solution
+	Compiler* compiler;
 
   public:
 	/// Constructor
@@ -53,12 +56,23 @@ class CodeSegment : public QDockWidget
 	virtual ~CodeSegment();
 	/// Get access to the code editor
 	inline CodeEditor* getCodeEditor() const { return codeEditor; }
+	/// Get access to the compiler and its output
+	inline Compiler* getCompiler() const { return compiler; }
 	/// Restores the last code made by player for the given unit, or the default unit's code if
 	/// player nas not played this unit
 	void loadCodeForUnit(Unit* unit);
-	/// Called when the player stopped playing the current unit, clear the code editor for being
-	/// reused again for a new unit
-	void reset();
+
+  signals:
+	/// Emitted when the run button is pressed, and therefore it is necessary to clear old output
+	void buildStarted();
+	/// Emitted when the compilation and linking process have finished
+	/// @param compiler Provides a pointer to the compiler that made the compilation and linking
+	/// process. Therefore, the interested objects can get the list of diagnostics generated.
+	void buildFinished(Compiler* compiler);
+	/// Emitted when the visualization has started
+	void visualizationStarted();
+	/// Emitted when the visualization has finished
+	void visualizationFinished();
 
   protected:
 	/// Set up the inner main window
@@ -67,10 +81,17 @@ class CodeSegment : public QDockWidget
 	void setupToolbar();
 	/// Create and configure the text editor object
 	void setupCodeEditor();
+	/// Starts the compilation process. It is done in background. When the compilation is finished
+	/// the @a compilationFinished() signal is emitted.
+	void startBuild();
+	/// ToDo:
+	void startVisualization();
+	/// Called when the Pause button is pressed in order to pause the visualization
+	void pauseVisualization();
 
   protected slots:
 	/// Called when the player solution has finished to compile and link
-	void playerSolutionCompiled();
+	void compilerFinished();
 	// ToDo: Move these slots to an Interpreter class
 	/// Called when the run or pause button is pressed
 	void runOrPauseTriggered();

@@ -43,9 +43,6 @@ class CodeEditor : public QTextEdit
 	bool loadFile(Unit* unit, const QString& filepath);
 	/// Loads a file given for its full path
 	bool loadFile(const QString& filepath);
-	/// Called when the player stopped playing the current unit, clear the code editor for being
-	/// reused again for a new unit
-	void reset();
 
   public slots:
 	/// Saves if there are changes to the @a filepath document in secondary memory

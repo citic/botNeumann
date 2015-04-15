@@ -71,12 +71,6 @@ bool CodeEditor::loadFile(const QString& filepath)
 	return loadFileContents();
 }
 
-void CodeEditor::reset()
-{
-	unit = nullptr;
-	disconnect(document(), SIGNAL(contentsChanged()), this, SLOT(documentChanged()));
-}
-
 bool CodeEditor::loadUnitInitialCode()
 {
 	Q_ASSERT(unit);

@@ -11,7 +11,6 @@ PlayerSolution::PlayerSolution(QObject *parent)
 	: QObject(parent)
 	, player(nullptr)
 	, unit(nullptr)
-	, compiler(nullptr)
 {
 }
 
@@ -67,6 +66,11 @@ QString PlayerSolution::getLastEditedFilepath() const
 	return sourceFiles[lastModifiedIndex].absoluteFilePath();
 }
 
+QString PlayerSolution::getExecutablePath() const
+{
+	return getPlayerUnitSourcePath( unit->getId() );
+}
+
 QString PlayerSolution::getPlayerUnitPath(Player* player, Unit* unit)
 {
 	Q_ASSERT(player);
@@ -79,63 +83,6 @@ QString PlayerSolution::getPlayerUnitSourcePath(Player* player, Unit* unit, cons
 	Q_ASSERT(player);
 	Q_ASSERT(unit);
 	return getPlayerUnitPath(player, unit) + '/' + basename;
-}
-
-bool PlayerSolution::compile()
-{
-	// If there are not files to compile, ignore the call
-	if ( sourceFiles.size() <= 0 ) return false;
-
-	// If there is an active compiling process, do not start a new one
-	if ( compiler ) return false;
-
-	// Create an object in charge of compiling the solution files
-	compiler = new Compiler(this);
-
-	// We do not wait until the entire compilation process finishes. The compiler will emit signals
-	// while the process is running, react to these signals
-	connect( compiler, SIGNAL(finished()), this, SLOT(compilerFinished()));
-
-	// The name of the executable file is the same id of the unit
-	const QString& executablePath = getPlayerUnitSourcePath( unit->getId() );
-
-	// Start the compiling process
-	compiler->compile(sourceFiles, executablePath);
-
-	// Done
-	return true;
-}
-
-#include <QDebug>
-
-void PlayerSolution::compilerFinished()
-{
-	Q_ASSERT(compiler);
-
-	qDebug("Compilation finished: %i error(s), %i warning(s)", compiler->getErrorCount(), compiler->getWarningCount());
-	if ( compiler->getErrorCount() == 0 )
-		qDebug() << "Solution can be run";
-/*
-	// Show diagnostics in terminal
-	const QList<Diagnostic*>& diagnostics = compiler->getDiagnostics();
-	for ( int i = 0; i < diagnostics.size(); ++i )
-	{
-		const Diagnostic* diagnostic = diagnostics[i];
-		qCritical() << diagnostic->getSeverityText()
-					<< diagnostic->getLine() << ':' << diagnostic->getColumn()
-					<< "::" << diagnostic->getMessage();
-	}
-	emit compilationFinished();
-*/
-	// Compilation has finished, remove the object for that compilation
-	compiler->deleteLater();
-	compiler = nullptr;
-}
-
-bool PlayerSolution::debug()
-{
-	// ToDo:
-	return false;
 }
 
 int PlayerSolution::loadFileList()

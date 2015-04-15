@@ -6,7 +6,6 @@
 
 class Player;
 class Unit;
-class Compiler;
 
 /**
 @brief Manages the list of source files that compound the player's solution to an unit
@@ -28,9 +27,6 @@ class PlayerSolution : public QObject
 	/// These files are being edited, but just one at time is shown. A drop down (combo box) control
 	/// allows player to choose the source to edit
 	QFileInfoList sourceFiles;
-	/// If a compilation process is running, this object is not nullptr. Only a compilation
-	/// process is started at time, in this version
-	Compiler* compiler;
 
   public:
 	/// Constructor
@@ -49,6 +45,12 @@ class PlayerSolution : public QObject
 	/// @remarks This method uses the modification dates of files to know which one is the
 	/// latest modify. If player modifies files outside botNeumann, it will affect this method
 	QString getLastEditedFilepath() const;
+	/// Get access to the list of source files that compound the player's solution
+	inline const QFileInfoList& getSourceFiles() const { return sourceFiles; }
+	/// Returns true if there is files in the solution
+	inline bool hasFiles() const { return sourceFiles.size() > 0; }
+	/// Returns the absolute path to the executable file that results of building this solution
+	QString getExecutablePath() const;
 	/// Get the player's directory to store source files for this unit. E.g: in Mac OS X:
 	/// /Users/<user>/Library/Application Support/botNeumann/<player>/<unit>
 	static QString getPlayerUnitPath(Player* player, Unit* unit);
@@ -61,24 +63,6 @@ class PlayerSolution : public QObject
 	static QString getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename);
 	/// @see getPlayerUnitSourcePath(Player*, Unit*)
 	inline QString getPlayerUnitSourcePath(const QString& basename) const { return getPlayerUnitSourcePath(player, unit, basename); }
-
-  signals:
-	/// Emmited when a compilation process has finished. The results are the diagnostics and the
-	/// intermediate representation, that can be gathered with @a getDiagnostics() and
-	/// @a getIntermediateRepresentation()
-	void compilationFinished();
-
-  public slots:
-	/// Starts the compilation process. It is done in background. When the compilation is finished
-	/// the @a compilationFinished() signal is emitted.
-	/// @return false if there is not files to compile in the solution, if a compiler installation
-	/// cannot be found in the system or it cannot connect to the compiler server by TCP. Returns
-	/// true if the compilation process has begun
-	bool compile();
-	/// Called when the compiler has finished compiling files
-	void compilerFinished();
-	/// ToDo:
-	bool debug();
 
   protected:
 	/// Loads the list of existing files in the unit solution directory for this player
