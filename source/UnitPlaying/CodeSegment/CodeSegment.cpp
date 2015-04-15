@@ -148,36 +148,14 @@ void CodeSegment::startBuild()
 	compiler->compile(playerSolution->getSourceFiles(), playerSolution->getExecutablePath());
 }
 
-void CodeSegment::startVisualization()
-{
-	// ToDo: Call the debugger here
-
-	// If it is successful, enable the stop button
-	stopAction->setEnabled(true);
-}
-
 void CodeSegment::compilerFinished()
 {
 	// Get the compiler and its results
 	Q_ASSERT(compiler);
 
-	// Alert other object the compilation process finished
+	// Alert other object the compilation process finished, for example, show the generated
+	// diagnostics in the tools' output on messages area
 	emit buildFinished(compiler);
-
-	// Show diagnostics in messages output
-
-/*
-	const QList<Diagnostic*>& diagnostics = compiler->getDiagnostics();
-	for ( int i = 0; i < diagnostics.size(); ++i )
-	{
-		const Diagnostic* diagnostic = diagnostics[i];
-		qCritical() << diagnostic->getSeverityText()
-					<< diagnostic->getLine() << ':' << diagnostic->getColumn()
-					<< "::" << diagnostic->getMessage();
-	}
-	emit compilationFinished();
-*/
-	qDebug("Compilation finished: %i error(s), %i warning(s)", compiler->getErrorCount(), compiler->getWarningCount());
 
 	// If there are not errors, the player's solution can be run. Start the visualization
 	if ( compiler->getErrorCount() == 0 )
@@ -190,6 +168,14 @@ void CodeSegment::compilerFinished()
 	}
 	else
 		runOrPauseAction->setEnabled(true);
+}
+
+void CodeSegment::startVisualization()
+{
+	// ToDo: Call the debugger here
+
+	// If it is successful, enable the stop button
+	stopAction->setEnabled(true);
 }
 
 void CodeSegment::pauseVisualization()

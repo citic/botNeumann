@@ -12,13 +12,6 @@
 // A tab is visualized as 3 space characters because screen size is reduced in the game
 const int tabStop = 3;
 
-// Default font point size
-#ifdef Q_OS_WIN
-const int editorFontSize = 10;
-#else
-const int editorFontSize = 11;
-#endif
-
 // After a change is made to the document, CodeEditor waits this amount of miliseconds, and then
 // autosaves and autocompiles the source code
 const int autoSaveWait = 2500;
@@ -28,12 +21,8 @@ CodeEditor::CodeEditor(QWidget* parent)
 	, unit(nullptr)
 	, autoSaveTimer( new QTimer(this) )
 {
-	// Set the default monospaced font of the operating system
-//	QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-	QFont font(BotNeumannApp::getMonospacedFontName());
-	font.setPointSize(editorFontSize);
-	font.setStyleHint(QFont::TypeWriter);
-	font.setFixedPitch(true);
+	// Set the default monospaced font of the game
+	const QFont& font = BotNeumannApp::getMonospacedFont();
 	setFont(font);
 
 	// Make tabs the same size than 4 spaces

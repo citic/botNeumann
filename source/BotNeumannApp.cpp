@@ -8,6 +8,13 @@
 QString BotNeumannApp::robotFontName;
 QString BotNeumannApp::monospacedFontName;
 
+// Default font point size
+#ifdef Q_OS_WIN
+const int monospacedFontSize = 10;
+#else
+const int monospacedFontSize = 11;
+#endif
+
 BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	: QApplication(argc, argv)
 {
@@ -31,6 +38,18 @@ BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	// Reload the configuration of the last player who was playing with this game
 	this->playerManager = new PlayerManager(this);
 	this->playerManager->reloadLastPlayer();
+}
+
+QFont BotNeumannApp::getMonospacedFont()
+{
+	// Set the default monospaced font of the operating system
+//	QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+
+	QFont font( getMonospacedFontName() );
+	font.setPointSize(monospacedFontSize);
+	font.setStyleHint(QFont::TypeWriter);
+	font.setFixedPitch(true);
+	return font;
 }
 
 Player* BotNeumannApp::getCurrentPlayer() const

@@ -151,4 +151,8 @@ void UnitPlayingScene::createMessagesDockWidget()
 	messagesDockWidget->setVisible(false);
 	messagesDockWidget->setUnitDescription( unit.getDescription("es"), false );
 	mainWindow->addDockWidget(Qt::BottomDockWidgetArea, messagesDockWidget);
+
+	// When the code segment has built a solution and has diagnostics show them in the messages area
+	Q_ASSERT(codeSegment);
+	connect(codeSegment, SIGNAL(buildFinished(Compiler*)), messagesDockWidget, SLOT(buildFinished(Compiler*)));
 }

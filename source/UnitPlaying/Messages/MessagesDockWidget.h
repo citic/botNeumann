@@ -3,6 +3,8 @@
 
 #include <QDockWidget>
 
+class Compiler;
+class Diagnostic;
 class QTabWidget;
 class QTextEdit;
 
@@ -34,6 +36,17 @@ class MessagesDockWidget : public QDockWidget
 	/// Display the given text in the unit description area, and makes it active if the second
 	/// parameter is true
 	void setUnitDescription(const QString& description, bool makeActiveTab);
+
+  public slots:
+	/// Called when a build process (compiling and linking) has finished, and ther are results
+	/// The compiler pointer is required in order to get the diagnostics. If there are errors
+	/// and the messages dock widget is hidden, it is made visible and the tools output tab is
+	/// made active. If there are not errors, the tools output tab is just cleared.
+	void buildFinished(Compiler* compiler);
+
+  protected:
+	/// Appends the given diagnostic to the tools output
+	void appendDiagnostic(const Diagnostic* diagnostic);
 };
 
 #endif // MESSAGESDOCKWIDGET_H

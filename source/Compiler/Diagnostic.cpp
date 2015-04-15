@@ -47,4 +47,5 @@ DiagnosticSeverity Diagnostic::mapSeverityText(const QString& text)
 void Diagnostic::appendExplanation(const QString& text)
 {
 	explanation.append(text);
+	explanation.append('\n');
 }

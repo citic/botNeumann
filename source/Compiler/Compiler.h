@@ -6,6 +6,7 @@
 #include <QStringList>
 
 class CompilerCall;
+class Diagnostic;
 class LinkerCall;
 
 /**
@@ -36,6 +37,8 @@ class Compiler : public QObject
 	/// The number of warnings collected during the compilation process. -1 if no compilation
 	/// has been done This value is valid only after a compilation process has finished.
 	int warningCount;
+	/// A concatenation of all generated diagnostics in all compiler calls
+	QList<Diagnostic*> allDiagnostics;
 	/// Path of the target executable file. It will be linked only if it is out-dated
 	QFileInfo executablePath;
 	/// The list of objectfiles to link
@@ -57,6 +60,9 @@ class Compiler : public QObject
 	/// The number of warnings collected during the compilation process. -1 if no compilation
 	/// has been done This value is valid only after a compilation process has finished.
 	inline int getWarningCount() const { return warningCount; }
+	/// Get access to all the diagnostics generated during the compiling and linking process of
+	/// all the sources files
+	inline const QList<Diagnostic*>& getAllDiagnostics() const { return allDiagnostics; }
 
   signals:
 	/// Emitted when a compilation process has finished
