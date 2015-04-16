@@ -25,7 +25,7 @@ QString CompilerDiagnostic::buildUserText() const
 	QFileInfo fileInfo( filename );
 
 	//toolsOutput->insertHtml(QString("<p class='%1'>%2:%3:%4: %5: %6</p>\n\n")
-	return QString("%1:%2:%3: %4: %5\n%6\n")
+	return QString("%1:%2:%3: %4: %5\n%6")
 		.arg(fileInfo.fileName())
 		.arg(line)
 		.arg(column)

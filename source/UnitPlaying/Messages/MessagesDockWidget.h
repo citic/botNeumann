@@ -5,6 +5,7 @@
 
 class Compiler;
 class Diagnostic;
+class QListWidget;
 class QTabWidget;
 class QTextEdit;
 
@@ -26,7 +27,7 @@ class MessagesDockWidget : public QDockWidget
 	/// Displays the current unit description
 	QTextEdit* unitDescription;
 	/// A control to display compiler, linker and debugger output
-	QTextEdit* toolsOutput;
+	QListWidget* toolsOutput;
 
   public:
 	/// Constructor

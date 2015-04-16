@@ -17,5 +17,5 @@ LinkerDiagnostic::~LinkerDiagnostic()
 
 QString LinkerDiagnostic::buildUserText() const
 {
-	return brief + '\n';
+	return brief;
 }

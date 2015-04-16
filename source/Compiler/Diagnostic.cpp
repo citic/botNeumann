@@ -36,9 +36,28 @@ DiagnosticSeverity Diagnostic::mapSeverityText(const QString& text)
 	return DiagnosticSeverity::unknown;
 }
 
+QColor Diagnostic::mapSeverityColor(DiagnosticSeverity severity)
+{
+	switch ( severity )
+	{
+		case DiagnosticSeverity::ignored: return Qt::lightGray;
+		case DiagnosticSeverity::note:    return Qt::gray;
+		case DiagnosticSeverity::warning: return Qt::blue;
+		case DiagnosticSeverity::error:   return Qt::red;
+		case DiagnosticSeverity::fatal:   return Qt::red;
+		case DiagnosticSeverity::unknown: return Qt::black;
+	}
+}
+
 void Diagnostic::appendExplanation(const QString& text)
 {
 	// Avoid summary messages
-	if ( ! text.contains(QRegularExpression("(warning|error).* generated\.$")))
-		explanation.append(text + '\n');
+	if ( text.contains(QRegularExpression("(warning|error).* generated\\.$")))
+		return;
+
+	// If there is previous text, separate by a new line
+	if ( explanation.length() > 0 )
+		explanation.append('\n');
+
+	explanation.append(text);
 }

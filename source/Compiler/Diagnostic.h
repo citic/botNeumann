@@ -1,6 +1,7 @@
 #ifndef DIAGNOSTIC_H
 #define DIAGNOSTIC_H
 
+#include <QColor>
 #include <QString>
 
 // Adapted from <clang-c/Index.h>
@@ -40,6 +41,10 @@ class Diagnostic
 	QString getSeverityText() const;
 	/// Given an English text, matches its severity
 	static DiagnosticSeverity mapSeverityText(const QString& text);
+	/// Returns a color to paint this diagnostic according to its severity
+	inline QColor getSeverityColor() const { return mapSeverityColor(severity); }
+	/// Given a severity, returns a color to paint it to help user to identify it visually
+	static QColor mapSeverityColor(DiagnosticSeverity severity);
 	/// Returns true if this diagnostic is a normal or fatal error
 	/// Therefore, the code cannot be run
 	inline bool isError() const { return severity == DiagnosticSeverity::error || severity == DiagnosticSeverity::fatal; }
