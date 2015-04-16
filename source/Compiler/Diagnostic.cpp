@@ -1,5 +1,4 @@
 #include "Diagnostic.h"
-#include <QRegularExpressionMatch>
 
 // User friendly text maps to the severity codes in English
 static const char* diagnosticSeverityText[] =
@@ -12,17 +11,9 @@ static const char* diagnosticSeverityText[] =
 	"unknown"
 };
 
-Diagnostic::Diagnostic(const QRegularExpressionMatch& match)
-	: severity{ mapSeverityText( match.captured(4) ) }
-	, filename{ match.captured(1) }
-	, line{ match.captured(2).toUInt() }
-	, column{ match.captured(3).toUInt() }
-	, brief{ match.captured(5) }
+Diagnostic::Diagnostic()
+	: severity(DiagnosticSeverity::unknown)
 {
-	// The expression used to know if a line starts a new error/warning was:
-	// " (1filepath)   (2lin) (3col)  (4sev)  (5br)
-	// "^(\\w?:?[^:]+):(\\d+):(\\d+): (\\w+): (.+)$"
-	// "/path/to/sourcefile.cpp:line:col: severity: short diagnostic message"
 }
 
 Diagnostic::~Diagnostic()

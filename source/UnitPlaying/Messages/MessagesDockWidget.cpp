@@ -68,16 +68,5 @@ void MessagesDockWidget::buildFinished(Compiler* compiler)
 void MessagesDockWidget::appendDiagnostic(const Diagnostic* diagnostic)
 {
 	Q_ASSERT(diagnostic);
-
-	// To extract only the file name, instead of the complete path
-	QFileInfo fileInfo( diagnostic->getFilename() );
-
-	//toolsOutput->insertHtml(QString("<p class='%1'>%2:%3:%4: %5: %6</p>\n\n")
-	toolsOutput->append(QString("%1:%2:%3: %4: %5\n%6\n")
-		.arg(fileInfo.fileName())
-		.arg(diagnostic->getLine())
-		.arg(diagnostic->getColumn())
-		.arg(diagnostic->getSeverityText())
-		.arg(diagnostic->getBrief())
-		.arg(diagnostic->getExplanation()) );
+	toolsOutput->append( diagnostic->buildUserText() );
 }

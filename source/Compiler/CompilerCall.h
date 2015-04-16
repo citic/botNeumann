@@ -44,8 +44,6 @@ class CompilerCall : public ToolCall
 	static QFileInfo getTargetPathFor(const QFileInfo& sourceFilePath);
 	/// Get access to the list of diagnostics (warnings and errors)
 	inline const QList<Diagnostic*>& getDiagnostics() const { return diagnostics; }
-	/// Erases all dignostics
-	void clear();
 	/// Number of errors found in this source file. If > 0, code cannot be run
 	inline int getErrorCount() const { return errorCount; }
 	/// Number of warnings found in this source file. Solution may still run
@@ -54,6 +52,8 @@ class CompilerCall : public ToolCall
 	inline bool isSourceNewerThan(const QFileInfo& fileInfo) const { return isFileNewerThan(sourcePath, fileInfo); }
 	/// Returns true if the object file is newer than the given one
 	inline bool isTargetNewerThan(const QFileInfo& fileInfo) const { return isFileNewerThan(targetPath, fileInfo); }
+	/// Erases all dignostics
+	void clear();
 	/// Launch a compiler process to compile this unit
 	/// Emits finished() when it has finished. The result (success, error, or warnings) can be
 	/// consulted after the finished() signal has been emitted

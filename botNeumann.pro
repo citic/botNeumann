@@ -36,8 +36,10 @@ SOURCES += \
 	source/Common/PlayerStatus.cpp \
 	source/Compiler/Compiler.cpp \
 	source/Compiler/CompilerCall.cpp \
+	source/Compiler/CompilerDiagnostic.cpp \
 	source/Compiler/Diagnostic.cpp \
 	source/Compiler/LinkerCall.cpp \
+	source/Compiler/LinkerDiagnostic.cpp \
 	source/Compiler/ToolCall.cpp \
 	source/Gamee/Actor.cpp \
 	source/Gamee/Director.cpp \
@@ -84,8 +86,10 @@ HEADERS += \
 	source/Common/PlayerStatus.h \
 	source/Compiler/Compiler.h \
 	source/Compiler/CompilerCall.h \
+	source/Compiler/CompilerDiagnostic.h \
 	source/Compiler/Diagnostic.h \
 	source/Compiler/LinkerCall.h \
+	source/Compiler/LinkerDiagnostic.h \
 	source/Compiler/ToolCall.h \
 	source/Gamee/Actor.h \
 	source/Gamee/Director.h \

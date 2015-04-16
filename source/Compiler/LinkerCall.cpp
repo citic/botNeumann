@@ -1,10 +1,14 @@
 #include "LinkerCall.h"
+#include "LinkerDiagnostic.h"
 #include <QProcess>
+#include <QTextStream>
 
 LinkerCall::LinkerCall(const QStringList& objectFiles, const QFileInfo& executablePath, QObject *parent)
 	: ToolCall(parent)
 	, objectFiles(objectFiles)
 	, executablePath(executablePath)
+	, errorCount(0)
+	, warningCount(0)
 {
 }
 
@@ -45,7 +49,26 @@ void LinkerCall::processFinished()
 	if (compilerStandarOutput.length() > 0 )
 		qDebug() << "stdout [" << compilerStandarOutput << "]";
 
-	qDebug() << "stderr {" << process->readAllStandardError() << "}";
+	QTextStream errorOutput( process->readAllStandardError() );
+	while ( ! errorOutput.atEnd() )
+	{
+		// Get the line
+		const QString& line = errorOutput.readLine();
+
+		// Ignore the exit status output of the linker
+		if ( line.contains("exit status") )
+			continue;
+
+		// Create a diagnostic for this line
+		LinkerDiagnostic* diagnostic = new LinkerDiagnostic(line);
+		diagnostics.append( diagnostic );
+
+		// If the diagnostic is a normal or fatal error, increase its number
+		if ( diagnostic->isError() )
+			++errorCount;
+		else
+			++warningCount;
+	}
 
 	// All the linker output was processed. The linker call is finished
 	state = ToolCallState::finished;

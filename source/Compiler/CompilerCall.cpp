@@ -1,5 +1,5 @@
 #include "CompilerCall.h"
-#include "Diagnostic.h"
+#include "CompilerDiagnostic.h"
 #include <QDir>
 #include <QProcess>
 #include <QRegularExpression>
@@ -82,7 +82,7 @@ void CompilerCall::processFinished()
 
 	// Each time a diagnostic start line is found, a new diagnostic object is created
 	// This pointer refers to the last one, the active one
-	Diagnostic* currentDiagnostic = nullptr;
+	CompilerDiagnostic* currentDiagnostic = nullptr;
 
 	// Warnings and errors are sent to the standard error by compilers, not standard output
 	QTextStream errorOutput( process->readAllStandardError() );
@@ -96,7 +96,7 @@ void CompilerCall::processFinished()
 		if ( match.hasMatch() )
 		{
 			// Create the new diagnostic and extract its parts from the regular expression match
-			currentDiagnostic = new Diagnostic(match);
+			currentDiagnostic = new CompilerDiagnostic(match);
 			diagnostics.append(currentDiagnostic);
 
 			// If the diagnostic is a normal or fatal error, increase its number
