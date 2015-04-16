@@ -25,4 +25,16 @@ inline ullint ipow(ullint base, unsigned int exp)
 	return result;
 }
 
+/** Returns the number of digits required by an unsigned integer number
+	It only counts the number of digits. It does not include space for a minus or plus sign
+**/
+template <typename Integer>
+inline int digitsRequiredBy(Integer number)
+{
+	int digits = 1;
+	for( number /= 10; number; number /= 10 )
+			++digits;
+	return digits;
+}
+
 #endif // GLOBAL_H

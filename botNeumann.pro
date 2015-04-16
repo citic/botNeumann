@@ -63,6 +63,7 @@ SOURCES += \
 	source/MainWindow.cpp \
 	source/UnitPlaying/CodeSegment/CodeEditor.cpp \
 	source/UnitPlaying/CodeSegment/CodeSegment.cpp \
+	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
 	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
 	source/UnitPlaying/Common/MemoryRow.cpp \
@@ -112,6 +113,7 @@ HEADERS += \
 	source/MainWindow.h \
 	source/UnitPlaying/CodeSegment/CodeEditor.h \
 	source/UnitPlaying/CodeSegment/CodeSegment.h \
+	source/UnitPlaying/CodeSegment/LineNumberArea.h \
 	source/UnitPlaying/CodeSegment/PlayerSolution.h \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
 	source/UnitPlaying/Common/MemoryRow.h \

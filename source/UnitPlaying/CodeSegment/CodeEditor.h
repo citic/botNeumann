@@ -1,8 +1,9 @@
 #ifndef CODEEDITOR_H
 #define CODEEDITOR_H
 
-#include <QTextEdit>
+#include <QPlainTextEdit>
 
+class LineNumberArea;
 class QTimer;
 class SyntaxHighlighter;
 class Unit;
@@ -10,7 +11,7 @@ class Unit;
 /**
 	Edits one source file at time
 */
-class CodeEditor : public QTextEdit
+class CodeEditor : public QPlainTextEdit
 {
 	Q_OBJECT
 
@@ -24,6 +25,8 @@ class CodeEditor : public QTextEdit
 	/// Fires a short time after the last made change in the document, in order to do some tasks
 	/// such as auto save() and auto compile()
 	QTimer* autoSaveTimer;
+	/// Object that paints line numbers in the left margin of the code editor
+	LineNumberArea* lineNumberArea;
 
   public:
 	/// Constructor
@@ -43,6 +46,12 @@ class CodeEditor : public QTextEdit
 	bool loadFile(Unit* unit, const QString& filepath);
 	/// Loads a file given for its full path
 	bool loadFile(const QString& filepath);
+	/// Calculate the width in pixels required by the line number area. The width depends on the
+	/// number of lines of the current document
+	int getLineNumberAreaWidth();
+	/// When the line number area object must be painted, this method is called
+	/// @remarks LineNumberArea class calls this method
+	void lineNumberAreaPaintEvent(QPaintEvent* event);
 
   public slots:
 	/// Saves if there are changes to the @a filepath document in secondary memory
@@ -55,6 +64,8 @@ class CodeEditor : public QTextEdit
 	bool loadUnitInitialCode();
 	/// Load the file contents of the file which full path is stored in @a filepath member data
 	bool loadFileContents();
+	/// Overrided in order to adjust size of the line number area when the code editor is resize
+	virtual void resizeEvent(QResizeEvent* event) override;
 
   protected slots:
 	/// Called each time the document is changed
@@ -62,6 +73,17 @@ class CodeEditor : public QTextEdit
 	/// Saves always the content of editor to the @a filepath document in secondary memory
 	/// @return true on success, false on error
 	bool save();
+	/// Make the left margin of the text editor bigger, in order to have space to the line number
+	/// area widget
+	void updateLineNumberAreaWidth();
+	/// @brief Invoked when the editor's viewport has been scrolled.
+	/// In the editor we resize and draw the line numbers on the LineNumberArea. We need to do this
+	/// when the number of lines in the editor changes, and when the editor's viewport() is scrolled
+	/// @param rect The part of the editing area that is do be updated (redrawn).
+	/// @param dy holds the number of pixels the view has been scrolled vertically.
+	void updateLineNumberArea(const QRect& rect, int dy);
+	/// Whenever the cursor's position changes, we highlight the current line
+	void highlightCurrentLine();
 };
 
 #endif // CODEEDITOR_H
