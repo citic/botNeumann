@@ -1,4 +1,5 @@
 #include "Diagnostic.h"
+#include <QRegularExpression>
 
 // User friendly text maps to the severity codes in English
 static const char* diagnosticSeverityText[] =
@@ -37,6 +38,7 @@ DiagnosticSeverity Diagnostic::mapSeverityText(const QString& text)
 
 void Diagnostic::appendExplanation(const QString& text)
 {
-	explanation.append(text);
-	explanation.append('\n');
+	// Avoid summary messages
+	if ( ! text.contains(QRegularExpression("(warning|error).* generated\.$")))
+		explanation.append(text + '\n');
 }

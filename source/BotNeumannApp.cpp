@@ -40,6 +40,13 @@ BotNeumannApp::BotNeumannApp(int argc, char *argv[])
 	this->playerManager->reloadLastPlayer();
 }
 
+QFont BotNeumannApp::getRobotFont()
+{
+	QFont font( getRobotFontName() );
+	font.setPointSize(monospacedFontSize + 2);
+	return font;
+}
+
 QFont BotNeumannApp::getMonospacedFont()
 {
 	// Set the default monospaced font of the operating system

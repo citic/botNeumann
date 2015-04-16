@@ -41,8 +41,8 @@ QStringList ToolCall::getDefaultCompilerArguments()
 {
 	QStringList arguments;
 	arguments << "-g" << "-Wall" << "-Wextra" << "-std=c++11";
-	if ( getCxxCompiler() == "clang++" )
-		arguments << "-fdiagnostics-parseable-fixits";
+//	if ( getCxxCompiler() == "clang++" )
+//		arguments << "-fdiagnostics-parseable-fixits";
 	return arguments;
 }
 
@@ -61,14 +61,13 @@ bool ToolCall::askPlayerCompilerDirectory()
 {
 	// A first dialog informs players about the problem and let them decide if they want to
 	// choose the compiler's installation directory or cancel everything
-	QString message(tr("A GCC compatible compiler is required to be installed on your system in "
-		"order to build and run your solution. If you already have installed a compiler that is "
-		"not included in your PATH environment variable, press 'Choose directory' to select it. "
-		"You should provide the 'bin' subdirectory of your compiler.\n\n"
+	QString message(tr("A GCC compatible compiler is required in order to build and run your "
+		"solution. If you have an installed compiler that is not included in your PATH environment "
+		"variable, please press 'Choose directory' and locate its 'bin' subdirectory. "
 		"If you do not have a compiler installed, consider the following suggestion:\n\n"));
 
   #if defined(Q_OS_WIN)
-	message.append(tr("TDM-GCC or MinGW"));
+	message.append(tr("TDM-GCC"));
   #elif defined(Q_OS_MAC)
 	message.append(tr("XCode and Command Line Tools\n"));
   #else //elif defined(Q_OS_UNIX)

@@ -22,6 +22,8 @@ class BotNeumannApp : public QApplication
 	explicit BotNeumannApp(int argc, char *argv[]);
 	/// Get a pointer to the unique instance of this class
 	static inline BotNeumannApp* getInstance() { return static_cast<BotNeumannApp*>(qApp); }
+	/// Get the default game font
+	static QFont getRobotFont();
 	/// Family name of the font used for buttons
 	static inline const QString& getRobotFontName() { return robotFontName; }
 	/// Get the default monospaced font to be used in several editors in the game

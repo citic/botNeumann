@@ -17,6 +17,9 @@ MessagesDockWidget::MessagesDockWidget(QWidget* parent, Qt::WindowFlags flags)
 
 	// Add the first tab (page): the unit problem description
 	unitDescription = new QTextEdit();
+	unitDescription->setReadOnly(true);
+	unitDescription->document()->setDefaultFont(BotNeumannApp::getRobotFont());
+	unitDescription->document()->setDefaultStyleSheet("pre { margin-left: 1em; background: #ddd; }");
 	QIcon unitDescriptionIcon(":/button_information.svg");
 	messagesTabWidget->addTab(unitDescription, unitDescriptionIcon, tr("Description"));
 
