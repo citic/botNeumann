@@ -4,24 +4,12 @@
 <svg version="1.1" id="struct_x5F_left" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
 	 y="0px" width="16.75px" height="19.5px" viewBox="0 0 16.75 19.5" enable-background="new 0 0 16.75 19.5" xml:space="preserve">
 <g>
-	<g>
-		<defs>
-			<rect id="SVGID_1_" width="16.749" height="19.5"/>
-		</defs>
-		<clipPath id="SVGID_2_">
-			<use xlink:href="#SVGID_1_"  overflow="visible"/>
-		</clipPath>
-		<g clip-path="url(#SVGID_2_)">
-			<path opacity="0.3" fill="#231F20" enable-background="new    " d="M106.224,16.738c0,1.525-1.235,2.762-2.761,2.762H9.014
-				c-1.525,0-2.761-1.236-2.761-2.762l0,0c0-1.524,1.236-2.762,2.761-2.762h94.451C104.989,13.979,106.224,15.214,106.224,16.738
-				L106.224,16.738z"/>
-			<rect x="8.25" y="1.579" opacity="0.3" fill="#FFFFFF" enable-background="new    " width="97.974" height="0.656"/>
-			<path opacity="0.4" fill="#FFFFFF" enable-background="new    " d="M112.111,9c0,4.693-3.805,8.5-8.5,8.5H9.417
-				c-4.694,0-8.5-3.807-8.5-8.5l0,0c0-4.694,3.806-8.5,8.5-8.5h94.192C108.306,0.5,112.111,4.306,112.111,9L112.111,9z"/>
-			<path fill="none" stroke="#8EC0D1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M112.111,9
-				c0,4.693-3.805,8.5-8.5,8.5H9.417c-4.694,0-8.5-3.807-8.5-8.5l0,0c0-4.694,3.806-8.5,8.5-8.5h94.192
-				C108.306,0.5,112.111,4.306,112.111,9L112.111,9z"/>
-		</g>
-	</g>
+	<path opacity="0.3" fill="#231F20" enable-background="new    " d="M9.016,19.5h7.734v-5.523H9.016
+		c-1.524,0-2.762,1.236-2.762,2.762S7.49,19.5,9.016,19.5z"/>
+	<path opacity="0.4" fill="#FFFFFF" enable-background="new    " d="M0.918,9c0,4.693,3.807,8.5,8.5,8.5h7.332v-17H9.418
+		C4.725,0.5,0.918,4.306,0.918,9z"/>
+	<rect x="8.251" y="1.594" opacity="0.4" fill="#FFFFFF" enable-background="new    " width="8.499" height="0.641"/>
+	<path fill="#8EC0D1" d="M16.75,1V0H9.418c-4.963,0-9,4.038-9,9c0,1.9,0.585,3.716,1.691,5.254C3.8,16.6,6.532,18,9.418,18h7.332v-1
+		H9.418c-2.564,0-4.994-1.245-6.497-3.33C1.938,12.303,1.418,10.688,1.418,9c0-4.411,3.589-8,8-8H16.75z"/>
 </g>
 </svg>
