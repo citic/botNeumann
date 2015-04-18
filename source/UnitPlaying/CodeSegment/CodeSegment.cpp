@@ -40,7 +40,7 @@ void CodeSegment::setupToolbar()
 	QToolBar* toolBar = innerMainWindow->addToolBar("code");
 
 	// Create the Run or pause action
-	runOrPauseAction = new QAction(QIcon(":/unit_playing/unit_playing/button_run.svg"), tr("&Run or pause"), this);
+	runOrPauseAction = new QAction(QIcon(":/unit_playing/buttons/run.svg"), tr("&Run or pause"), this);
 	runOrPauseAction->setObjectName("Run");
 	runOrPauseAction->setShortcut(QKeySequence("Ctrl+R"));
 	runOrPauseAction->setStatusTip(tr("Compiles the code and starts its visualization"));
@@ -49,7 +49,7 @@ void CodeSegment::setupToolbar()
 	toolBar->addAction(runOrPauseAction);
 
 	// Create the step into button
-	stepIntoAction = new QAction(QIcon(":/unit_playing/unit_playing/button_step_into.svg"), tr("Step &into"), this);
+	stepIntoAction = new QAction(QIcon(":/unit_playing/buttons/step_into.svg"), tr("Step &into"), this);
 	stepIntoAction->setShortcut(QKeySequence("Ctrl+I"));
 	stepIntoAction->setStatusTip(tr("Executes next statement entering in functions"));
 	stepIntoAction->setEnabled(false);
@@ -57,7 +57,7 @@ void CodeSegment::setupToolbar()
 	toolBar->addAction(stepIntoAction);
 
 	// Create the step out button
-	stepOutAction = new QAction(QIcon(":/unit_playing/unit_playing/button_step_out.svg"), tr("Step &out"), this);
+	stepOutAction = new QAction(QIcon(":/unit_playing/buttons/step_out.svg"), tr("Step &out"), this);
 	stepOutAction->setShortcut(QKeySequence("Ctrl+O"));
 	stepOutAction->setStatusTip(tr("Executes next statement in current function"));
 	stepOutAction->setEnabled(false);
@@ -65,7 +65,7 @@ void CodeSegment::setupToolbar()
 	toolBar->addAction(stepOutAction);
 
 	// Create the stop button
-	stopAction = new QAction(QIcon(":/unit_playing/unit_playing/button_stop.svg"), tr("S&top"), this);
+	stopAction = new QAction(QIcon(":/unit_playing/buttons/stop.svg"), tr("S&top"), this);
 	stopAction->setShortcut(QKeySequence("Ctrl+T"));
 	stopAction->setStatusTip(tr("Compiles the code and starts its visualization"));
 	stopAction->setEnabled(false);
@@ -162,7 +162,7 @@ void CodeSegment::compilerFinished()
 	{
 		startVisualization();
 		runOrPauseAction->setObjectName("Pause");
-		runOrPauseAction->setIcon(QIcon(":/unit_playing/unit_playing/button_pause.svg"));
+		runOrPauseAction->setIcon(QIcon(":/unit_playing/buttons/pause.svg"));
 		runOrPauseAction->setStatusTip(tr("Pauses the visualization"));
 		runOrPauseAction->setEnabled(false);
 	}

@@ -19,11 +19,6 @@
 	</qresource>
 	<qresource prefix="/unit_playing">
 		<file>unit_playing/background.svg</file>
-		<file>unit_playing/button_pause.svg</file>
-		<file>unit_playing/button_run.svg</file>
-		<file>unit_playing/button_step_into.svg</file>
-		<file>unit_playing/button_step_out.svg</file>
-		<file>unit_playing/button_stop.svg</file>
 		<file>unit_playing/shared_table.svg</file>
 		<file>unit_playing/shelf_interface.svg</file>
 		<file>unit_playing/shelf_left.svg</file>
@@ -36,9 +31,21 @@
 	</qresource>
 	<qresource prefix="/unit_playing/buttons">
 		<file alias="accept.svg">unit_playing/buttons/accept.svg</file>
+		<file alias="copy.svg">unit_playing/buttons/copy.svg</file>
+		<file alias="cut.svg">unit_playing/buttons/cut.svg</file>
 		<file alias="error.svg">unit_playing/buttons/error.svg</file>
+		<file alias="find_and_replace.svg">unit_playing/buttons/find_and_replace.svg</file>
 		<file alias="info.svg">unit_playing/buttons/info.svg</file>
 		<file alias="link_broken.svg">unit_playing/buttons/link_broken.svg</file>
+		<file alias="new_file.svg">unit_playing/buttons/new_file.svg</file>
+		<file alias="paste.svg">unit_playing/buttons/paste.svg</file>
+		<file alias="pause.svg">unit_playing/buttons/pause.svg</file>
+		<file alias="redo.svg">unit_playing/buttons/redo.svg</file>
+		<file alias="run.svg">unit_playing/buttons/run.svg</file>
+		<file alias="step_into.svg">unit_playing/buttons/step_into.svg</file>
+		<file alias="step_out.svg">unit_playing/buttons/step_out.svg</file>
+		<file alias="stop.svg">unit_playing/buttons/stop.svg</file>
+		<file alias="undo.svg">unit_playing/buttons/undo.svg</file>
 		<file alias="warning.svg">unit_playing/buttons/warning.svg</file>
 	</qresource>
 	<qresource prefix="/unit_playing/data_types"/>
