@@ -4,21 +4,28 @@
 #include "PlayerSolution.h"
 #include "Unit.h"
 #include <QAction>
+#include <QComboBox>
 #include <QMainWindow>
 #include <QSlider>
 #include <QToolBar>
 
+// Default width and height of the tools in toolbars
+const int toolBarIconSize = 18;
+
 CodeSegment::CodeSegment(QWidget *parent, Qt::WindowFlags flags)
 	: QDockWidget(tr("Program"), parent, flags)
 	, innerMainWindow( new QMainWindow(this) )
+	, codeEditor(nullptr)
 	, playerSolution(nullptr)
 	, compiler(nullptr)
 {
-	setObjectName("codeEditor");
+	setObjectName("codeSegment");
 
 	setupInnerWidget();
-	setupToolbar();
-	setupCodeEditor();
+	setupCodeEditor(); // It must be called before the toolbars
+	setupEditingToolbar();
+	innerMainWindow->addToolBarBreak();
+	setupRunToolbar();
 }
 
 CodeSegment::~CodeSegment()
@@ -34,10 +41,80 @@ void CodeSegment::setupInnerWidget()
 	setWidget(innerMainWindow);
 }
 
-void CodeSegment::setupToolbar()
+void CodeSegment::setupEditingToolbar()
 {
 	// Create the toolbar
-	QToolBar* toolBar = innerMainWindow->addToolBar("code");
+	QToolBar* editToolBar = innerMainWindow->addToolBar(tr("Edit"));
+	editToolBar->setIconSize( QSize(toolBarIconSize, toolBarIconSize) );
+
+	// Create new files in the solution
+	newFileAction = new QAction(QIcon(":/unit_playing/buttons/new_file.svg"), tr("&New file"), this);
+	newFileAction->setObjectName("newFile");
+	newFileAction->setShortcut(QKeySequence("Ctrl+N"));
+	newFileAction->setStatusTip(tr("Adds a new file to the solution"));
+	connect(newFileAction, SIGNAL(triggered()), this, SLOT(newFileTriggered()));
+	editToolBar->addAction(newFileAction);
+
+	// Undo
+	undoAction = new QAction(QIcon(":/unit_playing/buttons/undo.svg"), tr("&Undo"), this);
+	undoAction->setObjectName("undo");
+	undoAction->setEnabled(false);
+	undoAction->setShortcut(QKeySequence("Ctrl+Z"));
+	undoAction->setStatusTip(tr("Undoes the last action done in the editor"));
+	connect(codeEditor, SIGNAL(undoAvailable(bool)), undoAction, SLOT(setEnabled(bool)));
+	connect(undoAction, SIGNAL(triggered()), codeEditor, SLOT(undo()));
+	editToolBar->addAction(undoAction);
+
+	// Redo
+	redoAction = new QAction(QIcon(":/unit_playing/buttons/redo.svg"), tr("&Redo"), this);
+	redoAction->setObjectName("redo");
+	redoAction->setEnabled(false);
+	redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
+	redoAction->setStatusTip(tr("Redoes the last undone action in the editor"));
+	connect(codeEditor, SIGNAL(redoAvailable(bool)), redoAction, SLOT(setEnabled(bool)));
+	connect(redoAction, SIGNAL(triggered()), codeEditor, SLOT(redo()));
+	editToolBar->addAction(redoAction);
+
+	// Cut
+	cutAction = new QAction(QIcon(":/unit_playing/buttons/cut.svg"), tr("C&ut"), this);
+	cutAction->setObjectName("cut");
+	cutAction->setEnabled(false);
+	cutAction->setShortcut(QKeySequence("Ctrl+X"));
+	cutAction->setStatusTip(tr("Moves the selection to the clipboard"));
+	connect(codeEditor, SIGNAL(copyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
+	connect(cutAction, SIGNAL(triggered()), codeEditor, SLOT(cut()));
+	editToolBar->addAction(cutAction);
+
+	// Copy
+	copyAction = new QAction(QIcon(":/unit_playing/buttons/copy.svg"), tr("&Copy"), this);
+	copyAction->setObjectName("copy");
+	copyAction->setEnabled(false);
+	copyAction->setShortcut(QKeySequence("Ctrl+C"));
+	copyAction->setStatusTip(tr("Copies the selection to the clipboard"));
+	connect(codeEditor, SIGNAL(copyAvailable(bool)), copyAction, SLOT(setEnabled(bool)));
+	connect(copyAction, SIGNAL(triggered()), codeEditor, SLOT(copy()));
+	editToolBar->addAction(copyAction);
+
+	// Paste
+	pasteAction = new QAction(QIcon(":/unit_playing/buttons/paste.svg"), tr("&Paste"), this);
+	pasteAction->setObjectName("paste");
+	pasteAction->setEnabled(false);
+	pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+	pasteAction->setStatusTip(tr("Pastes the clipboard contents over the selection"));
+	connect(pasteAction, SIGNAL(triggered()), codeEditor, SLOT(paste()));
+	editToolBar->addAction(pasteAction);
+
+	// A combo box to show and choose the active file being edited
+	fileSelector = new QComboBox();
+	connect(fileSelector, SIGNAL(currentIndexChanged(QString)), this, SLOT(fileSelectorIndexChanged(QString)));
+	editToolBar->addWidget(fileSelector);
+}
+
+void CodeSegment::setupRunToolbar()
+{
+	// Create the toolbar
+	QToolBar* toolBar = innerMainWindow->addToolBar(tr("Run"));
+	toolBar->setIconSize( QSize(toolBarIconSize, toolBarIconSize) );
 
 	// Create the Run or pause action
 	runOrPauseAction = new QAction(QIcon(":/unit_playing/buttons/run.svg"), tr("&Run or pause"), this);
@@ -103,8 +180,14 @@ void CodeSegment::loadCodeForUnit(Unit* unit)
 	// Load the source file list that compounds the player's solution
 	playerSolution->loadSolutionForUnit(unit);
 
+	// Fill the file selector with the list of files that comprise this player solution
+	fileSelector->clear();
+	fileSelector->addItems( playerSolution->getSourceNames() );
+
 	// Ask the editor to show this source
-	codeEditor->loadFile(unit, playerSolution->getLastEditedFilepath());
+	const QFileInfo& lastEditedFilePath = playerSolution->getLastEditedFilePath();
+	codeEditor->loadFile(unit, lastEditedFilePath.absoluteFilePath() );
+	fileSelector->setCurrentText( lastEditedFilePath.fileName() );
 
 	// Now the run button can be triggered
 	runOrPauseAction->setEnabled(true);
@@ -145,7 +228,7 @@ void CodeSegment::startBuild()
 	connect(compiler, SIGNAL(finished()), this, SLOT(compilerFinished()));
 
 	// Start the compiling process with the files in the solution and the expected executable file
-	compiler->compile(playerSolution->getSourceFiles(), playerSolution->getExecutablePath());
+	compiler->compile(playerSolution->getSourcePaths(), playerSolution->getExecutablePath());
 }
 
 void CodeSegment::compilerFinished()
@@ -181,6 +264,16 @@ void CodeSegment::startVisualization()
 void CodeSegment::pauseVisualization()
 {
 	// Pause the visualization code here
+}
+
+void CodeSegment::newFileTriggered()
+{
+	qDebug() << "New file triggered";
+}
+
+void CodeSegment::fileSelectorIndexChanged(const QString& text)
+{
+	qDebug() << "New source file selected" << text;
 }
 
 void CodeSegment::stepIntoTriggered()

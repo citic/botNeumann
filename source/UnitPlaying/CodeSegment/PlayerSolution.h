@@ -44,9 +44,11 @@ class PlayerSolution : public QObject
 	/// files), it will assume an inexistent "main.cpp" in the solution folder.
 	/// @remarks This method uses the modification dates of files to know which one is the
 	/// latest modify. If player modifies files outside botNeumann, it will affect this method
-	QString getLastEditedFilepath() const;
+	QFileInfo getLastEditedFilePath() const;
 	/// Get access to the list of source files that compound the player's solution
-	inline const QFileInfoList& getSourceFiles() const { return sourceFiles; }
+	inline const QFileInfoList& getSourcePaths() const { return sourceFiles; }
+	/// Get a list of source files names, without full path
+	const QStringList getSourceNames() const;
 	/// Returns true if there is files in the solution
 	inline bool hasFiles() const { return sourceFiles.size() > 0; }
 	/// Returns the absolute path to the executable file that results of building this solution

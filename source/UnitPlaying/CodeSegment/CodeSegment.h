@@ -6,6 +6,7 @@
 class CodeEditor;
 class Compiler;
 class QAction;
+class QComboBox;
 class QMainWindow;
 class QSlider;
 class Player;
@@ -28,11 +29,33 @@ class CodeSegment : public QDockWidget
 	Q_OBJECT
 	Q_DISABLE_COPY(CodeSegment)
 
-  protected:
+  protected: // General objects
 	/// In order to have a toolbar, the widget of this code editor must be a main window
 	QMainWindow* innerMainWindow;
 	/// Object where the actual source code is shown and edited
 	CodeEditor* codeEditor;
+	/// Manages the list of source files that compound the player's solution to an unit
+	PlayerSolution* playerSolution;
+	/// Object in charge of compiling the player solution
+	Compiler* compiler;
+
+  protected: // Edit toolbar
+	/// Create new files in the solution: header file, source file and C++ classes
+	QAction* newFileAction;
+	/// Undoes the last action done in the editor
+	QAction* undoAction;
+	/// Redoes the last undone action in the editor
+	QAction* redoAction;
+	/// Cuts the current selection in the text editor and places it into the clipboard
+	QAction* cutAction;
+	/// Copies the current selection in the text editor and places a copy into the clipboard
+	QAction* copyAction;
+	/// Paste a copy of the clipboard contents over the current selection in the text editor
+	QAction* pasteAction;
+	/// Let player change the file to be edited, if the solution is compound of several files
+	QComboBox* fileSelector;
+
+  protected: // Run toolbar
 	/// Executes and animates the code or pauses it if already running
 	QAction* runOrPauseAction;
 	/// If visualisation is paused, executes the next code statement entering in functions if they
@@ -44,10 +67,6 @@ class CodeSegment : public QDockWidget
 	QAction* stopAction;
 	/// Allows user to set the speed of the visualization
 	QSlider* visualizationSpeedSlider;
-	/// Manages the list of source files that compound the player's solution to an unit
-	PlayerSolution* playerSolution;
-	/// Object in charge of compiling the player solution
-	Compiler* compiler;
 
   public:
 	/// Constructor
@@ -77,8 +96,10 @@ class CodeSegment : public QDockWidget
   protected:
 	/// Set up the inner main window
 	void setupInnerWidget();
-	/// Create and set up the tool bar with undo, copy, run, debug and other actions
-	void setupToolbar();
+	/// Create standard editing tool bar with undo, copy, run, debug and other actions
+	void setupEditingToolbar();
+	/// Create a toolbar with buttons for running, stop, step into/out
+	void setupRunToolbar();
 	/// Create and configure the text editor object
 	void setupCodeEditor();
 	/// Starts the compilation process. It is done in background. When the compilation is finished
@@ -90,11 +111,17 @@ class CodeSegment : public QDockWidget
 	void pauseVisualization();
 
   protected slots:
-	/// Called when the player solution has finished to compile and link
-	void compilerFinished();
+	/// Called when a new file should be added to the solution: a new header file, or
+	/// source file, or C++ class
+	void newFileTriggered();
+	/// Called when player selects another source file in the file selector combo box
+	void fileSelectorIndexChanged(const QString& text);
+
 	// ToDo: Move these slots to an Interpreter class
 	/// Called when the run or pause button is pressed
 	void runOrPauseTriggered();
+	/// Called when the player solution has finished to compile and link
+	void compilerFinished();
 	/// Called when the step into button is pressed
 	void stepIntoTriggered();
 	/// Called when the step out button is pressed

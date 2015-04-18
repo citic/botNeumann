@@ -38,19 +38,19 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 
 	// If player has never tried this unit, assume there is a "main.cpp"
 	if ( fileCount == -1 )
-		sourceFiles.append( QFileInfo(getLastEditedFilepath()) );
+		sourceFiles.append( getLastEditedFilePath() );
 
 	// Done
 	return fileCount;
 }
 
-QString PlayerSolution::getLastEditedFilepath() const
+QFileInfo PlayerSolution::getLastEditedFilePath() const
 {
 	// If there are not files, assume the last edited file is an inexistent "main.cpp"
-	if ( sourceFiles.size() <= 0 ) return getPlayerUnitSourcePath("main.cpp");
+	if ( sourceFiles.size() <= 0 ) return QFileInfo(getPlayerUnitSourcePath("main.cpp"));
 
 	// If there is only one file, we dont' have to compare modification dates
-	if ( sourceFiles.size() == 1 ) return sourceFiles[0].absoluteFilePath();
+	if ( sourceFiles.size() == 1 ) return sourceFiles[0];
 
 	// There are files, compare its modification dates, and select the latest modified
 	int lastModifiedIndex = 0;
@@ -63,7 +63,17 @@ QString PlayerSolution::getLastEditedFilepath() const
 		}
 
 	// Return the latest modified found file path
-	return sourceFiles[lastModifiedIndex].absoluteFilePath();
+	return sourceFiles[lastModifiedIndex];
+}
+
+const QStringList PlayerSolution::getSourceNames() const
+{
+	// Extract only the file names, without their path, from the list of files
+	QStringList sourceNames;
+	sourceNames.reserve( sourceFiles.size() );
+	foreach ( const QFileInfo& filePath, sourceFiles )
+		sourceNames.append( filePath.fileName() );
+	return sourceNames;
 }
 
 QString PlayerSolution::getExecutablePath() const
