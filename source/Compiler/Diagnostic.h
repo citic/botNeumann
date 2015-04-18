@@ -2,6 +2,7 @@
 #define DIAGNOSTIC_H
 
 #include <QColor>
+#include <QIcon>
 #include <QString>
 
 // Adapted from <clang-c/Index.h>
@@ -45,6 +46,10 @@ class Diagnostic
 	virtual QColor getSeverityColor() const { return mapSeverityColor(severity); }
 	/// Given a severity, returns a color to paint it to help user to identify it visually
 	static QColor mapSeverityColor(DiagnosticSeverity severity);
+	/// Returns an icon accordin to the severity of this diagnostic
+	virtual QIcon getSeverityIcon() const { return mapSeverityIcon(severity); }
+	/// Given a severity, returns an icon to represent the severity
+	static QIcon mapSeverityIcon(DiagnosticSeverity severity);
 	/// Returns true if this diagnostic is a normal or fatal error
 	/// Therefore, the code cannot be run
 	inline bool isError() const { return severity == DiagnosticSeverity::error || severity == DiagnosticSeverity::fatal; }

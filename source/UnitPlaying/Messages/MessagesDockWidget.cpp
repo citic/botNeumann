@@ -67,15 +67,17 @@ void MessagesDockWidget::buildFinished(Compiler* compiler)
 	}
 
 	// Always print a result
-	const QString& text = tr("Compilation finished: %1 error(s), %2 warning(s)").arg(compiler->getErrorCount()).arg(compiler->getWarningCount());
-	new QListWidgetItem(QIcon(":/button_information.svg"), text, toolsOutput);
+	const QString& text = tr("Build finished: %1 error(s), %2 warning(s)").arg(compiler->getErrorCount()).arg(compiler->getWarningCount());
+	new QListWidgetItem(text, toolsOutput);
 }
 
 void MessagesDockWidget::appendDiagnostic(const Diagnostic* diagnostic)
 {
 	Q_ASSERT(diagnostic);
-	// ToDo: change icon according to diagnostic severity
-	QIcon icon( /*diagnostic->getIcon()*/ ":/button_information.svg");
+
+	// Create a list item with icon according to the severity of the diagnostic.
+	// The text may be multiline. The constructor adds the item to the list widget automatically
+	QIcon icon( diagnostic->getSeverityIcon() );
 	QListWidgetItem* listItem = new QListWidgetItem(icon, diagnostic->buildUserText(), toolsOutput);
 
 	// Provide some styles

@@ -34,6 +34,13 @@
 		<file>unit_playing/tube_out.svg</file>
 		<file>unit_playing/workstation.svg</file>
 	</qresource>
+	<qresource prefix="/unit_playing/buttons">
+		<file alias="accept.svg">unit_playing/buttons/accept.svg</file>
+		<file alias="error.svg">unit_playing/buttons/error.svg</file>
+		<file alias="info.svg">unit_playing/buttons/info.svg</file>
+		<file alias="link_broken.svg">unit_playing/buttons/link_broken.svg</file>
+		<file alias="warning.svg">unit_playing/buttons/warning.svg</file>
+	</qresource>
 	<qresource prefix="/unit_playing/data_types"/>
 	<qresource prefix="/unit_selection">
 		<file>unit_selection/air_tube_pod.svg</file>

@@ -32,11 +32,6 @@
 
 | image | description | preview |
 |---|---|---|
-| button_run | compiles the code and starts the visualisation | ![button_run](unit_playing/button_run.svg) |
-| button_pause | pauses the visualisation to allow user to run it step by step | ![button_pause](unit_playing/button_pause.svg) |
-| button_step_into | if visualisation is paused, executes the next code statement entering in functions if they are defined by user | ![button_step_into](unit_playing/button_step_into.svg) |
-| button_step_out | if visualisation is paused, executes the next code statement in the current function | ![button_step_out](unit_playing/button_step_out.svg) |
-| button_stop | stops the visualisation | ![button_stop](unit_playing/button_stop.svg) |
 | background | fondo del laboratorio | ![background](unit_playing/background.svg) |
 | shelves_closed | Heap segment hidden to avoid cognitive overload at first levels. | ![shelves_closed](unit_playing/shelves_closed.svg) |
 | shelf_left | extremo izquierdo del estante. | ![shelf_left](unit_playing/shelf_left.svg) |
@@ -61,6 +56,17 @@
 | shared_table | mesa compartida por todos los robots: segmento de datos. | ![shared_table: mesa compartida por todos los robots](unit_playing/shared_table.svg) |
 | tube_in | tubo de entrada, hacerle una sección abierta de 8 bytes. | ![tube_in](unit_playing/tube_in.svg) |
 | tube_out | tubo de salida: también requiere la sección abierta. | ![tube_out: tubo de salida](unit_playing/tube_out.svg) |
+
+
+## unit_playing / buttons
+
+| image | description | preview |
+|---|---|---|
+| pause | pauses the visualisation to allow user to run it step by step | ![pause](unit_playing/button_pause.svg) |
+| run | compiles the code and starts the visualisation | ![run](unit_playing/button_run.svg) |
+| button_step_into | if visualisation is paused, executes the next code statement entering in functions if they are defined by user | ![button_step_into](unit_playing/button_step_into.svg) |
+| button_step_out | if visualisation is paused, executes the next code statement in the current function | ![button_step_out](unit_playing/button_step_out.svg) |
+| button_stop | stops the visualisation | ![button_stop](unit_playing/button_stop.svg) |
 
 
 ## unit_playing / data_types

@@ -19,3 +19,13 @@ QString LinkerDiagnostic::buildUserText() const
 {
 	return brief;
 }
+
+QColor LinkerDiagnostic::getSeverityColor() const
+{
+	return Qt::magenta;
+}
+
+QIcon LinkerDiagnostic::getSeverityIcon() const
+{
+	return QIcon(":/unit_playing/buttons/link_broken.svg");
+}

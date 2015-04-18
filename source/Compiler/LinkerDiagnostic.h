@@ -17,7 +17,9 @@ class LinkerDiagnostic : public Diagnostic
 	/// Generates a text line to the user, in order to understand the diagnostic
 	virtual QString buildUserText() const override;
 	/// Overrides the color to make linker diagnostics allways purple
-	virtual QColor getSeverityColor() const override { return Qt::magenta; }
+	virtual QColor getSeverityColor() const override;
+	/// Overrides the severity icon to show an icon exclusive for linking diagnostics
+	virtual QIcon getSeverityIcon() const override;
 };
 
 #endif // LINKERDIAGNOSTIC_H

@@ -49,6 +49,19 @@ QColor Diagnostic::mapSeverityColor(DiagnosticSeverity severity)
 	}
 }
 
+QIcon Diagnostic::mapSeverityIcon(DiagnosticSeverity severity)
+{
+	switch ( severity )
+	{
+		case DiagnosticSeverity::ignored: return QIcon(":/unit_playing/buttons/info.svg");
+		case DiagnosticSeverity::note:    return QIcon(":/unit_playing/buttons/info.svg");
+		case DiagnosticSeverity::warning: return QIcon(":/unit_playing/buttons/warning.svg");
+		case DiagnosticSeverity::error:   return QIcon(":/unit_playing/buttons/error.svg");
+		case DiagnosticSeverity::fatal:   return QIcon(":/unit_playing/buttons/error.svg");
+		case DiagnosticSeverity::unknown: return QIcon(":/unit_playing/buttons/info.svg");
+	}
+}
+
 void Diagnostic::appendExplanation(const QString& text)
 {
 	// Avoid summary messages
