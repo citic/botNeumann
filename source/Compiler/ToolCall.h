@@ -36,7 +36,11 @@ class ToolCall : public QObject
 	/// Returns the state of the compilation process of this unit
 	inline ToolCallState getState() const { return state; }
 	/// Returns true if @a file1 is newer (last modified) than file2
+	/// This function must create new QFileInfo objects, in order to force QFileInfo re-read the
+	/// times from secondary memory. It is necessary because user modifies files in edit process
 	static bool isFileNewerThan(const QFileInfo& file1, const QFileInfo& file2);
+	/// Returns true if @a file1 is newer (last modified) than file2
+	static bool isFileNewerThan(const QString& file1, const QString& file2);
 
   public:
 	/// Get the name of the default C++ compiler for this platform

@@ -19,7 +19,12 @@ ToolCall::~ToolCall()
 
 bool ToolCall::isFileNewerThan(const QFileInfo& file1, const QFileInfo& file2)
 {
-	return file1.lastModified() > file2.lastModified();
+	return isFileNewerThan(file1.absoluteFilePath(), file2.absoluteFilePath());
+}
+
+bool ToolCall::isFileNewerThan(const QString& file1, const QString& file2)
+{
+	return QFileInfo(file1).lastModified() > QFileInfo(file2).lastModified();
 }
 
 QString ToolCall::getCxxCompiler()

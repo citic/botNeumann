@@ -204,7 +204,7 @@ void CodeSegment::startBuild()
 {
 	// This method must be only called if there is a player solution with files
 	Q_ASSERT(playerSolution);
-	Q_ASSERT( playerSolution->hasFiles() );
+	Q_ASSERT(playerSolution->hasFiles());
 
 	// Avoid to call two or more times to the compiler
 	runOrPauseAction->setEnabled(false);
