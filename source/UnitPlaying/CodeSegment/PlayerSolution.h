@@ -63,7 +63,7 @@ class PlayerSolution : public QObject
 	/// @param basename The base name of the attempted C/C++ file, for example, main.cpp. This file
 	/// is part of the solution created by the player
 	static QString getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename);
-	/// @see getPlayerUnitSourcePath(Player*, Unit*)
+	/// @see getPlayerUnitSourcePath(Player*, Unit*, const QString&)
 	inline QString getPlayerUnitSourcePath(const QString& basename) const { return getPlayerUnitSourcePath(player, unit, basename); }
 
   protected:

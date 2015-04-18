@@ -98,6 +98,9 @@ bool CodeEditor::loadUnitInitialCode()
 
 bool CodeEditor::loadFileContents()
 {
+	// If there is a document with changes, save it
+	if ( filepath.length() > 0) saveChanges();
+
 	// Open the file with Text flag, each line-change character in Windows or Mac format
 	// will be converted to '\n' because Qt follows internally the Unix convertions
 	QFile file(filepath);
@@ -162,6 +165,9 @@ bool CodeEditor::save()
 
 	// Document was successfully saved, no changes are left
 	document()->setModified(false);
+
+	// If there is a pending autosave operation, cancel it
+	autoSaveTimer->stop();
 	qDebug() << "CodeEditor: File saved:" << filepath;
 	return true;
 }

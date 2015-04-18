@@ -273,7 +273,8 @@ void CodeSegment::newFileTriggered()
 
 void CodeSegment::fileSelectorIndexChanged(const QString& text)
 {
-	qDebug() << "New source file selected" << text;
+	// Get the full path to the filename and load it in the code editor
+	codeEditor->loadFile( playerSolution->getPlayerUnitSourcePath(text) );
 }
 
 void CodeSegment::stepIntoTriggered()
