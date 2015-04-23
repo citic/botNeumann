@@ -2,11 +2,11 @@
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="shelf_x5F_middle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="106.82px" height="44.21px" viewBox="7.63 0 106.82 44.21" enable-background="new 7.63 0 106.82 44.21"
+	 y="0px" width="106.82px" height="44.21px" viewBox="0 0 106.82 44.21" enable-background="new 0 0 106.82 44.21"
 	 xml:space="preserve">
 <g>
 	
-		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="395.999" y1="-273.8081" x2="395.999" y2="-282.2112" gradientTransform="matrix(1 0 0 -1 -334.96 -238.8955)">
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="723.3298" y1="601.9136" x2="723.3298" y2="610.3167" gradientTransform="matrix(1 0 0 1 -669.9199 -567)">
 		<stop  offset="0" style="stop-color:#C2C2C2"/>
 		<stop  offset="0.0673" style="stop-color:#B1B1B1"/>
 		<stop  offset="0.2964" style="stop-color:#7E7E7E"/>
@@ -15,16 +15,16 @@
 		<stop  offset="0.8766" style="stop-color:#272727"/>
 		<stop  offset="1" style="stop-color:#212121"/>
 	</linearGradient>
-	<rect x="7.63" y="34.157" fill="url(#SVGID_1_)" width="106.82" height="10.043"/>
+	<rect x="0" y="34.158" fill="url(#SVGID_1_)" width="106.82" height="10.043"/>
 	
-		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="396.001" y1="-273.0518" x2="396.001" y2="-248.7603" gradientTransform="matrix(1 0 0 -1 -334.96 -238.8955)">
+		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="723.3298" y1="601.1577" x2="723.3298" y2="576.8657" gradientTransform="matrix(1 0 0 1 -669.9199 -567)">
 		<stop  offset="0" style="stop-color:#858585"/>
 		<stop  offset="0.4409" style="stop-color:#212121"/>
 		<stop  offset="0.9677" style="stop-color:#1A1A1A"/>
 	</linearGradient>
-	<rect x="7.63" y="9.865" fill="url(#SVGID_2_)" width="106.82" height="24.292"/>
+	<rect x="0" y="9.865" fill="url(#SVGID_2_)" width="106.82" height="24.292"/>
 	
-		<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="396.001" y1="-248.7603" x2="396.001" y2="-238.9058" gradientTransform="matrix(1 0 0 -1 -334.96 -238.8955)">
+		<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="723.3298" y1="576.8647" x2="723.3298" y2="567.0112" gradientTransform="matrix(1 0 0 1 -669.9199 -567)">
 		<stop  offset="0" style="stop-color:#C2C2C2"/>
 		<stop  offset="0.0106" style="stop-color:#BFBFBF"/>
 		<stop  offset="0.1853" style="stop-color:#8F8F8F"/>
@@ -34,9 +34,9 @@
 		<stop  offset="0.8549" style="stop-color:#262626"/>
 		<stop  offset="1" style="stop-color:#212121"/>
 	</linearGradient>
-	<rect x="7.63" y="0.01" fill="url(#SVGID_3_)" width="106.82" height="9.854"/>
+	<rect x="0" y="0.01" fill="url(#SVGID_3_)" width="106.82" height="9.854"/>
 	
-		<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="342.5898" y1="-238.9058" x2="342.5898" y2="-238.9058" gradientTransform="matrix(1 0 0 -1 -334.96 -238.8955)">
+		<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="669.9197" y1="567.0112" x2="669.9197" y2="567.0112" gradientTransform="matrix(1 0 0 1 -669.9199 -567)">
 		<stop  offset="0" style="stop-color:#C2C2C2"/>
 		<stop  offset="0.0106" style="stop-color:#BFBFBF"/>
 		<stop  offset="0.1853" style="stop-color:#8F8F8F"/>
@@ -46,14 +46,14 @@
 		<stop  offset="0.8549" style="stop-color:#262626"/>
 		<stop  offset="1" style="stop-color:#212121"/>
 	</linearGradient>
-	<path fill="none" stroke="url(#SVGID_4_)" stroke-miterlimit="10" d="M7.63,0.01"/>
+	<path fill="none" stroke="url(#SVGID_4_)" stroke-miterlimit="10" d="M0,0.01"/>
 	<g>
-		<rect x="7.63" y="0.01" width="106.82" height="1"/>
-		<rect x="7.63" y="9.471" width="106.82" height="1"/>
+		<rect x="0" y="0.01" width="106.82" height="1"/>
+		<rect x="0" y="9.471" width="106.82" height="1"/>
 	</g>
 	<g>
-		<rect x="7.63" y="33.739" width="106.82" height="1"/>
-		<rect x="7.63" y="43.198" width="106.82" height="1"/>
+		<rect x="0" y="33.739" width="106.82" height="1"/>
+		<rect x="0" y="43.198" width="106.82" height="1"/>
 	</g>
 </g>
 </svg>
