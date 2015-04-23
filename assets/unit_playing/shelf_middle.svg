@@ -2,10 +2,11 @@
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="shelf_x5F_middle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="122.08px" height="44.21px" viewBox="0 0 122.08 44.21" enable-background="new 0 0 122.08 44.21"
+	 y="0px" width="106.82px" height="44.21px" viewBox="7.63 0 106.82 44.21" enable-background="new 7.63 0 106.82 44.21"
 	 xml:space="preserve">
 <g>
-	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="61.0396" y1="34.9229" x2="61.0396" y2="43.326">
+	
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="395.999" y1="-273.8081" x2="395.999" y2="-282.2112" gradientTransform="matrix(1 0 0 -1 -334.96 -238.8955)">
 		<stop  offset="0" style="stop-color:#C2C2C2"/>
 		<stop  offset="0.0673" style="stop-color:#B1B1B1"/>
 		<stop  offset="0.2964" style="stop-color:#7E7E7E"/>
@@ -14,14 +15,16 @@
 		<stop  offset="0.8766" style="stop-color:#272727"/>
 		<stop  offset="1" style="stop-color:#212121"/>
 	</linearGradient>
-	<rect y="34.167" fill="url(#SVGID_1_)" width="122.08" height="10.043"/>
-	<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="61.0405" y1="34.167" x2="61.0405" y2="9.8755">
+	<rect x="7.63" y="34.157" fill="url(#SVGID_1_)" width="106.82" height="10.043"/>
+	
+		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="396.001" y1="-273.0518" x2="396.001" y2="-248.7603" gradientTransform="matrix(1 0 0 -1 -334.96 -238.8955)">
 		<stop  offset="0" style="stop-color:#858585"/>
 		<stop  offset="0.4409" style="stop-color:#212121"/>
 		<stop  offset="0.9677" style="stop-color:#1A1A1A"/>
 	</linearGradient>
-	<rect y="9.875" fill="url(#SVGID_2_)" width="122.08" height="24.292"/>
-	<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="61.0405" y1="9.875" x2="61.0405" y2="0.0215">
+	<rect x="7.63" y="9.865" fill="url(#SVGID_2_)" width="106.82" height="24.292"/>
+	
+		<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="396.001" y1="-248.7603" x2="396.001" y2="-238.9058" gradientTransform="matrix(1 0 0 -1 -334.96 -238.8955)">
 		<stop  offset="0" style="stop-color:#C2C2C2"/>
 		<stop  offset="0.0106" style="stop-color:#BFBFBF"/>
 		<stop  offset="0.1853" style="stop-color:#8F8F8F"/>
@@ -31,8 +34,9 @@
 		<stop  offset="0.8549" style="stop-color:#262626"/>
 		<stop  offset="1" style="stop-color:#212121"/>
 	</linearGradient>
-	<rect y="0.021" fill="url(#SVGID_3_)" width="122.08" height="9.854"/>
-	<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="0" y1="0.0215" x2="0" y2="0.0215">
+	<rect x="7.63" y="0.01" fill="url(#SVGID_3_)" width="106.82" height="9.854"/>
+	
+		<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="342.5898" y1="-238.9058" x2="342.5898" y2="-238.9058" gradientTransform="matrix(1 0 0 -1 -334.96 -238.8955)">
 		<stop  offset="0" style="stop-color:#C2C2C2"/>
 		<stop  offset="0.0106" style="stop-color:#BFBFBF"/>
 		<stop  offset="0.1853" style="stop-color:#8F8F8F"/>
@@ -42,24 +46,14 @@
 		<stop  offset="0.8549" style="stop-color:#262626"/>
 		<stop  offset="1" style="stop-color:#212121"/>
 	</linearGradient>
-	<path fill="none" stroke="url(#SVGID_4_)" stroke-miterlimit="10" d="M0,0.021"/>
+	<path fill="none" stroke="url(#SVGID_4_)" stroke-miterlimit="10" d="M7.63,0.01"/>
 	<g>
-		<polygon fill="#636363" points="3.996,43.142 3.496,43.142 0,34.688 0.5,34.688 		"/>
-		<polygon fill="#7D7D7D" points="4.496,43.142 3.996,43.142 0.5,34.688 1,34.688 		"/>
+		<rect x="7.63" y="0.01" width="106.82" height="1"/>
+		<rect x="7.63" y="9.471" width="106.82" height="1"/>
 	</g>
 	<g>
-		<polygon fill="#636363" points="3.996,1.031 3.496,1.031 0,9.485 0.5,9.485 		"/>
-		<polygon fill="#7D7D7D" points="4.496,1.031 3.996,1.031 0.5,9.485 1,9.485 		"/>
-	</g>
-	<path fill="#3D3D3D" d="M4.037,22.11c0-6.832-1.768-12.379-3.973-12.589h11.951v0.988H2.748c1.561,2.568,2.289,7.234,2.289,11.601
-		c0,4.506-0.789,9.088-2.322,11.611h9.301v0.987H0C2.236,34.605,4.037,29.009,4.037,22.11z"/>
-	<g>
-		<rect y="0.021" width="122.08" height="1"/>
-		<rect y="9.482" width="122.08" height="1"/>
-	</g>
-	<g>
-		<rect y="33.75" width="122.08" height="0.999"/>
-		<rect y="43.209" width="122.08" height="1"/>
+		<rect x="7.63" y="33.739" width="106.82" height="1"/>
+		<rect x="7.63" y="43.198" width="106.82" height="1"/>
 	</g>
 </g>
 </svg>
