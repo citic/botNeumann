@@ -81,6 +81,11 @@ class CodeSegment : public QDockWidget
 	/// player nas not played this unit
 	void loadCodeForUnit(Unit* unit);
 
+  public slots:
+	/// Called when user selects one of the diagnostics in the tools output
+	/// @param index The index of the selected diagnostic in the allDiagnostics list
+	void diagnosticSelected(int index);
+
   signals:
 	/// Emitted when the run button is pressed, and therefore it is necessary to clear old output
 	void buildStarted();

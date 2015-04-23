@@ -10,21 +10,11 @@ class QRegularExpressionMatch;
  */
 class CompilerDiagnostic : public Diagnostic
 {
-  protected:
-	/// The line where the warning or error is presumed to be produced
-	unsigned line;
-	/// The column where the warning or error is presumed to be produced
-	unsigned column;
-
   public:
 	/// Constructor
 	CompilerDiagnostic(const QRegularExpressionMatch& match);
 	/// Destructor
 	~CompilerDiagnostic();
-	/// The line where the warning or error is presumed to be produced
-	inline unsigned getLine() const { return line; }
-	/// The column where the warning or error is presumed to be produced
-	inline unsigned getColumn() const { return column; }
 	/// Generates a text line to the user, in order to understand the diagnostic
 	virtual QString buildUserText() const override;
 };

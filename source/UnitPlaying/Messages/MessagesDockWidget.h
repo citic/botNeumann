@@ -28,6 +28,8 @@ class MessagesDockWidget : public QDockWidget
 	QTextEdit* unitDescription;
 	/// A control to display compiler, linker and debugger output
 	QListWidget* toolsOutput;
+	/// Compiler object that generated the diagnostics shown in the tools output list
+	Compiler* compiler;
 
   public:
 	/// Constructor
@@ -38,12 +40,23 @@ class MessagesDockWidget : public QDockWidget
 	/// parameter is true
 	void setUnitDescription(const QString& description, bool makeActiveTab);
 
+  signals:
+	/// Emitted when user selects one of the diagnostics in the tools output
+	/// @param index The index of the selected diagnostic in the allDiagnostics list
+	void diagnosticSelected(int index);
+
   public slots:
+	/// Called when a new compiling process has started, in order to clear old results
+	void buildStarted(Compiler* compiler);
 	/// Called when a build process (compiling and linking) has finished, and ther are results
 	/// The compiler pointer is required in order to get the diagnostics. If there are errors
 	/// and the messages dock widget is hidden, it is made visible and the tools output tab is
 	/// made active. If there are not errors, the tools output tab is just cleared.
 	void buildFinished(Compiler* compiler);
+
+  protected slots:
+	/// Called when user selects a diagnostic in the tools output list
+	void toolsOutputRowChanged(int row);
 
   protected:
 	/// Appends the given diagnostic to the tools output

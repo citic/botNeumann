@@ -57,6 +57,8 @@ class CodeEditor : public QPlainTextEdit
 	/// Saves if there are changes to the @a filepath document in secondary memory
 	/// @return true on success or when there is not need to save, false on error
 	bool saveChanges();
+	/// Place cursor in the given line (block) and column
+	void placeCursor(int line, int column );
 
   protected:
 	/// Load an initial code provided by the unit. This method is called when the player has never

@@ -155,4 +155,7 @@ void UnitPlayingScene::createMessagesDockWidget()
 	// When the code segment has built a solution and has diagnostics show them in the messages area
 	Q_ASSERT(codeSegment);
 	connect(codeSegment, SIGNAL(buildFinished(Compiler*)), messagesDockWidget, SLOT(buildFinished(Compiler*)));
+
+	// When user selects a diagnostic in the tools output, point its place in the code
+	connect(messagesDockWidget, SIGNAL(diagnosticSelected(int)), codeSegment, SLOT(diagnosticSelected(int)));
 }

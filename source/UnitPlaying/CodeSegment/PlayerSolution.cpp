@@ -76,6 +76,15 @@ const QStringList PlayerSolution::getSourceNames() const
 	return sourceNames;
 }
 
+int PlayerSolution::findFileIndex(const QFileInfo& filePath) const
+{
+	for ( int i = 0; i < sourceFiles.size(); ++i )
+		if ( filePath == sourceFiles[i] )
+			return i;
+
+	return -1;
+}
+
 QString PlayerSolution::getExecutablePath() const
 {
 	return getPlayerUnitSourcePath( unit->getId() );

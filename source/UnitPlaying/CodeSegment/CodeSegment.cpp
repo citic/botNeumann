@@ -1,6 +1,7 @@
 #include "CodeEditor.h"
 #include "CodeSegment.h"
 #include "Compiler.h"
+#include "Diagnostic.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
 #include <QAction>
@@ -193,8 +194,6 @@ void CodeSegment::loadCodeForUnit(Unit* unit)
 	runOrPauseAction->setEnabled(true);
 }
 
-#include <QDebug>
-
 void CodeSegment::runOrPauseTriggered()
 {
 	runOrPauseAction->objectName() == "Run" ? startBuild() : pauseVisualization();
@@ -253,9 +252,12 @@ void CodeSegment::compilerFinished()
 		runOrPauseAction->setEnabled(true);
 }
 
+#include <QDebug>
+
 void CodeSegment::startVisualization()
 {
 	// ToDo: Call the debugger here
+	qDebug() << "Start visualization...";
 
 	// If it is successful, enable the stop button
 	stopAction->setEnabled(true);
@@ -264,6 +266,7 @@ void CodeSegment::startVisualization()
 void CodeSegment::pauseVisualization()
 {
 	// Pause the visualization code here
+	qDebug() << "Pause visualization...";
 }
 
 void CodeSegment::newFileTriggered()
@@ -295,4 +298,26 @@ void CodeSegment::stopTriggered()
 void CodeSegment::visualizationSpeedChanged(int speed)
 {
 	qDebug() << "Visualization speed" << speed;
+}
+
+void CodeSegment::diagnosticSelected(int index)
+{
+	Q_ASSERT(compiler);
+	Q_ASSERT(index >= 0);
+	Q_ASSERT(index < compiler->getAllDiagnostics().size());
+
+	// Get the diagnostic that was selected
+	Diagnostic* diagnostic = compiler->getAllDiagnostics()[index];
+
+	// If the diagnostic was produced by a file that is not part of the player solution, for
+	// example, an external library, do not open the file in the Code Editor
+	QFileInfo filePath(diagnostic->getFilename());
+	if ( playerSolution->findFileIndex(filePath) == -1 )
+		return;
+
+	// The file is part of the solution. Select it in the file selector
+	fileSelector->setCurrentText( filePath.fileName() );
+
+	// Place the cursor on the line and column where the diagnostic was detected
+	codeEditor->placeCursor( diagnostic->getLine(), diagnostic->getColumn() );
 }

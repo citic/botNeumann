@@ -14,6 +14,8 @@ static const char* diagnosticSeverityText[] =
 
 Diagnostic::Diagnostic()
 	: severity(DiagnosticSeverity::unknown)
+	, line(-1)
+	, column(-1)
 {
 }
 

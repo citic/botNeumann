@@ -51,6 +51,8 @@ class PlayerSolution : public QObject
 	const QStringList getSourceNames() const;
 	/// Returns true if there is files in the solution
 	inline bool hasFiles() const { return sourceFiles.size() > 0; }
+	/// Returns the index if the given file is part of the player's solution, -1 othwerwise
+	int findFileIndex(const QFileInfo& filePath) const;
 	/// Returns the absolute path to the executable file that results of building this solution
 	QString getExecutablePath() const;
 	/// Get the player's directory to store source files for this unit. E.g: in Mac OS X:

@@ -277,3 +277,18 @@ void CodeEditor::highlightCurrentLine()
 
 	setExtraSelections(extraSelections);
 }
+
+void CodeEditor::placeCursor(int line, int column)
+{
+	// Change the cursor only if line is valid
+	if ( line < 0 || line >= blockCount() )
+		return;
+
+	QTextCursor cur( document()->findBlockByLineNumber(line - 1) );
+	cur.movePosition(QTextCursor::NextCharacter, QTextCursor::MoveAnchor, column);
+	setTextCursor(cur);
+	setFocus();
+
+	// ToDo: change the color of the number in the line number area
+	//lineNumberArea
+}
