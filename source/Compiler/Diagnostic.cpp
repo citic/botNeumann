@@ -48,6 +48,7 @@ QColor Diagnostic::mapSeverityColor(DiagnosticSeverity severity)
 		case DiagnosticSeverity::error:   return Qt::red;
 		case DiagnosticSeverity::fatal:   return Qt::red;
 		case DiagnosticSeverity::unknown: return Qt::black;
+        default: Q_ASSERT(false); return Qt::black;
 	}
 }
 
@@ -61,7 +62,8 @@ QIcon Diagnostic::mapSeverityIcon(DiagnosticSeverity severity)
 		case DiagnosticSeverity::error:   return QIcon(":/unit_playing/buttons/error.svg");
 		case DiagnosticSeverity::fatal:   return QIcon(":/unit_playing/buttons/error.svg");
 		case DiagnosticSeverity::unknown: return QIcon(":/unit_playing/buttons/info.svg");
-	}
+        default: Q_ASSERT(false); return QIcon(":/unit_playing/buttons/info.svg");
+    }
 }
 
 void Diagnostic::appendExplanation(const QString& text)
