@@ -3,7 +3,7 @@
 #include "DataSegment.h"
 #include "HeapSegment.h"
 #include "MainWindow.h"
-#include "MessagesDockWidget.h"
+#include "MessagesArea.h"
 #include "Stage.h"
 #include "UnitPlayingScene.h"
 #include <QDebug>
@@ -17,7 +17,7 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	, heapSegment(nullptr)
 	, cpuCores(nullptr)
 	, dataSegment(nullptr)
-	, messagesDockWidget(nullptr)
+	, messagesArea(nullptr)
 {
 	// Create the standar menu with back button, title, code editor toggle, config, and so on
 	createStandardMenu(context + ' ' + levelUnit, true);
@@ -34,7 +34,7 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	createCpuCores(cpuCoresProportion);
 	createDataSegment(dataSegmentProportion);
 	createCodeSegment();
-	createMessagesDockWidget();
+	createMessagesArea();
 }
 
 UnitPlayingScene::~UnitPlayingScene()
@@ -51,8 +51,8 @@ void UnitPlayingScene::startLeavingStage()
 	codeSegment->deleteLater();
 
 	// Hide and remove the messages area
-	messagesDockWidget->setVisible(false);
-	messagesDockWidget->deleteLater();
+	messagesArea->setVisible(false);
+	messagesArea->deleteLater();
 }
 
 void UnitPlayingScene::finishedEnteringStage()
@@ -61,7 +61,7 @@ void UnitPlayingScene::finishedEnteringStage()
 
 	// Show the code segment and the messages area
 	codeSegment->setVisible(true);
-	messagesDockWidget->setVisible(true);
+	messagesArea->setVisible(true);
 
 	// Loads or restore the code for this unit
 	codeSegment->loadCodeForUnit( &unit );
@@ -70,8 +70,8 @@ void UnitPlayingScene::finishedEnteringStage()
 void UnitPlayingScene::infoButtonPressed()
 {
 	// ToDo: get active language
-	Q_ASSERT(messagesDockWidget);
-	messagesDockWidget->setVisible( ! messagesDockWidget->isVisible() );
+	Q_ASSERT(messagesArea);
+	messagesArea->setVisible( ! messagesArea->isVisible() );
 }
 
 void UnitPlayingScene::backButtonPressed()
@@ -141,21 +141,21 @@ void UnitPlayingScene::createCodeSegment()
 	mainWindow->addDockWidget(Qt::RightDockWidgetArea, codeSegment);
 }
 
-void UnitPlayingScene::createMessagesDockWidget()
+void UnitPlayingScene::createMessagesArea()
 {
 	MainWindow* mainWindow = dynamic_cast<MainWindow*>( stage->parent() );
 	Q_ASSERT(mainWindow);
 
 	// Create a dock widget for the messages
-	messagesDockWidget = new MessagesDockWidget(mainWindow);
-	messagesDockWidget->setVisible(false);
-	messagesDockWidget->setUnitDescription( unit.getDescription("es"), false );
-	mainWindow->addDockWidget(Qt::BottomDockWidgetArea, messagesDockWidget);
+	messagesArea = new MessagesArea(mainWindow);
+	messagesArea->setVisible(false);
+	messagesArea->setUnitDescription( unit.getDescription("es"), false );
+	mainWindow->addDockWidget(Qt::BottomDockWidgetArea, messagesArea);
 
 	// When the code segment has built a solution and has diagnostics show them in the messages area
 	Q_ASSERT(codeSegment);
-	connect(codeSegment, SIGNAL(buildFinished(Compiler*)), messagesDockWidget, SLOT(buildFinished(Compiler*)));
+	connect(codeSegment, SIGNAL(buildFinished(Compiler*)), messagesArea, SLOT(buildFinished(Compiler*)));
 
 	// When user selects a diagnostic in the tools output, point its place in the code
-	connect(messagesDockWidget, SIGNAL(diagnosticSelected(int)), codeSegment, SLOT(diagnosticSelected(int)));
+	connect(messagesArea, SIGNAL(diagnosticSelected(int)), codeSegment, SLOT(diagnosticSelected(int)));
 }

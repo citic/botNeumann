@@ -1,12 +1,12 @@
 #include "BotNeumannApp.h"
 #include "Compiler.h"
 #include "Diagnostic.h"
-#include "MessagesDockWidget.h"
+#include "MessagesArea.h"
 #include <QListWidget>
 #include <QTabWidget>
 #include <QTextEdit>
 
-MessagesDockWidget::MessagesDockWidget(QWidget* parent, Qt::WindowFlags flags)
+MessagesArea::MessagesArea(QWidget* parent, Qt::WindowFlags flags)
 	: QDockWidget("Messages", parent, flags)
 	, compiler(nullptr)
 {
@@ -38,18 +38,18 @@ MessagesDockWidget::MessagesDockWidget(QWidget* parent, Qt::WindowFlags flags)
 	// ToDo: Add a third tab: for player's solution input/output
 }
 
-MessagesDockWidget::~MessagesDockWidget()
+MessagesArea::~MessagesArea()
 {
 }
 
-void MessagesDockWidget::setUnitDescription(const QString &description, bool makeActiveTab)
+void MessagesArea::setUnitDescription(const QString &description, bool makeActiveTab)
 {
 	unitDescription->setHtml(description);
 	if ( makeActiveTab )
 		messagesTabWidget->setCurrentWidget(unitDescription);
 }
 
-void MessagesDockWidget::buildStarted(Compiler* compiler)
+void MessagesArea::buildStarted(Compiler* compiler)
 {
 	// A new build process has started. Output from previous compiler calls are outdated, clear them
 	Q_UNUSED(compiler);
@@ -57,7 +57,7 @@ void MessagesDockWidget::buildStarted(Compiler* compiler)
 	toolsOutput->clear();
 }
 
-void MessagesDockWidget::buildFinished(Compiler* compiler)
+void MessagesArea::buildFinished(Compiler* compiler)
 {
 	// A build process (compiling and linking) has finished. Output from previous compiler calls
 	// are outdated, clear them
@@ -84,7 +84,7 @@ void MessagesDockWidget::buildFinished(Compiler* compiler)
 	new QListWidgetItem(text, toolsOutput);
 }
 
-void MessagesDockWidget::appendDiagnostic(const Diagnostic* diagnostic)
+void MessagesArea::appendDiagnostic(const Diagnostic* diagnostic)
 {
 	Q_ASSERT(diagnostic);
 
@@ -97,7 +97,7 @@ void MessagesDockWidget::appendDiagnostic(const Diagnostic* diagnostic)
 	listItem->setForeground( diagnostic->getSeverityColor() );
 }
 
-void MessagesDockWidget::toolsOutputRowChanged(int row)
+void MessagesArea::toolsOutputRowChanged(int row)
 {
 	// If there are not diagnostics, or selected the summary line, ignore the event
 	if ( compiler && row >= 0 && row < compiler->getAllDiagnostics().size() )

@@ -8,7 +8,7 @@ class CodeSegment;
 class CpuCores;
 class DataSegment;
 class HeapSegment;
-class MessagesDockWidget;
+class MessagesArea;
 
 /**
 	@brief Scene where players try to solve the unit's problem
@@ -56,7 +56,7 @@ class UnitPlayingScene : public GameScene
 	/// In botNeumann, this segment is the unique initialized with zeros
 	DataSegment* dataSegment;
 	/// The dock widget to place all the information and messages
-	MessagesDockWidget* messagesDockWidget;
+	MessagesArea* messagesArea;
 
   public:
 	/// Constructor
@@ -96,7 +96,7 @@ class UnitPlayingScene : public GameScene
 	/// Shows the Code Editor, which switches to Code Segment in run time
 	void createCodeSegment();
 	/// Create a dock widget that show information about the unit, messages from compilers...
-	void createMessagesDockWidget();
+	void createMessagesArea();
 };
 
 #endif // UNITPLAYINGSCENE_H

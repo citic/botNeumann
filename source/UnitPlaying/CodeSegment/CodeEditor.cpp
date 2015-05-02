@@ -46,7 +46,7 @@ CodeEditor::CodeEditor(QWidget* parent)
 	connect(autoSaveTimer, SIGNAL(timeout()), this, SLOT(saveChanges()));
 
 	// When user changes the number of lines on the editor, adjust the area of the line number
-	connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
+	connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth()));
 
 	// When this editor must be updated, because another window was covering it, or something else
 	// update the line number area widget too
