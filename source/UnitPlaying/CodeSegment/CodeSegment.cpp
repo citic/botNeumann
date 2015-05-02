@@ -239,16 +239,9 @@ void CodeSegment::compilerFinished()
 	// diagnostics in the tools' output on messages area
 	emit buildFinished(compiler);
 
-	// If there are not errors, the player's solution can be run. Start the visualization
-	if ( compiler->getErrorCount() == 0 )
-	{
-		startVisualization();
-		runOrPauseAction->setObjectName("Pause");
-		runOrPauseAction->setIcon(QIcon(":/unit_playing/buttons/pause.svg"));
-		runOrPauseAction->setStatusTip(tr("Pauses the visualization"));
-		runOrPauseAction->setEnabled(false);
-	}
-	else
+	// If there are errors, the player's solution cannot be run. The visualization will not start
+	// The "Run" button has not changed to "Pause", just re-enable it
+	if ( compiler->getErrorCount() > 0 )
 		runOrPauseAction->setEnabled(true);
 }
 
@@ -257,7 +250,10 @@ void CodeSegment::compilerFinished()
 void CodeSegment::startVisualization()
 {
 	// ToDo: Call the debugger here
-	qDebug() << "Start visualization...";
+	runOrPauseAction->setObjectName("Pause");
+	runOrPauseAction->setIcon(QIcon(":/unit_playing/buttons/pause.svg"));
+	runOrPauseAction->setStatusTip(tr("Pauses the visualization"));
+	runOrPauseAction->setEnabled(false);
 
 	// If it is successful, enable the stop button
 	stopAction->setEnabled(true);

@@ -36,7 +36,7 @@ class CodeSegment : public QDockWidget
 	CodeEditor* codeEditor;
 	/// Manages the list of source files that compound the player's solution to an unit
 	PlayerSolution* playerSolution;
-	/// Object in charge of compiling the player solution
+	/// Object in charge of compiling and linking the player solution
 	Compiler* compiler;
 
   protected: // Edit toolbar

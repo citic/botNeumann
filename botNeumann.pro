@@ -37,6 +37,7 @@ SOURCES += \
 	source/Compiler/Compiler.cpp \
 	source/Compiler/CompilerCall.cpp \
 	source/Compiler/CompilerDiagnostic.cpp \
+	source/Compiler/DebuggerCall.cpp \
 	source/Compiler/Diagnostic.cpp \
 	source/Compiler/LinkerCall.cpp \
 	source/Compiler/LinkerDiagnostic.cpp \
@@ -75,6 +76,7 @@ SOURCES += \
 	source/UnitPlaying/Threads/CpuCores.cpp \
 	source/UnitPlaying/Unit.cpp \
 	source/UnitPlaying/UnitPlayingScene.cpp \
+	source/UnitPlaying/Visualizator.cpp \
 	source/UnitSelection/UnitManager.cpp \
 	source/UnitSelection/UnitSelectionScene.cpp \
 
@@ -88,6 +90,7 @@ HEADERS += \
 	source/Compiler/Compiler.h \
 	source/Compiler/CompilerCall.h \
 	source/Compiler/CompilerDiagnostic.h \
+	source/Compiler/DebuggerCall.h \
 	source/Compiler/Diagnostic.h \
 	source/Compiler/LinkerCall.h \
 	source/Compiler/LinkerDiagnostic.h \
@@ -125,6 +128,7 @@ HEADERS += \
 	source/UnitPlaying/Threads/CpuCores.h \
 	source/UnitPlaying/Unit.h \
 	source/UnitPlaying/UnitPlayingScene.h \
+	source/UnitPlaying/Visualizator.h \
 	source/UnitSelection/UnitManager.h \
 	source/UnitSelection/UnitSelectionScene.h \
 

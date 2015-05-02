@@ -5,10 +5,12 @@
 #include "Unit.h"
 
 class CodeSegment;
+class Compiler;
 class CpuCores;
 class DataSegment;
 class HeapSegment;
 class MessagesArea;
+class Visualizator;
 
 /**
 	@brief Scene where players try to solve the unit's problem
@@ -57,6 +59,8 @@ class UnitPlayingScene : public GameScene
 	DataSegment* dataSegment;
 	/// The dock widget to place all the information and messages
 	MessagesArea* messagesArea;
+	/// Controller in charge of visualizing the executable
+	Visualizator* visualizator;
 
   public:
 	/// Constructor
@@ -82,6 +86,9 @@ class UnitPlayingScene : public GameScene
 	virtual void backButtonPressed() override;
 	/// Called when user press the code editor toggle button
 	virtual void codeSegmentTogglePressed() override;
+	/// Called when the compilation and linking process has finished
+	/// If there were no errorors, the visualization starts
+	void buildFinished(Compiler* compiler);
 
   protected:
 	/// Distribute the screen space between each segment according to the number of rows they

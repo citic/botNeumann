@@ -21,6 +21,7 @@ enum class ToolCallState
 class ToolCall : public QObject
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(ToolCall)
 
   protected:
 	/// Status of the tool called in a separated process

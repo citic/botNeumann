@@ -1,4 +1,5 @@
 #include "CodeSegment.h"
+#include "Compiler.h"
 #include "CpuCores.h"
 #include "DataSegment.h"
 #include "HeapSegment.h"
@@ -6,6 +7,7 @@
 #include "MessagesArea.h"
 #include "Stage.h"
 #include "UnitPlayingScene.h"
+#include "Visualizator.h"
 #include <QDebug>
 
 UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename, Stage* stage, QGraphicsItem* parent)
@@ -18,6 +20,7 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	, cpuCores(nullptr)
 	, dataSegment(nullptr)
 	, messagesArea(nullptr)
+	, visualizator(nullptr)
 {
 	// Create the standar menu with back button, title, code editor toggle, config, and so on
 	createStandardMenu(context + ' ' + levelUnit, true);
@@ -139,6 +142,10 @@ void UnitPlayingScene::createCodeSegment()
 	codeSegment = new CodeSegment(mainWindow);
 	codeSegment->setVisible(false);
 	mainWindow->addDockWidget(Qt::RightDockWidgetArea, codeSegment);
+
+	// When the user presses the button Run, his/her solution is compiled and linked. If there were
+	// no errors, the simulation should start
+	connect( codeSegment, SIGNAL(buildFinished(Compiler*)), this, SLOT(buildFinished(Compiler*)) );
 }
 
 void UnitPlayingScene::createMessagesArea()
@@ -158,4 +165,20 @@ void UnitPlayingScene::createMessagesArea()
 
 	// When user selects a diagnostic in the tools output, point its place in the code
 	connect(messagesArea, SIGNAL(diagnosticSelected(int)), codeSegment, SLOT(diagnosticSelected(int)));
+}
+
+void UnitPlayingScene::buildFinished(Compiler *compiler)
+{
+	// If there are errors, do not start the visualization
+	if ( compiler->getErrorCount() > 0 )
+		return;
+
+	// The player solution generated an executable and we are ready to visualize it
+	delete visualizator;
+	visualizator = new Visualizator(compiler->getExecutablePath(), this);
+
+	// ToDo: Connect signals emitted by visualizator with each part of the window
+
+	// Start the animation
+	visualizator->start();
 }

@@ -63,6 +63,9 @@ class Compiler : public QObject
 	/// Get access to all the diagnostics generated during the compiling and linking process of
 	/// all the sources files
 	inline const QList<Diagnostic*>& getAllDiagnostics() const { return allDiagnostics; }
+	/// Get access to the executable full path that should be generated after compiler the player
+	/// solution
+	inline const QFileInfo& getExecutablePath() const { return executablePath; }
 
   signals:
 	/// Emitted when a compilation process has finished
