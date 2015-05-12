@@ -3,3 +3,5 @@
 *.xz
 *.zip
 llvm*
+qt-creator*
+

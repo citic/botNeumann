@@ -1,4 +1,4 @@
-# If version > 3.6.0, version 
+# If version > 3.6.0, version
 LLVM_VERSION=3.6.0
 
 # Compresion of files, xz if version >= 3.5
@@ -7,7 +7,13 @@ CLANG_EXT=xz
 LLVM_BIN=$(PWD)/llvm/bin
 
 # Add here other 3rd party libraries
-all: build-llvm
+all: none
+
+qt-creator:
+	wget -c http://download.qt.io/official_releases/qtcreator/3.3/3.3.1/qt-creator-opensource-src-3.3.1.tar.gz
+	tar xf qt-creator-opensource-src-3.3.1.tar.gz
+	mv qt-creator-opensource-src-3.3.1 qt-creator
+	#rm qt-creator-opensource-src-3.3.1.tar.gz
 
 # Compile LLVM, Clang and LLDB
 build-llvm: llvm llvm/tools/clang llvm/tools/lldb
@@ -58,3 +64,6 @@ ignored:
 
 clean:
 	rm -rf *.$(CLANG_EXT) llvm*
+
+none:
+	@echo "No third party software required"

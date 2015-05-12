@@ -17,5 +17,5 @@ Visualizator::~Visualizator()
 
 void Visualizator::start()
 {
-	qDebug() << "Visualizator: starting" << debuggerCall->getExecutablePath().absolutePath();
+	qDebug() << "Visualizator: starting" << debuggerCall->getExecutablePath().absoluteFilePath();
 }
