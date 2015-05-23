@@ -22,6 +22,11 @@ class DebuggerCall : public ToolCall
 	~DebuggerCall();
 	/// Get access to the executable that is debugged
 	inline const QFileInfo& getExecutablePath() const { return executablePath; }
+	/// Returns the name of the debugger command, including its full path if necessary
+	static QString getDebugger();
+	/// Emits finished() when it has finished. The result (success, error, or warnings) can be
+	/// consulted after the finished() signal has been emitted
+	void start();
 };
 
 #endif // DEBUGGERCALL_H

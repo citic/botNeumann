@@ -27,18 +27,23 @@ bool ToolCall::isFileNewerThan(const QString& file1, const QString& file2)
 	return QFileInfo(file1).lastModified() > QFileInfo(file2).lastModified();
 }
 
-QString ToolCall::getCxxCompiler()
+QString ToolCall::getCompilerInstallationDirectory()
 {
 	// Get installation directory from preferences
 	QSettings settings;
 	QString installationDirectory = settings.value("Compiler/InstallationDirectory", "").toString();
 	if ( installationDirectory.length() > 0 )
 		installationDirectory.append( QDir::separator() );
+	return installationDirectory;
+}
+
+QString ToolCall::getCxxCompiler()
+{
 
   #if defined(Q_OS_MACX)
-	return installationDirectory + "clang++";
+	return getCompilerInstallationDirectory() + "clang++";
   #else
-	return installationDirectory + "g++";
+	return getCompilerInstallationDirectory() + "g++";
   #endif
 }
 

@@ -17,5 +17,6 @@ Visualizator::~Visualizator()
 
 void Visualizator::start()
 {
-	qDebug() << "Visualizator: starting" << debuggerCall->getExecutablePath().absoluteFilePath();
+	// ToDo: Connect signals and slots here
+	debuggerCall->start();
 }

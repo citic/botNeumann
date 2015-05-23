@@ -44,6 +44,9 @@ class ToolCall : public QObject
 	static bool isFileNewerThan(const QString& file1, const QString& file2);
 
   public:
+	/// Get the directory where the compiler suite being used is installed
+	/// This directory may be asked to the user using a file dialog
+	static QString getCompilerInstallationDirectory();
 	/// Get the name of the default C++ compiler for this platform
 	static QString getCxxCompiler();
 	/// Default parameters: all warnings enabled (-Wall), C++11 enabled (-std=c++11),
