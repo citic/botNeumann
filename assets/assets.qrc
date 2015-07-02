@@ -13,21 +13,27 @@
 		<file>fonts/tenby_five.otf</file>
 	</qresource>
 	<qresource prefix="/game_menu">
-		<file>game_menu/background.svg</file>
-		<file>game_menu/button_background.svg</file>
-		<file>game_menu/robot.svg</file>
+		<file alias="background.svg">game_menu/background.svg</file>
+		<file alias="button_background.svg">game_menu/button_background.svg</file>
+		<file alias="robot.svg">game_menu/robot.svg</file>
 	</qresource>
 	<qresource prefix="/unit_playing">
-		<file>unit_playing/background.svg</file>
-		<file>unit_playing/shared_table.svg</file>
-		<file>unit_playing/shelf_interface.svg</file>
-		<file>unit_playing/shelf_left.svg</file>
-		<file>unit_playing/shelf_middle.svg</file>
-		<file>unit_playing/shelf_right.svg</file>
-		<file>unit_playing/shelves_closed.svg</file>
-		<file>unit_playing/tube_in.svg</file>
-		<file>unit_playing/tube_out.svg</file>
-		<file>unit_playing/workstation.svg</file>
+		<file alias="background.svg">unit_playing/background.svg</file>
+		<file alias="heap_segment_disabled.svg">unit_playing/heap_segment_disabled.svg</file>
+		<file alias="heap_segment_interface.svg">unit_playing/heap_segment_interface.svg</file>
+		<file alias="memory_row_left.svg">unit_playing/memory_row_left.svg</file>
+		<file alias="memory_row_middle.svg">unit_playing/memory_row_middle.svg</file>
+		<file alias="memory_row_right.svg">unit_playing/memory_row_right.svg</file>
+		<file alias="memory_top_left.svg">unit_playing/memory_top_left.svg</file>
+		<file alias="memory_top_middle.svg">unit_playing/memory_top_middle.svg</file>
+		<file alias="memory_top_right.svg">unit_playing/memory_top_right.svg</file>
+		<file alias="stack_segment.svg">unit_playing/stack_segment.svg</file>
+		<file alias="standard_input_left.svg">unit_playing/standard_input_left.svg</file>
+		<file alias="standard_input_middle.svg">unit_playing/standard_input_middle.svg</file>
+		<file alias="standard_input_right.svg">unit_playing/standard_input_right.svg</file>
+		<file alias="standard_output_left.svg">unit_playing/standard_output_left.svg</file>
+		<file alias="standard_output_middle.svg">unit_playing/standard_output_middle.svg</file>
+		<file alias="standard_output_right.svg">unit_playing/standard_output_right.svg</file>
 	</qresource>
 	<qresource prefix="/unit_playing/buttons">
 		<file alias="accept.svg">unit_playing/buttons/accept.svg</file>
@@ -50,10 +56,10 @@
 	</qresource>
 	<qresource prefix="/unit_playing/data_types"/>
 	<qresource prefix="/unit_selection">
-		<file>unit_selection/air_tube_pod.svg</file>
-		<file>unit_selection/air_tube_short.svg</file>
-		<file>unit_selection/background.svg</file>
-		<file>unit_selection/chip_damaged.svg</file>
-		<file>unit_selection/chip_restored.svg</file>
+		<file alias="air_tube_pod.svg">unit_selection/air_tube_pod.svg</file>
+		<file alias="air_tube_short.svg">unit_selection/air_tube_short.svg</file>
+		<file alias="background.svg">unit_selection/background.svg</file>
+		<file alias="chip_damaged.svg">unit_selection/chip_damaged.svg</file>
+		<file alias="chip_restored.svg">unit_selection/chip_restored.svg</file>
 	</qresource>
 </RCC>

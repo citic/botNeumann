@@ -33,13 +33,13 @@ void HeapSegment::buildSegment()
 	}
 
 	// Create the heap segment interface that robots will use to access it
-	Prop* heapInterface = new Prop(":/unit_playing/unit_playing/shelf_interface.svg", scene);
+	Prop* heapInterface = new Prop(":/unit_playing/heap_segment_interface.svg", scene);
 	addItem(heapInterface, interfaceProportion);
 }
 
 void HeapSegment::hideSegment()
 {
 	Q_ASSERT(scene);
-	Prop* doors = new Prop(":/unit_playing/unit_playing/shelves_closed.svg", scene);
+	Prop* doors = new Prop(":/unit_playing/heap_segment_disabled.svg", scene);
 	addItem(doors, 1.0);
 }

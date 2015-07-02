@@ -28,7 +28,7 @@ void Scene::setBackground(const QString& filename)
 
 QString Scene::getResourcePathFor(const QString& assertName) const
 {
-	return ":/" + sceneName + '/' + sceneName + '/' + assertName;
+	return ":/" + sceneName + '/' + assertName;
 }
 
 void Scene::setLayout(Layout* layout)

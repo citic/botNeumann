@@ -18,7 +18,7 @@ void DataSegment::buildDataSegment()
 {
 	// The background: a shared table
 	Q_ASSERT(scene);
-	Prop* sharedTable = new Prop(":/unit_playing/unit_playing/shared_table.svg", scene);
+	Prop* sharedTable = new Prop(":/unit_playing/memory_row_middle.svg", scene);
 	addItem(sharedTable, 1.0);
 
 	// Memory rows are over the table
@@ -58,10 +58,10 @@ void DataSegment::buildStandardInOut(LinearLayout* contentsLayout, const double 
 	contentsLayout->addLayout(stdInOutLayout, stdInOutProportion, zStdInOut);
 
 	// First stdin tube. ToDo: swap tube images
-	Prop* inTube = new Prop(":/unit_playing/unit_playing/tube_out.svg", scene);
+	Prop* inTube = new Prop(":/unit_playing/standard_input_middle.svg", scene);
 	stdInOutLayout->addItem(inTube, 0.5, zStdInOut);
 
 	// Second stdout tube
-	Prop* outTube = new Prop(":/unit_playing/unit_playing/tube_in.svg", scene);
+	Prop* outTube = new Prop(":/unit_playing/standard_output_middle.svg", scene);
 	stdInOutLayout->addItem(outTube, 0.5, zStdInOut);
 }

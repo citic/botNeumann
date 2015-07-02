@@ -16,6 +16,6 @@ CpuCore::~CpuCore()
 void CpuCore::buildCpuCore()
 {
 	Q_ASSERT(scene);
-	Prop* workstation = new Prop(":/unit_playing/unit_playing/workstation.svg", scene);
+	Prop* workstation = new Prop(":/unit_playing/stack_segment.svg", scene);
 	addItem(workstation, 1.0);
 }

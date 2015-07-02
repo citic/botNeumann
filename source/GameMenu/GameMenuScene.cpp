@@ -26,7 +26,7 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 
 	LinearLayout* centralLayout = new LinearLayout(Qt::Horizontal);
 	leftLayout->addLayout(centralLayout, 0.8);
-	Prop* robot = new Prop(":/game_menu/game_menu/robot.svg", this);
+	Prop* robot = new Prop(":/game_menu/robot.svg", this);
 	robot->setMargins(0.2);
 	centralLayout->addItem(robot, 0.5);
 	robot->alignCenter();
@@ -57,7 +57,7 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 	connect(playerManager, SIGNAL(playerChanged(Player*)), this, SLOT(playerChanged(Player*)));
 
 	// Create the buttons for each game mode and configuration
-	QString buttonBackground(":/game_menu/game_menu/button_background.svg");
+	QString buttonBackground(":/game_menu/button_background.svg");
 	trainingButton = new SvgButton(buttonBackground, this, tr("Training"));
 	missionsButton = new SvgButton(buttonBackground, this, tr("Missions"));
 	collaborationButton = new SvgButton(buttonBackground, this, tr("Collaboration"));
@@ -83,9 +83,9 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 
 void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
 {
-	SvgButton* infoButton = new SvgButton("://button_information.svg", this);
-	SvgButton* rewardsButton = new SvgButton("://button_rewards.svg", this);
-	SvgButton* configButton = new SvgButton("://button_config.svg", this);
+	SvgButton* infoButton = new SvgButton(":/button_information.svg", this);
+	SvgButton* rewardsButton = new SvgButton(":/button_rewards.svg", this);
+	SvgButton* configButton = new SvgButton(":/button_config.svg", this);
 
 	LinearLayout* configButtonLayout = new LinearLayout(Qt::Horizontal);
 	configButtonLayout->addItem(infoButton, 1.0 / 3.0);

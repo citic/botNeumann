@@ -81,7 +81,7 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 	connect(configButton, SIGNAL(pressed()), this, SLOT(configButtonPressed()));
 
 	// Rewards button
-//	this->rewardsButton = SvgButton::createImageButton("://button_rewards.svg", this);
+//	this->rewardsButton = SvgButton::createImageButton(":/button_rewards.svg", this);
 //	menuLayout->addItem(rewardsButton, buttonWidthPercent);
 //	connect(rewardsButton, SIGNAL(pressed()), this, SLOT(rewardsButtonPressed()));
 }
