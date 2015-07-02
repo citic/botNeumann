@@ -32,30 +32,22 @@
 
 | image | description | preview |
 |---|---|---|
-| background | fondo del laboratorio | ![background](unit_playing/background.svg) |
-| shelves_closed | Heap segment hidden to avoid cognitive overload at first levels. | ![shelves_closed](unit_playing/shelves_closed.svg) |
-| shelf_left | extremo izquierdo del estante. | ![shelf_left](unit_playing/shelf_left.svg) |
-| shelf_middle | parte interna/del medio del estante. Se repite en mosaico para generar el ancho del estante. | ![shelf_middle](unit_playing/shelf_middle.svg) |
-| shelf_right | parte derecha del estante. | ![shelf_right](unit_playing/shelf_right.svg) |
-| robot1_front | robot 1 mirando hacia el jugador, para tomar datos del segmento de datos o los tubos entrada/salida | ![robot1_front](unit_playing/robot1_front.svg) |
-| robot1_side | robot 1 mirando de lado para hacer animación de giro | ![robot1_side](unit_playing/robot1_side.svg) |
-| robot1_back | vista trasera del robot 1: posición de trabajo normal | ![robot1_back](unit_playing/robot1_back.svg) |
-| robot2_front | robot 2 mirando hacia el jugador, para tomar datos del segmento de datos o los tubos entrada/salida | ![robot2_front](unit_playing/robot2_front.svg) |
-| robot2_side | robot 2 mirando de lado para hacer animación de giro | ![robot2_side](unit_playing/robot2_side.svg) |
-| robot2_back | vista trasera del robot 2: posición de trabajo normal | ![robot2_back](unit_playing/robot2_back.svg) |
-| robot3_front | robot 3 mirando hacia el jugador, para tomar datos del segmento de datos o los tubos entrada/salida | ![robot3_front](unit_playing/robot3_front.svg) |
-| robot3_side | robot 3 mirando de lado para hacer animación de giro | ![robot3_side](unit_playing/robot3_side.svg) |
-| robot3_back | vista trasera del robot 3: posición de trabajo normal | ![robot3_back](unit_playing/robot3_back.svg) |
-| robot4_front | robot 4 mirando hacia el jugador, para tomar datos del segmento de datos o los tubos entrada/salida | ![robot4_front](unit_playing/robot4_front.svg) |
-| robot4_side | robot 4 mirando de lado para hacer animación de giro | ![robot4_side](unit_playing/robot4_side.svg) |
-| robot4_back | vista trasera del robot 4: posición de trabajo normal | ![robot4_back](unit_playing/robot4_back.svg) |
-| wave | ancho igual al de 1 char | ![wave](unit_playing/wave.svg) |
-| shelf_interface | los controles para acceder a los estantes (embudo) | ![shelf_interface](unit_playing/shelf_interface.svg) |
-| workstation_table | mesa del robot, pueden haber varias una encima de la otra | ![workstation_table](unit_playing/workstation_table.svg) |
-| workstation_frame | el resto de la estación de trabajo del robot. | ![workstation_frame](unit_playing/workstation_frame.svg) |
-| shared_table | mesa compartida por todos los robots: segmento de datos. | ![shared_table: mesa compartida por todos los robots](unit_playing/shared_table.svg) |
-| tube_in | tubo de entrada, hacerle una sección abierta de 8 bytes. | ![tube_in](unit_playing/tube_in.svg) |
-| tube_out | tubo de salida: también requiere la sección abierta. | ![tube_out: tubo de salida](unit_playing/tube_out.svg) |
+| background | Laboratory floor | ![background](unit_playing/background.svg) |
+| heap_segment_disabled | Heap segment hidden to avoid cognitive overload at first levels. | ![heap_segment_disabled](unit_playing/heap_segment_disabled.svg) |
+| heap_segment_interface | Interface to read or write data into the heap segment | ![heap_segment_interface](unit_playing/heap_segment_interface.svg) |
+| memory_row_left | Left part of the memory row | ![memory_row_left](unit_playing/memory_row_left.svg) |
+| memory_row_middle | parte interna/del medio del estante. Se repite en mosaico para generar el ancho del estante. | ![memory_row_middle](unit_playing/memory_row_middle.svg) |
+| memory_row_right | parte derecha del estante. | ![memory_row_right](unit_playing/memory_row_right.svg) |
+| memory_top_left | Left part of the top-most memory row of a rack | ![memory_top_right](unit_playing/memory_top_left.svg) |
+| memory_top_middle | Middle part of the top-most memory row of a rack | ![memory_top_middle](unit_playing/memory_top_middle.svg) |
+| memory_top_right | Right part of the top-most memory row of a rack | ![memory_top_right](unit_playing/memory_top_right.svg) |
+| stack_segment | Bounds of the workstation area where a robot works | ![stack_segment](unit_playing/stack_segment.svg) |
+| standard_input_left | Left part of the standard input file. It is an open section of 8 bytes. | ![standard_input_left](unit_playing/standard_input_left.svg) |
+| standard_input_middle | Middle part of the standard input file. It is a expandable section of the transparent tube. | ![standard_input_middle](unit_playing/standard_input_middle.svg) |
+| standard_input_right | Right part of the standard input file. It is a curved section of the tube. | ![standard_input_right](unit_playing/standard_input_right.svg) |
+| standard_output_left | Left part of the standard input file. It is a curved section of the tube. | ![standard_output_left](unit_playing/standard_output_left.svg) |
+| standard_output_middle | Middle part of the standard output file. It is a expandable section of the transparent tube. | ![standard_output_middle](unit_playing/standard_output_middle.svg) |
+| standard_output_right | Left part of the standard output file. It is an open section of 8 bytes. | ![standard_output_right](unit_playing/standard_output_right.svg) |
 
 
 ## unit_playing / buttons
@@ -80,6 +72,24 @@
 | step_out | If visualisation is paused, executes the next code statement in the current function | ![step_out](unit_playing/buttons/step_out.svg ) |
 | stop | Stops the visualisation | ![stop](unit_playing/buttons/stop.svg ) |
 
+
+## unit_playing / threads
+
+| image | description | preview |
+|---|---|---|
+| thread1_front | robot 1 mirando hacia el jugador, para tomar datos del segmento de datos o los tubos entrada/salida | ![thread1_front](unit_playing/threads/thread1_front.svg) |
+| thread1_side | robot 1 mirando de lado para hacer animación de giro | ![thread1_side](unit_playing/threads/thread1_side.svg) |
+| thread1_back | vista trasera del robot 1: posición de trabajo normal | ![thread1_back](unit_playing/threads/thread1_back.svg) |
+| thread2_front | robot 2 mirando hacia el jugador, para tomar datos del segmento de datos o los tubos entrada/salida | ![thread2_front](unit_playing/threads/thread2_front.svg) |
+| thread2_side | robot 2 mirando de lado para hacer animación de giro | ![thread2_side](unit_playing/threads/thread2_side.svg) |
+| thread2_back | vista trasera del robot 2: posición de trabajo normal | ![thread2_back](unit_playing/threads/thread2_back.svg) |
+| thread3_front | robot 3 mirando hacia el jugador, para tomar datos del segmento de datos o los tubos entrada/salida | ![thread3_front](unit_playing/threads/thread3_front.svg) |
+| thread3_side | robot 3 mirando de lado para hacer animación de giro | ![thread3_side](unit_playing/threads/thread3_side.svg) |
+| thread3_back | vista trasera del robot 3: posición de trabajo normal | ![thread3_back](unit_playing/threads/thread3_back.svg) |
+| thread4_front | robot 4 mirando hacia el jugador, para tomar datos del segmento de datos o los tubos entrada/salida | ![thread4_front](unit_playing/threads/thread4_front.svg) |
+| thread4_side | robot 4 mirando de lado para hacer animación de giro | ![thread4_side](unit_playing/threads/thread4_side.svg) |
+| thread4_back | vista trasera del robot 4: posición de trabajo normal | ![thread4_back](unit_playing/threads/thread4_back.svg) |
+| wave | ancho igual al de 1 char | ![wave](unit_playing/wave.svg) |
 
 ## unit_playing / data_types
 
