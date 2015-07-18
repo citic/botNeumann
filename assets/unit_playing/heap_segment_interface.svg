@@ -2,129 +2,99 @@
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="768.27px" height="60.14px" viewBox="0 0 768.27 60.14" enable-background="new 0 0 768.27 60.14" xml:space="preserve">
+	 width="768.27px" height="60.141px" viewBox="0 0 768.27 60.141" enable-background="new 0 0 768.27 60.141" xml:space="preserve">
 <g>
 	<g>
-		<polygon fill="#65675F" stroke="#000000" stroke-miterlimit="10" points="444.289,5.707 323.436,5.707 0,5.707 0,60.138 
-			768.27,60.138 768.27,5.707 		"/>
+		<polygon fill="#65675F" stroke="#000000" stroke-miterlimit="10" points="444.289,6.375 323.435,6.375 0,6.375 0,60.806 
+			768.269,60.806 768.269,6.375 		"/>
 	</g>
-	<rect x="0.5" y="7.825" fill="#3F3F3F" width="759.5" height="5.082"/>
-	<rect x="0" y="0.002" fill="#898989" stroke="#000000" stroke-miterlimit="10" width="768.269" height="7.823"/>
+	<rect x="0.5" y="8.493" fill="#3F3F3F" width="756.479" height="5.083"/>
+	<rect x="0" y="0.67" fill="#898989" stroke="#000000" stroke-miterlimit="10" width="768.269" height="7.823"/>
 	<g>
 		<g>
-			<polygon fill="#737778" points="441.43,42.618 531.91,42.618 545.957,30.981 597.484,30.981 597.566,31.474 547.596,31.474 
-				533.896,42.618 532.504,43.951 441.43,43.951 427.32,32.815 427.32,30.981 			"/>
-			<polygon fill="#4B4C4C" points="441.43,41.315 531.91,41.315 545.957,29.679 597.484,29.679 597.566,30.171 547.596,30.171 
-				533.896,41.315 532.504,42.648 441.43,42.648 427.32,31.513 427.32,29.679 			"/>
+			<polygon fill="#737778" points="156.137,33.277 65.656,33.277 51.61,21.64 0.082,21.64 0,22.133 49.971,22.133 63.67,33.277 
+				65.063,34.61 156.137,34.61 170.245,23.475 170.245,21.64 			"/>
+			<polygon fill="#4B4C4C" points="156.137,31.974 65.656,31.974 51.61,20.338 0.082,20.338 0,20.83 49.971,20.83 63.67,31.974 
+				65.063,33.307 156.137,33.307 170.245,22.172 170.245,20.338 			"/>
 		</g>
 		<g>
-			<polygon fill="#737778" points="611.676,42.618 702.156,42.618 716.203,30.981 767.73,30.981 767.813,31.474 717.842,31.474 
-				704.143,42.618 702.75,43.951 611.676,43.951 597.566,32.815 597.566,30.981 			"/>
-			<polygon fill="#4B4C4C" points="611.676,41.315 702.156,41.315 716.203,29.679 767.73,29.679 767.813,30.171 717.842,30.171 
-				704.143,41.315 702.75,42.648 611.676,42.648 597.566,31.513 597.566,29.679 			"/>
+			<polygon fill="#737778" points="326.382,33.277 235.902,33.277 221.855,21.64 170.327,21.64 170.245,22.133 220.216,22.133 
+				233.915,33.277 235.308,34.61 326.382,34.61 340.49,23.475 340.49,21.64 			"/>
+			<polygon fill="#4B4C4C" points="326.382,31.974 235.902,31.974 221.855,20.338 170.327,20.338 170.245,20.83 220.216,20.83 
+				233.915,31.974 235.308,33.307 326.382,33.307 340.49,22.172 340.49,20.338 			"/>
+		</g>
+		<g>
+			<polygon fill="#737778" points="426.22,33.277 516.7,33.277 530.747,21.64 582.275,21.64 582.357,22.133 532.386,22.133 
+				518.687,33.277 517.294,34.61 426.22,34.61 412.112,23.475 412.112,21.64 			"/>
+			<polygon fill="#4B4C4C" points="426.22,31.974 516.7,31.974 530.747,20.338 582.275,20.338 582.357,20.83 532.386,20.83 
+				518.687,31.974 517.294,33.307 426.22,33.307 412.112,22.172 412.112,20.338 			"/>
+		</g>
+		<g>
+			<polygon fill="#737778" points="611.481,33.277 701.961,33.277 716.008,21.64 767.535,21.64 767.617,22.133 717.647,22.133 
+				703.948,33.277 702.555,34.61 611.481,34.61 597.371,23.475 597.371,21.64 			"/>
+			<polygon fill="#4B4C4C" points="611.481,31.974 701.961,31.974 716.008,20.338 767.535,20.338 767.617,20.83 717.647,20.83 
+				703.948,31.974 702.555,33.307 611.481,33.307 597.371,22.172 597.371,20.338 			"/>
 		</g>
 	</g>
+	<rect x="753.912" y="9" fill="#3F3F3F" width="13.9" height="51.257"/>
 	<g>
-		<g>
-			<polygon fill="#737778" points="326.883,42.618 236.403,42.618 222.356,30.981 170.829,30.981 170.747,31.474 220.717,31.474 
-				234.417,42.618 235.809,43.951 326.883,43.951 340.993,32.815 340.993,30.981 			"/>
-			<polygon fill="#4B4C4C" points="326.883,41.315 236.403,41.315 222.356,29.679 170.829,29.679 170.747,30.171 220.717,30.171 
-				234.417,41.315 235.809,42.648 326.883,42.648 340.993,31.513 340.993,29.679 			"/>
-		</g>
-		<g>
-			<polygon fill="#737778" points="156.637,42.618 66.157,42.618 52.11,30.981 0.583,30.981 0.5,31.474 50.471,31.474 64.17,42.618 
-				65.563,43.951 156.637,43.951 170.747,32.815 170.747,30.981 			"/>
-			<polygon fill="#4B4C4C" points="156.637,41.315 66.157,41.315 52.11,29.679 0.583,29.679 0.5,30.171 50.471,30.171 64.17,41.315 
-				65.563,42.648 156.637,42.648 170.747,31.513 170.747,29.679 			"/>
-		</g>
-	</g>
-	<g>
-		<rect x="474.345" y="15.998" fill="#7A7D77" stroke="#000000" stroke-miterlimit="10" width="23.146" height="24.75"/>
-		<rect x="474.741" y="18.331" fill="#005B59" width="20.25" height="22.084"/>
 		<g>
 			<g>
-				<rect x="477.554" y="20.726" fill="#00F77E" stroke="#000000" stroke-miterlimit="10" width="16.73" height="16.74"/>
-				<polygon opacity="0.5" fill="#00BA60" points="477.554,21.165 494.284,37.466 477.554,37.466 				"/>
-				<polyline fill="none" stroke="#000000" stroke-miterlimit="10" points="491.312,27.91 485.808,32.095 480.524,27.91 				"/>
 				
-					<line fill="none" stroke="#000000" stroke-width="1.3159" stroke-miterlimit="10" x1="485.808" y1="32.095" x2="485.808" y2="24.496"/>
+					<rect x="164.551" y="10.617" opacity="0.7" fill="#871A58" stroke="#000000" stroke-miterlimit="10" width="111.488" height="27.875"/>
+				<rect x="167.354" y="13.67" fill="#333233" stroke="#000000" stroke-miterlimit="10" width="105.883" height="22.17"/>
+				<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="220.2781" y1="35.2556" x2="220.2781" y2="24.9993">
+					<stop  offset="0" style="stop-color:#969696"/>
+					<stop  offset="0.4036" style="stop-color:#545454"/>
+					<stop  offset="0.8073" style="stop-color:#181818"/>
+					<stop  offset="1" style="stop-color:#000000"/>
+				</linearGradient>
+				<polygon fill="url(#SVGID_1_)" points="272.706,35.256 167.85,35.256 173.606,24.999 267.026,24.999 				"/>
+				<polygon fill="#514D4D" points="173.606,24.999 173.606,14.179 167.85,14.179 167.85,35.256 				"/>
+				<polygon fill="#514D4D" points="266.95,24.999 266.95,14.179 272.706,14.179 272.706,35.256 				"/>
+				<line fill="none" stroke="#BBB9EA" stroke-miterlimit="10" x1="275.289" y1="11.683" x2="165.289" y2="11.683"/>
+				<line fill="none" stroke="#BBB9EA" stroke-miterlimit="10" x1="273.706" y1="36.67" x2="166.831" y2="36.67"/>
 			</g>
-			<rect x="477.554" y="18.743" fill="#47FF66" stroke="#000000" stroke-miterlimit="10" width="16.73" height="1.982"/>
+			<rect x="164.115" y="38.874" fill="#535657" width="112.469" height="4.25"/>
 		</g>
-		<rect x="474.741" y="16.394" fill="#BBBFB8" width="22.168" height="1.938"/>
-		<rect x="473.741" y="41.248" fill="#535657" width="24.324" height="4.25"/>
-		<rect x="270.807" y="15.998" fill="#7A7D77" stroke="#000000" stroke-miterlimit="10" width="23.147" height="24.75"/>
-		<rect x="271.204" y="18.331" fill="#005B59" width="20.25" height="22.084"/>
 		<g>
 			<g>
-				<rect x="274.016" y="20.726" fill="#00F77E" stroke="#000000" stroke-miterlimit="10" width="16.73" height="16.74"/>
-				<polygon opacity="0.5" fill="#00BA60" points="274.016,21.165 290.746,37.466 274.016,37.466 				"/>
-				<polyline fill="none" stroke="#000000" stroke-miterlimit="10" points="276.986,28.681 282.489,24.496 287.773,28.681 				"/>
 				
-					<line fill="none" stroke="#000000" stroke-width="1.3159" stroke-miterlimit="10" x1="282.489" y1="24.496" x2="282.489" y2="32.095"/>
+					<rect x="327.075" y="10.617" opacity="0.7" fill="#806A00" stroke="#000000" stroke-miterlimit="10" width="111.488" height="27.875"/>
+				<rect x="329.878" y="13.67" fill="#333233" stroke="#000000" stroke-miterlimit="10" width="105.882" height="22.17"/>
+				<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="382.8025" y1="35.2556" x2="382.8025" y2="24.9993">
+					<stop  offset="0" style="stop-color:#969696"/>
+					<stop  offset="0.4036" style="stop-color:#545454"/>
+					<stop  offset="0.8073" style="stop-color:#181818"/>
+					<stop  offset="1" style="stop-color:#000000"/>
+				</linearGradient>
+				<polygon fill="url(#SVGID_2_)" points="435.23,35.256 330.374,35.256 336.13,24.999 429.55,24.999 				"/>
+				<polygon fill="#514D4D" points="336.13,24.999 336.13,14.179 330.374,14.179 330.374,35.256 				"/>
+				<polygon fill="#514D4D" points="429.475,24.999 429.475,14.179 435.23,14.179 435.23,35.256 				"/>
+				<line fill="none" stroke="#FFF4BB" stroke-miterlimit="10" x1="437.813" y1="11.683" x2="327.813" y2="11.683"/>
+				<line fill="none" stroke="#FFF4BB" stroke-miterlimit="10" x1="436.23" y1="36.67" x2="329.355" y2="36.67"/>
 			</g>
-			<rect x="274.016" y="18.743" fill="#47FF66" stroke="#000000" stroke-miterlimit="10" width="16.73" height="1.982"/>
+			<rect x="326.585" y="38.874" fill="#535657" width="112.469" height="4.25"/>
 		</g>
-		<rect x="271.204" y="16.394" fill="#BBBFB8" width="22.166" height="1.938"/>
-		<rect x="270.204" y="41.248" fill="#535657" width="24.323" height="4.25"/>
-	</g>
-	<rect x="760" y="8.331" fill="#3F3F3F" width="7.813" height="51.257"/>
-	<g>
 		<g>
-			
-				<rect x="44.717" y="17.956" opacity="0.7" fill="#871A58" stroke="#000000" stroke-miterlimit="10" width="111.488" height="27.875"/>
-			<rect x="47.52" y="21.009" fill="#333233" stroke="#000000" stroke-miterlimit="10" width="105.883" height="22.17"/>
-			<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="100.4438" y1="42.5947" x2="100.4438" y2="32.3379">
-				<stop  offset="0" style="stop-color:#969696"/>
-				<stop  offset="0.4036" style="stop-color:#545454"/>
-				<stop  offset="0.8073" style="stop-color:#181818"/>
-				<stop  offset="1" style="stop-color:#000000"/>
-			</linearGradient>
-			<polygon fill="url(#SVGID_1_)" points="152.872,42.595 48.016,42.595 53.771,32.338 147.192,32.338 			"/>
-			<polygon fill="#514D4D" points="53.771,32.338 53.771,21.519 48.016,21.519 48.016,42.595 			"/>
-			<polygon fill="#514D4D" points="147.116,32.338 147.116,21.519 152.872,21.519 152.872,42.595 			"/>
-			<line fill="none" stroke="#BBB9EA" stroke-miterlimit="10" x1="155.455" y1="19.022" x2="45.455" y2="19.022"/>
-			<line fill="none" stroke="#BBB9EA" stroke-miterlimit="10" x1="153.872" y1="44.009" x2="46.997" y2="44.009"/>
+			<g>
+				
+					<rect x="489.545" y="10.78" opacity="0.7" fill="#004775" stroke="#000000" stroke-miterlimit="10" width="111.488" height="27.875"/>
+				<rect x="492.348" y="13.833" fill="#333233" stroke="#000000" stroke-miterlimit="10" width="105.883" height="22.171"/>
+				<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="545.2727" y1="35.4187" x2="545.2727" y2="25.1624">
+					<stop  offset="0" style="stop-color:#969696"/>
+					<stop  offset="0.4036" style="stop-color:#545454"/>
+					<stop  offset="0.8073" style="stop-color:#181818"/>
+					<stop  offset="1" style="stop-color:#000000"/>
+				</linearGradient>
+				<polygon fill="url(#SVGID_3_)" points="597.7,35.419 492.845,35.419 498.6,25.162 592.021,25.162 				"/>
+				<polygon fill="#514D4D" points="498.6,25.162 498.6,14.343 492.845,14.343 492.845,35.419 				"/>
+				<polygon fill="#514D4D" points="591.946,25.162 591.946,14.343 597.7,14.343 597.7,35.419 				"/>
+				<line fill="none" stroke="#79D3FF" stroke-miterlimit="10" x1="600.283" y1="11.846" x2="490.283" y2="11.846"/>
+				<line fill="none" stroke="#79D3FF" stroke-miterlimit="10" x1="598.7" y1="36.832" x2="491.825" y2="36.832"/>
+			</g>
+			<rect x="489.054" y="39.124" fill="#535657" width="112.47" height="4.25"/>
 		</g>
-		<rect x="44.281" y="46.213" fill="#535657" width="112.469" height="4.25"/>
-	</g>
-	<g>
-		<g>
-			
-				<rect x="328.39" y="17.956" opacity="0.7" fill="#806A00" stroke="#000000" stroke-miterlimit="10" width="111.487" height="27.875"/>
-			<rect x="331.193" y="21.009" fill="#333233" stroke="#000000" stroke-miterlimit="10" width="105.881" height="22.17"/>
-			<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="384.1177" y1="42.5947" x2="384.1177" y2="32.3379">
-				<stop  offset="0" style="stop-color:#969696"/>
-				<stop  offset="0.4036" style="stop-color:#545454"/>
-				<stop  offset="0.8073" style="stop-color:#181818"/>
-				<stop  offset="1" style="stop-color:#000000"/>
-			</linearGradient>
-			<polygon fill="url(#SVGID_2_)" points="436.545,42.595 331.689,42.595 337.445,32.338 430.865,32.338 			"/>
-			<polygon fill="#514D4D" points="337.445,32.338 337.445,21.519 331.689,21.519 331.689,42.595 			"/>
-			<polygon fill="#514D4D" points="430.789,32.338 430.789,21.519 436.545,21.519 436.545,42.595 			"/>
-			<line fill="none" stroke="#FFF4BB" stroke-miterlimit="10" x1="439.127" y1="19.022" x2="329.128" y2="19.022"/>
-			<line fill="none" stroke="#FFF4BB" stroke-miterlimit="10" x1="437.545" y1="44.009" x2="330.67" y2="44.009"/>
-		</g>
-		<rect x="327.9" y="46.213" fill="#535657" width="112.469" height="4.25"/>
-	</g>
-	<g>
-		<g>
-			
-				<rect x="596.438" y="18.119" opacity="0.7" fill="#004775" stroke="#000000" stroke-miterlimit="10" width="111.488" height="27.875"/>
-			<rect x="599.24" y="21.172" fill="#333233" stroke="#000000" stroke-miterlimit="10" width="105.883" height="22.171"/>
-			<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="652.166" y1="42.7578" x2="652.166" y2="32.501">
-				<stop  offset="0" style="stop-color:#969696"/>
-				<stop  offset="0.4036" style="stop-color:#545454"/>
-				<stop  offset="0.8073" style="stop-color:#181818"/>
-				<stop  offset="1" style="stop-color:#000000"/>
-			</linearGradient>
-			<polygon fill="url(#SVGID_3_)" points="704.594,42.758 599.738,42.758 605.492,32.501 698.914,32.501 			"/>
-			<polygon fill="#514D4D" points="605.492,32.501 605.492,21.682 599.738,21.682 599.738,42.758 			"/>
-			<polygon fill="#514D4D" points="698.838,32.501 698.838,21.682 704.594,21.682 704.594,42.758 			"/>
-			<line fill="none" stroke="#79D3FF" stroke-miterlimit="10" x1="707.176" y1="19.186" x2="597.176" y2="19.186"/>
-			<line fill="none" stroke="#79D3FF" stroke-miterlimit="10" x1="705.594" y1="44.171" x2="598.719" y2="44.171"/>
-		</g>
-		<rect x="595.947" y="46.463" fill="#535657" width="112.469" height="4.25"/>
 	</g>
 </g>
 </svg>
