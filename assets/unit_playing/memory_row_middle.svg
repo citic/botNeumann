@@ -6,7 +6,7 @@
 	 xml:space="preserve">
 <g>
 	
-		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="366.6238" y1="773.3848" x2="366.6238" y2="783.8408" gradientTransform="matrix(1 0 0 1 -305.1499 -762.3848)">
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="750.2078" y1="-1047.4175" x2="750.2078" y2="-1057.8735" gradientTransform="matrix(1 0 0 -1 -688.7344 -1023.4756)">
 		<stop  offset="0" style="stop-color:#C2C2C2"/>
 		<stop  offset="0.0673" style="stop-color:#B1B1B1"/>
 		<stop  offset="0.2964" style="stop-color:#7E7E7E"/>
@@ -15,10 +15,10 @@
 		<stop  offset="0.8766" style="stop-color:#5E5E5E"/>
 		<stop  offset="1" style="stop-color:#949494"/>
 	</linearGradient>
-	<polyline fill="url(#SVGID_1_)" points="-0.001,11.5 -0.001,21.456 122.948,21.456 122.948,11 0.499,11.167 -0.001,11.005 
-		-0.001,11.5 	"/>
+	<polyline fill="url(#SVGID_1_)" points="-0.001,24.441 -0.001,34.397 122.948,34.397 122.948,23.941 0.499,24.108 -0.001,23.946 
+		-0.001,24.441 	"/>
 	
-		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="366.6228" y1="773.3906" x2="366.6228" y2="762.8848" gradientTransform="matrix(1 0 0 1 -305.1499 -762.3848)">
+		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="750.2087" y1="-1047.4214" x2="750.2087" y2="-1036.917" gradientTransform="matrix(1 0 0 -1 -688.7344 -1023.4756)">
 		<stop  offset="0" style="stop-color:#C2C2C2"/>
 		<stop  offset="0.0032" style="stop-color:#B9B9B9"/>
 		<stop  offset="0.0129" style="stop-color:#A3A3A3"/>
@@ -32,9 +32,9 @@
 		<stop  offset="0.7865" style="stop-color:#272727"/>
 		<stop  offset="0.9301" style="stop-color:#212121"/>
 	</linearGradient>
-	<polyline fill="url(#SVGID_2_)" points="-0.001,0.5 -0.001,11.005 122.948,11 122.948,0.5 -0.001,0.5 	"/>
-	<polygon points="122.948,1 -0.001,1 -0.001,0 122.948,0 	"/>
-	<rect x="-0.001" y="20.938" width="122.947" height="1"/>
-	<rect x="-0.001" y="10.5" width="122.947" height="1"/>
+	<polyline fill="url(#SVGID_2_)" points="-0.001,13.441 -0.001,23.946 122.948,23.941 122.948,13.441 -0.001,13.441 	"/>
+	<polygon points="122.948,13.941 -0.001,13.941 -0.001,12.941 122.948,12.941 	"/>
+	<rect x="-0.001" y="33.879" width="122.947" height="1"/>
+	<rect x="-0.001" y="23.441" width="122.947" height="1"/>
 </g>
 </svg>
