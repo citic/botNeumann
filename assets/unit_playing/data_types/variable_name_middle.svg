@@ -2,16 +2,19 @@
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="13.293px" height="10.357px" viewBox="0 0 13.293 10.357" enable-background="new 0 0 13.293 10.357" xml:space="preserve">
+	 width="11.951px" height="11.946px" viewBox="0.671 -1.589 11.951 11.946" enable-background="new 0.671 -1.589 11.951 11.946"
+	 xml:space="preserve">
 <g>
-	<g opacity="0.5">
-		<rect y="0.11" opacity="0.6" fill="#FFFFFF" width="13.293" height="9.907"/>
-		<g>
-			<rect fill="#FCFCFC" width="13.293" height="0.22"/>
-			<rect y="9.908" fill="#FCFCFC" width="13.293" height="0.22"/>
+	<g>
+		<g opacity="0.5">
+			<rect x="0.672" y="-1.462" opacity="0.6" fill="#FFFFFF" width="11.951" height="11.427"/>
+			<g>
+				<rect x="0.672" y="-1.589" fill="#FFFFFF" width="11.951" height="0.253"/>
+				<rect x="0.672" y="9.838" fill="#FFFFFF" width="11.951" height="0.254"/>
+			</g>
 		</g>
+		<rect x="0.672" y="10.103" opacity="0.3" width="11.951" height="0.254"/>
 	</g>
-	<rect y="10.138" opacity="0.3" width="13.293" height="0.22"/>
-	<polygon opacity="0.1" fill="#FFFFFF" points="11.432,0.194 5.309,9.915 0.135,9.915 6.097,0.194 	"/>
+	<rect x="0.672" y="-0.661" opacity="0.1" fill="#FFFFFF" width="11.951" height="1"/>
 </g>
 </svg>
