@@ -18,8 +18,9 @@ class LinkerCall;
 	mobile devices, the compilation is sent to a TCP server.
 
 	All files are always compiled with all warnings enabled (-Wall), C++11 enabled (-std=c++11),
-	debug information enabled (-g). Each source file is compiled by separate, generating a .o
-	file. If there is an updated .o, the file is ommited in order to make the process faster.
+	debug information enabled (-g) and no optimizations (-O0). Each source file is compiled by
+	separate, generating a .o file. If there is an updated .o, the file is ommited in order to make
+	the process faster.
  */
 class Compiler : public QObject
 {
