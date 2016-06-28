@@ -1,27 +1,16 @@
 #ifndef USERPROGRAM_H
 #define USERPROGRAM_H
 
-#include <QObject>
-#include <QProcess>
+#include "ToolCall.h"
 
-class UserProgram : public QObject
+class UserProgram : public ToolCall
 {
 	Q_OBJECT
-
-  protected:
-	QProcess process;
 
   public:
 	explicit UserProgram(QObject* parent = nullptr);
 	virtual ~UserProgram();
 	void start(const QString& executablePath);
-
-  signals:
-	void userProgramFinished();
-
-  public slots:
-	void processUserProgramFinished();
-	void processErrorOcurred(QProcess::ProcessError error);
 };
 
 #endif // USERPROGRAM_H

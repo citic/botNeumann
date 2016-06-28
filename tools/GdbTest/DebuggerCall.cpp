@@ -1,5 +1,4 @@
 #include "DebuggerCall.h"
-#include <stdio.h>
 
 static const QString gdbPath = QStringLiteral(
 #ifdef Q_OS_MAC
@@ -9,23 +8,22 @@ static const QString gdbPath = QStringLiteral(
 #endif
 
 DebuggerCall::DebuggerCall(QObject *parent)
-	: QObject(parent)
-	, process(this)
+	: ToolCall("DebuggerCall", parent)
 {
 }
 
 DebuggerCall::~DebuggerCall()
 {
 	// Exit gdb cleanly
-	fprintf(stderr, "DebuggerCall: exiting gdb...\n");
+	printf("%s: exiting gdb...\n", qPrintable(toolName));
 	process.write("-gdb-exit\n");
 	process.terminate();
 	process.waitForFinished();
-	fprintf(stderr, "DebuggerCall object deleted\n");
 }
 
 bool DebuggerCall::start()
 {
+	printf("%s: starting gdb...\n", qPrintable(toolName));
 	const QString& command = QStringLiteral("%1 --interpreter=mi2").arg(gdbPath);
 	process.start(command);
 	process.waitForStarted();

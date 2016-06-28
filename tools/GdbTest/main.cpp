@@ -2,15 +2,14 @@
 #include "UserProgram.h"
 #include <QCoreApplication>
 
-
 int main(int argc, char *argv[])
 {
 	QCoreApplication app(argc, argv);
 
-	printf("\nStarting debugger...\n");
 	DebuggerCall debuggerCall;
 	bool ok = debuggerCall.start();
-	if ( ! ok ) return fprintf(stderr, "Could not start gdb\n");
+	if ( ! ok ) return fprintf(stderr, "main: could not start gdb\n");
+	printf("main: gdb started\n");
 
 	UserProgram userProgram;
 	userProgram.start("/Users/jhc/dev/botNeumann/tools/GdbTest/examples/hello_c");
@@ -18,4 +17,3 @@ int main(int argc, char *argv[])
 
 	return app.exec();
 }
-
