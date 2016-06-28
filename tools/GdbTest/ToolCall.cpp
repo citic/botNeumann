@@ -5,6 +5,8 @@ ToolCall::ToolCall(const QString& toolName, QObject *parent)
 	, toolName(toolName)
 	, process(this)
 {
+	connect( &process, SIGNAL(finished(int)), this, SLOT(processFinished()) );
+	connect( &process, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(processErrorOccurred(QProcess::ProcessError)) );
 }
 
 ToolCall::~ToolCall()
@@ -12,13 +14,19 @@ ToolCall::~ToolCall()
 	printf("%s: object deleted\n", qPrintable(toolName));
 }
 
-void ToolCall::processUserProgramFinished()
+qint64 ToolCall::processId() const
 {
-	printf("%s: execution finished\n", qPrintable(toolName));
-	emit userProgramFinished();
+	return process.processId();
 }
 
-void ToolCall::processErrorOcurred(QProcess::ProcessError error)
+void ToolCall::processFinished()
+{
+	printf("%s: execution finished\n", qPrintable(toolName));
+	emit toolFinished();
+}
+
+void ToolCall::processErrorOccurred(QProcess::ProcessError error)
 {
 	printf("%s: error %i\n", qPrintable(toolName), (int)error);
+	emit errorOccurred();
 }

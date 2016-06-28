@@ -12,7 +12,6 @@ UserProgram::~UserProgram()
 void UserProgram::start(const QString& executablePath)
 {
 	printf("%s: starting %s\n", qPrintable(toolName), qPrintable(executablePath));
-	connect( &process, SIGNAL(finished(int)), this, SLOT(processUserProgramFinished()) );
 	process.setProgram(executablePath);
 	//ToDo: process.setArguments(arguments);
 	//Old: process.start(executablePath);

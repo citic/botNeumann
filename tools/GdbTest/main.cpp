@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
 	UserProgram userProgram;
 	userProgram.start("/Users/jhc/dev/botNeumann/tools/GdbTest/examples/hello_c");
-	app.connect( &userProgram, SIGNAL(userProgramFinished()), &app, SLOT(quit()) );
+	app.connect( &userProgram, SIGNAL(toolFinished()), &app, SLOT(quit()) );
 
 	return app.exec();
 }

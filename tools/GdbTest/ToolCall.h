@@ -15,13 +15,15 @@ class ToolCall : public QObject
   public:
 	explicit ToolCall(const QString& toolName, QObject *parent = nullptr);
 	virtual ~ToolCall();
+	qint64 processId() const;
 
   signals:
-	void userProgramFinished();
+	void toolFinished();
+	void errorOccurred();
 
   public slots:
-	void processUserProgramFinished();
-	void processErrorOcurred(QProcess::ProcessError error);
+	void processFinished();
+	void processErrorOccurred(QProcess::ProcessError error);
 };
 
 #endif // TOOLCALL_H
