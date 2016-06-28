@@ -25,8 +25,19 @@ void ToolCall::processFinished()
 	emit toolFinished();
 }
 
+// @see QProcess::ProcessError enum
+static const char* const ProcessErrorStr[] =
+{
+	"FailedToStart", //### file not found, resource error
+	"Crashed",
+	"Timedout",
+	"ReadError",
+	"WriteError",
+	"UnknownError"
+};
+
 void ToolCall::processErrorOccurred(QProcess::ProcessError error)
 {
-	printf("%s: error %i\n", qPrintable(toolName), (int)error);
+	printf("%s: error %i: %s\n", qPrintable(toolName), (int)error, ProcessErrorStr[(int)error]);
 	emit errorOccurred();
 }

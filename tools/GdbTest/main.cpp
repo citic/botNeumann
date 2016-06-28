@@ -4,6 +4,10 @@
 
 int main(int argc, char *argv[])
 {
+	// The executable to be debugged must be provided by parameter
+	if ( argc < 2 )
+		return printf("Usage: GdbTest executable-path\n");
+
 	QCoreApplication app(argc, argv);
 
 	DebuggerCall debuggerCall;
@@ -12,7 +16,7 @@ int main(int argc, char *argv[])
 	printf("main: gdb started\n");
 
 	UserProgram userProgram;
-	userProgram.start("/Users/jhc/dev/botNeumann/tools/GdbTest/examples/hello_c");
+	userProgram.start(argv[1]);
 	app.connect( &userProgram, SIGNAL(toolFinished()), &app, SLOT(quit()) );
 
 	return app.exec();
