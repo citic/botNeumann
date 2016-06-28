@@ -1,11 +1,20 @@
-all: hello_c hello_cpp
-# params_c params_cpp
+CC=gcc
+CXX=g++
 
-hello_c: hello_c.c
-	cc -Wall -std=c99 -g -O0 -o hello_c hello_c.c
+FLAGS=-Wall -g -O0 -I.
+CFLAGS=$(FLAGS) -std=c99
+CXXFLAGS=$(FLAGS) -std=c++11
 
-hello_cpp: hello_cpp.cpp
-	c++ -Wall -std=c++11 -g -O0 -o hello_cpp hello_cpp.cpp
+all: hello_c hello_cpp ftoc_f ftoc_i
+
+%: %.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+%: %.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $<
 
 clean:
-	rm -rf hello_c hello_cpp *.dSYM
+	rm -rf hello_c hello_cpp *.exe *.dSYM
+
+clean-dos:
+	del /f/q *.exe
