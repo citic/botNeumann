@@ -9,6 +9,7 @@
 *.dylib
 *.pyc
 *.dll
+*.dSYM
 
 # Compiled Static libraries
 *.lai
