@@ -2,7 +2,7 @@
 
 static const QString gdbPath = QStringLiteral(
 #ifdef Q_OS_MAC
-	"ggdb");
+	"/opt/local/bin/ggdb");
 #else
 	"gdb");
 #endif
@@ -23,8 +23,8 @@ DebuggerCall::~DebuggerCall()
 
 bool DebuggerCall::start()
 {
-	printf("%s: starting gdb...\n", qPrintable(toolName));
-	const QString& command = QStringLiteral("%1 --interpreter=mi2").arg(gdbPath);
+	const QString& command = QStringLiteral("%1 -q --interpreter=mi2").arg(gdbPath);
+	printf("%s: starting: %s\n", qPrintable(toolName), qPrintable(command));
 	process.start(command);
 	process.waitForStarted();
 	return process.state() != QProcess::NotRunning;
