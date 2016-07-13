@@ -1,6 +1,4 @@
-#include "DebuggerCall.h"
-#include "UserProgram.h"
-#include <QCoreApplication>
+#include "GdbTest.h"
 
 int main(int argc, char *argv[])
 {
@@ -8,16 +6,6 @@ int main(int argc, char *argv[])
 	if ( argc < 2 )
 		return printf("Usage: GdbTest executable-path\n");
 
-	QCoreApplication app(argc, argv);
-
-	DebuggerCall debuggerCall;
-	bool ok = debuggerCall.start();
-	if ( ! ok ) return fprintf(stderr, "main: could not start gdb\n");
-	printf("main: gdb started\n");
-
-	UserProgram userProgram;
-	userProgram.start(argv[1]);
-	app.connect( &userProgram, SIGNAL(toolFinished()), &app, SLOT(quit()) );
-
-	return app.exec();
+    GdbTest app(argc, argv);
+    return app.run();
 }

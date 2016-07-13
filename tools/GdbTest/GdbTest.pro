@@ -10,10 +10,12 @@ TEMPLATE = app
 SOURCES += main.cpp \
     UserProgram.cpp \
     DebuggerCall.cpp \
-    ToolCall.cpp
+    ToolCall.cpp \
+    GdbTest.cpp
 
 HEADERS += \
     UserProgram.h \
     DebuggerCall.h \
-    ToolCall.h
+    ToolCall.h \
+    GdbTest.h
 
