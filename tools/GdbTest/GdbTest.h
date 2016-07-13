@@ -17,11 +17,15 @@ class GdbTest : public QCoreApplication
 	QString userProgramPath;
 	DebuggerCall* debuggerCall = nullptr;
 	UserProgram* userProgram = nullptr;
+	int pseudoterminalDeviceFileDescriptor = 0;
 
   public:
 	explicit GdbTest(int argc, char *argv[]);
 	~GdbTest();
 	int run();
+
+  protected:
+	bool createPseudoterminal();
 };
 
 #endif // GDBTEST_H
