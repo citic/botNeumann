@@ -6,6 +6,6 @@ int main(int argc, char *argv[])
 	if ( argc < 2 )
 		return printf("Usage: GdbTest executable-path\n");
 
-    GdbTest app(argc, argv);
-    return app.run();
+	GdbTest app(argc, argv);
+	return app.run();
 }
