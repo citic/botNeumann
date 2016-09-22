@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     ToolCall.cpp \
     GdbTest.cpp \
     GdbResponse.cpp \
-    GdbOutput.cpp
+    GdbOutput.cpp \
+    GdbToken.cpp
 
 HEADERS += \
     UserProgram.h \
@@ -21,5 +22,6 @@ HEADERS += \
     ToolCall.h \
     GdbTest.h \
     GdbResponse.h \
-    GdbOutput.h
+    GdbOutput.h \
+    GdbToken.h
 

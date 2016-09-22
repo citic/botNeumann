@@ -257,7 +257,7 @@ void DebuggerCall::parseGdbOutputLine(const QString& line)
 
 	char firstChar = line[0].toLatin1();
 	if( strchr("(^*+~@&=", firstChar) )
-		pendingTokens.append( tokenize(line) )
+		pendingTokens.append( GdbToken::tokenize(line) )
 //	else if(m_listener)
 //		m_listener->onTargetStreamOutput(line);
 }
