@@ -11,11 +11,15 @@ SOURCES += main.cpp \
     UserProgram.cpp \
     DebuggerCall.cpp \
     ToolCall.cpp \
-    GdbTest.cpp
+    GdbTest.cpp \
+    GdbResponse.cpp \
+    GdbOutput.cpp
 
 HEADERS += \
     UserProgram.h \
     DebuggerCall.h \
     ToolCall.h \
-    GdbTest.h
+    GdbTest.h \
+    GdbResponse.h \
+    GdbOutput.h
 
