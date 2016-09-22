@@ -34,6 +34,9 @@ class GdbToken
 	explicit GdbToken(Type type, const QString& text = "");
 	static QList<GdbToken*> tokenize(const QString& line);
 	inline void appendText(QChar ch) { text += ch; }
+	inline void setType(Type type) { this->type = type; }
+	inline Type getType() const { return this->type; }
+	inline const QString& getText() const { return this->text; }
 };
 
 #endif // GDBTOKEN_H

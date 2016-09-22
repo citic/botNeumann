@@ -1,4 +1,6 @@
 #include "DebuggerCall.h"
+#include "GdbOutput.h"
+#include "GdbToken.h"
 #include <QSocketNotifier>
 
 /*static*/ size_t GdbCommand::instances = 0;
@@ -149,8 +151,8 @@ void DebuggerCall::readFromGdb(GdbResponse& response)
 
 	GdbOutput* gdbOutput = nullptr;
 
-	do
-	{
+//	do
+//	{
 		// Wait until GDB produces output and parse it when it becomes available
 		while ( (gdbOutput = parseGdbOutput()) == nullptr )
 			process.waitForReadyRead(100);
@@ -162,11 +164,11 @@ void DebuggerCall::readFromGdb(GdbResponse& response)
 
 //		if(gdbOutput->getType() == GdbOutput::RESULT)
 //		{
-			response.setResult( gdbOutput->getResult() );
+//			response.setResult( gdbOutput->getResult() );
 //			m_resultData->copy(gdbOutput->tree);
 //		}
 
-	} while ( gdbOutput->getType() != GdbOutput::TERMINATION );
+//	} while ( gdbOutput->getType() != GdbOutput::TERMINATION );
 
 /*
 	// Dump all stderr content
@@ -190,8 +192,9 @@ GdbOutput* DebuggerCall::parseGdbOutput()
 	GdbOutput* resp = nullptr;
 
 	if( isTokenPending() )
-		resp = parseOutOfBandRecord();
-
+//		resp = parseOutOfBandRecord();
+		;
+/*
 	if( isTokenPending() && resp == nullptr )
 		resp = parseResultRecord();
 
@@ -202,7 +205,7 @@ GdbOutput* DebuggerCall::parseGdbOutput()
 		if( token )
 			resp->setType(GdbOutput::TERMINATION);
 	}
-
+*/
 	return resp;
 }
 
@@ -257,7 +260,7 @@ void DebuggerCall::parseGdbOutputLine(const QString& line)
 
 	char firstChar = line[0].toLatin1();
 	if( strchr("(^*+~@&=", firstChar) )
-		pendingTokens.append( GdbToken::tokenize(line) )
+		pendingTokens.append( GdbToken::tokenize(line) );
 //	else if(m_listener)
 //		m_listener->onTargetStreamOutput(line);
 }
