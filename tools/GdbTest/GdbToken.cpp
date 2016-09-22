@@ -8,131 +8,124 @@ GdbToken::GdbToken(Type type, const QString& text)
 
 QList<GdbToken*> GdbToken::tokenize(const QString& line)
 {
-	enum { IDLE, END_CODE, STRING, VAR} state = IDLE;
+	enum { IDLE, END_CODE, STRING, VAR} parsingState = IDLE;
 
-	QList<GdbToken*> list;
-	GdbToken *cur = NULL;
-	QChar prevC = ' ';
+	QList<GdbToken*> tokenList;
+	GdbToken *currentToken = nullptr;
+	QChar previousChar = ' ';
 
-	if(line.isEmpty())
-		return list;
+	if( line.isEmpty() )
+		return tokenList;
 
-	for(int i = 0;i < line.size();i++)
+	for( int index = 0; index < line.size(); ++index )
 	{
-		QChar c = line[i];
-		switch(state)
+		QChar currentChar = line[index];
+
+		switch(parsingState)
 		{
 			case IDLE:
 			{
-				if(c == '"')
+				if ( currentChar == '"' )
 				{
-					cur = new GdbToken(GdbToken::C_STRING);
-					list.push_back(cur);
-					state = STRING;
+					currentToken = new GdbToken(GdbToken::C_STRING);
+					tokenList.push_back(currentToken);
+					parsingState = STRING;
 				}
-				else if(c == '(')
+				else if ( currentChar == '(' )
 				{
-					cur = new GdbToken(GdbToken::END_CODE);
-					list.push_back(cur);
-					cur->text += c;
-					state = END_CODE;
+					currentToken = new GdbToken(GdbToken::END_CODE, currentChar);
+					tokenList.push_back(currentToken);
+					parsingState = END_CODE;
 				}
-				else if(c == '=' || c == '{' || c == '}' || c == ',' ||
-					c == '[' || c == ']' || c == '+' || c == '^' ||
-					c == '~' || c == '@' || c == '&' || c == '*')
+				else if ( mapTokenType(currentChar) != UNKNOWN )
 				{
-					GdbToken::Type type = GdbToken::UNKNOWN;
-					if(c == '=')
-						type = GdbToken::KEY_EQUAL;
-					if(c == '{')
-						type = GdbToken::KEY_LEFT_BRACE;
-					if(c == '}')
-						type = GdbToken::KEY_RIGHT_BRACE;
-					if(c == '[')
-						type = GdbToken::KEY_LEFT_BAR;
-					if(c == ']')
-						type = GdbToken::KEY_RIGHT_BAR;
-					if(c == ',')
-						type = GdbToken::KEY_COMMA;
-					if(c == '^')
-						type = GdbToken::KEY_UP;
-					if(c == '+')
-						type = GdbToken::KEY_PLUS;
-					if(c == '~')
-						type = GdbToken::KEY_TILDE;
-					if(c == '@')
-						type = GdbToken::KEY_SNABEL;
-					if(c == '&')
-						type = GdbToken::KEY_AND;
-					if(c == '*')
-						type = GdbToken::KEY_STAR;
-					cur = new GdbToken(type);
-					list.push_back(cur);
-					cur->text += c;
-					state = IDLE;
+					currentToken = new GdbToken(mapTokenType(currentChar), currentChar);
+					tokenList.push_back(currentToken);
+					parsingState = IDLE;
 				}
-				else if( c != ' ')
+				else if ( currentChar != ' ' )
 				{
-					cur = new GdbToken(GdbToken::VAR);
-					list.push_back(cur);
-					cur->text = c;
-					state = VAR;
+					currentToken = new GdbToken(GdbToken::VAR, currentChar);
+					tokenList.push_back(currentToken);
+					parsingState = VAR;
 				}
+			}; break;
 
-			};break;
 			case END_CODE:
 			{
 				QString codeEndStr = "(gdb)";
-				cur->text += c;
+				currentToken->text += currentChar;
 
-				if(cur->text.length() == codeEndStr.length())
+				if ( currentToken->text.length() == codeEndStr.length() )
 				{
-					state = IDLE;
-
+					parsingState = IDLE;
 				}
-				else if(cur->text.compare(codeEndStr.left(cur->text.length())) != 0)
+				else if (currentToken->text.compare(codeEndStr.left(currentToken->text.length())) != 0)
 				{
-					cur->setType(GdbToken::VAR);
-					state = IDLE;
+					currentToken->setType(GdbToken::VAR);
+					parsingState = IDLE;
 				}
-
 			};break;
+
 			case STRING:
 			{
-				if(prevC != '\\' && c == '\\')
+				if(previousChar != '\\' && currentChar == '\\')
 				{
 				}
-				else if(prevC == '\\')
+				else if(previousChar == '\\')
 				{
-					if(c == 'n')
-						cur->text += '\n';
+					if(currentChar == 'n')
+						currentToken->text += '\n';
 					else
-						cur->text += c;
+						currentToken->text += currentChar;
 				}
-				else if(c == '"')
-					state = IDLE;
+				else if(currentChar == '"')
+					parsingState = IDLE;
 				else
-					cur->text += c;
-			};break;
-			case VAR:
-			{
-				if(c == '=' || c == ',' || c == '{' || c == '}')
-				{
-					i--;
-					cur->text = cur->text.trimmed();
-					state = IDLE;
-				}
-				else
-					cur->text += c;
+					currentToken->text += currentChar;
 			};break;
 
+			case VAR:
+			{
+				if(currentChar == '=' || currentChar == ',' || currentChar == '{' || currentChar == '}')
+				{
+					--index;
+					currentToken->text = currentToken->text.trimmed();
+					parsingState = IDLE;
+				}
+				else
+					currentToken->text += currentChar;
+			};break;
 		}
-		prevC = c;
+
+		previousChar = currentChar;
 	}
-	if(cur)
+
+	if ( currentToken )
 	{
-		if(cur->getType() == GdbToken::VAR)
-			cur->text = cur->text.trimmed();
+		if ( currentToken->getType() == GdbToken::VAR )
+			currentToken->text = currentToken->text.trimmed();
 	}
-	return list;
+
+	return tokenList;
+}
+
+GdbToken::Type GdbToken::mapTokenType(QChar ch)
+{
+	switch ( ch.toLatin1() )
+	{
+		case '=': return KEY_EQUAL;
+		case '{': return KEY_LEFT_BRACE;
+		case '}': return KEY_RIGHT_BRACE;
+		case '[': return KEY_LEFT_BAR;
+		case ']': return KEY_RIGHT_BAR;
+		case ',': return KEY_COMMA;
+		case '^': return KEY_UP;
+		case '+': return KEY_PLUS;
+		case '~': return KEY_TILDE;
+		case '@': return KEY_SNABEL;
+		case '&': return KEY_AND;
+		case '*': return KEY_STAR;
+		default : return UNKNOWN;
+	}
 }

@@ -2,6 +2,7 @@
 #define GDBTOKEN_H
 
 #include <QList>
+#include <QString>
 
 class GdbToken
 {
@@ -37,6 +38,7 @@ class GdbToken
 	inline void setType(Type type) { this->type = type; }
 	inline Type getType() const { return this->type; }
 	inline const QString& getText() const { return this->text; }
+	static Type mapTokenType(QChar ch);
 };
 
 #endif // GDBTOKEN_H
