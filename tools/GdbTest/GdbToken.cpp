@@ -11,7 +11,7 @@ QList<GdbToken*> GdbToken::tokenize(const QString& line)
 	enum { IDLE, END_CODE, STRING, VAR} parsingState = IDLE;
 
 	QList<GdbToken*> tokenList;
-	GdbToken *currentToken = nullptr;
+	GdbToken* currentToken = nullptr;
 	QChar previousChar = ' ';
 
 	if( line.isEmpty() )
@@ -49,7 +49,7 @@ QList<GdbToken*> GdbToken::tokenize(const QString& line)
 					tokenList.push_back(currentToken);
 					parsingState = VAR;
 				}
-			}; break;
+			} break;
 
 			case END_CODE:
 			{
@@ -57,15 +57,13 @@ QList<GdbToken*> GdbToken::tokenize(const QString& line)
 				currentToken->text += currentChar;
 
 				if ( currentToken->text.length() == codeEndStr.length() )
-				{
 					parsingState = IDLE;
-				}
 				else if (currentToken->text.compare(codeEndStr.left(currentToken->text.length())) != 0)
 				{
 					currentToken->setType(GdbToken::VAR);
 					parsingState = IDLE;
 				}
-			};break;
+			} break;
 
 			case STRING:
 			{
@@ -83,7 +81,7 @@ QList<GdbToken*> GdbToken::tokenize(const QString& line)
 					parsingState = IDLE;
 				else
 					currentToken->text += currentChar;
-			};break;
+			} break;
 
 			case VAR:
 			{
@@ -95,7 +93,7 @@ QList<GdbToken*> GdbToken::tokenize(const QString& line)
 				}
 				else
 					currentToken->text += currentChar;
-			};break;
+			} break;
 		}
 
 		previousChar = currentChar;

@@ -145,7 +145,7 @@ GdbResponse DebuggerCall::sendGdbCommand(const QString& command)
 	return response;
 }
 
-void DebuggerCall::readFromGdb(GdbResponse& response)
+void DebuggerCall::readFromGdb(GdbResponse& /*response*/)
 {
 	// ToDo: see com.cpp:851-878 when m_result==NULL
 
@@ -191,21 +191,35 @@ GdbOutput* DebuggerCall::parseGdbOutput()
 {
 	GdbOutput* resp = nullptr;
 
+	// ToDo: study and remove redundant isTokenPending() calls
 	if( isTokenPending() )
-//		resp = parseOutOfBandRecord();
-		;
-/*
-	if( isTokenPending() && resp == nullptr )
-		resp = parseResultRecord();
-
-	if( isTokenPending() && resp == nullptr )
 	{
-		resp = new GdbOutput();
-		Token *token = checkToken(Token::END_CODE);
-		if( token )
-			resp->setType(GdbOutput::TERMINATION);
+		// parseOutOfBandRecord:
+		if ( isTokenPending() && resp == nullptr )
+		{
+			// parseAsyncRecord:
+//			if( isTokenPending() && resp == nullptr )
+//				resp = parseExecAsyncOutput();
+//			if( isTokenPending() && resp == nullptr )
+//				resp = parseStatusAsyncOutput();
+//			if( isTokenPending() && resp == nullptr )
+//				resp = parseNotifyAsyncOutput();
+		}
+//		if ( isTokenPending() && resp == nullptr )
+//			resp = parseStreamRecord();
 	}
-*/
+
+//	if ( isTokenPending() && resp == nullptr )
+//		resp = parseResultRecord();
+
+//	if ( isTokenPending() && resp == nullptr )
+	{
+//		resp = new GdbOutput();
+//		Token *token = checkToken(Token::END_CODE);
+//		if( token )
+//			resp->setType(GdbOutput::TERMINATION);
+	}
+
 	return resp;
 }
 
@@ -228,7 +242,7 @@ void DebuggerCall::readTokens()
 	{
 		// Newline received?
 		int newLineIndex = gdbRawOutput.indexOf('\n');
-		if( newLineIndex != -1 )
+		if ( newLineIndex != -1 )
 		{
 			QString line = QString( gdbRawOutput.left(newLineIndex) );
 			gdbRawOutput = gdbRawOutput.mid( newLineIndex + 1 );
@@ -236,7 +250,7 @@ void DebuggerCall::readTokens()
 		}
 
 		// Half a line received?
-		if( gdbRawOutput.isEmpty() == false )
+		if ( gdbRawOutput.isEmpty() == false )
 		{
 			int timeout = 20;
 			// Wait for the complete line to be received
