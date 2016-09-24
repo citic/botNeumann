@@ -156,6 +156,8 @@ void DebuggerCall::readFromGdb(GdbResponse& /*response*/)
 		while ( (gdbOutput = parseGdbOutput()) == nullptr )
 			process.waitForReadyRead(100);
 
+		qDebug("readFromGdb response: %s", qPrintable(gdbOutput->buildDescription()));
+
 		while( processedTokens.isEmpty() == false )
 			delete processedTokens.takeFirst();
 
@@ -236,7 +238,7 @@ GdbToken* DebuggerCall::popToken()
 
 	GdbToken* token = pendingTokens.takeFirst();
 	processedTokens.append( token );
-	qDebug("popToken: %s", qPrintable(token->getText()));
+	qDebug("popToken: %s", qPrintable(token->buildDescription()));
 	return token;
 }
 
@@ -248,9 +250,9 @@ GdbToken* DebuggerCall::checkAndPopToken(GdbToken::Type tokenType)
 		return nullptr;
 
 	if ( token->getType() == tokenType )
-		popToken();
+		return popToken();
 
-	return token;
+	return nullptr;
 }
 
 GdbToken* DebuggerCall::eatToken(GdbToken::Type tokenType)
@@ -318,7 +320,7 @@ void DebuggerCall::parseGdbOutputLine(const QString& line)
 		const QList<GdbToken*> newTokens = GdbToken::tokenize(line);
 		pendingTokens.append( newTokens );
 		foreach ( GdbToken* token, newTokens )
-			qDebug("  GdbToken(%s, \"%s\")", token->getTypeString(), qPrintable(token->getText()));
+			qDebug("  %s", qPrintable(token->buildDescription()) );
 	}
 //	else if(m_listener)
 //		m_listener->onTargetStreamOutput(line);
@@ -335,7 +337,8 @@ GdbOutput* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::T
 		// ToDo: Who deletes this object?
 		GdbOutput* resp = new GdbOutput(outputType);
 
-		// The type of async-message comes within a VAR token
+		// The type of async-message must come immediately after, within a VAR token, e.g when gdb
+		// starts, it issues the assnc notification '=thread-group-added,id="i1"'
 		GdbToken* tokenVar = eatToken(GdbToken::VAR);
 		if ( tokenVar )
 		{

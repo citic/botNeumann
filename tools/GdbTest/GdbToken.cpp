@@ -31,6 +31,11 @@ const char* GdbToken::mapTypeToString(GdbToken::Type type)
 	return nullptr;
 }
 
+QString GdbToken::buildDescription() const
+{
+	return QString("GdbToken(%1, \"%2\")").arg(getTypeString()).arg(getText());
+}
+
 GdbToken::GdbToken(Type type, const QString& text)
 	: type(type)
 	, text(text)
