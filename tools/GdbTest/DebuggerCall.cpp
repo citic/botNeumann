@@ -1,4 +1,5 @@
 #include "DebuggerCall.h"
+#include <QDebug>
 #include <QSocketNotifier>
 
 /*static*/ size_t GdbCommand::instances = 0;
@@ -18,7 +19,7 @@ DebuggerCall::DebuggerCall(QObject *parent)
 DebuggerCall::~DebuggerCall()
 {
 	// Exit gdb cleanly
-	printf("%s: exiting gdb...\n", qPrintable(toolName));
+	qDebug("%s: exiting gdb...", qPrintable(toolName));
 	process.write("-gdb-exit\n");
 	process.terminate();
 	process.waitForFinished();
@@ -29,7 +30,7 @@ bool DebuggerCall::start()
 	if ( ! createPseudoterminal() ) return false;
 
 	const QString& command = QStringLiteral("%1 -q --interpreter=mi2").arg(gdbPath);
-	printf("%s: starting: %s\n", qPrintable(toolName), qPrintable(command));
+	qDebug("%s: starting: %s", qPrintable(toolName), qPrintable(command));
 	process.start(command);
 	process.waitForStarted();
 	if ( process.state() == QProcess::NotRunning )
@@ -61,7 +62,7 @@ bool DebuggerCall::createPseudoterminal()
 	// is good practice to keep it for compatibility
 	if( grantpt(inferiorPseudoterminalId) != EXIT_SUCCESS )
 	{
-		fprintf(stderr, "GdbTest: Failed to grant pseudoterminal %i\n", inferiorPseudoterminalId);
+		qFatal("GdbTest: Failed to grant pseudoterminal %i", inferiorPseudoterminalId);
 		close(inferiorPseudoterminalId);
 		return false;
 	}
@@ -70,14 +71,14 @@ bool DebuggerCall::createPseudoterminal()
 	// programs start running on it. When initialization is done, pseudoterminal must be unlocked
 	if( unlockpt(inferiorPseudoterminalId) != EXIT_SUCCESS )
 	{
-		fprintf(stderr, "GdbTest: Failed to unlock pseudoterminal %i\n", inferiorPseudoterminalId);
+		qFatal("GdbTest: Failed to unlock pseudoterminal %i", inferiorPseudoterminalId);
 		close(inferiorPseudoterminalId);
 		return false;
 	}
 
 	// If the pseudoterminal was created successfully, it will have a name like /dev/pts/nn where
 	// nn is a number that identifies the pseudoterminal
-	printf("GdbTest: using pseudoterminal: %s\n", ptsname(inferiorPseudoterminalId));
+	qInfo("GdbTest: using pseudoterminal: %s", ptsname(inferiorPseudoterminalId));
 	return true;
 }
 
@@ -103,7 +104,7 @@ void DebuggerCall::onGdbOutput(int fileDescriptor)
 		buffer[n] = '\0';
 
 	// For now
-	printf("gdb:'%s'\n", buffer);
+	qInfo("onGdbOutput:'%s'", buffer);
 }
 
 const char*DebuggerCall::getInferiorPseudoterminalName() const
@@ -119,7 +120,7 @@ GdbResponse DebuggerCall::sendGdbCommand(const QString& command)
 	GdbCommand gdbCommand(command);
 	pendingCommands.append(gdbCommand);
 
-	printf("Send GDB: '%s'", qPrintable(gdbCommand.getCommand()));
+	qDebug("sendGdbCommand: '%s'", qPrintable(command));
 	process.write( qPrintable( gdbCommand.getCommand() ) );
 
 	// Discard output from previous commands, if any
@@ -235,7 +236,7 @@ GdbToken* DebuggerCall::popToken()
 
 	GdbToken* token = pendingTokens.takeFirst();
 	processedTokens.append( token );
-	fprintf(stderr, "popToken: %s\n", qPrintable(token->getText()));
+	qDebug("popToken: %s", qPrintable(token->getText()));
 	return token;
 }
 
@@ -265,8 +266,8 @@ GdbToken* DebuggerCall::eatToken(GdbToken::Type tokenType)
 	if ( token->getType() == tokenType )
 		return popToken();
 
-	fprintf(stderr, "Expected '%s' but got '%s'\n"
-		, GdbToken::typeToString(tokenType)
+	qFatal("eatToken: Expected '%s' but got '%s'"
+		, GdbToken::mapTypeToString(tokenType)
 		, token ? qPrintable(token->getText()) : "<null>");
 
 	return nullptr;
@@ -308,11 +309,17 @@ void DebuggerCall::parseGdbOutputLine(const QString& line)
 	if( line.isEmpty() )
 		return;
 
-	fprintf(stderr, "GDB line: [%s]\n", qPrintable(line));
+	qDebug("parseGdbOutputLine: [%s]", qPrintable(line));
 
 	char firstChar = line[0].toLatin1();
-	if( strchr("(^*+~@&=", firstChar) )
-		pendingTokens.append( GdbToken::tokenize(line) );
+	if ( strchr("(^*+~@&=", firstChar) )
+	{
+		//pendingTokens.append( GdbToken::tokenize(line) );
+		const QList<GdbToken*> newTokens = GdbToken::tokenize(line);
+		pendingTokens.append( newTokens );
+		foreach ( GdbToken* token, newTokens )
+			qDebug("  GdbToken(%s, \"%s\")", token->getTypeString(), qPrintable(token->getText()));
+	}
 //	else if(m_listener)
 //		m_listener->onTargetStreamOutput(line);
 }

@@ -22,7 +22,7 @@ static const struct { GdbToken::Type type; const char* const text; } tokenTypeTe
 
 #define arr_size(arr) (sizeof(arr) / sizeof(arr[0]))
 
-const char* GdbToken::typeToString(GdbToken::Type type)
+const char* GdbToken::mapTypeToString(GdbToken::Type type)
 {
 	for ( size_t index = 0; index < arr_size(tokenTypeTextMap); ++index )
 		if ( type == tokenTypeTextMap[index].type )
