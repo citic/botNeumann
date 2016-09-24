@@ -1,14 +1,14 @@
 #ifndef DEBUGGERCALL_H
 #define DEBUGGERCALL_H
 
+#include "GdbOutput.h"
 #include "GdbResponse.h"
+#include "GdbToken.h"
 #include "ToolCall.h"
 
 #include <QByteArray>
 #include <QList>
 
-class GdbOutput;
-class GdbToken;
 class QSocketNotifier;
 
 class GdbCommand
@@ -41,8 +41,10 @@ class DebuggerCall : public ToolCall
 	int busy = 0;
 	/// The list of commands sent to GDB that are waiting for GDB response (output)
 	QList<GdbCommand> pendingCommands;
-	///
+	/// A list of keywords, variables, texts... that result of parsing GDB output
 	QList<GdbToken*> pendingTokens;
+	/// A list of tokens that were previously in pendingTokens and were processed
+	QList<GdbToken*> processedTokens;
 	/// Raw output received from GDB process
 	QByteArray gdbRawOutput;
 
@@ -74,10 +76,20 @@ class DebuggerCall : public ToolCall
 	inline bool isTokenPending() { return peekToken() != nullptr; }
 	///
 	GdbToken* peekToken();
+	/// Moves the first pending token (in pendingTokens list) to processedTokens list
+	/// @returns A pointer to the token moved, nullptr if there is no pending tokens
+	GdbToken* popToken();
+	/// @brief Checks and pops a token if the kind is as expected.
+	/// @return The found token or nullptr if no hit.
+	GdbToken* checkAndPopToken(GdbToken::Type tokenType);
+	/// Waits until there is a token
+	GdbToken* eatToken(GdbToken::Type tokenType);
 	///
 	void readTokens();
 	///
 	void parseGdbOutputLine(const QString& line);
+	/// ?
+	GdbOutput* parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::Type outputType);
 
   private slots:
 	/// Called each time GDB produces output

@@ -1,6 +1,4 @@
 #include "DebuggerCall.h"
-#include "GdbOutput.h"
-#include "GdbToken.h"
 #include <QSocketNotifier>
 
 /*static*/ size_t GdbCommand::instances = 0;
@@ -157,8 +155,8 @@ void DebuggerCall::readFromGdb(GdbResponse& /*response*/)
 		while ( (gdbOutput = parseGdbOutput()) == nullptr )
 			process.waitForReadyRead(100);
 
-//		while(!m_freeTokens.isEmpty())
-//			delete m_freeTokens.takeFirst();
+		while( processedTokens.isEmpty() == false )
+			delete processedTokens.takeFirst();
 
 //		m_respQueue.push_back(gdbOutput);
 
@@ -189,29 +187,30 @@ void DebuggerCall::readFromGdb(GdbResponse& /*response*/)
 
 GdbOutput* DebuggerCall::parseGdbOutput()
 {
+	// If there not tokens to parse, stop
+	if( ! isTokenPending() )
+		return nullptr;
+
 	GdbOutput* resp = nullptr;
 
-	// ToDo: study and remove redundant isTokenPending() calls
-	if( isTokenPending() )
-	{
-		// parseOutOfBandRecord:
-		if ( isTokenPending() && resp == nullptr )
-		{
-			// parseAsyncRecord:
-//			if( isTokenPending() && resp == nullptr )
-//				resp = parseExecAsyncOutput();
-//			if( isTokenPending() && resp == nullptr )
-//				resp = parseStatusAsyncOutput();
-//			if( isTokenPending() && resp == nullptr )
-//				resp = parseNotifyAsyncOutput();
-		}
+	// [1] try to parse out of band records:
+	// [1.1] parse async records:
+	if ( ( resp = parseAsyncRecord(GdbToken::KEY_STAR, GdbOutput::EXEC_ASYNC_OUTPUT) ) )
+		return resp;
+	if ( ( resp = parseAsyncRecord(GdbToken::KEY_PLUS, GdbOutput::STATUS_ASYNC_OUTPUT) ) )
+		return resp;
+	if ( ( resp = parseAsyncRecord(GdbToken::KEY_EQUAL, GdbOutput::NOTIFY_ASYNC_OUTPUT) ) )
+		return resp;
+
+	// [1.2] stream records:
 //		if ( isTokenPending() && resp == nullptr )
 //			resp = parseStreamRecord();
-	}
 
+// [2] result record
 //	if ( isTokenPending() && resp == nullptr )
 //		resp = parseResultRecord();
 
+// [3] termination
 //	if ( isTokenPending() && resp == nullptr )
 	{
 //		resp = new GdbOutput();
@@ -233,6 +232,48 @@ GdbToken* DebuggerCall::peekToken()
 	return pendingTokens.first();
 }
 
+GdbToken* DebuggerCall::popToken()
+{
+	if( pendingTokens.empty() )
+		return nullptr;
+
+	GdbToken* token = pendingTokens.takeFirst();
+	processedTokens.append( token );
+	fprintf(stderr, "popToken: %s\n", qPrintable(token->getText()));
+	return token;
+}
+
+GdbToken* DebuggerCall::checkAndPopToken(GdbToken::Type tokenType)
+{
+	GdbToken* token = peekToken();
+
+	if ( token == nullptr )
+		return nullptr;
+
+	if ( token->getType() == tokenType )
+		popToken();
+
+	return token;
+}
+
+GdbToken* DebuggerCall::eatToken(GdbToken::Type tokenType)
+{
+	GdbToken* token = nullptr;
+
+	while( ( token = peekToken() ) == nullptr )
+	{
+		process.waitForReadyRead(100);
+		readTokens();
+	}
+
+	if ( token->getType() == tokenType )
+		return popToken();
+
+//	fprintf(stderr, "Expected '%s' but got '%s'\n"
+//		, GdbToken::typeToString(type), token ? qPrintable(token->getString()) : "<NULL>");
+	return nullptr;
+}
+
 void DebuggerCall::readTokens()
 {
 	gdbRawOutput += process.readAllStandardOutput();
@@ -248,10 +289,9 @@ void DebuggerCall::readTokens()
 			gdbRawOutput = gdbRawOutput.mid( newLineIndex + 1 );
 			parseGdbOutputLine(line);
 		}
-
-		// Half a line received?
-		if ( gdbRawOutput.isEmpty() == false )
+		else if( gdbRawOutput.isEmpty() == false )
 		{
+			// Half a line received
 			int timeout = 20;
 			// Wait for the complete line to be received
 			while( gdbRawOutput.indexOf('\n') == -1 )
@@ -278,3 +318,29 @@ void DebuggerCall::parseGdbOutputLine(const QString& line)
 //	else if(m_listener)
 //		m_listener->onTargetStreamOutput(line);
 }
+
+GdbOutput* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::Type outputType)
+{
+	// If there is a variable token, discard it. Why?
+	checkAndPopToken(GdbToken::VAR);
+
+	// If there is a token of the given type, pop it
+	if ( checkAndPopToken(tokenType) )
+	{
+		// ToDo: Who deletes this object?
+		GdbOutput* resp = new GdbOutput(outputType);
+
+		// The type of async-message comes within a VAR token
+		GdbToken* tokenVar = eatToken(GdbToken::VAR);
+		if ( tokenVar )
+		{
+			resp->parseAsyncOutput( tokenVar->getText() );
+//			while ( checkAndPopToken(GdbToken::KEY_COMMA) )
+//				parseResult( resp->tree.getRoot() );
+		}
+		return resp;
+	}
+
+	return nullptr;
+}
+

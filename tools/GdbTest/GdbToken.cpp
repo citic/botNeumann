@@ -37,7 +37,7 @@ QList<GdbToken*> GdbToken::tokenize(const QString& line)
 					tokenList.push_back(currentToken);
 					parsingState = END_CODE;
 				}
-				else if ( mapTokenType(currentChar) != UNKNOWN )
+				else if ( mapTokenType(currentChar) != UNKNOWN ) // "={}[],^+ ~@&*"
 				{
 					currentToken = new GdbToken(mapTokenType(currentChar), currentChar);
 					tokenList.push_back(currentToken);
@@ -53,13 +53,18 @@ QList<GdbToken*> GdbToken::tokenize(const QString& line)
 
 			case END_CODE:
 			{
+				// GDB finishes a command output with "(gdb)"
 				QString codeEndStr = "(gdb)";
 				currentToken->text += currentChar;
 
 				if ( currentToken->text.length() == codeEndStr.length() )
+				{
+					// The "(gdb)" command end was completely read
 					parsingState = IDLE;
+				}
 				else if (currentToken->text.compare(codeEndStr.left(currentToken->text.length())) != 0)
 				{
+					// GDB did not produced "(gdb)", something else such as "(grr)"
 					currentToken->setType(GdbToken::VAR);
 					parsingState = IDLE;
 				}
