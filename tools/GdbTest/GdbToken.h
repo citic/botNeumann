@@ -37,6 +37,7 @@ class GdbToken
 	inline void appendText(QChar ch) { text += ch; }
 	inline void setType(Type type) { this->type = type; }
 	inline Type getType() const { return this->type; }
+	static const char* typeToString(Type type);
 	inline const QString& getText() const { return this->text; }
 	static Type mapTokenType(QChar ch);
 };

@@ -1,5 +1,36 @@
 #include "GdbToken.h"
 
+static const struct { GdbToken::Type type; const char* const text; } tokenTypeTextMap[] =
+{
+	{ GdbToken::UNKNOWN, "unknown" },
+	{ GdbToken::C_STRING, "c_string" },
+	{ GdbToken::KEY_EQUAL, "=" },
+	{ GdbToken::KEY_LEFT_BRACE, "{" },
+	{ GdbToken::KEY_RIGHT_BRACE, "}" },
+	{ GdbToken::KEY_LEFT_BAR, "[" },
+	{ GdbToken::KEY_RIGHT_BAR, "]" },
+	{ GdbToken::KEY_UP, "^" },
+	{ GdbToken::KEY_PLUS, "+" },
+	{ GdbToken::KEY_COMMA, "," },
+	{ GdbToken::KEY_TILDE, "~" },
+	{ GdbToken::KEY_SNABEL, "@" },
+	{ GdbToken::KEY_STAR, "*" },
+	{ GdbToken::KEY_AND, "&" },
+	{ GdbToken::END_CODE, "endcode" },
+	{ GdbToken::VAR, "var" },
+};
+
+#define arr_size(arr) (sizeof(arr) / sizeof(arr[0]))
+
+const char* GdbToken::typeToString(GdbToken::Type type)
+{
+	for ( size_t index = 0; index < arr_size(tokenTypeTextMap); ++index )
+		if ( type == tokenTypeTextMap[index].type )
+			return tokenTypeTextMap[index].text;
+
+	return nullptr;
+}
+
 GdbToken::GdbToken(Type type, const QString& text)
 	: type(type)
 	, text(text)

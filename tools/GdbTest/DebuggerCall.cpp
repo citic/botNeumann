@@ -149,8 +149,8 @@ void DebuggerCall::readFromGdb(GdbResponse& /*response*/)
 
 	GdbOutput* gdbOutput = nullptr;
 
-//	do
-//	{
+	do
+	{
 		// Wait until GDB produces output and parse it when it becomes available
 		while ( (gdbOutput = parseGdbOutput()) == nullptr )
 			process.waitForReadyRead(100);
@@ -166,7 +166,7 @@ void DebuggerCall::readFromGdb(GdbResponse& /*response*/)
 //			m_resultData->copy(gdbOutput->tree);
 //		}
 
-//	} while ( gdbOutput->getType() != GdbOutput::TERMINATION );
+	} while ( gdbOutput->getType() != GdbOutput::TERMINATION );
 
 /*
 	// Dump all stderr content
@@ -210,14 +210,10 @@ GdbOutput* DebuggerCall::parseGdbOutput()
 //	if ( isTokenPending() && resp == nullptr )
 //		resp = parseResultRecord();
 
-// [3] termination
-//	if ( isTokenPending() && resp == nullptr )
-	{
-//		resp = new GdbOutput();
-//		Token *token = checkToken(Token::END_CODE);
-//		if( token )
-//			resp->setType(GdbOutput::TERMINATION);
-	}
+	// [3] termination
+	resp = new GdbOutput(GdbOutput::UNKNOWN);
+	GdbToken *token = checkAndPopToken(GdbToken::END_CODE);
+	if( token ) resp->setType(GdbOutput::TERMINATION);
 
 	return resp;
 }
@@ -269,8 +265,10 @@ GdbToken* DebuggerCall::eatToken(GdbToken::Type tokenType)
 	if ( token->getType() == tokenType )
 		return popToken();
 
-//	fprintf(stderr, "Expected '%s' but got '%s'\n"
-//		, GdbToken::typeToString(type), token ? qPrintable(token->getString()) : "<NULL>");
+	fprintf(stderr, "Expected '%s' but got '%s'\n"
+		, GdbToken::typeToString(tokenType)
+		, token ? qPrintable(token->getText()) : "<null>");
+
 	return nullptr;
 }
 
