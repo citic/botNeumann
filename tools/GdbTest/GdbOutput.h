@@ -1,6 +1,7 @@
 #ifndef GDBOUTPUT_H
 #define GDBOUTPUT_H
 
+#include "GdbItemTree.h"
 #include <QString>
 
 /// AsyncClass (or reason)
@@ -48,6 +49,8 @@ class GdbOutput
 	/// If this output comes from an ASYNC GDB line, this is the "type" of record
 	/// something like "thread-created" or "thread-group-added" or "running" or "stopped"
 	AsyncClass reason;
+	/// A tree of items that are part of the generated line by GDB
+	GdbItemTree itemTree;
 
   public:
 	/// Constructor
@@ -74,6 +77,8 @@ class GdbOutput
 	int parseAsyncOutput(const QString& reason);
 	/// Builds a description of this output response
 	QString buildDescription() const;
+	/// Shortcut to access the root item
+	inline GdbTreeNode* getRootItem() { return itemTree.getRoot(); }
 };
 
 #endif // GDBOUTPUT_H

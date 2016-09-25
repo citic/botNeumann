@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     GdbTest.cpp \
     GdbResponse.cpp \
     GdbOutput.cpp \
-    GdbToken.cpp
+    GdbToken.cpp \
+    GdbItemTree.cpp
 
 HEADERS += \
     UserProgram.h \
@@ -23,5 +24,6 @@ HEADERS += \
     GdbTest.h \
     GdbResponse.h \
     GdbOutput.h \
-    GdbToken.h
+    GdbToken.h \
+    GdbItemTree.h
 

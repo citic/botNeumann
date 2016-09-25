@@ -10,6 +10,7 @@
 #include <QList>
 
 class QSocketNotifier;
+class GdbTreeNode;
 
 class GdbCommand
 {
@@ -90,6 +91,11 @@ class DebuggerCall : public ToolCall
 	void parseGdbOutputLine(const QString& line);
 	/// ?
 	GdbOutput* parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::Type outputType);
+	/// Parses items in the form item=value,item=[value1,value2],item={item1,item2}
+	/// @return 0 on success, -1 on error
+	int parseItem(GdbTreeNode* parent);
+	/// Parses the value of an item
+	int parseValue(GdbTreeNode* item);
 
   private slots:
 	/// Called each time GDB produces output

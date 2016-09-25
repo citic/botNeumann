@@ -1,4 +1,5 @@
 #include "DebuggerCall.h"
+#include "GdbItemTree.h"
 #include <QDebug>
 #include <QSocketNotifier>
 
@@ -343,8 +344,8 @@ GdbOutput* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::T
 		if ( tokenVar )
 		{
 			resp->parseAsyncOutput( tokenVar->getText() );
-//			while ( checkAndPopToken(GdbToken::KEY_COMMA) )
-//				parseResult( resp->tree.getRoot() );
+			while ( checkAndPopToken(GdbToken::KEY_COMMA) )
+				parseItem( resp->getRootItem() );
 		}
 		return resp;
 	}
@@ -352,3 +353,109 @@ GdbOutput* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::T
 	return nullptr;
 }
 
+int DebuggerCall::parseItem(GdbTreeNode* parent)
+{
+	// Create a node in the tree for this item
+	GdbTreeNode* item = new GdbTreeNode();
+	parent->addChild(item);
+
+	// The item is compound of tokens, the next one indicates the item type
+	GdbToken* token = peekToken();
+	if ( token != nullptr && token->getType() == GdbToken::KEY_LEFT_BRACE )
+	{
+		// The item has object form: item={item1=value1,item2=value2...}, i.e. recursive parsing
+		parseValue(item);
+	}
+	else
+	{
+		// The must have variable form: item=value, i.e. stop condition of recursion
+		GdbToken *tokenVar = eatToken(GdbToken::VAR);
+		if ( tokenVar == nullptr )
+			return -1;
+
+		// Copy the variable name as name of the item
+		item->setName( tokenVar->getText() );
+
+		// Ignore the equals sign from item=value
+		if ( eatToken(GdbToken::KEY_EQUAL) == nullptr )
+			return -1;
+
+		// Parse item value
+		parseValue(item);
+	}
+
+	// Success
+	return 0;
+}
+
+int DebuggerCall::parseValue(GdbTreeNode* item)
+{
+	int result = 0;
+
+	// The next token after the equals sign says the type of value:
+	// item=value or item={...} or item=[...]
+	GdbToken* token = popToken();
+
+	if ( token->getType() == GdbToken::C_STRING ) // "value"
+	{
+		// Constant literal
+		item->setTextValue( token->getText() );
+	}
+	else if ( token->getType() == GdbToken::KEY_LEFT_BRACE ) // {...
+	{
+		// Values are a tuple of comma-seaparated items:
+		// item={item1=value1,item2=value2,...,itemN=valueN}
+		do
+		{
+			// Recursiveley process each item=value within the tuple
+			// the current item will be the parent for the new items
+			parseItem(item);
+		} while ( checkAndPopToken(GdbToken::KEY_COMMA) != nullptr );
+
+		// Skip the closing '}' token
+		if ( eatToken(GdbToken::KEY_RIGHT_BRACE) == NULL)
+			return -1;
+	}
+	else if ( token->getType() == GdbToken::KEY_LEFT_BAR ) // [...
+	{
+		// Values are a list of comma-separated values:
+		// item=[value1,value2,...,valueN]
+		if ( checkAndPopToken(GdbToken::KEY_RIGHT_BAR) != nullptr )
+		{
+			// Empty lists are valid: item=[]
+			return 0;
+		}
+
+		// The list is not empty, i.e. it has the form: item=[value1...]
+		token = peekToken();
+		if ( token->getType() == GdbToken::VAR )
+		{
+			// We found name of an item, i.e. it is a comma-separated list of items:
+			// item=[item1=value1,item2=value2,itemN=valueN]
+			do
+			{
+				parseItem(item);
+			} while ( checkAndPopToken(GdbToken::KEY_COMMA) != nullptr );
+		}
+		else
+		{
+			// ?
+			int index = 0;
+
+			do
+			{
+				GdbTreeNode* node = new GdbTreeNode();
+				node->setName( QString::number(++index) );
+				item->addChild(node);
+				result = parseValue(node);
+			} while ( checkAndPopToken(GdbToken::KEY_COMMA) != nullptr );
+		}
+
+		if ( eatToken(GdbToken::KEY_RIGHT_BAR) == nullptr )
+			return -1;
+	}
+	else
+		qFatal("Unexpected token: '%s'", qPrintable(token->getText()));
+
+	return result;
+}
