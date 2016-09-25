@@ -41,6 +41,9 @@ class GdbTreeNode
 	inline void setTextValue(const QString& textValue) { this->textValue = textValue; }
 	/// Adds a node to the list of children
 	inline void addChild(GdbTreeNode* child) { children.append(child); }
+	/// Builds a description of this item
+	/// @param recursive If true, all its children will be included in description
+	QString buildDescription(bool recursive) const;
 };
 
 
@@ -53,6 +56,8 @@ class GdbItemTree
   public:
 	/// Get access to the root element
 	inline GdbTreeNode* getRoot() { return &this->root; }
+	/// Traverses the item tree and produces a string represeting all the items
+	inline QString buildDescription() const { return root.buildDescription(true); }
 };
 
 #endif // GDBITEMTREE_H

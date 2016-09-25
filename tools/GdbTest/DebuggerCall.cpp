@@ -157,7 +157,7 @@ void DebuggerCall::readFromGdb(GdbResponse& /*response*/)
 		while ( (gdbOutput = parseGdbOutput()) == nullptr )
 			process.waitForReadyRead(100);
 
-		qDebug("readFromGdb response: %s", qPrintable(gdbOutput->buildDescription()));
+		qDebug("readFromGdb response: %s", qPrintable(gdbOutput->buildDescription(true)));
 
 		while( processedTokens.isEmpty() == false )
 			delete processedTokens.takeFirst();

@@ -76,7 +76,8 @@ class GdbOutput
 	/// @return 0 on success, -1 on error
 	int parseAsyncOutput(const QString& reason);
 	/// Builds a description of this output response
-	QString buildDescription() const;
+	/// @param includeItemTree true if the item tree should be included in description
+	QString buildDescription(bool includeItemTree) const;
 	/// Shortcut to access the root item
 	inline GdbTreeNode* getRootItem() { return itemTree.getRoot(); }
 };

@@ -78,7 +78,10 @@ int GdbOutput::parseAsyncOutput(const QString& reasonText)
 	return 0;
 }
 
-QString GdbOutput::buildDescription() const
+QString GdbOutput::buildDescription(bool includeItemTree) const
 {
-	return QString("GdbOutput(%1, %2)").arg( getTypeString() ).arg( getReasonString() );
+	QString description = QString("GdbOutput(%1, %2)").arg( getTypeString() ).arg( getReasonString() );
+	if ( includeItemTree )
+		description += ' ' + itemTree.buildDescription();
+	return description;
 }
