@@ -3,7 +3,7 @@
 
 #include <QCoreApplication>
 
-class DebuggerCall;
+class GdbCall;
 class UserProgram;
 
 /**
@@ -15,7 +15,7 @@ class GdbTest : public QCoreApplication
 
   protected:
 	QString userProgramPath;
-	DebuggerCall* debuggerCall = nullptr;
+	GdbCall* debuggerCall = nullptr;
 	UserProgram* userProgram = nullptr;
 
   public:

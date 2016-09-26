@@ -1,5 +1,5 @@
-#ifndef DEBUGGERCALL_H
-#define DEBUGGERCALL_H
+#ifndef GDBCALL_H
+#define GDBCALL_H
 
 #include "GdbResponse.h"
 #include "GdbToken.h"
@@ -25,7 +25,7 @@ class GdbCommand
 	inline QString getCommand() const { return text + '\n'; }
 };
 
-class DebuggerCall : public ToolCall
+class GdbCall : public ToolCall
 {
 	Q_OBJECT
 
@@ -52,9 +52,9 @@ class DebuggerCall : public ToolCall
 
   public:
 	/// Constructor
-	explicit DebuggerCall(QObject *parent = nullptr);
+	explicit GdbCall(QObject *parent = nullptr);
 	/// Destructor
-	virtual ~DebuggerCall();
+	virtual ~GdbCall();
 	/// Stats the execution of gdb and inferior
 	bool start();
 	/// Gets the inferior pseudoterminal name, something like /dev/pts/nn where
@@ -106,4 +106,4 @@ class DebuggerCall : public ToolCall
 	void onGdbOutput(int fileDescriptor);
 };
 
-#endif // DEBUGGERCALL_H
+#endif // GDBCALL_H

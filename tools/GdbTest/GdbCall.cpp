@@ -1,4 +1,4 @@
-#include "DebuggerCall.h"
+#include "GdbCall.h"
 #include "GdbItemTree.h"
 #include <QDebug>
 #include <QSocketNotifier>
@@ -12,12 +12,12 @@ static const QString gdbPath = QStringLiteral(
 	"gdb");
 #endif
 
-DebuggerCall::DebuggerCall(QObject *parent)
+GdbCall::GdbCall(QObject *parent)
 	: ToolCall("DebuggerCall", parent)
 {
 }
 
-DebuggerCall::~DebuggerCall()
+GdbCall::~GdbCall()
 {
 	// Exit gdb cleanly
 	qDebug("%s: exiting gdb...", qPrintable(toolName));
@@ -26,7 +26,7 @@ DebuggerCall::~DebuggerCall()
 	process.waitForFinished();
 }
 
-bool DebuggerCall::start()
+bool GdbCall::start()
 {
 	if ( ! createPseudoterminal() ) return false;
 
@@ -49,7 +49,7 @@ bool DebuggerCall::start()
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
-bool DebuggerCall::createPseudoterminal()
+bool GdbCall::createPseudoterminal()
 {
 	Q_ASSERT(inferiorPseudoterminalId == 0);
 
@@ -83,7 +83,7 @@ bool DebuggerCall::createPseudoterminal()
 	return true;
 }
 
-void DebuggerCall::startMonitoringPseudoterminal()
+void GdbCall::startMonitoringPseudoterminal()
 {
 	// QSocketNotifier monitors activity on a file descriptor
 	this->pseudoterminalActivityMonitor = new QSocketNotifier(inferiorPseudoterminalId, QSocketNotifier::Read);
@@ -91,7 +91,7 @@ void DebuggerCall::startMonitoringPseudoterminal()
 	connect(this->pseudoterminalActivityMonitor, SIGNAL(activated(int)), this, SLOT(onGdbOutput(int)));
 }
 
-void DebuggerCall::onGdbOutput(int fileDescriptor)
+void GdbCall::onGdbOutput(int fileDescriptor)
 {
 	// Gdb generated output
 	Q_UNUSED(fileDescriptor);
@@ -108,12 +108,12 @@ void DebuggerCall::onGdbOutput(int fileDescriptor)
 	qInfo("onGdbOutput:'%s'", buffer);
 }
 
-const char*DebuggerCall::getInferiorPseudoterminalName() const
+const char*GdbCall::getInferiorPseudoterminalName() const
 {
 	return ptsname(inferiorPseudoterminalId);
 }
 
-void DebuggerCall::sendGdbCommand(const QString& command)
+void GdbCall::sendGdbCommand(const QString& command)
 {
 	Q_ASSERT(busy == 0);
 	++busy;
@@ -142,7 +142,7 @@ void DebuggerCall::sendGdbCommand(const QString& command)
 //	onReadyReadStandardOutput();
 }
 
-void DebuggerCall::readFromGdb()
+void GdbCall::readFromGdb()
 {
 	// ToDo: see com.cpp:851-878 when m_result==NULL
 
@@ -186,7 +186,7 @@ void DebuggerCall::readFromGdb()
 */
 }
 
-GdbResponse* DebuggerCall::parseGdbOutput()
+GdbResponse* GdbCall::parseGdbOutput()
 {
 	// If there not tokens to parse, stop
 	if( ! isTokenPending() )
@@ -216,7 +216,7 @@ GdbResponse* DebuggerCall::parseGdbOutput()
 	return resp;
 }
 
-GdbToken* DebuggerCall::peekToken()
+GdbToken* GdbCall::peekToken()
 {
 	readTokens();
 
@@ -226,7 +226,7 @@ GdbToken* DebuggerCall::peekToken()
 	return pendingTokens.first();
 }
 
-GdbToken* DebuggerCall::popToken()
+GdbToken* GdbCall::popToken()
 {
 	if( pendingTokens.empty() )
 		return nullptr;
@@ -237,7 +237,7 @@ GdbToken* DebuggerCall::popToken()
 	return token;
 }
 
-GdbToken* DebuggerCall::checkAndPopToken(GdbToken::Type tokenType)
+GdbToken* GdbCall::checkAndPopToken(GdbToken::Type tokenType)
 {
 	GdbToken* token = peekToken();
 
@@ -250,7 +250,7 @@ GdbToken* DebuggerCall::checkAndPopToken(GdbToken::Type tokenType)
 	return nullptr;
 }
 
-GdbToken* DebuggerCall::eatToken(GdbToken::Type tokenType)
+GdbToken* GdbCall::eatToken(GdbToken::Type tokenType)
 {
 	GdbToken* token = nullptr;
 
@@ -270,7 +270,7 @@ GdbToken* DebuggerCall::eatToken(GdbToken::Type tokenType)
 	return nullptr;
 }
 
-void DebuggerCall::readTokens()
+void GdbCall::readTokens()
 {
 	gdbRawOutput += process.readAllStandardOutput();
 
@@ -301,7 +301,7 @@ void DebuggerCall::readTokens()
 	}
 }
 
-void DebuggerCall::parseGdbOutputLine(const QString& line)
+void GdbCall::parseGdbOutputLine(const QString& line)
 {
 	if( line.isEmpty() )
 		return;
@@ -321,7 +321,7 @@ void DebuggerCall::parseGdbOutputLine(const QString& line)
 //		m_listener->onTargetStreamOutput(line);
 }
 
-GdbResponse* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbResponse::Type outputType)
+GdbResponse* GdbCall::parseAsyncRecord(GdbToken::Type tokenType, GdbResponse::Type outputType)
 {
 	// If there is a variable token, discard it. Why?
 	checkAndPopToken(GdbToken::VAR);
@@ -347,7 +347,7 @@ GdbResponse* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbRespons
 	return nullptr;
 }
 
-GdbResponse* DebuggerCall::parseStreamRecord()
+GdbResponse* GdbCall::parseStreamRecord()
 {
 	GdbResponse::Type type = GdbResponse::UNKNOWN;
 
@@ -368,7 +368,7 @@ GdbResponse* DebuggerCall::parseStreamRecord()
 	return resp;
 }
 
-GdbResponse* DebuggerCall::parseResultRecord()
+GdbResponse* GdbCall::parseResultRecord()
 {
 	// If there is a variable token, remove it, why? Original comment: Parse 'token'
 	checkAndPopToken(GdbToken::VAR);
@@ -408,7 +408,7 @@ GdbResponse* DebuggerCall::parseResultRecord()
 	return resp;
 }
 
-int DebuggerCall::parseItem(GdbTreeNode* parent)
+int GdbCall::parseItem(GdbTreeNode* parent)
 {
 	// Create a node in the tree for this item
 	GdbTreeNode* item = new GdbTreeNode();
@@ -443,7 +443,7 @@ int DebuggerCall::parseItem(GdbTreeNode* parent)
 	return 0;
 }
 
-int DebuggerCall::parseValue(GdbTreeNode* item)
+int GdbCall::parseValue(GdbTreeNode* item)
 {
 	int result = 0;
 

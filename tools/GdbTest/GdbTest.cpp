@@ -1,5 +1,5 @@
 #include "GdbTest.h"
-#include "DebuggerCall.h"
+#include "GdbCall.h"
 #include "UserProgram.h"
 
 GdbTest::GdbTest(int argc, char *argv[])
@@ -17,7 +17,7 @@ GdbTest::~GdbTest()
 int GdbTest::run()
 {
 	Q_ASSERT(debuggerCall == nullptr);
-	debuggerCall = new DebuggerCall(this);
+	debuggerCall = new GdbCall(this);
 	bool ok = debuggerCall->start();
 	if ( ! ok ) return fprintf(stderr, "GdbTest: could not start gdb\n");
 	printf("gdbtest: gdb started\n");
