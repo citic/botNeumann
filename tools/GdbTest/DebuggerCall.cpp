@@ -162,7 +162,7 @@ void DebuggerCall::readFromGdb(GdbResponse& /*response*/)
 		while( processedTokens.isEmpty() == false )
 			delete processedTokens.takeFirst();
 
-//		m_respQueue.push_back(gdbOutput);
+		responseQueue.append(gdbOutput);
 
 //		if(gdbOutput->getType() == GdbOutput::RESULT)
 //		{
@@ -198,17 +198,16 @@ GdbOutput* DebuggerCall::parseGdbOutput()
 	GdbOutput* resp = nullptr;
 
 	// [1] try to parse out of band records:
-	// [1.1] parse async records:
+	// [1.1] async records:
 	if ( ( resp = parseAsyncRecord(GdbToken::KEY_STAR, GdbOutput::EXEC_ASYNC_OUTPUT) ) )
 		return resp;
 	if ( ( resp = parseAsyncRecord(GdbToken::KEY_PLUS, GdbOutput::STATUS_ASYNC_OUTPUT) ) )
 		return resp;
 	if ( ( resp = parseAsyncRecord(GdbToken::KEY_EQUAL, GdbOutput::NOTIFY_ASYNC_OUTPUT) ) )
 		return resp;
-
 	// [1.2] stream records:
-//		if ( isTokenPending() && resp == nullptr )
-//			resp = parseStreamRecord();
+	if ( ( resp = parseStreamRecord() ) )
+		return resp;
 
 // [2] result record
 //	if ( isTokenPending() && resp == nullptr )
@@ -351,6 +350,27 @@ GdbOutput* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::T
 	}
 
 	return nullptr;
+}
+
+GdbOutput* DebuggerCall::parseStreamRecord()
+{
+	GdbOutput::Type type = GdbOutput::UNKNOWN;
+
+	if ( checkAndPopToken(GdbToken::KEY_TILDE) )
+		type = GdbOutput::CONSOLE_STREAM_OUTPUT;
+	else if( checkAndPopToken(GdbToken::KEY_SNABEL) )
+		type = GdbOutput::TARGET_STREAM_OUTPUT;
+	else if( checkAndPopToken(GdbToken::KEY_AND) )
+		type = GdbOutput::LOG_STREAM_OUTPUT;
+
+	if ( type == GdbOutput::UNKNOWN )
+		return nullptr;
+
+	GdbOutput* resp = new GdbOutput(type);
+	GdbToken* token = eatToken(GdbToken::C_STRING);
+	Q_ASSERT(token);
+	resp->setText( token->getText() );
+	return resp;
 }
 
 int DebuggerCall::parseItem(GdbTreeNode* parent)

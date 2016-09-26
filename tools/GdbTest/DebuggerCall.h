@@ -42,12 +42,14 @@ class DebuggerCall : public ToolCall
 	int busy = 0;
 	/// The list of commands sent to GDB that are waiting for GDB response (output)
 	QList<GdbCommand> pendingCommands;
+	/// Raw output received from GDB process
+	QByteArray gdbRawOutput;
 	/// A list of keywords, variables, texts... that result of parsing GDB output
 	QList<GdbToken*> pendingTokens;
 	/// A list of tokens that were previously in pendingTokens and were processed
 	QList<GdbToken*> processedTokens;
-	/// Raw output received from GDB process
-	QByteArray gdbRawOutput;
+	/// A list of GDB responses that were assambled from the parsed tokens
+	QList<GdbOutput*> responseQueue;
 
   public:
 	/// Constructor
@@ -91,6 +93,8 @@ class DebuggerCall : public ToolCall
 	void parseGdbOutputLine(const QString& line);
 	/// ?
 	GdbOutput* parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::Type outputType);
+	/// ?
+	GdbOutput* parseStreamRecord();
 	/// Parses items in the form item=value,item=[value1,value2],item={item1,item2}
 	/// @return 0 on success, -1 on error
 	int parseItem(GdbTreeNode* parent);

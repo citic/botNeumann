@@ -49,7 +49,9 @@ class GdbOutput
 	/// If this output comes from an ASYNC GDB line, this is the "type" of record
 	/// something like "thread-created" or "thread-group-added" or "running" or "stopped"
 	AsyncClass reason;
-	/// A tree of items that are part of the generated line by GDB
+	/// The text in stream records, e.g: ~"Copyright (C) 2015 Free Software Foundation, Inc.\n"
+	QString text;
+	/// A tree of items that are part of the generated line by GDB, when a text is not enough?
 	GdbItemTree itemTree;
 
   public:
@@ -64,6 +66,11 @@ class GdbOutput
 	inline QString getTypeString() const { return mapTypeToString(this->type); }
 	/// Maps the given ASYNC reason to the enumeration value
 	static const char* mapTypeToString(Type outputType);
+
+	/// Get access to the stream record text
+	inline const QString& getText() const { return text; }
+	/// Sets the stream record text
+	inline void setText(const QString& text) { this->text = text; }
 
 	/// Get a text version of the type of this output response
 	inline QString getReasonString() const { return mapReasonToString(this->reason); }
