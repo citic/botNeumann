@@ -113,7 +113,7 @@ const char*DebuggerCall::getInferiorPseudoterminalName() const
 	return ptsname(inferiorPseudoterminalId);
 }
 
-GdbResponse DebuggerCall::sendGdbCommand(const QString& command)
+void DebuggerCall::sendGdbCommand(const QString& command)
 {
 	Q_ASSERT(busy == 0);
 	++busy;
@@ -126,12 +126,11 @@ GdbResponse DebuggerCall::sendGdbCommand(const QString& command)
 
 	// Discard output from previous commands, if any
 	// Read the output that GDB generates by the new sent command
-	GdbResponse response;
 	do
 	{
 		// readFromGdb matches the GDB output to each command, and
 		// removes the answered commands from the pending list
-		readFromGdb(response);
+		readFromGdb();
 	} while ( pendingCommands.isEmpty() == false );
 
 //	while( ! m_list.isEmpty() )
@@ -141,11 +140,9 @@ GdbResponse DebuggerCall::sendGdbCommand(const QString& command)
 
 //	dispatchResp();
 //	onReadyReadStandardOutput();
-
-	return response;
 }
 
-void DebuggerCall::readFromGdb(GdbResponse& /*response*/)
+void DebuggerCall::readFromGdb()
 {
 	// ToDo: see com.cpp:851-878 when m_result==NULL
 
