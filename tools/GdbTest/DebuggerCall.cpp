@@ -146,7 +146,7 @@ void DebuggerCall::readFromGdb()
 {
 	// ToDo: see com.cpp:851-878 when m_result==NULL
 
-	GdbOutput* gdbOutput = nullptr;
+	GdbResponse* gdbOutput = nullptr;
 
 	do
 	{
@@ -167,7 +167,7 @@ void DebuggerCall::readFromGdb()
 //			m_resultData->copy(gdbOutput->tree);
 //		}
 
-	} while ( gdbOutput->getType() != GdbOutput::TERMINATION );
+	} while ( gdbOutput->getType() != GdbResponse::TERMINATION );
 
 /*
 	// Dump all stderr content
@@ -186,21 +186,21 @@ void DebuggerCall::readFromGdb()
 */
 }
 
-GdbOutput* DebuggerCall::parseGdbOutput()
+GdbResponse* DebuggerCall::parseGdbOutput()
 {
 	// If there not tokens to parse, stop
 	if( ! isTokenPending() )
 		return nullptr;
 
-	GdbOutput* resp = nullptr;
+	GdbResponse* resp = nullptr;
 
 	// [1] try to parse out of band records:
 	// [1.1] async records:
-	if ( ( resp = parseAsyncRecord(GdbToken::KEY_STAR, GdbOutput::EXEC_ASYNC_OUTPUT) ) )
+	if ( ( resp = parseAsyncRecord(GdbToken::KEY_STAR, GdbResponse::EXEC_ASYNC_OUTPUT) ) )
 		return resp;
-	if ( ( resp = parseAsyncRecord(GdbToken::KEY_PLUS, GdbOutput::STATUS_ASYNC_OUTPUT) ) )
+	if ( ( resp = parseAsyncRecord(GdbToken::KEY_PLUS, GdbResponse::STATUS_ASYNC_OUTPUT) ) )
 		return resp;
-	if ( ( resp = parseAsyncRecord(GdbToken::KEY_EQUAL, GdbOutput::NOTIFY_ASYNC_OUTPUT) ) )
+	if ( ( resp = parseAsyncRecord(GdbToken::KEY_EQUAL, GdbResponse::NOTIFY_ASYNC_OUTPUT) ) )
 		return resp;
 	// [1.2] stream records:
 	if ( ( resp = parseStreamRecord() ) )
@@ -209,9 +209,9 @@ GdbOutput* DebuggerCall::parseGdbOutput()
 	if ( ( resp = parseResultRecord() ) )
 		return resp;
 	// [3] termination
-	resp = new GdbOutput(GdbOutput::UNKNOWN);
+	resp = new GdbResponse(GdbResponse::UNKNOWN);
 	if ( checkAndPopToken(GdbToken::END_CODE) )
-		resp->setType(GdbOutput::TERMINATION);
+		resp->setType(GdbResponse::TERMINATION);
 
 	return resp;
 }
@@ -321,7 +321,7 @@ void DebuggerCall::parseGdbOutputLine(const QString& line)
 //		m_listener->onTargetStreamOutput(line);
 }
 
-GdbOutput* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::Type outputType)
+GdbResponse* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbResponse::Type outputType)
 {
 	// If there is a variable token, discard it. Why?
 	checkAndPopToken(GdbToken::VAR);
@@ -330,7 +330,7 @@ GdbOutput* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::T
 	if ( checkAndPopToken(tokenType) )
 	{
 		// ToDo: Who deletes this object?
-		GdbOutput* resp = new GdbOutput(outputType);
+		GdbResponse* resp = new GdbResponse(outputType);
 
 		// The type of async-message must come immediately after, within a VAR token, e.g when gdb
 		// starts, it issues the assnc notification '=thread-group-added,id="i1"'
@@ -347,28 +347,28 @@ GdbOutput* DebuggerCall::parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::T
 	return nullptr;
 }
 
-GdbOutput* DebuggerCall::parseStreamRecord()
+GdbResponse* DebuggerCall::parseStreamRecord()
 {
-	GdbOutput::Type type = GdbOutput::UNKNOWN;
+	GdbResponse::Type type = GdbResponse::UNKNOWN;
 
 	if ( checkAndPopToken(GdbToken::KEY_TILDE) )
-		type = GdbOutput::CONSOLE_STREAM_OUTPUT;
+		type = GdbResponse::CONSOLE_STREAM_OUTPUT;
 	else if( checkAndPopToken(GdbToken::KEY_SNABEL) )
-		type = GdbOutput::TARGET_STREAM_OUTPUT;
+		type = GdbResponse::TARGET_STREAM_OUTPUT;
 	else if( checkAndPopToken(GdbToken::KEY_AND) )
-		type = GdbOutput::LOG_STREAM_OUTPUT;
+		type = GdbResponse::LOG_STREAM_OUTPUT;
 
-	if ( type == GdbOutput::UNKNOWN )
+	if ( type == GdbResponse::UNKNOWN )
 		return nullptr;
 
-	GdbOutput* resp = new GdbOutput(type);
+	GdbResponse* resp = new GdbResponse(type);
 	GdbToken* token = eatToken(GdbToken::C_STRING);
 	Q_ASSERT(token);
 	resp->setText( token->getText() );
 	return resp;
 }
 
-GdbOutput* DebuggerCall::parseResultRecord()
+GdbResponse* DebuggerCall::parseResultRecord()
 {
 	// If there is a variable token, remove it, why? Original comment: Parse 'token'
 	checkAndPopToken(GdbToken::VAR);
@@ -383,14 +383,14 @@ GdbOutput* DebuggerCall::parseResultRecord()
 		return nullptr;
 
 	QString resultClass = token->getText();
-	GdbResult res = GdbOutput::mapTextToResult(resultClass);
+	GdbResult res = GdbResponse::mapTextToResult(resultClass);
 	if ( res == GdbResult::GDB_UNKNOWN )
 	{
 		qCritical("Invalid result class found: %s", qPrintable(resultClass));
 		return nullptr;
 	}
 
-	GdbOutput* resp = new GdbOutput(GdbOutput::UNKNOWN);
+	GdbResponse* resp = new GdbResponse(GdbResponse::UNKNOWN);
 	resp->setResult(res);
 
 	while ( checkAndPopToken(GdbToken::KEY_COMMA) )
@@ -403,7 +403,7 @@ GdbOutput* DebuggerCall::parseResultRecord()
 		qDebug("%s done", qPrintable(cmd.getText()));
 	}
 
-	resp->setType(GdbOutput::RESULT);
+	resp->setType(GdbResponse::RESULT);
 
 	return resp;
 }

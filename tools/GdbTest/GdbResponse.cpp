@@ -1,4 +1,4 @@
-#include "GdbOutput.h"
+#include "GdbResponse.h"
 #include <QDebug>
 
 #define arr_size(arr) (sizeof(arr) / sizeof(arr[0]))
@@ -16,7 +16,7 @@ static const char* const typeTextMap[] =
 	"EXEC_ASYNC_OUTPUT",
 };
 
-const char*GdbOutput::mapTypeToString(GdbOutput::Type outputType)
+const char*GdbResponse::mapTypeToString(GdbResponse::Type outputType)
 {
 	static_assert(arr_size(typeTextMap) == TYPE_COUNT, "Number of text must match enum");
 	Q_ASSERT(outputType < TYPE_COUNT);
@@ -40,7 +40,7 @@ const struct { AsyncClass type; const char* text; } asyncTextMap[] =
 	{ AsyncClass::AC_CMD_PARAM_CHANGED, "cmd-param-changed" },
 };
 
-AsyncClass GdbOutput::mapTextToReason(const QString& reason)
+AsyncClass GdbResponse::mapTextToReason(const QString& reason)
 {
 	for ( size_t index = 0; index < arr_size(asyncTextMap); ++index )
 		if ( reason == asyncTextMap[index].text )
@@ -49,7 +49,7 @@ AsyncClass GdbOutput::mapTextToReason(const QString& reason)
 	return AsyncClass::AC_UNKNOWN;
 }
 
-const char* GdbOutput::mapReasonToString(AsyncClass outputType)
+const char* GdbResponse::mapReasonToString(AsyncClass outputType)
 {
 	for ( size_t index = 0; index < arr_size(asyncTextMap); ++index )
 		if ( outputType == asyncTextMap[index].type )
@@ -58,7 +58,7 @@ const char* GdbOutput::mapReasonToString(AsyncClass outputType)
 	return nullptr;
 }
 
-GdbResult GdbOutput::mapTextToResult(const QString& resultClass)
+GdbResult GdbResponse::mapTextToResult(const QString& resultClass)
 {
 	if ( resultClass == "done" )
 		return GDB_DONE;
@@ -74,7 +74,7 @@ GdbResult GdbOutput::mapTextToResult(const QString& resultClass)
 	return GDB_UNKNOWN;
 }
 
-const char*GdbOutput::mapResultToString(GdbResult result)
+const char*GdbResponse::mapResultToString(GdbResult result)
 {
 	switch ( result )
 	{
@@ -88,13 +88,13 @@ const char*GdbOutput::mapResultToString(GdbResult result)
 	}
 }
 
-void GdbOutput::setType(GdbOutput::Type type)
+void GdbResponse::setType(GdbResponse::Type type)
 {
 	Q_ASSERT(this->type == UNKNOWN);
 	this->type = type;
 }
 
-int GdbOutput::parseAsyncOutput(const QString& reasonText)
+int GdbResponse::parseAsyncOutput(const QString& reasonText)
 {
 	AsyncClass asyncType = mapTextToReason(reasonText);
 	if ( asyncType == AsyncClass::AC_UNKNOWN )
@@ -108,7 +108,7 @@ int GdbOutput::parseAsyncOutput(const QString& reasonText)
 	return 0;
 }
 
-QString GdbOutput::buildDescription(bool includeItemTree) const
+QString GdbResponse::buildDescription(bool includeItemTree) const
 {
 	QString description = QString("GdbOutput(%1, %2, '%3')")
 		.arg( getTypeString() ).arg( getReasonString() ).arg( getText() );

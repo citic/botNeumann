@@ -12,16 +12,16 @@ SOURCES += main.cpp \
     DebuggerCall.cpp \
     ToolCall.cpp \
     GdbTest.cpp \
-    GdbOutput.cpp \
     GdbToken.cpp \
-    GdbItemTree.cpp
+    GdbItemTree.cpp \
+    GdbResponse.cpp
 
 HEADERS += \
     UserProgram.h \
     DebuggerCall.h \
     ToolCall.h \
     GdbTest.h \
-    GdbOutput.h \
     GdbToken.h \
-    GdbItemTree.h
+    GdbItemTree.h \
+    GdbResponse.h
 
