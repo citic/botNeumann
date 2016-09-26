@@ -121,7 +121,7 @@ void GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
 	GdbCommand gdbCommand(command);
 	pendingCommands.append(gdbCommand);
 
-	qDebug("sendGdbCommand: '%s'", qPrintable(command));
+	qDebug(">>> '%s' command sent", qPrintable(command));
 	process.write( qPrintable( gdbCommand.getCommand() ) );
 
 	// Discard output from previous commands, if any
@@ -374,39 +374,41 @@ GdbResponse* GdbCall::parseResultRecord()
 	// If there is a variable token, remove it, why? Original comment: Parse 'token'
 	checkAndPopToken(GdbToken::VAR);
 
-	// Parse '^'
+	// Result records begin with '^', for example '^done'
 	if ( checkAndPopToken(GdbToken::KEY_UP) == nullptr )
 		return nullptr;
 
-	// Parse 'result class'
-	GdbToken *token = eatToken(GdbToken::VAR);
+	// Parse 'result class', i.e. the word after the '^', such as 'done'
+	GdbToken* token = eatToken(GdbToken::VAR);
 	if ( token == nullptr )
 		return nullptr;
 
+	// Map the word to the corresponding enumeration value: done, running, connected, error, exit
 	QString resultClass = token->getText();
-	GdbResult res = GdbResponse::mapTextToResult(resultClass);
-	if ( res == GdbResult::GDB_UNKNOWN )
+	GdbResult resultType = GdbResponse::mapTextToResult(resultClass);
+	if ( resultType == GdbResult::GDB_UNKNOWN )
 	{
 		qCritical("Invalid result class found: %s", qPrintable(resultClass));
 		return nullptr;
 	}
 
-	GdbResponse* resp = new GdbResponse(GdbResponse::UNKNOWN);
-	resp->setResult(res);
+	// Create a response representing this GDB response
+	GdbResponse* response = new GdbResponse(GdbResponse::RESULT);
+	response->setResult(resultType);
 
+	// If there are pairs item=values, fill the item tree
 	while ( checkAndPopToken(GdbToken::KEY_COMMA) )
-		if ( parseItem( resp->getRootItem() ) != 0 )
+		if ( parseItem( response->getRootItem() ) != 0 )
 			break;
 
+	// This result token finishes a command that we issued previously to GDB
 	if ( ! pendingCommands.isEmpty() )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
-		qDebug("%s done", qPrintable(cmd.getText()));
+		qDebug("<<< '%s' command done!", qPrintable( cmd.getText() ));
 	}
 
-	resp->setType(GdbResponse::RESULT);
-
-	return resp;
+	return response;
 }
 
 int GdbCall::parseItem(GdbTreeNode* parent)
