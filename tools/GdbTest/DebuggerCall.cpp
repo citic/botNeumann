@@ -208,15 +208,13 @@ GdbOutput* DebuggerCall::parseGdbOutput()
 	// [1.2] stream records:
 	if ( ( resp = parseStreamRecord() ) )
 		return resp;
-
-// [2] result record
-//	if ( isTokenPending() && resp == nullptr )
-//		resp = parseResultRecord();
-
+	// [2] result record
+	if ( ( resp = parseResultRecord() ) )
+		return resp;
 	// [3] termination
 	resp = new GdbOutput(GdbOutput::UNKNOWN);
-	GdbToken *token = checkAndPopToken(GdbToken::END_CODE);
-	if( token ) resp->setType(GdbOutput::TERMINATION);
+	if ( checkAndPopToken(GdbToken::END_CODE) )
+		resp->setType(GdbOutput::TERMINATION);
 
 	return resp;
 }
@@ -370,6 +368,46 @@ GdbOutput* DebuggerCall::parseStreamRecord()
 	GdbToken* token = eatToken(GdbToken::C_STRING);
 	Q_ASSERT(token);
 	resp->setText( token->getText() );
+	return resp;
+}
+
+GdbOutput* DebuggerCall::parseResultRecord()
+{
+	// If there is a variable token, remove it, why? Original comment: Parse 'token'
+	checkAndPopToken(GdbToken::VAR);
+
+	// Parse '^'
+	if ( checkAndPopToken(GdbToken::KEY_UP) == nullptr )
+		return nullptr;
+
+	// Parse 'result class'
+	GdbToken *token = eatToken(GdbToken::VAR);
+	if ( token == nullptr )
+		return nullptr;
+
+	QString resultClass = token->getText();
+	GdbResult res = GdbOutput::mapTextToResult(resultClass);
+	if ( res == GdbResult::GDB_UNKNOWN )
+	{
+		qCritical("Invalid result class found: %s", qPrintable(resultClass));
+		return nullptr;
+	}
+
+	GdbOutput* resp = new GdbOutput(GdbOutput::UNKNOWN);
+	resp->setResult(res);
+
+	while ( checkAndPopToken(GdbToken::KEY_COMMA) )
+		if ( parseItem( resp->getRootItem() ) != 0 )
+			break;
+
+	if ( ! pendingCommands.isEmpty() )
+	{
+		GdbCommand cmd = pendingCommands.takeFirst();
+		qDebug("%s done", qPrintable(cmd.getText()));
+	}
+
+	resp->setType(GdbOutput::RESULT);
+
 	return resp;
 }
 

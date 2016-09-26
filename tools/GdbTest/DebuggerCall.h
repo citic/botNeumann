@@ -91,10 +91,12 @@ class DebuggerCall : public ToolCall
 	void readTokens();
 	///
 	void parseGdbOutputLine(const QString& line);
-	/// ?
+	/// Lines such as '=thread-group-added,id="i1"'
 	GdbOutput* parseAsyncRecord(GdbToken::Type tokenType, GdbOutput::Type outputType);
-	/// ?
+	/// Lines such as '~"Any long text description"'
 	GdbOutput* parseStreamRecord();
+	/// Lines such as ''
+	GdbOutput* parseResultRecord();
 	/// Parses items in the form item=value,item=[value1,value2],item={item1,item2}
 	/// @return 0 on success, -1 on error
 	int parseItem(GdbTreeNode* parent);

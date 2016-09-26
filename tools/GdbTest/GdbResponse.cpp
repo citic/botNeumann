@@ -2,5 +2,4 @@
 
 GdbResponse::GdbResponse()
 {
-
 }

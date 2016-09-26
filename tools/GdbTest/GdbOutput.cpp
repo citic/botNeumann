@@ -58,6 +58,36 @@ const char* GdbOutput::mapReasonToString(AsyncClass outputType)
 	return nullptr;
 }
 
+GdbResult GdbOutput::mapTextToResult(const QString& resultClass)
+{
+	if ( resultClass == "done" )
+		return GDB_DONE;
+	if( resultClass == "running" )
+		return GDB_RUNNING;
+	if( resultClass == "connected" )
+		return GDB_CONNECTED;
+	if( resultClass == "error" )
+		return GDB_ERROR;
+	if( resultClass == "exit" )
+		return GDB_EXIT;
+
+	return GDB_UNKNOWN;
+}
+
+const char*GdbOutput::mapResultToString(GdbResult result)
+{
+	switch ( result )
+	{
+		case GDB_DONE: return "done";
+		case GDB_RUNNING: return "running";
+		case GDB_CONNECTED: return "connected";
+		case GDB_ERROR: return "error";
+		case GDB_EXIT: return "exit";
+
+		default: return "unknown";
+	}
+}
+
 void GdbOutput::setType(GdbOutput::Type type)
 {
 	Q_ASSERT(this->type == UNKNOWN);
@@ -82,6 +112,8 @@ QString GdbOutput::buildDescription(bool includeItemTree) const
 {
 	QString description = QString("GdbOutput(%1, %2, '%3')")
 		.arg( getTypeString() ).arg( getReasonString() ).arg( getText() );
+	if ( result != GDB_UNKNOWN )
+		description += " RESULT=" + getResultString();
 	if ( includeItemTree )
 		description += ' ' + itemTree.buildDescription();
 	return description;
