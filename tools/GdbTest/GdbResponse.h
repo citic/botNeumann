@@ -103,14 +103,19 @@ class GdbResponse
 	/// Give s textual description of the result type of this output
 	inline QString getResultString() const { return mapResultToString(this->result); }
 
+	/// Get read-write access to the item tree
+	inline GdbItemTree& getItemTree() { return this->itemTree; }
+	/// Get read-only access to the item tree
+	inline const GdbItemTree& getItemTree() const { return this->itemTree; }
+	/// Shortcut to access the root item
+	inline GdbTreeNode* getRootItem() { return itemTree.getRoot(); }
+
 	/// @brief Parses 'ASYNC-OUTPUT' type
 	/// @return 0 on success, -1 on error
 	int parseAsyncOutput(const QString& reason);
 	/// Builds a description of this output response
 	/// @param includeItemTree true if the item tree should be included in description
 	QString buildDescription(bool includeItemTree) const;
-	/// Shortcut to access the root item
-	inline GdbTreeNode* getRootItem() { return itemTree.getRoot(); }
 };
 
 #endif // GDBRESPONSE_H

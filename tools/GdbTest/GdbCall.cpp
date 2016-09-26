@@ -113,7 +113,7 @@ const char*GdbCall::getInferiorPseudoterminalName() const
 	return ptsname(inferiorPseudoterminalId);
 }
 
-void GdbCall::sendGdbCommand(const QString& command)
+void GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
 {
 	Q_ASSERT(busy == 0);
 	++busy;
@@ -130,7 +130,7 @@ void GdbCall::sendGdbCommand(const QString& command)
 	{
 		// readFromGdb matches the GDB output to each command, and
 		// removes the answered commands from the pending list
-		readFromGdb();
+		readFromGdb(resultData);
 	} while ( pendingCommands.isEmpty() == false );
 
 //	while( ! m_list.isEmpty() )
@@ -142,32 +142,29 @@ void GdbCall::sendGdbCommand(const QString& command)
 //	onReadyReadStandardOutput();
 }
 
-void GdbCall::readFromGdb()
+void GdbCall::readFromGdb(GdbItemTree* resultData)
 {
 	// ToDo: see com.cpp:851-878 when m_result==NULL
 
-	GdbResponse* gdbOutput = nullptr;
+	GdbResponse* response = nullptr;
 
 	do
 	{
 		// Wait until GDB produces output and parse it when it becomes available
-		while ( (gdbOutput = parseGdbOutput()) == nullptr )
+		while ( (response = parseGdbOutput()) == nullptr )
 			process.waitForReadyRead(100);
 
-		qDebug("readFromGdb response: %s", qPrintable(gdbOutput->buildDescription(true)));
+		qDebug("readFromGdb response: %s", qPrintable(response->buildDescription(true)));
 
 		while( processedTokens.isEmpty() == false )
 			delete processedTokens.takeFirst();
 
-		responseQueue.append(gdbOutput);
+		responseQueue.append(response);
 
-//		if(gdbOutput->getType() == GdbOutput::RESULT)
-//		{
-//			response.setResult( gdbOutput->getResult() );
-//			m_resultData->copy(gdbOutput->tree);
-//		}
+		if( resultData && response->getResult() == GdbResponse::RESULT )
+			*resultData = response->getItemTree();
 
-	} while ( gdbOutput->getType() != GdbResponse::TERMINATION );
+	} while ( response->getType() != GdbResponse::TERMINATION );
 
 /*
 	// Dump all stderr content

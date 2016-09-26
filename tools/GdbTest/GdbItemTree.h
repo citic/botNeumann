@@ -20,17 +20,22 @@ class GdbTreeNode
 	QString name;
 	/// If this item has a textual value (i.e item=value)
 	QString textValue;
-	///
 	/// @remarks why QVector and not QList?
 	QVector<GdbTreeNode*> children;
 
   public:
 	/// Default constructor
 	GdbTreeNode();
-	/// Disable copies, move constructor?
-	GdbTreeNode(const GdbTreeNode& other) = delete;
-	/// Disable copies
-	GdbTreeNode& operator=(const GdbTreeNode& other) = delete;
+	/// Copy constructor
+	GdbTreeNode(const GdbTreeNode& other);
+	/// Move constructor
+	GdbTreeNode(GdbTreeNode&& temp);
+	/// Assignment operator
+	GdbTreeNode& operator=(const GdbTreeNode& other);
+	/// Move operator
+	GdbTreeNode& operator=(GdbTreeNode&& temp);
+	/// Destructor
+	~GdbTreeNode() { clearChildren(); }
 	/// Get access to the name
 	inline const QString& getName() const { return this->name; }
 	/// Changes the name of the element when it is known
@@ -41,6 +46,10 @@ class GdbTreeNode
 	inline void setTextValue(const QString& textValue) { this->textValue = textValue; }
 	/// Adds a node to the list of children
 	inline void addChild(GdbTreeNode* child) { children.append(child); }
+	/// Removes all children and cleans the vector
+	void clearChildren();
+	/// Copies children from another node
+	void copyChildrenFrom(const GdbTreeNode& other);
 	/// Builds a description of this item
 	/// @param recursive If true, all its children will be included in description
 	QString buildDescription(bool recursive) const;
@@ -54,6 +63,18 @@ class GdbItemTree
 	GdbTreeNode root;
 
   public:
+	/// Default constructor
+	GdbItemTree() { }
+	/// Copy constructor
+	GdbItemTree(const GdbItemTree& other) : root(other.root) { }
+	/// Move constructor
+	GdbItemTree(GdbItemTree&& temp) : root( std::move(temp.root) ) { }
+	/// Copies the given tree, duplicating node by node
+	GdbItemTree& operator=(const GdbItemTree& other);
+	/// Move operator
+	GdbItemTree& operator=(GdbItemTree&& temp);
+	/// Destructor
+	~GdbItemTree() { }
 	/// Get access to the root element
 	inline GdbTreeNode* getRoot() { return &this->root; }
 	/// Traverses the item tree and produces a string represeting all the items
