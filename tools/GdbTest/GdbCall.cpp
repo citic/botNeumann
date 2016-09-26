@@ -166,21 +166,25 @@ void GdbCall::readFromGdb(GdbItemTree* resultData)
 
 	} while ( response->getType() != GdbResponse::TERMINATION );
 
-/*
+	dumpGdbStandardError();
+}
+
+void GdbCall::dumpGdbStandardError()
+{
 	// Dump all stderr content
-	QByteArray stderrBuffer = m_process.readAllStandardError();
-	if(!stderrBuffer.isEmpty())
-	{
-		QString respString = QString(stderrBuffer);
-		QStringList respList = respString.split("\n");
-		for(int r = 0;r < respList.size();r++)
-		{
-			QString row = respList[r];
-			if(!row.isEmpty())
-				debugMsg("GDB|E>%s", stringToCStr(row));
-		}
-	}
-*/
+	QByteArray stderrBuffer = process.readAllStandardError();
+
+	// Continue only if there are standard error messages
+	if ( stderrBuffer.isEmpty() )
+		return;
+
+	// Slice messages into lines
+	const QStringList& lineList = QString(stderrBuffer).split("\n");
+
+	// Print each line using custom format
+	for ( int lineIndex = 0; lineIndex < lineList.size(); ++lineIndex )
+		if ( lineList[lineIndex].isEmpty() == false )
+			qDebug( "GDB error: %s", qPrintable(lineList[lineIndex]) );
 }
 
 GdbResponse* GdbCall::parseGdbOutput()
