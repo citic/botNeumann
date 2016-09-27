@@ -138,7 +138,7 @@ void GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
 
 	--busy;
 
-//	dispatchResp();
+	dispatchResponses();
 //	onReadyReadStandardOutput();
 }
 
@@ -330,7 +330,7 @@ GdbResponse* GdbCall::parseAsyncRecord(GdbToken::Type tokenType, GdbResponse::Ty
 	// If there is a token of the given type, pop it
 	if ( checkAndPopToken(tokenType) )
 	{
-		// ToDo: Who deletes this object?
+		// A response is a collection of tokens that answers a command
 		GdbResponse* resp = new GdbResponse(outputType);
 
 		// The type of async-message must come immediately after, within a VAR token, e.g when gdb
@@ -516,4 +516,20 @@ int GdbCall::parseValue(GdbTreeNode* item)
 		qFatal("Unexpected token: '%s'", qPrintable(token->getText()));
 
 	return result;
+}
+
+void GdbCall::dispatchResponses()
+{
+	// Dispatch each response to the listener, if any
+	while( responseQueue.isEmpty() == false )
+	{
+		GdbResponse* response = responseQueue.takeFirst();
+		Q_ASSERT(response);
+
+		// Dispatch the response
+		if ( listener )
+			response->dispatchTo(listener);
+
+		delete response;
+	}
 }
