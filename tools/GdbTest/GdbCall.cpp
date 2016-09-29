@@ -5,16 +5,16 @@
 
 /*static*/ size_t GdbCommand::instances = 0;
 
-static const QString gdbPath = QStringLiteral(
 #ifdef Q_OS_MAC
-	"/opt/local/bin/ggdb");
+	static const QString gdbPath = QStringLiteral("/opt/local/bin/ggdb");
 #else
-	"gdb");
+	static const QString gdbPath = QStringLiteral("gdb");
 #endif
 
 GdbCall::GdbCall(QObject *parent)
 	: ToolCall("DebuggerCall", parent)
 {
+	connect( &process, SIGNAL(readyReadStandardOutput()), this, SLOT(onReadyReadStandardOutput()) );
 }
 
 GdbCall::~GdbCall()
@@ -136,42 +136,49 @@ void GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
 		readFromGdb(resultData);
 	} while ( pendingCommands.isEmpty() == false );
 
-//	while( ! m_list.isEmpty() )
-//		readFromGdb(NULL,resultData);
+	// If GDB is generating more output, but we have not received it entirely
+	while( ! pendingTokens.isEmpty() )
+		readFromGdb( nullptr, false );
 
 	--busy;
 
 	dispatchResponses();
-//	onReadyReadStandardOutput();
+	onReadyReadStandardOutput();
 }
 
-void GdbCall::readFromGdb(GdbItemTree* resultData)
+void GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutput)
 {
-	// ToDo: see com.cpp:851-878 when m_result==NULL
-
 	GdbResponse* response = nullptr;
 
 	do
 	{
 		// Wait until GDB produces output and parse it when it becomes available
-		while ( (response = parseGdbOutput()) == nullptr )
-			process.waitForReadyRead(100);
+		do
+		{
+			if ( (response = parseGdbOutput()) == nullptr )
+				process.waitForReadyRead(100);
+		}
+		while ( response == nullptr && waitUntilGdbHasOutput );
 
-		qDebug("readFromGdb response: %s", qPrintable(response->buildDescription(true)));
+		if ( response )
+		{
 
-		deleteProcessedTokens();
+			qDebug("readFromGdb response: %s", qPrintable(response->buildDescription(true)));
 
-		// Each command sent to gdb will generate at least one response. We store them
-		// for inform the call later about the result
-		responseQueue.append(response);
+			deleteProcessedTokens();
 
-		// If this response is the final result of a command and caller wants a copy
-		// of the tree, provide it
-		if( resultData && response->getType() == GdbResponse::RESULT )
-			*resultData = response->getItemTree();
+			// Each command sent to gdb will generate at least one response. We store them
+			// for inform the call later about the result
+			responseQueue.append(response);
 
-		// GDB stops generating responses when it shows "(gdb)" prompt, called termination
-	} while ( response->getType() != GdbResponse::TERMINATION );
+			// If this response is the final result of a command and caller wants a copy
+			// of the tree, provide it
+			if( resultData && response->getType() == GdbResponse::RESULT )
+				*resultData = response->getItemTree();
+
+			// GDB stops generating responses when it shows "(gdb)" prompt, called termination
+		}
+	} while ( waitUntilGdbHasOutput && response->getType() != GdbResponse::TERMINATION );
 
 	dumpGdbStandardError();
 }
@@ -534,7 +541,7 @@ int GdbCall::parseValue(GdbTreeNode* item)
 void GdbCall::dispatchResponses()
 {
 	// Dispatch each response to the listener, if any
-	while( responseQueue.isEmpty() == false )
+	while ( responseQueue.isEmpty() == false )
 	{
 		GdbResponse* response = responseQueue.takeFirst();
 		Q_ASSERT(response);
@@ -545,4 +552,18 @@ void GdbCall::dispatchResponses()
 
 		delete response;
 	}
+}
+
+void GdbCall::onReadyReadStandardOutput()
+{
+	// If already parsing GDB output, stop
+	if ( busy ) return;
+
+	while ( process.bytesAvailable() || pendingTokens.isEmpty() == false )
+	{
+		readFromGdb(nullptr, false);
+		Q_ASSERT( pendingCommands.isEmpty() == true );
+	}
+
+	dispatchResponses();
 }

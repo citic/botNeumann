@@ -21,7 +21,7 @@ int GdbTest::run()
 	debuggerCall->setListener(this);
 	bool ok = debuggerCall->start();
 	if ( ! ok ) return fprintf(stderr, "GdbTest: could not start gdb\n");
-	printf("gdbtest: gdb started\n");
+	printf("GdbTest: gdb started\n");
 
 	Q_ASSERT(userProgram == nullptr);
 	userProgram = new UserProgram(this);

@@ -121,6 +121,7 @@ QString GdbResponse::buildDescription(bool includeItemTree) const
 
 void GdbResponse::dispatchTo(GdbResponseListener* listener)
 {
+	Q_ASSERT(listener);
 	switch ( type )
 	{
 		case EXEC_ASYNC_OUTPUT: listener->onExecAsyncOut(itemTree, reason); break;
