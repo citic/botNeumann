@@ -24,6 +24,9 @@ GdbCall::~GdbCall()
 	process.write("-gdb-exit\n");
 	process.terminate();
 	process.waitForFinished();
+
+	// Delete dynamic allocated objects
+	deleteProcessedTokens();
 }
 
 bool GdbCall::start()
@@ -156,14 +159,18 @@ void GdbCall::readFromGdb(GdbItemTree* resultData)
 
 		qDebug("readFromGdb response: %s", qPrintable(response->buildDescription(true)));
 
-		while( processedTokens.isEmpty() == false )
-			delete processedTokens.takeFirst();
+		deleteProcessedTokens();
 
+		// Each command sent to gdb will generate at least one response. We store them
+		// for inform the call later about the result
 		responseQueue.append(response);
 
-		if( resultData && response->getResult() == GdbResponse::RESULT )
+		// If this response is the final result of a command and caller wants a copy
+		// of the tree, provide it
+		if( resultData && response->getType() == GdbResponse::RESULT )
 			*resultData = response->getItemTree();
 
+		// GDB stops generating responses when it shows "(gdb)" prompt, called termination
 	} while ( response->getType() != GdbResponse::TERMINATION );
 
 	dumpGdbStandardError();
@@ -269,6 +276,12 @@ GdbToken* GdbCall::eatToken(GdbToken::Type tokenType)
 		, token ? qPrintable(token->getText()) : "<null>");
 
 	return nullptr;
+}
+
+void GdbCall::deleteProcessedTokens()
+{
+	while( processedTokens.isEmpty() == false )
+		delete processedTokens.takeFirst();
 }
 
 void GdbCall::readTokens()

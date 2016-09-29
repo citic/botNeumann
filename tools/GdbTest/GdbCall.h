@@ -86,6 +86,8 @@ class GdbCall : public ToolCall
 	void dumpGdbStandardError();
 	/// Returns true if there is a token ready to be processed, false otherwise
 	inline bool isTokenPending() { return peekToken() != nullptr; }
+	/// Deletes all processed token objects from memory, if any
+	void deleteProcessedTokens();
 	/// Gets a pointer to the next token that is ready to be processed, nullptr if none
 	GdbToken* peekToken();
 	/// Moves the first pending token (in pendingTokens list) to processedTokens list
