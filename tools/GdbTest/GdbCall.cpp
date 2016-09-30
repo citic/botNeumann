@@ -43,8 +43,6 @@ bool GdbCall::start()
 	/// Tells GDB to use the pseudoterminal in order to control de inferior
 	sendGdbCommand( QStringLiteral("-inferior-tty-set %1").arg(getInferiorPseudoterminalName()) );
 
-	// ...
-
 	// Success
 	return true;
 }
@@ -116,7 +114,7 @@ const char*GdbCall::getInferiorPseudoterminalName() const
 	return ptsname(inferiorPseudoterminalId);
 }
 
-void GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
+GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
 {
 	Q_ASSERT(busy == 0);
 	++busy;
@@ -124,8 +122,10 @@ void GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
 	GdbCommand gdbCommand(command);
 	pendingCommands.append(gdbCommand);
 
-	qDebug(">>> '%s' command sent", qPrintable(command));
+	qDebug("\n>>> '%s' command sent", qPrintable(command));
 	process.write( qPrintable( gdbCommand.getCommand() ) );
+
+	GdbResult lastResult = GDB_UNKNOWN;
 
 	// Discard output from previous commands, if any
 	// Read the output that GDB generates by the new sent command
@@ -133,7 +133,7 @@ void GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
 	{
 		// readFromGdb matches the GDB output to each command, and
 		// removes the answered commands from the pending list
-		readFromGdb(resultData);
+		lastResult = readFromGdb(resultData);
 	} while ( pendingCommands.isEmpty() == false );
 
 	// If GDB is generating more output, but we have not received it entirely
@@ -144,11 +144,14 @@ void GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
 
 	dispatchResponses();
 	onReadyReadStandardOutput();
+
+	return lastResult;
 }
 
-void GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutput)
+GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutput)
 {
 	GdbResponse* response = nullptr;
+	GdbResult result = GDB_UNKNOWN;
 
 	do
 	{
@@ -171,16 +174,24 @@ void GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutput)
 			// for inform the call later about the result
 			responseQueue.append(response);
 
-			// If this response is the final result of a command and caller wants a copy
-			// of the tree, provide it
-			if( resultData && response->getType() == GdbResponse::RESULT )
-				*resultData = response->getItemTree();
+			// If this response is the final result of a command
+			if( response->getType() == GdbResponse::RESULT )
+			{
+				// This is the final result of the command
+				result = response->getResult();
+
+				// The caller wants also a copy of the item tree
+				if ( resultData )
+					*resultData = response->getItemTree();
+			}
 
 			// GDB stops generating responses when it shows "(gdb)" prompt, called termination
 		}
 	} while ( waitUntilGdbHasOutput && response->getType() != GdbResponse::TERMINATION );
 
 	dumpGdbStandardError();
+
+	return result;
 }
 
 void GdbCall::dumpGdbStandardError()
@@ -425,7 +436,7 @@ GdbResponse* GdbCall::parseResultRecord()
 	if ( ! pendingCommands.isEmpty() )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
-		qDebug("<<< '%s' command done!", qPrintable( cmd.getText() ));
+		qDebug("<<< '%s' command done!\n", qPrintable( cmd.getText() ));
 	}
 
 	return response;

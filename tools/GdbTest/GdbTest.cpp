@@ -23,6 +23,10 @@ int GdbTest::run()
 	if ( ! ok ) return fprintf(stderr, "GdbTest: could not start gdb\n");
 	printf("GdbTest: gdb started\n");
 
+	// Ask GDB run user program
+	if ( debuggerCall->sendGdbCommand(QString("-file-exec-and-symbols %1").arg(userProgramPath)) == GDB_ERROR )
+		qFatal("GdbTest: Failed to run user program: '%s'", qPrintable(userProgramPath));
+
 	Q_ASSERT(userProgram == nullptr);
 	userProgram = new UserProgram(this);
 	userProgram->start( this->userProgramPath );
