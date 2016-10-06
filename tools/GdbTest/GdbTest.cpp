@@ -32,6 +32,12 @@ int GdbTest::run()
 	if ( userProgramArguments.length() > 0 )
 		debuggerCall->sendGdbCommand(QString("-exec-arguments %1").arg(userProgramArguments));
 
+	// ToDo: restore breakpoints from configuration
+	// else set breakpoint to main function
+	if ( debuggerCall->sendGdbCommand("-break-insert -f main") == GDB_ERROR )
+		qFatal("GdbTest: Failed to set breakpoint at main() function");
+
+
 	Q_ASSERT(userProgram == nullptr);
 	userProgram = new UserProgram(this);
 	userProgram->start( this->userProgramPath );
