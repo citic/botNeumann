@@ -16,6 +16,7 @@ class GdbTest : public QCoreApplication, public GdbResponseListener
 
   protected:
 	QString userProgramPath;
+	QString userProgramArguments;
 	GdbCall* debuggerCall = nullptr;
 	UserProgram* userProgram = nullptr;
 
@@ -23,6 +24,10 @@ class GdbTest : public QCoreApplication, public GdbResponseListener
 	explicit GdbTest(int argc, char *argv[]);
 	~GdbTest();
 	int run();
+
+  protected:
+	/// Extracts inferior parameters from command line arguments
+	void parseUserProgramArguments(int argc, char *argv[]);
 
   protected:
 	/// Async records are used to notify the gdb/mi client of additional changes that have occurred.

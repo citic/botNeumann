@@ -6,6 +6,7 @@ GdbTest::GdbTest(int argc, char *argv[])
 	: QCoreApplication(argc, argv)
 	, userProgramPath( argv[1] )
 {
+	parseUserProgramArguments(argc, argv);
 }
 
 GdbTest::~GdbTest()
@@ -27,12 +28,22 @@ int GdbTest::run()
 	if ( debuggerCall->sendGdbCommand(QString("-file-exec-and-symbols %1").arg(userProgramPath)) == GDB_ERROR )
 		qFatal("GdbTest: Failed to run user program: '%s'", qPrintable(userProgramPath));
 
+	// Give inferior parameters to GDB
+	if ( userProgramArguments.length() > 0 )
+		debuggerCall->sendGdbCommand(QString("-exec-arguments %1").arg(userProgramArguments));
+
 	Q_ASSERT(userProgram == nullptr);
 	userProgram = new UserProgram(this);
 	userProgram->start( this->userProgramPath );
 	connect( userProgram, SIGNAL(toolFinished()), this, SLOT(quit()) );
 
 	return QCoreApplication::exec();
+}
+
+void GdbTest::parseUserProgramArguments(int argc, char* argv[])
+{
+	for ( int index = 2; index < argc; ++index )
+		userProgramArguments += argv[index];
 }
 
 void GdbTest::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
