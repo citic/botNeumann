@@ -11,32 +11,39 @@ GdbTest::GdbTest(int argc, char *argv[])
 
 GdbTest::~GdbTest()
 {
-	delete debuggerCall;
+	delete gdbCall;
 	delete userProgram;
 }
 
 int GdbTest::run()
 {
-	Q_ASSERT(debuggerCall == nullptr);
-	debuggerCall = new GdbCall(this);
-	debuggerCall->setListener(this);
-	bool ok = debuggerCall->start();
+	Q_ASSERT(gdbCall == nullptr);
+	gdbCall = new GdbCall(this);
+	gdbCall->setListener(this);
+	bool ok = gdbCall->start();
 	if ( ! ok ) return fprintf(stderr, "GdbTest: could not start gdb\n");
 	printf("GdbTest: gdb started\n");
 
 	// Ask GDB run user program
-	if ( debuggerCall->sendGdbCommand(QString("-file-exec-and-symbols %1").arg(userProgramPath)) == GDB_ERROR )
+	if ( gdbCall->sendGdbCommand(QString("-file-exec-and-symbols %1").arg(userProgramPath)) == GDB_ERROR )
 		qFatal("GdbTest: Failed to run user program: '%s'", qPrintable(userProgramPath));
 
 	// Give inferior parameters to GDB
 	if ( userProgramArguments.length() > 0 )
-		debuggerCall->sendGdbCommand(QString("-exec-arguments %1").arg(userProgramArguments));
+		gdbCall->sendGdbCommand(QString("-exec-arguments %1").arg(userProgramArguments));
 
 	// ToDo: restore breakpoints from configuration
 	// else set breakpoint to main function
-	if ( debuggerCall->sendGdbCommand("-break-insert -f main") == GDB_ERROR )
+	if ( gdbCall->sendGdbCommand("-break-insert -f main") == GDB_ERROR )
 		qFatal("GdbTest: Failed to set breakpoint at main() function");
 
+	// ToDo: Extract source filenames. Not required by botNeumann++ for the moment
+
+	// Ask GDB to start execution of user program (inferior), only if it is not running already
+	if ( gdbCall->getState() == GdbCall::STATE_RUNNING )
+		qFatal("GdbTest: gdb already running");
+	else
+		gdbCall->sendGdbCommand("-exec-run");
 
 	Q_ASSERT(userProgram == nullptr);
 	userProgram = new UserProgram(this);

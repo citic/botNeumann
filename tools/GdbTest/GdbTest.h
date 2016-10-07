@@ -17,7 +17,7 @@ class GdbTest : public QCoreApplication, public GdbResponseListener
   protected:
 	QString userProgramPath;
 	QString userProgramArguments;
-	GdbCall* debuggerCall = nullptr;
+	GdbCall* gdbCall = nullptr;
 	UserProgram* userProgram = nullptr;
 
   public:
