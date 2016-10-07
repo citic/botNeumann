@@ -19,7 +19,7 @@ int GdbTest::run()
 {
 	Q_ASSERT(gdbCall == nullptr);
 	gdbCall = new GdbCall(this);
-	gdbCall->setListener(this);
+	connect( gdbCall, SIGNAL(onGdbResponse(const GdbResponse*)), this, SLOT(onGdbResponse(const GdbResponse*)) );
 	bool ok = gdbCall->start();
 	if ( ! ok ) return fprintf(stderr, "GdbTest: could not start gdb\n");
 	printf("GdbTest: gdb started\n");
@@ -51,6 +51,23 @@ int GdbTest::run()
 	connect( userProgram, SIGNAL(toolFinished()), this, SLOT(quit()) );
 
 	return QCoreApplication::exec();
+}
+
+void GdbTest::onGdbResponse(const GdbResponse* response)
+{
+	Q_ASSERT(response);
+	switch ( response->getType() )
+	{
+		case GdbResponse::EXEC_ASYNC_OUTPUT: onExecAsyncOut(response->getItemTree(), response->getReason()); break;
+		case GdbResponse::STATUS_ASYNC_OUTPUT: onStatusAsyncOut(response->getItemTree(), response->getReason()); break;
+		case GdbResponse::NOTIFY_ASYNC_OUTPUT: onNotifyAsyncOut(response->getItemTree(), response->getReason()); break;
+		case GdbResponse::LOG_STREAM_OUTPUT: onLogStreamOutput(response->getText()); break;
+		case GdbResponse::TARGET_STREAM_OUTPUT: onTargetStreamOutput(response->getText()); break;
+		case GdbResponse::CONSOLE_STREAM_OUTPUT: onConsoleStreamOutput(response->getText()); break;
+		case GdbResponse::RESULT: onResult(response->getItemTree()); break;
+
+		default: break;
+	}
 }
 
 void GdbTest::parseUserProgramArguments(int argc, char* argv[])

@@ -558,8 +558,7 @@ void GdbCall::dispatchResponses()
 		Q_ASSERT(response);
 
 		// Dispatch the response
-		if ( listener )
-			response->dispatchTo(listener);
+		emit onGdbResponse(response);
 
 		delete response;
 	}

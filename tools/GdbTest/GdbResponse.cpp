@@ -118,20 +118,3 @@ QString GdbResponse::buildDescription(bool includeItemTree) const
 		description += ' ' + itemTree.buildDescription();
 	return description;
 }
-
-void GdbResponse::dispatchTo(GdbResponseListener* listener)
-{
-	Q_ASSERT(listener);
-	switch ( type )
-	{
-		case EXEC_ASYNC_OUTPUT: listener->onExecAsyncOut(itemTree, reason); break;
-		case STATUS_ASYNC_OUTPUT: listener->onStatusAsyncOut(itemTree, reason); break;
-		case NOTIFY_ASYNC_OUTPUT: listener->onNotifyAsyncOut(itemTree, reason); break;
-		case LOG_STREAM_OUTPUT: listener->onLogStreamOutput(text); break;
-		case TARGET_STREAM_OUTPUT: listener->onTargetStreamOutput(text); break;
-		case CONSOLE_STREAM_OUTPUT: listener->onConsoleStreamOutput(text); break;
-		case RESULT: listener->onResult(itemTree); break;
-
-		default: break;
-	}
-}
