@@ -1,6 +1,7 @@
 #include "GdbCall.h"
 #include "GdbItemTree.h"
 #include <QDebug>
+#include <QProcess>
 #include <QSocketNotifier>
 
 /*static*/ size_t GdbCommand::instances = 0;
@@ -12,18 +13,20 @@
 #endif
 
 GdbCall::GdbCall(QObject *parent)
-	: ToolCall("DebuggerCall", parent)
+	: DebuggerCall(parent)
 {
-	connect( &process, SIGNAL(readyReadStandardOutput()), this, SLOT(onReadyReadStandardOutput()) );
 }
 
 GdbCall::~GdbCall()
 {
 	// Exit gdb cleanly
-	qDebug("%s: exiting gdb...", qPrintable(toolName));
-	process.write("-gdb-exit\n");
-	process.terminate();
-	process.waitForFinished();
+	qDebug("GdbCall: exiting gdb...");
+	if (process)
+	{
+		process->write("-gdb-exit\n");
+		process->terminate();
+		process->waitForFinished();
+	}
 
 	// Delete dynamic allocated objects
 	deleteProcessedTokens();
@@ -33,11 +36,18 @@ bool GdbCall::start()
 {
 	if ( ! createPseudoterminal() ) return false;
 
+	// Call the debugger in another process
+	Q_ASSERT(process == nullptr);
+	process = new QProcess(this);
+
+	// When GDB has generated output, parse it
+	connect( process, SIGNAL(readyReadStandardOutput()), this, SLOT(onReadyReadStandardOutput()) );
+
 	const QString& command = QStringLiteral("%1 -q --interpreter=mi2").arg(gdbPath);
-	qDebug("%s: starting: %s", qPrintable(toolName), qPrintable(command));
-	process.start(command);
-	process.waitForStarted();
-	if ( process.state() == QProcess::NotRunning )
+	qDebug("GdbCall: starting: %s", qPrintable(command));
+	process->start(command);
+	process->waitForStarted();
+	if ( process->state() == QProcess::NotRunning )
 		return false;
 
 	/// Tells GDB to use the pseudoterminal in order to control de inferior
@@ -123,7 +133,7 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultDat
 	pendingCommands.append(gdbCommand);
 
 	qDebug("\n>>> '%s' command sent", qPrintable(command));
-	process.write( qPrintable( gdbCommand.getCommand() ) );
+	process->write( qPrintable( gdbCommand.getCommand() ) );
 
 	GdbResult lastResult = GDB_UNKNOWN;
 
@@ -159,7 +169,7 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 		do
 		{
 			if ( (response = parseGdbOutput()) == nullptr )
-				process.waitForReadyRead(100);
+				process->waitForReadyRead(100);
 		}
 		while ( response == nullptr && waitUntilGdbHasOutput );
 
@@ -197,7 +207,7 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 void GdbCall::dumpGdbStandardError()
 {
 	// Dump all stderr content
-	QByteArray stderrBuffer = process.readAllStandardError();
+	QByteArray stderrBuffer = process->readAllStandardError();
 
 	// Continue only if there are standard error messages
 	if ( stderrBuffer.isEmpty() )
@@ -282,7 +292,7 @@ GdbToken* GdbCall::eatToken(GdbToken::Type tokenType)
 
 	while( ( token = peekToken() ) == nullptr )
 	{
-		process.waitForReadyRead(100);
+		process->waitForReadyRead(100);
 		readTokens();
 	}
 
@@ -304,7 +314,7 @@ void GdbCall::deleteProcessedTokens()
 
 void GdbCall::readTokens()
 {
-	gdbRawOutput += process.readAllStandardOutput();
+	gdbRawOutput += process->readAllStandardOutput();
 
 	// Any characters received?
 	while( gdbRawOutput.size() > 0 )
@@ -324,8 +334,8 @@ void GdbCall::readTokens()
 			// Wait for the complete line to be received
 			while( gdbRawOutput.indexOf('\n') == -1 )
 			{
-				process.waitForReadyRead(100);
-				gdbRawOutput += process.readAllStandardOutput();
+				process->waitForReadyRead(100);
+				gdbRawOutput += process->readAllStandardOutput();
 				--timeout;
 				Q_ASSERT(timeout > 0);
 			}
@@ -569,7 +579,7 @@ void GdbCall::onReadyReadStandardOutput()
 	// If already parsing GDB output, stop
 	if ( busy ) return;
 
-	while ( process.bytesAvailable() || pendingTokens.isEmpty() == false )
+	while ( process->bytesAvailable() || pendingTokens.isEmpty() == false )
 	{
 		readFromGdb(nullptr, false);
 		Q_ASSERT( pendingCommands.isEmpty() == true );

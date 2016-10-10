@@ -3,7 +3,7 @@
 
 #include "GdbResponse.h"
 #include "GdbToken.h"
-#include "ToolCall.h"
+#include "DebuggerCall.h"
 
 #include <QByteArray>
 #include <QList>
@@ -26,7 +26,7 @@ class GdbCommand
 	inline QString getCommand() const { return text + '\n'; }
 };
 
-class GdbCall : public ToolCall
+class GdbCall : public DebuggerCall
 {
 	Q_OBJECT
 

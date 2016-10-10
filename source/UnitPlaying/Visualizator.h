@@ -2,9 +2,9 @@
 #define VISUALIZATOR_H
 
 #include <QObject>
+#include <QFileInfo>
 
-class DebuggerCall;
-class QFileInfo;
+class GdbCall;
 class UnitPlayingScene;
 
 /**
@@ -19,8 +19,13 @@ class Visualizator : public QObject
 	Q_DISABLE_COPY(Visualizator)
 
   protected:
+	/// Full path to the player's executable to be debugged
+	QFileInfo executablePath;
+	/// @todo Allow user to write executable parameters
+	QString userProgramArguments;
 	/// The model is a debugger session with the executable of the player
-	DebuggerCall* debuggerCall;
+	/// @todo Using GdbCall interface directly, replace it by DebuggerCall interface
+	GdbCall* debuggerCall;
 	/// The view is the unit playing scene and its components
 	UnitPlayingScene* unitPlayingScene;
 
@@ -32,7 +37,8 @@ class Visualizator : public QObject
 	/// Destructor
 	~Visualizator();
 	/// Start the visualization process
-	void start();
+	/// @return true on success, false otherwise
+	bool start();
 };
 
 #endif // VISUALIZATOR_H

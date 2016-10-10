@@ -63,6 +63,10 @@ SOURCES += \
 	source/ToolCall/Compiler/LinkerCall.cpp \
 	source/ToolCall/Compiler/LinkerDiagnostic.cpp \
 	source/ToolCall/Debugger/DebuggerCall.cpp \
+	source/ToolCall/Debugger/GdbCall.cpp \
+	source/ToolCall/Debugger/GdbItemTree.cpp \
+	source/ToolCall/Debugger/GdbResponse.cpp \
+	source/ToolCall/Debugger/GdbToken.cpp \
 	source/ToolCall/ToolCall.cpp \
 	source/UnitPlaying/CodeSegment/CodeEditor.cpp \
 	source/UnitPlaying/CodeSegment/CodeSegment.cpp \
@@ -115,6 +119,10 @@ HEADERS += \
 	source/ToolCall/Compiler/LinkerCall.h \
 	source/ToolCall/Compiler/LinkerDiagnostic.h \
 	source/ToolCall/Debugger/DebuggerCall.h \
+	source/ToolCall/Debugger/GdbCall.h \
+	source/ToolCall/Debugger/GdbItemTree.h \
+	source/ToolCall/Debugger/GdbResponse.h \
+	source/ToolCall/Debugger/GdbToken.h \
 	source/ToolCall/ToolCall.h \
 	source/UnitPlaying/CodeSegment/CodeEditor.h \
 	source/UnitPlaying/CodeSegment/CodeSegment.h \

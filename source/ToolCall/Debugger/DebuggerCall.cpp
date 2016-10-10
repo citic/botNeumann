@@ -1,8 +1,7 @@
 #include "DebuggerCall.h"
 
-DebuggerCall::DebuggerCall(const QFileInfo &executablePath, QObject *parent)
+DebuggerCall::DebuggerCall(QObject *parent)
 	: ToolCall(parent)
-	, executablePath(executablePath)
 {
 }
 
@@ -18,12 +17,3 @@ QString DebuggerCall::getDebugger()
 	return getCompilerInstallationDirectory() + "gdb";
 #endif
 }
-
-#include <QDebug>
-
-void DebuggerCall::start()
-{
-	const QString& command = QString("'%1' -q -i mi '%2'").arg(getDebugger()).arg(getExecutablePath().absoluteFilePath());
-	qDebug() << "DebuggerCall:" << command;
-}
-
