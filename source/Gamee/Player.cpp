@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QDebug>
 
 Player::Player(const QString& nickname, QObject *parent)
 	: QObject(parent)
@@ -41,6 +42,9 @@ QString Player::getLocalDataPath() const
 QDir Player::getLocalDataDirectory() const
 {
 	QDir dir( getLocalDataPath() );
-	if ( ! dir.exists() ) dir.mkdir( dir.path() );
+	if ( ! dir.exists() )
+		if ( ! dir.mkpath( "." ) )
+			qWarning() << "Unable to create user data directory: " << dir.path();
+
 	return dir;
 }

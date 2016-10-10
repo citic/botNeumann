@@ -94,7 +94,7 @@ QString PlayerSolution::getPlayerUnitPath(Player* player, Unit* unit)
 {
 	Q_ASSERT(player);
 	Q_ASSERT(unit);
-	return player->getLocalDataPath() + '/' + unit->getId();
+	return player->getLocalDataDirectory().absolutePath() + '/' + unit->getId();
 }
 
 QString PlayerSolution::getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename)
