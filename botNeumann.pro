@@ -12,13 +12,15 @@ RC_ICONS = assets/game_logo.ico
 INCLUDEPATH += \
 	source \
 	source/Common \
-	source/Compiler \
 	source/Dialogs \
 	source/Gamee \
 	source/Gamee/Layouts \
 	source/Gamee/Transitions \
 	source/GameMenu \
 	source/Players \
+	source/ToolCall \
+	source/ToolCall/Compiler \
+	source/ToolCall/Debugger \
 	source/UnitPlaying \
 	source/UnitPlaying/Common \
 	source/UnitPlaying/CodeSegment \
@@ -34,14 +36,6 @@ SOURCES += \
 	source/Common/GameScene.cpp \
 	source/Common/InfoDialog.cpp \
 	source/Common/PlayerStatus.cpp \
-	source/Compiler/Compiler.cpp \
-	source/Compiler/CompilerCall.cpp \
-	source/Compiler/CompilerDiagnostic.cpp \
-	source/Compiler/DebuggerCall.cpp \
-	source/Compiler/Diagnostic.cpp \
-	source/Compiler/LinkerCall.cpp \
-	source/Compiler/LinkerDiagnostic.cpp \
-	source/Compiler/ToolCall.cpp \
 	source/Gamee/Actor.cpp \
 	source/Gamee/Director.cpp \
 	source/Gamee/LabelButton.cpp \
@@ -62,6 +56,14 @@ SOURCES += \
 	source/GameMenu/PlayerManagerDialog.cpp \
 	source/main.cpp \
 	source/MainWindow.cpp \
+	source/ToolCall/Compiler/Compiler.cpp \
+	source/ToolCall/Compiler/CompilerCall.cpp \
+	source/ToolCall/Compiler/CompilerDiagnostic.cpp \
+	source/ToolCall/Compiler/Diagnostic.cpp \
+	source/ToolCall/Compiler/LinkerCall.cpp \
+	source/ToolCall/Compiler/LinkerDiagnostic.cpp \
+	source/ToolCall/Debugger/DebuggerCall.cpp \
+	source/ToolCall/ToolCall.cpp \
 	source/UnitPlaying/CodeSegment/CodeEditor.cpp \
 	source/UnitPlaying/CodeSegment/CodeSegment.cpp \
 	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
@@ -87,14 +89,6 @@ HEADERS += \
 	source/Common/GameScene.h \
 	source/Common/InfoDialog.h \
 	source/Common/PlayerStatus.h \
-	source/Compiler/Compiler.h \
-	source/Compiler/CompilerCall.h \
-	source/Compiler/CompilerDiagnostic.h \
-	source/Compiler/DebuggerCall.h \
-	source/Compiler/Diagnostic.h \
-	source/Compiler/LinkerCall.h \
-	source/Compiler/LinkerDiagnostic.h \
-	source/Compiler/ToolCall.h \
 	source/Gamee/Actor.h \
 	source/Gamee/Director.h \
 	source/Gamee/LabelButton.h \
@@ -114,6 +108,14 @@ HEADERS += \
 	source/GameMenu/GameMenuScene.h \
 	source/GameMenu/PlayerManagerDialog.h \
 	source/MainWindow.h \
+	source/ToolCall/Compiler/Compiler.h \
+	source/ToolCall/Compiler/CompilerCall.h \
+	source/ToolCall/Compiler/CompilerDiagnostic.h \
+	source/ToolCall/Compiler/Diagnostic.h \
+	source/ToolCall/Compiler/LinkerCall.h \
+	source/ToolCall/Compiler/LinkerDiagnostic.h \
+	source/ToolCall/Debugger/DebuggerCall.h \
+	source/ToolCall/ToolCall.h \
 	source/UnitPlaying/CodeSegment/CodeEditor.h \
 	source/UnitPlaying/CodeSegment/CodeSegment.h \
 	source/UnitPlaying/CodeSegment/LineNumberArea.h \
