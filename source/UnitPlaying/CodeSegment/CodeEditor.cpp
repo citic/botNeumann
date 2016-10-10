@@ -88,7 +88,7 @@ bool CodeEditor::loadUnitInitialCode()
 {
 	Q_ASSERT(unit);
 	setPlainText( unit->getARandomInitialCode() );
-	document()->setModified(false);
+	document()->setModified(true);
 
 	// Each time the document is changed, update the pending time to autosave/autocompile
 	connect(document(), SIGNAL(contentsChanged()), this, SLOT(documentChanged()));
