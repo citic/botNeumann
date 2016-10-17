@@ -74,6 +74,8 @@ class UnitPlayingScene : public GameScene
 	virtual void startLeavingStage() override;
 	/// Called when a transition has finished, indicating this scene entered into the stage
 	virtual void finishedEnteringStage() override;
+	/// Give access to the messages area object
+	inline MessagesArea* getMessagesArea() const { return messagesArea; }
 
   signals:
 	/// Emitted when a game mode button is pressed

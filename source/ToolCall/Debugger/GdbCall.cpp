@@ -20,7 +20,7 @@ GdbCall::GdbCall(QObject *parent)
 GdbCall::~GdbCall()
 {
 	// Exit gdb cleanly
-	qDebug("GdbCall: exiting gdb...");
+	emit onGdbLogMessage(LOG_INFO, "GdbCall: exiting gdb...");
 	if (process)
 	{
 		process->write("-gdb-exit\n");
@@ -44,7 +44,7 @@ bool GdbCall::start()
 	connect( process, SIGNAL(readyReadStandardOutput()), this, SLOT(onReadyReadStandardOutput()) );
 
 	const QString& command = QStringLiteral("%1 -q --interpreter=mi2").arg(gdbPath);
-	qDebug("GdbCall: starting: %s", qPrintable(command));
+	emit onGdbLogMessage( LOG_COMMAND_SENT, QString("GdbCall: starting: %1").arg(command) );
 	process->start(command);
 	process->waitForStarted();
 	if ( process->state() == QProcess::NotRunning )
@@ -74,7 +74,7 @@ bool GdbCall::createPseudoterminal()
 	// is good practice to keep it for compatibility
 	if( grantpt(inferiorPseudoterminalId) != EXIT_SUCCESS )
 	{
-		qFatal("GdbTest: Failed to grant pseudoterminal %i", inferiorPseudoterminalId);
+		emit onGdbLogMessage( LOG_ERROR, QString("GdbTest: Failed to grant pseudoterminal %1").arg(inferiorPseudoterminalId) );
 		close(inferiorPseudoterminalId);
 		return false;
 	}
@@ -83,14 +83,14 @@ bool GdbCall::createPseudoterminal()
 	// programs start running on it. When initialization is done, pseudoterminal must be unlocked
 	if( unlockpt(inferiorPseudoterminalId) != EXIT_SUCCESS )
 	{
-		qFatal("GdbTest: Failed to unlock pseudoterminal %i", inferiorPseudoterminalId);
+		emit onGdbLogMessage( LOG_ERROR, QString("GdbTest: Failed to unlock pseudoterminal %1").arg(inferiorPseudoterminalId) );
 		close(inferiorPseudoterminalId);
 		return false;
 	}
 
 	// If the pseudoterminal was created successfully, it will have a name like /dev/pts/nn where
 	// nn is a number that identifies the pseudoterminal
-	qInfo("GdbTest: using pseudoterminal: %s", ptsname(inferiorPseudoterminalId));
+	emit onGdbLogMessage( LOG_INFO, QString("GdbTest: using pseudoterminal: %1").arg(ptsname(inferiorPseudoterminalId)) );
 	return true;
 }
 
@@ -116,7 +116,7 @@ void GdbCall::onGdbOutput(int fileDescriptor)
 		buffer[n] = '\0';
 
 	// For now
-	qInfo("onGdbOutput:'%s'", buffer);
+	emit onGdbLogMessage( LOG_DEBUG, QString("[!]GdbCall::onGdbOutput:'%1'").arg(buffer) );
 }
 
 const char*GdbCall::getInferiorPseudoterminalName() const
@@ -132,7 +132,7 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultDat
 	GdbCommand gdbCommand(command);
 	pendingCommands.append(gdbCommand);
 
-	qDebug("\n>>> '%s' command sent", qPrintable(command));
+	emit onGdbLogMessage( LOG_COMMAND_SENT, QString("'%1' command sent").arg(command) );
 	process->write( qPrintable( gdbCommand.getCommand() ) );
 
 	GdbResult lastResult = GDB_UNKNOWN;
@@ -176,7 +176,7 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 		if ( response )
 		{
 
-			qDebug("readFromGdb response: %s", qPrintable(response->buildDescription(true)));
+			emit onGdbLogMessage( LOG_DEBUG, QString("GdbCall::readFromGdb:response: %1").arg(response->buildDescription(true)) );
 
 			deleteProcessedTokens();
 
@@ -219,7 +219,7 @@ void GdbCall::dumpGdbStandardError()
 	// Print each line using custom format
 	for ( int lineIndex = 0; lineIndex < lineList.size(); ++lineIndex )
 		if ( lineList[lineIndex].isEmpty() == false )
-			qDebug( "GDB error: %s", qPrintable(lineList[lineIndex]) );
+			emit onGdbLogMessage( LOG_ERROR, QString("GDB error: %1").arg(lineList[lineIndex]) );
 }
 
 GdbResponse* GdbCall::parseGdbOutput()
@@ -269,7 +269,10 @@ GdbToken* GdbCall::popToken()
 
 	GdbToken* token = pendingTokens.takeFirst();
 	processedTokens.append( token );
-	qDebug("popToken: %s", qPrintable(token->buildDescription()));
+
+  #ifdef LOG_GDB_PARSER
+	emit onGdbLogMessage( LOG_DEBUG, QString("popToken: %1").arg(token->buildDescription()) );
+  #endif
 	return token;
 }
 
@@ -299,16 +302,16 @@ GdbToken* GdbCall::eatToken(GdbToken::Type tokenType)
 	if ( token->getType() == tokenType )
 		return popToken();
 
-	qFatal("eatToken: Expected '%s' but got '%s'"
-		, GdbToken::mapTypeToString(tokenType)
-		, token ? qPrintable(token->getText()) : "<null>");
+	emit onGdbLogMessage( LOG_ERROR, QString("GdbCall::eatToken: Expected '%1' but got '%1'")
+		.arg( GdbToken::mapTypeToString(tokenType) )
+		.arg( token ? qPrintable(token->getText()) : "<null>" ) );
 
 	return nullptr;
 }
 
 void GdbCall::deleteProcessedTokens()
 {
-	while( processedTokens.isEmpty() == false )
+	while ( processedTokens.isEmpty() == false )
 		delete processedTokens.takeFirst();
 }
 
@@ -317,7 +320,7 @@ void GdbCall::readTokens()
 	gdbRawOutput += process->readAllStandardOutput();
 
 	// Any characters received?
-	while( gdbRawOutput.size() > 0 )
+	while ( gdbRawOutput.size() > 0 )
 	{
 		// Newline received?
 		int newLineIndex = gdbRawOutput.indexOf('\n');
@@ -327,12 +330,12 @@ void GdbCall::readTokens()
 			gdbRawOutput = gdbRawOutput.mid( newLineIndex + 1 );
 			parseGdbOutputLine(line);
 		}
-		else if( gdbRawOutput.isEmpty() == false )
+		else if ( gdbRawOutput.isEmpty() == false )
 		{
 			// Half a line received
 			int timeout = 20;
 			// Wait for the complete line to be received
-			while( gdbRawOutput.indexOf('\n') == -1 )
+			while ( gdbRawOutput.indexOf('\n') == -1 )
 			{
 				process->waitForReadyRead(100);
 				gdbRawOutput += process->readAllStandardOutput();
@@ -345,10 +348,10 @@ void GdbCall::readTokens()
 
 void GdbCall::parseGdbOutputLine(const QString& line)
 {
-	if( line.isEmpty() )
+	if ( line.isEmpty() )
 		return;
 
-	qDebug("parseGdbOutputLine: [%s]", qPrintable(line));
+	emit onGdbLogMessage( LOG_INFO, QString("GdbCall::parseGdbOutputLine: [%1]").arg(line) );
 
 	char firstChar = line[0].toLatin1();
 	if ( strchr("(^*+~@&=", firstChar) )
@@ -356,8 +359,10 @@ void GdbCall::parseGdbOutputLine(const QString& line)
 		//pendingTokens.append( GdbToken::tokenize(line) );
 		const QList<GdbToken*> newTokens = GdbToken::tokenize(line);
 		pendingTokens.append( newTokens );
+	  #ifdef LOG_GDB_PARSER
 		foreach ( GdbToken* token, newTokens )
-			qDebug("  %s", qPrintable(token->buildDescription()) );
+			emit onGdbLogMessage( LOG_DEBUG, QString("  %1").arg(token->buildDescription()) );
+	  #endif
 	}
 //	else if(m_listener)
 //		m_listener->onTargetStreamOutput(line);
@@ -429,7 +434,7 @@ GdbResponse* GdbCall::parseResultRecord()
 	GdbResult resultType = GdbResponse::mapTextToResult(resultClass);
 	if ( resultType == GdbResult::GDB_UNKNOWN )
 	{
-		qCritical("Invalid result class found: %s", qPrintable(resultClass));
+		emit onGdbLogMessage( LOG_ERROR, QString("Invalid result class found: %1").arg(resultClass) );
 		return nullptr;
 	}
 
@@ -446,7 +451,7 @@ GdbResponse* GdbCall::parseResultRecord()
 	if ( ! pendingCommands.isEmpty() )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
-		qDebug("<<< '%s' command done!\n", qPrintable( cmd.getText() ));
+		emit onGdbLogMessage( LOG_DEBUG, QString("'%1' command done!\n").arg( cmd.getText() ) );
 	}
 
 	return response;
@@ -554,7 +559,7 @@ int GdbCall::parseValue(GdbTreeNode* item)
 			return -1;
 	}
 	else
-		qFatal("Unexpected token: '%s'", qPrintable(token->getText()));
+		emit onGdbLogMessage( LOG_ERROR, QString("Unexpected token: '%1'").arg(token->getText()) );
 
 	return result;
 }

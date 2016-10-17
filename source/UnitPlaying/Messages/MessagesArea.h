@@ -1,6 +1,7 @@
 #ifndef MESSAGESAREA_H
 #define MESSAGESAREA_H
 
+#include "GdbCommon.h"
 #include <QDockWidget>
 
 class Compiler;
@@ -53,6 +54,8 @@ class MessagesArea : public QDockWidget
 	/// and the messages dock widget is hidden, it is made visible and the tools output tab is
 	/// made active. If there are not errors, the tools output tab is just cleared.
 	void buildFinished(Compiler* compiler);
+	/// Appends a message sent by the debugger (e.g. GDB)
+	void appendDebuggerMessage(GdbLogType type, const QString& message);
 
   protected slots:
 	/// Called when user selects a diagnostic in the tools output list

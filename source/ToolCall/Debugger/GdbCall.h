@@ -1,6 +1,7 @@
 #ifndef GDBCALL_H
 #define GDBCALL_H
 
+#include "GdbCommon.h"
 #include "GdbResponse.h"
 #include "GdbToken.h"
 #include "DebuggerCall.h"
@@ -128,6 +129,8 @@ class GdbCall : public DebuggerCall
 	void dispatchResponses();
 
   signals:
+	/// Emitted when there is a message from GdbCall that is useful to display into a log widget
+	void onGdbLogMessage(GdbLogType type, const QString& message);
 	/// Emmited when a response was fetched from gdb
 	void onGdbResponse(const GdbResponse* response);
 

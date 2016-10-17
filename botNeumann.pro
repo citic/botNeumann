@@ -141,6 +141,7 @@ HEADERS += \
 	source/UnitPlaying/Visualizator.h \
 	source/UnitSelection/UnitManager.h \
 	source/UnitSelection/UnitSelectionScene.h \
+    source/ToolCall/Debugger/GdbCommon.h
 
 RESOURCES += \
 	assets/assets.qrc \

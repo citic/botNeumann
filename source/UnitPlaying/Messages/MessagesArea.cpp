@@ -97,6 +97,26 @@ void MessagesArea::appendDiagnostic(const Diagnostic* diagnostic)
 	listItem->setForeground( diagnostic->getSeverityColor() );
 }
 
+void MessagesArea::appendDebuggerMessage(GdbLogType type, const QString& message)
+{
+	QColor color = Qt::black;
+	QIcon icon;
+
+	switch ( type )
+	{
+		case LOG_WARNING: color = Qt::magenta; icon.addFile(":/unit_playing/buttons/warning.svg"); break;
+		case LOG_ERROR: color = Qt::red; icon.addFile(":/unit_playing/buttons/error.svg"); break;
+		case LOG_DEBUG: color = Qt::gray; icon.addFile(":/unit_playing/buttons/link_broken.svg"); break;
+		case LOG_COMMAND_SENT: color = Qt::green; icon.addFile(":/unit_playing/buttons/info.svg"); break;
+		default: icon.addFile(":/unit_playing/buttons/info.svg"); break;
+	}
+
+	QListWidgetItem* listItem = new QListWidgetItem(icon, message, toolsOutput);
+
+	// Provide some styles
+	listItem->setForeground( color );
+}
+
 void MessagesArea::toolsOutputRowChanged(int row)
 {
 	// If there are not diagnostics, or selected the summary line, ignore the event

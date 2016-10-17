@@ -1,5 +1,6 @@
 #include "Visualizator.h"
 #include "GdbCall.h"
+#include "MessagesArea.h"
 #include "UnitPlayingScene.h"
 #include <QDebug>
 
@@ -21,7 +22,10 @@ bool Visualizator::start()
 	Q_ASSERT(debuggerCall == nullptr);
 	debuggerCall = new GdbCall(this);
 
+	// Connect events
 	connect( debuggerCall, SIGNAL(onGdbResponse(const GdbResponse*)), this, SLOT(onGdbResponse(const GdbResponse*)) );
+	connect( debuggerCall, SIGNAL(onGdbLogMessage(GdbLogType,QString)), unitPlayingScene->getMessagesArea(), SLOT(appendDebuggerMessage(GdbLogType,QString)) );
+
 	bool result = debuggerCall->start();
 	if ( ! result )
 	{
