@@ -82,6 +82,8 @@ class Visualizator : public QObject
   protected:
 	/// A Gdb result brought an updated list of threads, refresh them
 	void updateThreads(const GdbTreeNode* threadsNode);
+	/// A Gdb result indicates that a new breakpoint was added
+	void updateBreakpoints(const GdbTreeNode* breakpointNode);
 };
 
 #endif // VISUALIZATOR_H

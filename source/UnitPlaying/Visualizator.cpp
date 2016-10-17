@@ -100,6 +100,8 @@ void Visualizator::onResult(const GdbItemTree& tree)
 
 	if ( ( node = tree.findNode("/threads") ) )
 		return updateThreads( node );
+	if ( ( node = tree.findNode("/bkpt") ) )
+		return updateBreakpoints( node );
 }
 
 void Visualizator::onConsoleStreamOutput(const QString& str)
@@ -145,5 +147,34 @@ void Visualizator::updateThreads(const GdbTreeNode* threadsNode)
 	if(m_inf)
 		m_inf->ICore_onThreadListChanged();
 #endif
+}
+}
+
+void Visualizator::updateBreakpoints(const GdbTreeNode* breakpointNode)
+{
+	int lineNo = breakpointNode->findTextValue("line").toInt();
+	int number = breakpointNode->findTextValue("number").toInt();
+
+	const QString& filePath = breakpointNode->findTextValue("fullname");
+	const QString& functionName = breakpointNode->findTextValue("func");
+	const QString& address = breakpointNode->findTextValue("addr");
+
+#if 0
+	BreakPoint *bkpt = findBreakPointByNumber(number);
+	if(bkpt == NULL)
+	{
+		bkpt = new BreakPoint(number);
+		m_breakpoints.push_back(bkpt);
 	}
+	bkpt->lineNo = lineNo;
+	bkpt->fullname = tree.getString("bkpt/fullname");
+	bkpt->m_funcName = tree.getString("bkpt/func");
+	bkpt->m_addr = tree.getLongLong("bkpt/addr");
+
+	if(m_inf)
+	m_inf->ICore_onBreakpointsChanged();
+#endif
+
+	qDebug("  Breakpoint[number=%d][line=%d][file=%s][function=%s][address=%s]"
+		   , number, lineNo, qPrintable(filePath), qPrintable(functionName), qPrintable(address));
 }
