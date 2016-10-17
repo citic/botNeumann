@@ -78,6 +78,10 @@ class Visualizator : public QObject
 	void onTargetStreamOutput(const QString& str);
 	/// The log stream contains debugging messages being produced by gdb's internals.
 	void onLogStreamOutput(const QString& str);
+
+  protected:
+	/// A Gdb result brought an updated list of threads, refresh them
+	void updateThreads(const GdbTreeNode* threadsNode);
 };
 
 #endif // VISUALIZATOR_H

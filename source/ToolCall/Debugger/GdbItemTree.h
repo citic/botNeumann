@@ -53,6 +53,29 @@ class GdbTreeNode
 	/// Builds a description of this item
 	/// @param recursive If true, all its children will be included in description
 	QString buildDescription(bool recursive) const;
+	/// Get the text value of the node which path is given
+	/// @param path a textual root using /node/names notation or /node/#number
+	/// e.g: "/thread-id/#1"
+	/// @return A pointer to the node if it is found, mullptr otherwise
+	const GdbTreeNode* findNode(QString nodePath) const;
+	/// Get the text value of the node which path is given
+	/// @see findNode()
+	/// @return The string value of the node if it is found, empty string otherwise
+	QString findTextValue(const QString& nodePath) const;
+
+  public:
+	/// Get the number for child nodes
+	inline int getChildCount() const { return children.size(); }
+	/// Get access to the i-th child node
+	/// @remarks No index out of bounds verification is done
+	const GdbTreeNode* getChild(int childIndex) const;
+	/// Allows traviersing for the children of this node, ugly bu efficient
+//	inline const QVector<GdbTreeNode*>& getChildren() const { return children; }
+
+  protected:
+	/// Finds the child whose name is given by parameter. The search is linear, i.e. O(n)
+	/// @returns The index of the child which name is given by parameter, -1 if not found
+	int findChildIndex(const QString& childName) const;
 };
 
 
@@ -79,6 +102,15 @@ class GdbItemTree
 	inline GdbTreeNode* getRoot() { return &this->root; }
 	/// Traverses the item tree and produces a string represeting all the items
 	inline QString buildDescription() const { return root.buildDescription(true); }
+	/// Returns a pointer o the node whose path is given
+	/// @param path a textual root using /node/names notation or /node/#number
+	/// e.g: "/thread-id/#1"
+	/// @return A constant pointer to the node if it is found, nullptr otherwise
+	inline const GdbTreeNode* findNode(const QString& nodePath) const { return root.findNode(nodePath); }
+	/// Get the text value of the node which path is given
+	/// @see findNode()
+	/// @return The string value of the node if it is found, empty string otherwise
+	inline QString findNodeTextValue(const QString& nodePath) const { return root.findTextValue(nodePath); }
 };
 
 #endif // GDBITEMTREE_H
