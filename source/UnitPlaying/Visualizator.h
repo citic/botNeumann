@@ -71,7 +71,7 @@ class Visualizator : public QObject
 	/// gdb internally maintains a number of output streams: the console (~), the target (@), and
 	/// the log (&). The console output stream ('~') contains text that should be displayed in the
 	/// CLI console window. It contains the textual responses to CLI commands.
-	void onConsoleStreamOutput(const QString& str);
+	void onConsoleStreamOutput(const QString& text);
 	/// The target output stream (@) contains any textual output from the running target. This is
 	/// only present when GDB's event loop is truly asynchronous, which is currently only the case
 	/// for remote targets.

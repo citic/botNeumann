@@ -108,9 +108,15 @@ void Visualizator::onResult(const GdbItemTree& tree)
 		return updateBreakpoints( node );
 }
 
-void Visualizator::onConsoleStreamOutput(const QString& str)
+void Visualizator::onConsoleStreamOutput(const QString& text)
 {
-	qDebug("Visualizator::onConsoleStreamOutput(%s)", qPrintable(str));
+	QStringList lines = text.split('\n');
+	for ( int lineIndex = 0; lineIndex < lines.size(); ++lineIndex )
+	{
+		const QString& line = lines[lineIndex];
+		if ( lineIndex < lines.size() - 1 || ! line.isEmpty() )
+			unitPlayingScene->getMessagesArea()->appendDebuggerMessage(LOG_INFO, line);
+	}
 }
 
 void Visualizator::onTargetStreamOutput(const QString& str)
