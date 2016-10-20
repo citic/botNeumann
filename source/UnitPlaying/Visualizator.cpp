@@ -33,7 +33,7 @@ bool Visualizator::start()
 		return false;
 	}
 
-	qDebug("Visualizator: gdb started\n");
+	qDebug("Visualizator: gdb started");
 
 	// Ask GDB run user program
 	if ( debuggerCall->sendGdbCommand(QString("-file-exec-and-symbols \"%1\"").arg(executablePath.filePath())) == GDB_ERROR )

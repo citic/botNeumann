@@ -59,10 +59,6 @@ void MessagesArea::buildStarted(Compiler* compiler)
 
 void MessagesArea::buildFinished(Compiler* compiler)
 {
-	// A build process (compiling and linking) has finished. Output from previous compiler calls
-	// are outdated, clear them
-	toolsOutput->clear();
-
 	// Save the compiler to get information of the diagnostics when user select them
 	this->compiler = compiler;
 
@@ -80,8 +76,14 @@ void MessagesArea::buildFinished(Compiler* compiler)
 	}
 
 	// Always print a result
-	const QString& text = tr("Build finished: %1 error(s), %2 warning(s)").arg(compiler->getErrorCount()).arg(compiler->getWarningCount());
+	int errors = compiler->getErrorCount();
+	int warnings = compiler->getWarningCount();
+	const QString& text = tr("Build finished: %1 error(s), %2 warning(s)").arg(errors).arg(warnings);
 	new QListWidgetItem(text, toolsOutput);
+
+	// If no errors, the debug output is appended, change the widget title
+	if ( errors == 0 )
+		messagesTabWidget->setTabText( messagesTabWidget->currentIndex(), tr("Debugger output") );
 }
 
 void MessagesArea::appendDiagnostic(const Diagnostic* diagnostic)
@@ -95,6 +97,9 @@ void MessagesArea::appendDiagnostic(const Diagnostic* diagnostic)
 
 	// Provide some styles
 	listItem->setForeground( diagnostic->getSeverityColor() );
+
+	static size_t messageCount = 0;
+	qDebug("/%zu/[%s]", ++messageCount, qPrintable(diagnostic->buildUserText()) );
 }
 
 void MessagesArea::appendDebuggerMessage(GdbLogType type, const QString& message)
@@ -106,13 +111,14 @@ void MessagesArea::appendDebuggerMessage(GdbLogType type, const QString& message
 	{
 		case LOG_WARNING: color = Qt::magenta; icon.addFile(":/unit_playing/buttons/warning.svg"); break;
 		case LOG_ERROR: color = Qt::red; icon.addFile(":/unit_playing/buttons/error.svg"); break;
-		case LOG_DEBUG: color = Qt::gray; icon.addFile(":/unit_playing/buttons/link_broken.svg"); break;
-		case LOG_COMMAND_SENT: color = Qt::green; icon.addFile(":/unit_playing/buttons/info.svg"); break;
+		case LOG_DEBUG: color = Qt::darkGray; icon.addFile(":/unit_playing/buttons/link_broken.svg"); break;
+		case LOG_COMMAND_SENT: color = Qt::darkGreen; icon.addFile(":/unit_playing/buttons/info.svg"); break;
 		default: icon.addFile(":/unit_playing/buttons/info.svg"); break;
 	}
 
 	QListWidgetItem* listItem = new QListWidgetItem(icon, message, toolsOutput);
-	qDebug(">>>%s<<<", qPrintable(listItem->text()) );
+//	static size_t messageCount = 0;
+//	qDebug("[%zu][%s]", ++messageCount, qPrintable(message) );
 
 	// Provide some styles
 	listItem->setForeground( color );
