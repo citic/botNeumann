@@ -284,7 +284,7 @@ void CodeEditor::placeCursor(int line, int column)
 	if ( line < 0 || line >= blockCount() )
 		return;
 
-	QTextCursor cur( document()->findBlockByLineNumber(line - 1) );
+	QTextCursor cur( document()->findBlockByLineNumber(line) );
 	cur.movePosition(QTextCursor::NextCharacter, QTextCursor::MoveAnchor, column);
 	setTextCursor(cur);
 	setFocus();
