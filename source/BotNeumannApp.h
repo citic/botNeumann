@@ -19,7 +19,7 @@ class BotNeumannApp : public QApplication
 
   public:
 	/// Constructor
-	explicit BotNeumannApp(int argc, char *argv[]);
+	explicit BotNeumannApp(int& argc, char *argv[]);
 	/// Get a pointer to the unique instance of this class
 	static inline BotNeumannApp* getInstance() { return static_cast<BotNeumannApp*>(qApp); }
 	/// Get the default game font

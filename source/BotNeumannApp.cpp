@@ -15,7 +15,7 @@ const int monospacedFontSize = 10;
 const int monospacedFontSize = 11;
 #endif
 
-BotNeumannApp::BotNeumannApp(int argc, char *argv[])
+BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
 	: QApplication(argc, argv)
 {
 	// Properties for the whole application
