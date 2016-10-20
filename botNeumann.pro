@@ -120,6 +120,7 @@ HEADERS += \
 	source/ToolCall/Compiler/LinkerDiagnostic.h \
 	source/ToolCall/Debugger/DebuggerCall.h \
 	source/ToolCall/Debugger/GdbCall.h \
+	source/ToolCall/Debugger/GdbCommon.h \
 	source/ToolCall/Debugger/GdbItemTree.h \
 	source/ToolCall/Debugger/GdbResponse.h \
 	source/ToolCall/Debugger/GdbToken.h \
@@ -141,7 +142,6 @@ HEADERS += \
 	source/UnitPlaying/Visualizator.h \
 	source/UnitSelection/UnitManager.h \
 	source/UnitSelection/UnitSelectionScene.h \
-    source/ToolCall/Debugger/GdbCommon.h
 
 RESOURCES += \
 	assets/assets.qrc \

@@ -175,8 +175,9 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 
 		if ( response )
 		{
-
+		  #ifdef QT_DEBUG
 			emit onGdbLogMessage( LOG_DEBUG, QString("GdbCall::readFromGdb:response: %1").arg(response->buildDescription(true)) );
+		  #endif
 
 			deleteProcessedTokens();
 
@@ -351,7 +352,9 @@ void GdbCall::parseGdbOutputLine(const QString& line)
 	if ( line.isEmpty() )
 		return;
 
-	emit onGdbLogMessage( LOG_INFO, QString("GdbCall::parseGdbOutputLine: [%1]").arg(line) );
+  #ifdef QT_DEBUG
+	emit onGdbLogMessage( LOG_DEBUG, QString("GdbCall::parseGdbOutputLine: [%1]").arg(line) );
+  #endif
 
 	char firstChar = line[0].toLatin1();
 	if ( strchr("(^*+~@&=", firstChar) )

@@ -24,7 +24,7 @@ bool Visualizator::start()
 
 	// Connect events
 	connect( debuggerCall, SIGNAL(onGdbResponse(const GdbResponse*)), this, SLOT(onGdbResponse(const GdbResponse*)) );
-	connect( debuggerCall, SIGNAL(onGdbLogMessage(GdbLogType,QString)), unitPlayingScene->getMessagesArea(), SLOT(appendDebuggerMessage(GdbLogType,QString)) );
+	connect( debuggerCall, SIGNAL(onGdbLogMessage(GdbLogType,QString)), unitPlayingScene->getMessagesArea(), SLOT(appendDebuggerMessage(GdbLogType,QString)));
 
 	bool result = debuggerCall->start();
 	if ( ! result )
@@ -114,7 +114,7 @@ void Visualizator::onConsoleStreamOutput(const QString& text)
 	for ( int lineIndex = 0; lineIndex < lines.size(); ++lineIndex )
 	{
 		const QString& line = lines[lineIndex];
-		if ( lineIndex < lines.size() - 1 || ! line.isEmpty() )
+		if ( ! line.isEmpty() )
 			unitPlayingScene->getMessagesArea()->appendDebuggerMessage(LOG_INFO, line);
 	}
 }
