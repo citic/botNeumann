@@ -132,7 +132,7 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultDat
 	GdbCommand gdbCommand(command);
 	pendingCommands.append(gdbCommand);
 
-	emit onGdbLogMessage( LOG_COMMAND_SENT, QString("'%1' command sent").arg(command) );
+	emit onGdbLogMessage( LOG_COMMAND_SENT, command );
 	process->write( qPrintable( gdbCommand.getCommand() ) );
 
 	GdbResult lastResult = GDB_UNKNOWN;
@@ -352,9 +352,7 @@ void GdbCall::parseGdbOutputLine(const QString& line)
 	if ( line.isEmpty() )
 		return;
 
-  #ifdef QT_DEBUG
-	emit onGdbLogMessage( LOG_DEBUG, QString("GdbCall::parseGdbOutputLine: [%1]").arg(line) );
-  #endif
+	emit onGdbLogMessage( LOG_DEBUG, line );
 
 	char firstChar = line[0].toLatin1();
 	if ( strchr("(^*+~@&=", firstChar) )
@@ -454,7 +452,9 @@ GdbResponse* GdbCall::parseResultRecord()
 	if ( ! pendingCommands.isEmpty() )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
+	  #if QT_DEBUG
 		emit onGdbLogMessage( LOG_DEBUG, QString("'%1' command done!").arg( cmd.getText() ) );
+	  #endif
 	}
 
 	return response;

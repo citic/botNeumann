@@ -104,6 +104,12 @@ void MessagesArea::appendDiagnostic(const Diagnostic* diagnostic)
 
 void MessagesArea::appendDebuggerMessage(GdbLogType type, const QString& message)
 {
+  #ifdef QT_NO_DEBUG
+	// In release mode ignore the library events reported by debugger
+	if ( message.indexOf("=library-loaded") >= 0 )
+		return;
+  #endif
+
 	QColor color = Qt::black;
 	QIcon icon;
 
