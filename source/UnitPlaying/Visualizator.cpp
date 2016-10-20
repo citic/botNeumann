@@ -115,7 +115,7 @@ void Visualizator::onConsoleStreamOutput(const QString& text)
 	{
 		const QString& line = lines[lineIndex];
 		if ( ! line.isEmpty() )
-			unitPlayingScene->getMessagesArea()->appendDebuggerMessage(LOG_INFO, line);
+			unitPlayingScene->getMessagesArea()->appendDebuggerMessage(LOG_CONSOLE_OUTPUT, line);
 	}
 }
 

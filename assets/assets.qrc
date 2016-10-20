@@ -43,6 +43,8 @@
 		<file alias="find_and_replace.svg">unit_playing/buttons/find_and_replace.svg</file>
 		<file alias="info.svg">unit_playing/buttons/info.svg</file>
 		<file alias="link_broken.svg">unit_playing/buttons/link_broken.svg</file>
+		<!-- Icon monitor.svg made by http://www.flaticon.com/authors/iconnice, adapted by jhc -->
+		<file alias="monitor.svg">unit_playing/buttons/monitor.svg</file>
 		<file alias="new_file.svg">unit_playing/buttons/new_file.svg</file>
 		<file alias="paste.svg">unit_playing/buttons/paste.svg</file>
 		<file alias="pause.svg">unit_playing/buttons/pause.svg</file>

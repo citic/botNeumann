@@ -119,6 +119,7 @@ void MessagesArea::appendDebuggerMessage(GdbLogType type, const QString& message
 		case LOG_ERROR: color = Qt::red; icon.addFile(":/unit_playing/buttons/error.svg"); break;
 		case LOG_DEBUG: color = Qt::darkGray; icon.addFile(":/unit_playing/buttons/link_broken.svg"); break;
 		case LOG_COMMAND_SENT: color = Qt::darkGreen; icon.addFile(":/unit_playing/buttons/info.svg"); break;
+		case LOG_CONSOLE_OUTPUT: color = Qt::black; icon.addFile(":/unit_playing/buttons/monitor.svg"); break;
 		default: icon.addFile(":/unit_playing/buttons/info.svg"); break;
 	}
 
