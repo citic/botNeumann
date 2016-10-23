@@ -452,7 +452,7 @@ GdbResponse* GdbCall::parseResultRecord()
 	if ( ! pendingCommands.isEmpty() )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
-	  #if QT_DEBUG
+	  #ifdef QT_DEBUG
 		emit onGdbLogMessage( LOG_DEBUG, QString("'%1' command done!").arg( cmd.getText() ) );
 	  #endif
 	}

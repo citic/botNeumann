@@ -43,9 +43,14 @@ bool Visualizator::start()
 	if ( userProgramArguments.length() > 0 )
 		debuggerCall->sendGdbCommand(QString("-exec-arguments %1").arg(userProgramArguments));
 
-	// ToDo: restore breakpoints from configuration
+	// ToDo: restore breakpoints from configuration or current user-defined breakpoints on GUI
+	const QSet<int>& breakpoints = unitPlayingScene->getBreakpoints();
+	if ( breakpoints.size() > 0 )
+	{
+		qDebug("!!!!!!!!!!!! %d breakpoints !!!!!!!!!!!!", breakpoints.size());
+	}
 	// else set breakpoint to main function
-	if ( debuggerCall->sendGdbCommand("-break-insert -f main") == GDB_ERROR )
+	else if ( debuggerCall->sendGdbCommand("-break-insert -f main") == GDB_ERROR )
 		qFatal("Visualizator: Failed to set breakpoint at main() function");
 
 	// ToDo: Extract source filenames. Not required by botNeumann++ for the moment

@@ -77,6 +77,10 @@ class UnitPlayingScene : public GameScene
 	/// Give access to the messages area object
 	inline MessagesArea* getMessagesArea() const { return messagesArea; }
 
+  public:
+	/// Get access to the breakpoints list set by the user
+	const QSet<int>& getBreakpoints() const;
+
   signals:
 	/// Emitted when a game mode button is pressed
 	void showUnitSelectionScene(const QString& context, bool forward);

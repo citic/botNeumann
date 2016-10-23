@@ -70,6 +70,11 @@ void UnitPlayingScene::finishedEnteringStage()
 	codeSegment->loadCodeForUnit( &unit );
 }
 
+const QSet<int>& UnitPlayingScene::getBreakpoints() const
+{
+	return codeSegment->getBreakpoints();
+}
+
 void UnitPlayingScene::infoButtonPressed()
 {
 	// ToDo: get active language

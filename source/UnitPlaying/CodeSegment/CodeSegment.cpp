@@ -317,3 +317,8 @@ void CodeSegment::diagnosticSelected(int index)
 	// Place the cursor on the line and column where the diagnostic was detected
 	codeEditor->placeCursor( diagnostic->getLine(), diagnostic->getColumn() );
 }
+
+const QSet<int>&CodeSegment::getBreakpoints() const
+{
+	return codeEditor->getBreakpoints();
+}

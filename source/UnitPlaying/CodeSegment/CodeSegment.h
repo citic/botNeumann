@@ -85,6 +85,8 @@ class CodeSegment : public QDockWidget
 	/// Called when user selects one of the diagnostics in the tools output
 	/// @param index The index of the selected diagnostic in the allDiagnostics list
 	void diagnosticSelected(int index);
+	/// Get access to the breakpoints list set by the user
+	const QSet<int>& getBreakpoints() const;
 
   signals:
 	/// Emitted when the run button is pressed, and therefore it is necessary to clear old output

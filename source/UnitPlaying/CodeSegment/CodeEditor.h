@@ -2,6 +2,7 @@
 #define CODEEDITOR_H
 
 #include <QPlainTextEdit>
+#include <QSet>
 
 class LineNumberArea;
 class QTimer;
@@ -27,6 +28,9 @@ class CodeEditor : public QPlainTextEdit
 	QTimer* autoSaveTimer;
 	/// Object that paints line numbers in the left margin of the code editor
 	LineNumberArea* lineNumberArea;
+	/// The list of user-defined breakpoints. They are created and deleted when user
+	/// presses the line-number on the left edge of the editor
+	QSet<int> breakpoints;
 
   public:
 	/// Constructor
@@ -52,6 +56,10 @@ class CodeEditor : public QPlainTextEdit
 	/// When the line number area object must be painted, this method is called
 	/// @remarks LineNumberArea class calls this method
 	void lineNumberAreaPaintEvent(QPaintEvent* event);
+	/// Get access to the list of user-defined breakpoints
+	inline const QSet<int>& getBreakpoints() const { return breakpoints; }
+	/// @return true if the given line number has a breakpoint
+	inline bool hasBreakpoint(int line) const { return breakpoints.contains(line); }
 
   public slots:
 	/// Saves if there are changes to the @a filepath document in secondary memory

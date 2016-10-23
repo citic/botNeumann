@@ -55,6 +55,9 @@ CodeEditor::CodeEditor(QWidget* parent)
 	// When user changes the cursor, highlight the active line and un-paint the old active one
 	connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
+breakpoints.insert(4);
+breakpoints.insert(9);
+
 	// Calculate the initial line number area width
 	updateLineNumberAreaWidth();
 
@@ -224,6 +227,8 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 		{
 			QString number = QString::number(blockNumber + 1);
 			painter.setPen( QColor(Qt::gray).darker() );
+			if ( hasBreakpoint(blockNumber + 1) )
+				painter.fillRect(0, top, getLineNumberAreaWidth(), fontMetrics().height() - 1, QColor(Qt::red).lighter() );
 			painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(), Qt::AlignRight, number);
 		}
 
