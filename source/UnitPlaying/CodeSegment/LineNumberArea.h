@@ -34,6 +34,8 @@ class LineNumberArea : public QWidget
   protected:
 	/// Called when this widet must be painted
 	virtual void paintEvent(QPaintEvent* event) override;
+	/// Toggles breakpoints if user presses a line number
+	virtual void mousePressEvent(QMouseEvent *event) override;
 };
 
 #endif // LINENUMBERAREA_H

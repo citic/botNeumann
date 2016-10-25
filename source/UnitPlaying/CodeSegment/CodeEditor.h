@@ -56,6 +56,9 @@ class CodeEditor : public QPlainTextEdit
 	/// When the line number area object must be painted, this method is called
 	/// @remarks LineNumberArea class calls this method
 	void lineNumberAreaPaintEvent(QPaintEvent* event);
+	/// When the users clicks a line number this method is called to toggle a breakpoint
+	/// @remarks LineNumberArea class calls this method
+	void toggleBreakpointEvent(QMouseEvent* event);
 	/// Get access to the list of user-defined breakpoints
 	inline const QSet<int>& getBreakpoints() const { return breakpoints; }
 	/// @return true if the given line number has a breakpoint

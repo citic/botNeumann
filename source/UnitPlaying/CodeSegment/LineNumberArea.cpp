@@ -20,3 +20,9 @@ void LineNumberArea::paintEvent(QPaintEvent* event)
 {
 	codeEditor->lineNumberAreaPaintEvent(event);
 }
+
+void LineNumberArea::mousePressEvent(QMouseEvent* event)
+{
+	if ( event->buttons() & Qt::LeftButton )
+		codeEditor->toggleBreakpointEvent(event);
+}

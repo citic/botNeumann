@@ -240,6 +240,18 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 	}
 }
 
+void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
+{
+	// Get the first visible line number (block in Qt nomenclature)
+	QTextBlock block = firstVisibleBlock();
+	int blockNumber = block.blockNumber();
+	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
+	int clickedY = event->pos().y();
+	int clickedLineOffset = (clickedY - top) / blockBoundingRect(block).height();
+	int clickedLine = blockNumber + clickedLineOffset;
+	qDebug(">>>%i line clicked", clickedLine + 1);
+}
+
 void CodeEditor::updateLineNumberAreaWidth()
 {
 	// Make room in the left edge of the editor
