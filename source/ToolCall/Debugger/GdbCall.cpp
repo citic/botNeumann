@@ -50,8 +50,10 @@ bool GdbCall::start()
 	if ( process->state() == QProcess::NotRunning )
 		return false;
 
-	/// Tells GDB to use the pseudoterminal in order to control de inferior
+	// Tells GDB to use the pseudoterminal in order to control de inferior
+  #ifndef Q_OS_WIN
 	sendGdbCommand( QStringLiteral("-inferior-tty-set %1").arg(getInferiorPseudoterminalName()) );
+  #endif
 
 	// Success
 	return true;
@@ -62,6 +64,7 @@ bool GdbCall::start()
 #include <unistd.h>
 bool GdbCall::createPseudoterminal()
 {
+  #ifndef Q_OS_WIN
 	Q_ASSERT(inferiorPseudoterminalId == 0);
 
 	// Open an unused pseudoterminal master device, identifed by the returned file descriptor
@@ -91,6 +94,8 @@ bool GdbCall::createPseudoterminal()
 	// If the pseudoterminal was created successfully, it will have a name like /dev/pts/nn where
 	// nn is a number that identifies the pseudoterminal
 	emit onGdbLogMessage( LOG_INFO, QString("GdbTest: using pseudoterminal: %1").arg(ptsname(inferiorPseudoterminalId)) );
+  #endif // Q_OS_WIN
+
 	return true;
 }
 
@@ -119,9 +124,13 @@ void GdbCall::onGdbOutput(int fileDescriptor)
 	emit onGdbLogMessage( LOG_DEBUG, QString("[!]GdbCall::onGdbOutput:'%1'").arg(buffer) );
 }
 
-const char*GdbCall::getInferiorPseudoterminalName() const
+const char* GdbCall::getInferiorPseudoterminalName() const
 {
+  #ifdef Q_OS_WIN
+	return "";
+  #else
 	return ptsname(inferiorPseudoterminalId);
+  #endif
 }
 
 GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
