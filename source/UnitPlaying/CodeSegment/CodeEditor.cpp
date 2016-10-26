@@ -55,9 +55,6 @@ CodeEditor::CodeEditor(QWidget* parent)
 	// When user changes the cursor, highlight the active line and un-paint the old active one
 	connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
-breakpoints.insert(4);
-breakpoints.insert(9);
-
 	// Calculate the initial line number area width
 	updateLineNumberAreaWidth();
 
@@ -242,14 +239,38 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 
 void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
 {
-	// Get the first visible line number (block in Qt nomenclature)
 	QTextBlock block = firstVisibleBlock();
 	int blockNumber = block.blockNumber();
 	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
+	int bottom = top + (int) blockBoundingRect(block).height();
 	int clickedY = event->pos().y();
-	int clickedLineOffset = (clickedY - top) / blockBoundingRect(block).height();
-	int clickedLine = blockNumber + clickedLineOffset;
-	qDebug(">>>%i line clicked", clickedLine + 1);
+
+	// Adjust these values by the height of the current text block in each iteration in the loop
+	while ( block.isValid() && block.isVisible() )
+	{
+		// Check if clicked pixel is inside of this block
+		if ( clickedY >= top && clickedY < bottom )
+		{
+			// Updates the set of breakpoints
+			toggleBreakpoint(blockNumber + 1);
+			// Asks Qt to schedule a update event to paint or erase the breakpoint marker
+			lineNumberArea->update(0, top, getLineNumberAreaWidth(), fontMetrics().height());
+		}
+
+		// Move to the nex block (complete line)
+		block = block.next();
+		top = bottom;
+		bottom = top + (int) blockBoundingRect(block).height();
+		++blockNumber;
+	}
+}
+
+void CodeEditor::toggleBreakpoint(int lineNumber)
+{
+	if ( breakpoints.contains(lineNumber) )
+		breakpoints.remove(lineNumber);
+	else
+		breakpoints.insert(lineNumber);
 }
 
 void CodeEditor::updateLineNumberAreaWidth()

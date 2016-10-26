@@ -59,6 +59,10 @@ class CodeEditor : public QPlainTextEdit
 	/// When the users clicks a line number this method is called to toggle a breakpoint
 	/// @remarks LineNumberArea class calls this method
 	void toggleBreakpointEvent(QMouseEvent* event);
+	/// Toggles the breakpoint at the given line number
+	/// Returns the current state of the breakpoint at lineNumber
+	/// @param lineNumber a number starting at 1 indicating the line number where user made click
+	void toggleBreakpoint(int lineNumber);
 	/// Get access to the list of user-defined breakpoints
 	inline const QSet<int>& getBreakpoints() const { return breakpoints; }
 	/// @return true if the given line number has a breakpoint
