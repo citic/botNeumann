@@ -47,7 +47,9 @@ bool Visualizator::start()
 	const QSet<int>& breakpoints = unitPlayingScene->getBreakpoints();
 	if ( breakpoints.size() > 0 )
 	{
-		qDebug("!!!!!!!!!!!! %d breakpoints !!!!!!!!!!!!", breakpoints.size());
+		foreach(int lineNumber, breakpoints)
+			if ( debuggerCall->sendGdbCommand( QString("-break-insert %1:%2").arg("main.cpp").arg(lineNumber) ) == GDB_ERROR )
+				qWarning("Visualizator: Error: -break-insert %s:%i", qPrintable("main.cpp"), lineNumber);
 	}
 	// else set breakpoint to main function
 	else if ( debuggerCall->sendGdbCommand("-break-insert -f main") == GDB_ERROR )
