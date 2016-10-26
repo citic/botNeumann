@@ -83,7 +83,7 @@ void MessagesArea::buildFinished(Compiler* compiler)
 
 	// If no errors, the debug output is appended, change the widget title
 	if ( errors == 0 )
-		messagesTabWidget->setTabText( messagesTabWidget->currentIndex(), tr("Debugger output") );
+		messagesTabWidget->setTabText( 1, tr("Debugger output") );
 }
 
 void MessagesArea::appendDiagnostic(const Diagnostic* diagnostic)
