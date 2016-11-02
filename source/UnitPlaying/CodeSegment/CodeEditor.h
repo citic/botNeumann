@@ -6,11 +6,15 @@
 
 class LineNumberArea;
 class QTimer;
+class PlayerSolution;
 class SyntaxHighlighter;
 class Unit;
 
 /**
 	Edits one source file at time
+
+	@todo Replace CodeSegment::codeEditor by a QStackedWidget, in order to support several
+	source files and breakpoints across the entire player's solution
 */
 class CodeEditor : public QPlainTextEdit
 {
@@ -19,8 +23,10 @@ class CodeEditor : public QPlainTextEdit
   protected:
 	/// Store formatting rules for C++
 	SyntaxHighlighter* highlighter;
-	/// Current unit being played
+	/// Reference to existing unit being played
 	Unit* unit;
+	/// Reference to existing user's solution to the unit being played
+	PlayerSolution* playerSolution;
 	/// The full path to the source file being edited
 	QString filepath;
 	/// Fires a short time after the last made change in the document, in order to do some tasks
@@ -28,15 +34,16 @@ class CodeEditor : public QPlainTextEdit
 	QTimer* autoSaveTimer;
 	/// Object that paints line numbers in the left margin of the code editor
 	LineNumberArea* lineNumberArea;
-	/// The list of user-defined breakpoints. They are created and deleted when user
-	/// presses the line-number on the left edge of the editor
-	QSet<int> breakpoints;
 
   public:
 	/// Constructor
 	explicit CodeEditor(QWidget* parent = nullptr);
 	/// Destructor
 	~CodeEditor();
+	/// Set the unit being solved by player and his/her solution
+	/// @remark This method must be called when the UnitPlayingScene is launched before asking
+	/// to edit any player-solution's source files
+	void setPlayerSolutionForUnit(Unit* unit, PlayerSolution* playerSolution);
 	/// Restores the last code made by player for the given unit, or the default unit's code if
 	/// player nas not played this unit
 	/// @param filepath Full path to the active source file to be edited by the player. In order
@@ -47,7 +54,7 @@ class CodeEditor : public QPlainTextEdit
 	/// player changes the code, the autosave function will active and it will use this filename
 	/// to store the changes
 	/// @return true on success, false otherwise. ToDo: decide how to report errors?
-	bool loadFile(Unit* unit, const QString& filepath);
+	bool loadInitialFile(const QString& filepath);
 	/// Loads a file given for its full path
 	bool loadFile(const QString& filepath);
 	/// Calculate the width in pixels required by the line number area. The width depends on the
@@ -62,11 +69,9 @@ class CodeEditor : public QPlainTextEdit
 	/// Toggles the breakpoint at the given line number
 	/// Returns the current state of the breakpoint at lineNumber
 	/// @param lineNumber a number starting at 1 indicating the line number where user made click
-	void toggleBreakpoint(int lineNumber);
+	void toggleBreakpoint(QTextBlock& block);
 	/// Get access to the list of user-defined breakpoints
-	inline const QSet<int>& getBreakpoints() const { return breakpoints; }
-	/// @return true if the given line number has a breakpoint
-	inline bool hasBreakpoint(int line) const { return breakpoints.contains(line); }
+	QList<QString> retrieveBreakpoints() const;
 
   public slots:
 	/// Saves if there are changes to the @a filepath document in secondary memory
@@ -83,6 +88,9 @@ class CodeEditor : public QPlainTextEdit
 	bool loadFileContents();
 	/// Overrided in order to adjust size of the line number area when the code editor is resize
 	virtual void resizeEvent(QResizeEvent* event) override;
+	/// If the given block has a breakpoint, paints a mark in the line numbers area
+	/// If the breakpoint is valid, the mark is red, else, gray
+	void paintBreakpoint(QTextBlock& block, QPainter& painter, int top, int width, int fontHeight);
 
   protected slots:
 	/// Called each time the document is changed

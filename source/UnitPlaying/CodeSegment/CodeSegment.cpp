@@ -4,6 +4,7 @@
 #include "Diagnostic.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
+
 #include <QAction>
 #include <QComboBox>
 #include <QMainWindow>
@@ -187,7 +188,7 @@ void CodeSegment::loadCodeForUnit(Unit* unit)
 
 	// Ask the editor to show this source
 	const QFileInfo& lastEditedFilePath = playerSolution->getLastEditedFilePath();
-	codeEditor->loadFile(unit, lastEditedFilePath.absoluteFilePath() );
+	codeEditor->loadInitialFile( lastEditedFilePath.absoluteFilePath() );
 	fileSelector->setCurrentText( lastEditedFilePath.fileName() );
 
 	// Now the run button can be triggered
@@ -318,7 +319,8 @@ void CodeSegment::diagnosticSelected(int index)
 	codeEditor->placeCursor( diagnostic->getLine(), diagnostic->getColumn() );
 }
 
-const QSet<int>&CodeSegment::getBreakpoints() const
+QList<QString> CodeSegment::retrieveBreakpoints() const
 {
-	return codeEditor->getBreakpoints();
+	// ToDo: for each opened source file (i.e. have several code editors open)
+	return codeEditor->retrieveBreakpoints();
 }

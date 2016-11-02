@@ -1,8 +1,8 @@
 #ifndef PLAYERSOLUTION_H
 #define PLAYERSOLUTION_H
 
-#include <QObject>
 #include <QFileInfo>
+#include <QObject>
 
 class Player;
 class Unit;
@@ -17,6 +17,7 @@ class Unit;
 class PlayerSolution : public QObject
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(PlayerSolution)
 
   protected:
 	/// The player who created the files that compound this solution

@@ -1,10 +1,13 @@
 #include "BotNeumannApp.h"
+#include "Breakpoint.h"
 #include "CodeEditor.h"
 #include "Common.h"
 #include "LineNumberArea.h"
 #include "Player.h"
+#include "PlayerSolution.h"
 #include "SyntaxHighlighter.h"
 #include "Unit.h"
+
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -26,6 +29,7 @@ const int breakpointEdgeWidth = 0; // pixels
 CodeEditor::CodeEditor(QWidget* parent)
 	: QPlainTextEdit(parent)
 	, unit(nullptr)
+	, playerSolution(nullptr)
 	, autoSaveTimer( new QTimer(this) )
 	, lineNumberArea( new LineNumberArea(this) )
 {
@@ -67,10 +71,15 @@ CodeEditor::~CodeEditor()
 	saveChanges();
 }
 
-bool CodeEditor::loadFile(Unit* unit, const QString& filepath)
+void CodeEditor::setPlayerSolutionForUnit(Unit* unit, PlayerSolution* playerSolution)
+{
+	this->unit = unit;
+	this->playerSolution = playerSolution;
+}
+
+bool CodeEditor::loadInitialFile(const QString& filepath)
 {
 	// Store the active unit and the filepath for future use
-	this->unit = unit;
 	this->filepath = filepath;
 	qDebug() << "CodeEditor: editing" << filepath;
 
@@ -114,6 +123,8 @@ bool CodeEditor::loadFileContents()
 	// bytes into a QString object assuming the UTF-8 character encoding (the default for this game)
 	setPlainText( QString::fromUtf8(file.readAll()) );
 	document()->setModified(false);
+
+	// ToDo: restore existing breakpoints from PlayerSolution or configuration
 
 	// Each time the document is changed, update the pending time to autosave/autocompile
 	connect(document(), SIGNAL(contentsChanged()), this, SLOT(documentChanged()));
@@ -214,6 +225,8 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 	int blockNumber = block.blockNumber();
 	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
 	int bottom = top + (int) blockBoundingRect(block).height();
+	int lineNumberAreaWidth = getLineNumberAreaWidth();
+	int fontHeight = fontMetrics().height() - 1;
 
 	// Adjust these values by the height of the current text block in each iteration in the loop
 	while (block.isValid() && top <= event->rect().bottom())
@@ -224,8 +237,8 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 		{
 			QString number = QString::number(blockNumber + 1);
 			painter.setPen( QColor(Qt::gray).darker() );
-			if ( hasBreakpoint(blockNumber + 1) )
-				painter.fillRect(0, top, getLineNumberAreaWidth(), fontMetrics().height() - 1, QColor(Qt::red).lighter() );
+			// If this line has a breakpoint, paint it
+			paintBreakpoint(block, painter, top, lineNumberAreaWidth, fontHeight);
 			painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(), Qt::AlignRight, number);
 		}
 
@@ -237,10 +250,20 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 	}
 }
 
+void CodeEditor::paintBreakpoint(QTextBlock& block, QPainter& painter, int top, int width, int fontHeight)
+{
+	GuiBreakpoint* breakpoint = dynamic_cast<GuiBreakpoint*>( block.userData() );
+	if ( breakpoint == nullptr ) return;
+
+	QColor color = breakpoint->isValid() ? Qt::red : Qt::gray;
+	painter.fillRect(0, top, width, fontHeight, color.lighter() );
+}
+
+
+
 void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
 {
 	QTextBlock block = firstVisibleBlock();
-	int blockNumber = block.blockNumber();
 	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
 	int bottom = top + (int) blockBoundingRect(block).height();
 	int clickedY = event->pos().y();
@@ -252,7 +275,7 @@ void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
 		if ( clickedY >= top && clickedY < bottom )
 		{
 			// Updates the set of breakpoints
-			toggleBreakpoint(blockNumber + 1);
+			toggleBreakpoint(block);
 			// Asks Qt to schedule a update event to paint or erase the breakpoint marker
 			lineNumberArea->update(0, top, getLineNumberAreaWidth(), fontMetrics().height());
 		}
@@ -261,16 +284,43 @@ void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
 		block = block.next();
 		top = bottom;
 		bottom = top + (int) blockBoundingRect(block).height();
-		++blockNumber;
 	}
 }
 
-void CodeEditor::toggleBreakpoint(int lineNumber)
+void CodeEditor::toggleBreakpoint(QTextBlock& block)
 {
-	if ( breakpoints.contains(lineNumber) )
-		breakpoints.remove(lineNumber);
+	// Check if this line has an associated breakpoint
+	Breakpoint* breakpoint = dynamic_cast<Breakpoint*>( block.userData() );
+	if ( breakpoint )
+	{
+		// ToDo: If visualization is running, ask debugger to clear the breakpoint
+//		emit clearBreakpoint( breakpoint->getFilename(), breakpoint->getLineNumber() );
+		// The line already has a breakpoint, remove it.
+		block.setUserData(nullptr);
+	}
 	else
-		breakpoints.insert(lineNumber);
+	{
+		// User is trying to create a new breakpoint.
+		// ToDo: check for validity of the new breakpoint (
+		block.setUserData( new GuiBreakpoint(true) );
+	}
+}
+
+QList<QString> CodeEditor::retrieveBreakpoints() const
+{
+	// A list of pairs "source:lineNumber" of breakpoints
+	QList<QString> result;
+
+	// Iterate for all the lines in this document finding breakpoints
+	for ( QTextBlock block = document()->begin(); block != document()->end(); block = block.next() )
+	{
+		// If this line has a breakpoint, convert it to a string in "file:lineNumber" format
+		GuiBreakpoint* breakpoint = dynamic_cast<GuiBreakpoint*>( block.userData() );
+		if ( breakpoint )
+			result.append( QString("\"%1:%2\"").arg(QFileInfo(filepath).fileName()).arg(block.blockNumber() + 1) );
+	}
+
+	return result;
 }
 
 void CodeEditor::updateLineNumberAreaWidth()

@@ -79,7 +79,7 @@ class UnitPlayingScene : public GameScene
 
   public:
 	/// Get access to the breakpoints list set by the user
-	const QSet<int>& getBreakpoints() const;
+	QList<QString> retrieveBreakpoints() const;
 
   signals:
 	/// Emitted when a game mode button is pressed

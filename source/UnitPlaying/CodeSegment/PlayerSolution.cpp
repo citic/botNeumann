@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
+
 #include <QDateTime>
 #include <QDir>
 
@@ -30,7 +31,7 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 	this->player = player;
 	this->unit = unit;
 
-	// Clear files from previous loads or units
+	// Clear files from previous loads or units, if any
 	sourceFiles.clear();
 
 	// Load the list of files from the player's source
@@ -39,6 +40,8 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 	// If player has never tried this unit, assume there is a "main.cpp"
 	if ( fileCount == -1 )
 		sourceFiles.append( getLastEditedFilePath() );
+
+	// ToDo: load breakpoints from user configuration
 
 	// Done
 	return fileCount;

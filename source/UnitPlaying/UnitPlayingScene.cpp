@@ -70,9 +70,9 @@ void UnitPlayingScene::finishedEnteringStage()
 	codeSegment->loadCodeForUnit( &unit );
 }
 
-const QSet<int>& UnitPlayingScene::getBreakpoints() const
+QList<QString> UnitPlayingScene::retrieveBreakpoints() const
 {
-	return codeSegment->getBreakpoints();
+	return codeSegment->retrieveBreakpoints();
 }
 
 void UnitPlayingScene::infoButtonPressed()
