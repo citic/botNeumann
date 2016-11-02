@@ -6,6 +6,8 @@
 
 class Prop : public ScenicElement<QGraphicsSvgItem>
 {
+	Q_DISABLE_COPY(Prop)
+
   public:
 	/// Constructor
 	explicit Prop(QGraphicsItem* parentItem);

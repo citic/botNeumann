@@ -19,6 +19,7 @@ class Unit;
 class CodeEditor : public QPlainTextEdit
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(CodeEditor)
 
   protected:
 	/// Store formatting rules for C++

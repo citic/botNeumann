@@ -9,6 +9,7 @@ class Scene;
 class Transition : public QObject
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(Transition)
 
   protected:
 	/// Controls the animation time

@@ -9,6 +9,7 @@ class Scene;
 class BotNeumannDirector : public Director
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(BotNeumannDirector)
 
   protected:
 	/// Current scene being presented

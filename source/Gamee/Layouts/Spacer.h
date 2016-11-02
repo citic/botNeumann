@@ -5,6 +5,8 @@
 
 class Spacer : public LayoutItem
 {
+	Q_DISABLE_COPY(Spacer)
+
   public:
 	/// Constructor
 	Spacer();

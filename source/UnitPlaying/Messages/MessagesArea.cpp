@@ -124,8 +124,6 @@ void MessagesArea::appendDebuggerMessage(GdbLogType type, const QString& message
 	}
 
 	QListWidgetItem* listItem = new QListWidgetItem(icon, message, toolsOutput);
-//	static size_t messageCount = 0;
-//	qDebug("[%zu][%s]", ++messageCount, qPrintable(message) );
 
 	// Provide some styles
 	listItem->setForeground( color );

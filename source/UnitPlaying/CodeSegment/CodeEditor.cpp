@@ -290,8 +290,8 @@ void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
 void CodeEditor::toggleBreakpoint(QTextBlock& block)
 {
 	// Check if this line has an associated breakpoint
-	Breakpoint* breakpoint = dynamic_cast<Breakpoint*>( block.userData() );
-	if ( breakpoint )
+	GuiBreakpoint* guiBreakpoint = dynamic_cast<GuiBreakpoint*>( block.userData() );
+	if ( guiBreakpoint )
 	{
 		// ToDo: If visualization is running, ask debugger to clear the breakpoint
 //		emit clearBreakpoint( breakpoint->getFilename(), breakpoint->getLineNumber() );

@@ -25,6 +25,7 @@ class LinkerCall;
 class Compiler : public QObject
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(Compiler)
 
   protected:
 	/// For each .c/.cpp source file a compiler call is scheduled in this list

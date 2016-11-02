@@ -18,6 +18,7 @@ class Diagnostic;
 class CompilerCall : public ToolCall
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(CompilerCall)
 
   protected:
 	/// Complete file path to the source file (.c/.cpp)

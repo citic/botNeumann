@@ -6,6 +6,7 @@
 class TransitionSlide : public Transition
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(TransitionSlide)
 
   public:
 	/// The valid directions of movement of both slides

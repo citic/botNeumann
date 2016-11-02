@@ -5,6 +5,8 @@
 
 class LinearLayout : public Layout
 {
+	Q_DISABLE_COPY(LinearLayout)
+
   protected:
 	/// Direction to distribute child items
 	Qt::Orientation orientation;

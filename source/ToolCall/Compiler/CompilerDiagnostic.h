@@ -10,6 +10,8 @@ class QRegularExpressionMatch;
  */
 class CompilerDiagnostic : public Diagnostic
 {
+	Q_DISABLE_COPY(CompilerDiagnostic)
+
   public:
 	/// Constructor
 	CompilerDiagnostic(const QRegularExpressionMatch& match);

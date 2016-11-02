@@ -30,6 +30,7 @@ class GdbCommand
 class GdbCall : public DebuggerCall
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(GdbCall)
 
   public:
 	/// The state of GDB being controlled by this object

@@ -12,6 +12,7 @@ class Diagnostic;
 class LinkerCall : public ToolCall
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(LinkerCall)
 
   protected:
 	/// The list of all object files (.o) to be included in the executable file

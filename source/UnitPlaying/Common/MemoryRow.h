@@ -10,6 +10,8 @@ class Scene;
  */
 class MemoryRow : public LinearLayout
 {
+	Q_DISABLE_COPY(MemoryRow)
+
   public:
 	/// Memory rows are represented as shelves. These shelves allocate variables (values). Shelves
 	/// have a space to labels. We can display on them one of the following: memory addresses (the

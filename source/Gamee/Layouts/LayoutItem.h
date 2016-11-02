@@ -6,6 +6,8 @@
 /** Base class for layouts, scenic objects, spacers and widgets */
 class LayoutItem
 {
+	Q_DISABLE_COPY(LayoutItem)
+
   public:
 	/// Constants to access each margin
 	enum { marginTop, marginRight, marginBottom, marginLeft, marginCount };

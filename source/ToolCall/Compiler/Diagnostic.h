@@ -21,6 +21,8 @@ enum class DiagnosticSeverity
  */
 class Diagnostic
 {
+	Q_DISABLE_COPY(Diagnostic)
+
   protected:
 	/// A enum value indicating if it is a warning, error or fatal error
 	DiagnosticSeverity severity;

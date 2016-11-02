@@ -8,6 +8,7 @@ namespace Ui { class PlayerManagerDialog; }
 class PlayerManagerDialog : public QDialog
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(PlayerManagerDialog)
 
   protected:
 	Ui::PlayerManagerDialog* ui;

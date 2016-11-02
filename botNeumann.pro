@@ -30,63 +30,6 @@ INCLUDEPATH += \
 	source/UnitPlaying/Threads \
 	source/UnitSelection \
 
-SOURCES += \
-	source/BotNeumannApp.cpp \
-	source/BotNeumannDirector.cpp \
-	source/Common/GameScene.cpp \
-	source/Common/InfoDialog.cpp \
-	source/Common/PlayerStatus.cpp \
-	source/Gamee/Actor.cpp \
-	source/Gamee/Director.cpp \
-	source/Gamee/LabelButton.cpp \
-	source/Gamee/Layouts/Layout.cpp \
-	source/Gamee/Layouts/LayoutItem.cpp \
-	source/Gamee/Layouts/LinearLayout.cpp \
-	source/Gamee/Layouts/Spacer.cpp \
-	source/Gamee/Player.cpp \
-	source/Gamee/PlayerManager.cpp \
-	source/Gamee/Prop.cpp \
-	source/Gamee/Scene.cpp \
-	source/Gamee/ScenicElement.cpp \
-	source/Gamee/Stage.cpp \
-	source/Gamee/SvgButton.cpp \
-	source/Gamee/Transitions/Transition.cpp \
-	source/Gamee/Transitions/TransitionSlide.cpp \
-	source/GameMenu/GameMenuScene.cpp \
-	source/GameMenu/PlayerManagerDialog.cpp \
-	source/main.cpp \
-	source/MainWindow.cpp \
-	source/ToolCall/Compiler/Compiler.cpp \
-	source/ToolCall/Compiler/CompilerCall.cpp \
-	source/ToolCall/Compiler/CompilerDiagnostic.cpp \
-	source/ToolCall/Compiler/Diagnostic.cpp \
-	source/ToolCall/Compiler/LinkerCall.cpp \
-	source/ToolCall/Compiler/LinkerDiagnostic.cpp \
-	source/ToolCall/Debugger/DebuggerCall.cpp \
-	source/ToolCall/Debugger/GdbCall.cpp \
-	source/ToolCall/Debugger/GdbItemTree.cpp \
-	source/ToolCall/Debugger/GdbResponse.cpp \
-	source/ToolCall/Debugger/GdbToken.cpp \
-	source/ToolCall/ToolCall.cpp \
-	source/UnitPlaying/CodeSegment/Breakpoint.cpp \
-	source/UnitPlaying/CodeSegment/CodeEditor.cpp \
-	source/UnitPlaying/CodeSegment/CodeSegment.cpp \
-	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
-	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
-	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
-	source/UnitPlaying/Common/MemoryRow.cpp \
-	source/UnitPlaying/Common/MemorySegment.cpp \
-	source/UnitPlaying/DataSegment/DataSegment.cpp \
-	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
-	source/UnitPlaying/Messages/MessagesArea.cpp \
-	source/UnitPlaying/Threads/CpuCore.cpp \
-	source/UnitPlaying/Threads/CpuCores.cpp \
-	source/UnitPlaying/Unit.cpp \
-	source/UnitPlaying/UnitPlayingScene.cpp \
-	source/UnitPlaying/Visualizator.cpp \
-	source/UnitSelection/UnitManager.cpp \
-	source/UnitSelection/UnitSelectionScene.cpp \
-
 HEADERS += \
 	source/BotNeumannApp.h \
 	source/BotNeumannDirector.h \
@@ -144,6 +87,63 @@ HEADERS += \
 	source/UnitPlaying/Visualizator.h \
 	source/UnitSelection/UnitManager.h \
 	source/UnitSelection/UnitSelectionScene.h \
+
+SOURCES += \
+	source/BotNeumannApp.cpp \
+	source/BotNeumannDirector.cpp \
+	source/Common/GameScene.cpp \
+	source/Common/InfoDialog.cpp \
+	source/Common/PlayerStatus.cpp \
+	source/Gamee/Actor.cpp \
+	source/Gamee/Director.cpp \
+	source/Gamee/LabelButton.cpp \
+	source/Gamee/Layouts/Layout.cpp \
+	source/Gamee/Layouts/LayoutItem.cpp \
+	source/Gamee/Layouts/LinearLayout.cpp \
+	source/Gamee/Layouts/Spacer.cpp \
+	source/Gamee/Player.cpp \
+	source/Gamee/PlayerManager.cpp \
+	source/Gamee/Prop.cpp \
+	source/Gamee/Scene.cpp \
+	source/Gamee/ScenicElement.cpp \
+	source/Gamee/Stage.cpp \
+	source/Gamee/SvgButton.cpp \
+	source/Gamee/Transitions/Transition.cpp \
+	source/Gamee/Transitions/TransitionSlide.cpp \
+	source/GameMenu/GameMenuScene.cpp \
+	source/GameMenu/PlayerManagerDialog.cpp \
+	source/main.cpp \
+	source/MainWindow.cpp \
+	source/ToolCall/Compiler/Compiler.cpp \
+	source/ToolCall/Compiler/CompilerCall.cpp \
+	source/ToolCall/Compiler/CompilerDiagnostic.cpp \
+	source/ToolCall/Compiler/Diagnostic.cpp \
+	source/ToolCall/Compiler/LinkerCall.cpp \
+	source/ToolCall/Compiler/LinkerDiagnostic.cpp \
+	source/ToolCall/Debugger/DebuggerCall.cpp \
+	source/ToolCall/Debugger/GdbCall.cpp \
+	source/ToolCall/Debugger/GdbItemTree.cpp \
+	source/ToolCall/Debugger/GdbResponse.cpp \
+	source/ToolCall/Debugger/GdbToken.cpp \
+	source/ToolCall/ToolCall.cpp \
+	source/UnitPlaying/CodeSegment/Breakpoint.cpp \
+	source/UnitPlaying/CodeSegment/CodeEditor.cpp \
+	source/UnitPlaying/CodeSegment/CodeSegment.cpp \
+	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
+	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
+	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
+	source/UnitPlaying/Common/MemoryRow.cpp \
+	source/UnitPlaying/Common/MemorySegment.cpp \
+	source/UnitPlaying/DataSegment/DataSegment.cpp \
+	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
+	source/UnitPlaying/Messages/MessagesArea.cpp \
+	source/UnitPlaying/Threads/CpuCore.cpp \
+	source/UnitPlaying/Threads/CpuCores.cpp \
+	source/UnitPlaying/Unit.cpp \
+	source/UnitPlaying/UnitPlayingScene.cpp \
+	source/UnitPlaying/Visualizator.cpp \
+	source/UnitSelection/UnitManager.cpp \
+	source/UnitSelection/UnitSelectionScene.cpp \
 
 RESOURCES += \
 	assets/assets.qrc \
