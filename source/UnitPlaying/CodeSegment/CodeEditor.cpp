@@ -1,7 +1,7 @@
 #include "BotNeumannApp.h"
-#include "Breakpoint.h"
 #include "CodeEditor.h"
 #include "Common.h"
+#include "GuiBreakpoint.h"
 #include "LineNumberArea.h"
 #include "Player.h"
 #include "PlayerSolution.h"

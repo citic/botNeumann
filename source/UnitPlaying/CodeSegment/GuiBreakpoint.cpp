@@ -1,4 +1,6 @@
-#include "Breakpoint.h"
+#include "GuiBreakpoint.h"
+
+#if 0
 
 Breakpoint::Breakpoint(const QString& filename, int lineNumber)
 	 : filename(filename)
@@ -9,3 +11,5 @@ Breakpoint::Breakpoint(const QString& filename, int lineNumber)
 Breakpoint::~Breakpoint()
 {
 }
+
+#endif

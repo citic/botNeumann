@@ -1,13 +1,21 @@
 #ifndef BREAKPOINT_H
 #define BREAKPOINT_H
 
-#include <QTextBlockUserData>
+#include <QString>
 
-#if 0
-/** Manages all breakpoints set in the application.
+/** Manages breakpoints set in debugger
 
-	Debuggers work with breakpoints. When users ask to run their solutions, there will happen two
-	scenearios:
+	There are two types of breakpoints in botNeumann. (1) GuiBreakpoints are set by user in line
+	numbers area of code editors. (2) Breakpoints in debugger call. Usually they are synchronized
+	because when visualization starts, GuiBreakpoints are sent to debugger. After visualization
+	has started, user may remove or created new GuiBreakpoints. These are sent againg to the
+	running debugger session and they are considered "valid" because source code is synchronized.
+	But user may introduce line changes, such as insert lines or move code in editor. The source
+	code in editor gets out-synchronized with source code in debugger. Any new breakpoint
+	modification gets tricky, because line numbers is the method to "identify" breakpoints.
+
+	Breakpoints are used in botNeumann to control the visualization. When users ask to run their
+	solutions, there will happen two scenearios:
 
 	-	If users have not set any explicit breakpoints, botNeumann stops at main() function.
 		Therefore an implicit/hidden breakpoint is set. The visualization starts advancing one
@@ -50,34 +58,6 @@ class Breakpoint
 	explicit Breakpoint(const QString& filename, int lineNumber);
 	/// Deletes this breakpoint
 	virtual ~Breakpoint();
-};
-
-#endif
-
-/**
-	Simply tells if a code editor line/block has or not a breakpoint
-**/
-class GuiBreakpoint : public QTextBlockUserData
-{
-	Q_DISABLE_COPY(GuiBreakpoint)
-
-  protected:
-	/// True if this breakpoint is updated with object code. False if this breakpoint was set
-	/// after a change in the source file that is not synchronized with the object code being
-	/// visualizated. An invalid breakpoint is painted gray instead of red in the line number
-	/// area, to alert user that the breakpoint is not going to have effect in visualization.
-	bool valid;
-
-  public:
-	/// Constructor
-	explicit GuiBreakpoint(bool valid) : valid(valid) { }
-	/// Destructor
-	virtual ~GuiBreakpoint() { }
-	/// Tells if this breakpoint is valid
-	/// @see valid
-	inline bool isValid() const { return valid; }
-	/// Makes this breakpoint valid or invalid
-	inline void makeValid(bool valid) { this->valid = valid; }
 };
 
 #endif // BREAKPOINT_H
