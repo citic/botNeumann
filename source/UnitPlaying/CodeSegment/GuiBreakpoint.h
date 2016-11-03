@@ -14,22 +14,42 @@ class GuiBreakpoint : public QTextBlockUserData
 	Q_DISABLE_COPY(GuiBreakpoint)
 
   protected:
-	/// True if this breakpoint is updated with object code. False if this breakpoint was set
+	/// The source file where this breakpoint is defined
+	QString filename;
+	/// The line number within @a filename where this breakpoint is set
+	/// This field is updated each time the list of breakpoints is retrieved to be sent to debugger
+	int lineNumberInEditor;
+	/// The number that this breakpoint had when the player's solution was compiled/visualizated
+	/// for last time. Therfore its number in object code. If this breakpoint was set
 	/// after a change in the source file that is not synchronized with the object code being
-	/// visualizated. An invalid breakpoint is painted gray instead of red in the line number
+	/// visualizated, this number will be distinct to its current line number in the code editor.
+	/// An invalid breakpoint is painted gray instead of red in the line number
 	/// area, to alert user that the breakpoint is not going to have effect in visualization.
-	bool valid;
+	int lineNumberInObjectCode;
 
   public:
 	/// Constructor
-	explicit GuiBreakpoint(bool valid) : valid(valid) { }
+	explicit GuiBreakpoint(const QString& filename, int lineNumberInEditor);
 	/// Destructor
 	virtual ~GuiBreakpoint() { }
-	/// Tells if this breakpoint is valid
-	/// @see valid
-	inline bool isValid() const { return valid; }
-	/// Makes this breakpoint valid or invalid
-	inline void makeValid(bool valid) { this->valid = valid; }
+	/// Gets the filename where this breakpoint is defined
+	const QString& getFilename() const { return filename; }
+	/// Gets the line where this file is defined
+	inline int getLineNumber() const { return lineNumberInEditor; }
+	/// Updates the line number
+	/// @param both Send true to update the line number in object code as well
+	void updateLineNumber(int lineNumber, bool both);
+	/// Get access to the last line number that debugger knows for this breakpoint
+	inline int getLineNumberInObjectCode() const { return lineNumberInObjectCode; }
+	/// Called when user starts the visualization. All breakpoints are updated with their current
+	/// line numbers
+	inline void setLineNumberInObjectCode(int lineNumber) { this->lineNumberInObjectCode = lineNumber; }
+	/// Returns true if the line in editor is synchornized with the last object code generated
+	/// This method updates the internal current line in editor with the given one
+	bool isSyncWithObjectCode(int currentLineNumber);
+	/// Builds a text in format "filename:lineNumber" where a breakpoint is set
+	/// The line number on object code is used instead of the number in editor
+	QString buildFileLineString() const;
 };
 
 #endif // GUIBREAKPOINT_H

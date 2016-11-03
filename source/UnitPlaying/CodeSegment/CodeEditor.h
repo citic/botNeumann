@@ -2,10 +2,10 @@
 #define CODEEDITOR_H
 
 #include <QPlainTextEdit>
-#include <QSet>
 
 class LineNumberArea;
 class QTimer;
+class GuiBreakpoint;
 class PlayerSolution;
 class SyntaxHighlighter;
 class Unit;
@@ -72,7 +72,7 @@ class CodeEditor : public QPlainTextEdit
 	/// @param lineNumber a number starting at 1 indicating the line number where user made click
 	void toggleBreakpoint(QTextBlock& block);
 	/// Get access to the list of user-defined breakpoints
-	QList<QString> retrieveBreakpoints() const;
+	QList<GuiBreakpoint*> retrieveBreakpoints() const;
 
   signals:
 	/// Emited when user presses over a breakpoint symbol in order to remove it
@@ -99,8 +99,6 @@ class CodeEditor : public QPlainTextEdit
 	/// If the given block has a breakpoint, paints a mark in the line numbers area
 	/// If the breakpoint is valid, the mark is red, else, gray
 	void paintBreakpoint(QTextBlock& block, QPainter& painter, int top, int width, int fontHeight);
-	/// Builds a text in format "filename:lineNumber" where a breakpoint is set
-	QString buildBreakpointString(const QTextBlock& block) const;
 
   protected slots:
 	/// Called each time the document is changed

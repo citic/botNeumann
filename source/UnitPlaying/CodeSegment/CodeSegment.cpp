@@ -319,7 +319,7 @@ void CodeSegment::diagnosticSelected(int index)
 	codeEditor->placeCursor( diagnostic->getLine(), diagnostic->getColumn() );
 }
 
-QList<QString> CodeSegment::retrieveBreakpoints() const
+QList<GuiBreakpoint*> CodeSegment::retrieveBreakpoints()
 {
 	// ToDo: for each opened source file (i.e. have several code editors open)
 	return codeEditor->retrieveBreakpoints();

@@ -1,15 +1,26 @@
 #include "GuiBreakpoint.h"
+#include <QFileInfo>
 
-#if 0
-
-Breakpoint::Breakpoint(const QString& filename, int lineNumber)
-	 : filename(filename)
-	 , lineNumber(lineNumber)
+GuiBreakpoint::GuiBreakpoint(const QString& filename, int lineNumberInEditor)
+	: filename(filename)
+	, lineNumberInEditor(lineNumberInEditor)
 {
 }
 
-Breakpoint::~Breakpoint()
+void GuiBreakpoint::updateLineNumber(int lineNumber, bool both)
 {
+	this->lineNumberInEditor = lineNumber;
+	if ( both )
+		this->lineNumberInObjectCode = lineNumber;
 }
 
-#endif
+bool GuiBreakpoint::isSyncWithObjectCode(int currentLineNumber)
+{
+	this->lineNumberInEditor = currentLineNumber;
+	return lineNumberInEditor == lineNumberInObjectCode;
+}
+
+QString GuiBreakpoint::buildFileLineString() const
+{
+	return QString("\"%1:%2\"").arg(QFileInfo(filename).fileName()).arg(lineNumberInObjectCode);
+}

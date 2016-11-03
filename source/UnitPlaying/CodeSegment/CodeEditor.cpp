@@ -11,7 +11,6 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
-#include <QFileInfo>
 #include <QPainter>
 #include <QTimer>
 
@@ -255,13 +254,8 @@ void CodeEditor::paintBreakpoint(QTextBlock& block, QPainter& painter, int top, 
 	GuiBreakpoint* breakpoint = dynamic_cast<GuiBreakpoint*>( block.userData() );
 	if ( breakpoint == nullptr ) return;
 
-	QColor color = breakpoint->isValid() ? Qt::red : Qt::gray;
+	QColor color = breakpoint->isSyncWithObjectCode(block.blockNumber() + 1) ? Qt::red : Qt::magenta;
 	painter.fillRect(0, top, width, fontHeight, color.lighter() );
-}
-
-QString CodeEditor::buildBreakpointString(const QTextBlock& block) const
-{
-	return QString("\"%1:%2\"").arg(QFileInfo(filepath).fileName()).arg(block.blockNumber() + 1);
 }
 
 void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
@@ -306,23 +300,25 @@ void CodeEditor::toggleBreakpoint(QTextBlock& block)
 	else
 	{
 		// User is trying to create a new breakpoint.
-		// ToDo: check for validity of the new breakpoint (
-		block.setUserData( new GuiBreakpoint(true) );
+		block.setUserData( new GuiBreakpoint( filepath, block.blockNumber() + 1) );
 	}
 }
 
-QList<QString> CodeEditor::retrieveBreakpoints() const
+QList<GuiBreakpoint*> CodeEditor::retrieveBreakpoints() const
 {
 	// A list of pairs "source:lineNumber" of breakpoints
-	QList<QString> result;
+	QList<GuiBreakpoint*> result;
 
 	// Iterate for all the lines in this document finding breakpoints
 	for ( QTextBlock block = document()->begin(); block != document()->end(); block = block.next() )
 	{
 		// If this line has a breakpoint, convert it to a string in "file:lineNumber" format
-		GuiBreakpoint* breakpoint = dynamic_cast<GuiBreakpoint*>( block.userData() );
-		if ( breakpoint )
-			result.append( buildBreakpointString(block) );
+		GuiBreakpoint* guiBreakpoint = dynamic_cast<GuiBreakpoint*>( block.userData() );
+		if ( guiBreakpoint )
+		{
+			guiBreakpoint->updateLineNumber( block.blockNumber() + 1, true );
+			result.append( guiBreakpoint );
+		}
 	}
 
 	return result;

@@ -5,6 +5,7 @@
 
 class CodeEditor;
 class Compiler;
+class GuiBreakpoint;
 class QAction;
 class QComboBox;
 class QMainWindow;
@@ -86,7 +87,7 @@ class CodeSegment : public QDockWidget
 	/// @param index The index of the selected diagnostic in the allDiagnostics list
 	void diagnosticSelected(int index);
 	/// Get access to the breakpoints list set by the user
-	QList<QString> retrieveBreakpoints() const;
+	QList<GuiBreakpoint*> retrieveBreakpoints();
 
   signals:
 	/// Emitted when the run button is pressed, and therefore it is necessary to clear old output
