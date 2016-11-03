@@ -259,10 +259,15 @@ void CodeEditor::paintBreakpoint(QTextBlock& block, QPainter& painter, int top, 
 	painter.fillRect(0, top, width, fontHeight, color.lighter() );
 }
 
-
+QString CodeEditor::buildBreakpointString(const QTextBlock& block) const
+{
+	return QString("\"%1:%2\"").arg(QFileInfo(filepath).fileName()).arg(block.blockNumber() + 1);
+}
 
 void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
 {
+	// Locate the line where user made click. Each line should be analyzed one by one because
+	// word-wrap is enabled by default and some blocks may occupy two lines
 	QTextBlock block = firstVisibleBlock();
 	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
 	int bottom = top + (int) blockBoundingRect(block).height();
@@ -294,7 +299,7 @@ void CodeEditor::toggleBreakpoint(QTextBlock& block)
 	if ( guiBreakpoint )
 	{
 		// ToDo: If visualization is running, ask debugger to clear the breakpoint
-//		emit clearBreakpoint( breakpoint->getFilename(), breakpoint->getLineNumber() );
+//		emit breakpointRemoved( buildBreakpointString(block) );
 		// The line already has a breakpoint, remove it.
 		block.setUserData(nullptr);
 	}
@@ -317,7 +322,7 @@ QList<QString> CodeEditor::retrieveBreakpoints() const
 		// If this line has a breakpoint, convert it to a string in "file:lineNumber" format
 		GuiBreakpoint* breakpoint = dynamic_cast<GuiBreakpoint*>( block.userData() );
 		if ( breakpoint )
-			result.append( QString("\"%1:%2\"").arg(QFileInfo(filepath).fileName()).arg(block.blockNumber() + 1) );
+			result.append( buildBreakpointString(block) );
 	}
 
 	return result;

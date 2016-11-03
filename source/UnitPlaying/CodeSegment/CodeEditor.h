@@ -74,6 +74,13 @@ class CodeEditor : public QPlainTextEdit
 	/// Get access to the list of user-defined breakpoints
 	QList<QString> retrieveBreakpoints() const;
 
+  signals:
+	/// Emited when user presses over a breakpoint symbol in order to remove it
+	/// Visualization controller requires this signal in order to clear the breakpont in
+	/// debugger when visualization is running. The breakpoint is stored as a string in format
+	/// "filename:linenumber"
+//	void breakpointRemoved(const QString& breakpointFileLine);
+
   public slots:
 	/// Saves if there are changes to the @a filepath document in secondary memory
 	/// @return true on success or when there is not need to save, false on error
@@ -92,6 +99,8 @@ class CodeEditor : public QPlainTextEdit
 	/// If the given block has a breakpoint, paints a mark in the line numbers area
 	/// If the breakpoint is valid, the mark is red, else, gray
 	void paintBreakpoint(QTextBlock& block, QPainter& painter, int top, int width, int fontHeight);
+	/// Builds a text in format "filename:lineNumber" where a breakpoint is set
+	QString buildBreakpointString(const QTextBlock& block) const;
 
   protected slots:
 	/// Called each time the document is changed
