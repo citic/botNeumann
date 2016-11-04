@@ -1,5 +1,6 @@
 #include "Visualizator.h"
 #include "GdbCall.h"
+#include "GuiBreakpoint.h"
 #include "MessagesArea.h"
 #include "UnitPlayingScene.h"
 #include <QDebug>
@@ -44,12 +45,12 @@ bool Visualizator::start()
 		debuggerCall->sendGdbCommand(QString("-exec-arguments %1").arg(userProgramArguments));
 
 	// Get current user-defined breakpoints on GUI, if any as strings "filename:lineNumber"
-	const QList<QString>& breakpoints = unitPlayingScene->retrieveBreakpoints();
-	if ( breakpoints.size() > 0 )
+	const QList<GuiBreakpoint*>& editorBreakpoints = unitPlayingScene->retrieveBreakpoints();
+	foreach(const GuiBreakpoint* guiBreakpoint, editorBreakpoints)
 	{
-		foreach(const QString& breakpoint, breakpoints)
-			if ( debuggerCall->sendGdbCommand( "-break-insert " + breakpoint ) == GDB_ERROR )
-				qWarning( "Visualizator: Error: -break-insert %s", qPrintable(breakpoint) );
+		const QString& breakpointFileLine = guiBreakpoint->buildFileLineString();
+		if ( debuggerCall->sendGdbCommand( "-break-insert " + breakpointFileLine ) == GDB_ERROR )
+			qWarning( "Visualizator: Error: -break-insert %s", qPrintable(breakpointFileLine) );
 	}
 
 	// Always stop execution at main function

@@ -72,6 +72,7 @@ HEADERS += \
 	source/UnitPlaying/CodeSegment/Breakpoint.h \
 	source/UnitPlaying/CodeSegment/CodeEditor.h \
 	source/UnitPlaying/CodeSegment/CodeSegment.h \
+	source/UnitPlaying/CodeSegment/GuiBreakpoint.h \
 	source/UnitPlaying/CodeSegment/LineNumberArea.h \
 	source/UnitPlaying/CodeSegment/PlayerSolution.h \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
@@ -129,6 +130,7 @@ SOURCES += \
 	source/UnitPlaying/CodeSegment/Breakpoint.cpp \
 	source/UnitPlaying/CodeSegment/CodeEditor.cpp \
 	source/UnitPlaying/CodeSegment/CodeSegment.cpp \
+	source/UnitPlaying/CodeSegment/GuiBreakpoint.cpp \
 	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
 	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \

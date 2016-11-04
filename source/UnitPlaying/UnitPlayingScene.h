@@ -8,6 +8,7 @@ class CodeSegment;
 class Compiler;
 class CpuCores;
 class DataSegment;
+class GuiBreakpoint;
 class HeapSegment;
 class MessagesArea;
 class Visualizator;
@@ -79,7 +80,7 @@ class UnitPlayingScene : public GameScene
 
   public:
 	/// Get access to the breakpoints list set by the user
-	QList<QString> retrieveBreakpoints() const;
+	QList<GuiBreakpoint*> retrieveBreakpoints();
 
   signals:
 	/// Emitted when a game mode button is pressed

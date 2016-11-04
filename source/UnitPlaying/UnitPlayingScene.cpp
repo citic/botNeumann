@@ -70,7 +70,7 @@ void UnitPlayingScene::finishedEnteringStage()
 	codeSegment->loadCodeForUnit( &unit );
 }
 
-QList<QString> UnitPlayingScene::retrieveBreakpoints() const
+QList<GuiBreakpoint*> UnitPlayingScene::retrieveBreakpoints()
 {
 	return codeSegment->retrieveBreakpoints();
 }
