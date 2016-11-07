@@ -1,4 +1,5 @@
 #include "Visualizator.h"
+#include "DebuggerBreakpoint.h"
 #include "GdbCall.h"
 #include "GuiBreakpoint.h"
 #include "MessagesArea.h"
@@ -15,6 +16,9 @@ Visualizator::Visualizator(const QFileInfo& executablePath, UnitPlayingScene* un
 
 Visualizator::~Visualizator()
 {
+	for ( int index = 0; index < debuggerBreakpoints.size(); ++index )
+		delete debuggerBreakpoints[index];
+
 	delete debuggerCall;
 }
 
@@ -113,10 +117,25 @@ void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
 			break;
 
 		case GuiBreakpoint::Action::removed:
-			int breakpointNumber = -1; // ToDo: map the number to a list of breakpoints
-			debuggerCall->sendGdbCommand( QString("-break-delete %1").arg(breakpointNumber) );
+			int breakpointNumber = findDebuggerBreakpointIndex( *guiBreakpoint );
+			if ( breakpointNumber > 0 && debuggerCall->sendGdbCommand( QString("-break-delete %1").arg(breakpointNumber) ) != GDB_ERROR )
+			{
+				delete debuggerBreakpoints[breakpointNumber];
+				debuggerBreakpoints[breakpointNumber] = nullptr;
+			}
 			break;
 	}
+}
+
+int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint) const
+{
+	// For all debugger breakpoints, find the one that matches the GUI breakpoint and return its index
+	for ( int index = 0; index < debuggerBreakpoints.size(); ++index )
+		if ( debuggerBreakpoints[index] && guiBreakpoint.matches( *debuggerBreakpoints[index] ) )
+			return index;
+
+	// Not found
+	return -1;
 }
 
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
@@ -142,7 +161,32 @@ void Visualizator::onResult(const GdbItemTree& tree)
 	if ( ( node = tree.findNode("/threads") ) )
 		return updateThreads( node );
 	if ( ( node = tree.findNode("/bkpt") ) )
-		return updateBreakpoints( node );
+		return updateDebuggerBreakpoint( node );
+}
+
+void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode)
+{
+	// Create a debugger breakpoint that parsers the output sent by debugger
+	Q_ASSERT(breakpointNode);
+	DebuggerBreakpoint* debuggerBreakpoint = new DebuggerBreakpoint( *breakpointNode );
+
+	// Check if the breakpoint already exists in our vector
+	int breakpointNumber = debuggerBreakpoint->getNumber();
+	if ( breakpointNumber < debuggerBreakpoints.size() && debuggerBreakpoints[breakpointNumber] != nullptr )
+	{
+		// The breakpoint already exists in our vector, update it by replacing the old one by the new one
+		delete debuggerBreakpoints[breakpointNumber];
+		debuggerBreakpoints[breakpointNumber] = debuggerBreakpoint;
+	}
+	else
+	{
+		// The breakpoint does not exist in our vector, add it using the breakpoint number as its index
+		debuggerBreakpoints.resize( qMax(breakpointNumber + 1, debuggerBreakpoints.size()) );
+		debuggerBreakpoints[breakpointNumber] = debuggerBreakpoint;
+	}
+
+	// Update the interface?
+//	emit breakpointUpdated( debuggerBreakpoints[breakpointNumber] );
 }
 
 void Visualizator::onConsoleStreamOutput(const QString& text)
@@ -194,34 +238,5 @@ void Visualizator::updateThreads(const GdbTreeNode* threadsNode)
 	if(m_inf)
 		m_inf->ICore_onThreadListChanged();
 #endif
-}
-}
-
-void Visualizator::updateBreakpoints(const GdbTreeNode* breakpointNode)
-{
-	int lineNo = breakpointNode->findTextValue("line").toInt();
-	int number = breakpointNode->findTextValue("number").toInt();
-
-	const QString& filePath = breakpointNode->findTextValue("fullname");
-	const QString& functionName = breakpointNode->findTextValue("func");
-	const QString& address = breakpointNode->findTextValue("addr");
-
-#if 0
-	BreakPoint *bkpt = findBreakPointByNumber(number);
-	if(bkpt == NULL)
-	{
-		bkpt = new BreakPoint(number);
-		m_breakpoints.push_back(bkpt);
 	}
-	bkpt->lineNo = lineNo;
-	bkpt->fullname = tree.getString("bkpt/fullname");
-	bkpt->m_funcName = tree.getString("bkpt/func");
-	bkpt->m_addr = tree.getLongLong("bkpt/addr");
-
-	if(m_inf)
-	m_inf->ICore_onBreakpointsChanged();
-#endif
-
-	qDebug("  Breakpoint[number=%d][line=%d][file=%s][function=%s][address=%s]"
-		   , number, lineNo, qPrintable(filePath), qPrintable(functionName), qPrintable(address));
 }

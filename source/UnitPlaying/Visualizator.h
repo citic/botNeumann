@@ -4,7 +4,9 @@
 #include "GdbResponse.h"
 #include <QObject>
 #include <QFileInfo>
+#include <QVector>
 
+class DebuggerBreakpoint;
 class GdbCall;
 class GuiBreakpoint;
 class UnitPlayingScene;
@@ -30,6 +32,9 @@ class Visualizator : public QObject
 	GdbCall* debuggerCall;
 	/// The view is the unit playing scene and its components
 	UnitPlayingScene* unitPlayingScene;
+	/// The list of breakpoints reported by debugger. They are identified by integers. The indexes
+	/// in the array match the integers used by the debugger
+	QVector<DebuggerBreakpoint*> debuggerBreakpoints;
 
   public:
 	/// Constructor
@@ -89,7 +94,12 @@ class Visualizator : public QObject
 	/// A Gdb result brought an updated list of threads, refresh them
 	void updateThreads(const GdbTreeNode* threadsNode);
 	/// A Gdb result indicates that a new breakpoint was added
-	void updateBreakpoints(const GdbTreeNode* breakpointNode);
+	void updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode);
+	/// Returns the index of the debugger breakpoint that matches the given GUI breakpoint. The
+	/// comparison is made by filename and line number. Returns -1 if no matches are found.
+	/// @remark Search is made sequential, therefore O(n) where n is the number of debugger
+	/// breakpoints stored in the vector
+	int findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint) const;
 };
 
 #endif // VISUALIZATOR_H

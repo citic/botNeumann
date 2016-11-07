@@ -1,4 +1,5 @@
 #include "GuiBreakpoint.h"
+#include "DebuggerBreakpoint.h"
 #include <QFileInfo>
 
 GuiBreakpoint::GuiBreakpoint(const QString& filename, int lineNumberInEditor)
@@ -25,4 +26,10 @@ bool GuiBreakpoint::isSyncWithObjectCode(int currentLineNumber)
 QString GuiBreakpoint::buildFileLineString() const
 {
 	return QString("\"%1:%2\"").arg(QFileInfo(filename).fileName()).arg(lineNumberInObjectCode);
+}
+
+bool GuiBreakpoint::matches(const DebuggerBreakpoint& debuggerBreakpont) const
+{
+	return lineNumberInObjectCode == debuggerBreakpont.getLineNumber()
+		&& QFileInfo(filename).fileName() == QFileInfo(debuggerBreakpont.getFilename()).fileName();
 }

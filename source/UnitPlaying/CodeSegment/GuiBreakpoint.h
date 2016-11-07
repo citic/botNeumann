@@ -3,6 +3,8 @@
 
 #include <QTextBlockUserData>
 
+class DebuggerBreakpoint;
+
 /**
 	Tells if a code editor line/block has or not a breakpoint.
 
@@ -68,6 +70,9 @@ class GuiBreakpoint : public QTextBlockUserData
 	inline Action getAction() const { return action; }
 	/// Makes this object to transport an action related to this breakpoint
 	inline void setAction(Action action) { this->action = action; }
+	/// Returns true if this GUI breakpoint is the same than the given debugger breakpoint. Two
+	/// breakpoints are considered the same if they are set at the same file and line
+	bool matches(const DebuggerBreakpoint& debuggerBreakpont) const;
 };
 
 #endif // GUIBREAKPOINT_H
