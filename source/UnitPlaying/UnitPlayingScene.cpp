@@ -42,7 +42,7 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 
 UnitPlayingScene::~UnitPlayingScene()
 {
-	// Layout system deletes heapSegment, cpuCores, and dataSegment
+	// Nothing to do: Layout system deletes heapSegment, cpuCores, and dataSegment
 }
 
 void UnitPlayingScene::startLeavingStage()
@@ -181,6 +181,9 @@ void UnitPlayingScene::buildFinished(Compiler *compiler)
 	// The player solution generated an executable and we are ready to visualize it
 	delete visualizator;
 	visualizator = new Visualizator(compiler->getExecutablePath(), this);
+
+	// When user creates or removes breakpoints and visualization is running, update them
+	connect( codeSegment, SIGNAL(breakpointAction(GuiBreakpoint*)), visualizator, SLOT(breakpointAction(GuiBreakpoint*)) );
 
 	// ToDo: Connect signals emitted by visualizator with each part of the window
 

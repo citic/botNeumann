@@ -4,6 +4,8 @@
 GuiBreakpoint::GuiBreakpoint(const QString& filename, int lineNumberInEditor)
 	: filename(filename)
 	, lineNumberInEditor(lineNumberInEditor)
+	, lineNumberInObjectCode(-1)
+	, action( Action::unknown )
 {
 }
 

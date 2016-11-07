@@ -100,6 +100,10 @@ class CodeSegment : public QDockWidget
 	void visualizationStarted();
 	/// Emitted when the visualization has finished
 	void visualizationFinished();
+	/// Emited when user presses over a breakpoint symbol in any code editor window in order to
+	/// remove the breakpoint. Visualization controller requires this signal in order to clear
+	/// the breakpont in debugger when visualization is running.
+	void breakpointAction(GuiBreakpoint* guiBreakpoint);
 
   protected:
 	/// Set up the inner main window

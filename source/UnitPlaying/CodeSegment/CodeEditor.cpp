@@ -31,6 +31,7 @@ CodeEditor::CodeEditor(QWidget* parent)
 	, playerSolution(nullptr)
 	, autoSaveTimer( new QTimer(this) )
 	, lineNumberArea( new LineNumberArea(this) )
+	, synchronizedWithObjectCode( false )
 {
 	// Set the default monospaced font of the game
 	const QFont& font = BotNeumannApp::getMonospacedFont();
@@ -292,20 +293,36 @@ void CodeEditor::toggleBreakpoint(QTextBlock& block)
 	GuiBreakpoint* guiBreakpoint = dynamic_cast<GuiBreakpoint*>( block.userData() );
 	if ( guiBreakpoint )
 	{
-		// ToDo: If visualization is running, ask debugger to clear the breakpoint
-//		emit breakpointRemoved( buildBreakpointString(block) );
-		// The line already has a breakpoint, remove it.
+		// Update the breakpoint number in the interface. If this number is distinct to the
+		// line number on the last build, the breakpoint is not synchronized
+		guiBreakpoint->updateLineNumber(block.blockNumber() + 1, synchronizedWithObjectCode);
+		// This breakpont object will indicate the receiver it is a delettion of the breakpoint
+		guiBreakpoint->setAction(GuiBreakpoint::Action::removed);
+		// If visualization is running, ask debugger to clear the breakpoint
+		emit breakpointAction(guiBreakpoint);
+		// The line already has a breakpoint, remove it
 		block.setUserData(nullptr);
 	}
 	else
 	{
-		// User is trying to create a new breakpoint.
-		block.setUserData( new GuiBreakpoint( filepath, block.blockNumber() + 1) );
+		// User is trying to create a new breakpoint
+		GuiBreakpoint* guiBreakpoint = new GuiBreakpoint( filepath, block.blockNumber() + 1);
+		// If source code is synchronized with object code, is it safe to set breakpoints
+		if ( synchronizedWithObjectCode )
+			guiBreakpoint->setLineNumberInObjectCode( block.blockNumber() + 1 );
+		// Store the breakpoint as user data in the code editor
+		block.setUserData(guiBreakpoint);
+		// This breakpont object will indicate the receiver it is a delettion of the breakpoint
+		guiBreakpoint->setAction(GuiBreakpoint::Action::created);
+		// If visualization is running, ask debugger to set the breakpoint
+		emit breakpointAction(guiBreakpoint);
 	}
 }
 
-QList<GuiBreakpoint*> CodeEditor::retrieveBreakpoints() const
+QList<GuiBreakpoint*> CodeEditor::retrieveBreakpoints()
 {
+	this->synchronizedWithObjectCode = true;
+
 	// A list of pairs "source:lineNumber" of breakpoints
 	QList<GuiBreakpoint*> result;
 
@@ -326,6 +343,7 @@ QList<GuiBreakpoint*> CodeEditor::retrieveBreakpoints() const
 
 void CodeEditor::updateLineNumberAreaWidth()
 {
+	this->synchronizedWithObjectCode = false;
 	// Make room in the left edge of the editor
 	setViewportMargins(getLineNumberAreaWidth(), 0, 0, 0);
 }

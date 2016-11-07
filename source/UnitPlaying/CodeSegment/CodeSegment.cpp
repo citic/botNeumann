@@ -166,8 +166,12 @@ void CodeSegment::setupRunToolbar()
 
 void CodeSegment::setupCodeEditor()
 {
+	// ToDo: Have several code editors, one for each source file in player's solution
 	// The code editor is a QTextEdit object
 	codeEditor = new CodeEditor(this);
+
+	// Propagate events to the visualization controller and the debugger
+	connect( codeEditor, SIGNAL(breakpointAction(GuiBreakpoint*)), this, SIGNAL(breakpointAction(GuiBreakpoint*)) );
 
 	// Place the code editor as the central widget of this dock widget
 	innerMainWindow->setCentralWidget(codeEditor);

@@ -35,6 +35,11 @@ class CodeEditor : public QPlainTextEdit
 	QTimer* autoSaveTimer;
 	/// Object that paints line numbers in the left margin of the code editor
 	LineNumberArea* lineNumberArea;
+	/// True if this source file is synchronized with object code. False when user makes changes.
+	/// This flag is used to know if breakpoints are synchoronized with object code. In that case
+	/// user can set new updated breakpoints, otherwise, modifications to breakpoints will be out
+	/// of sync.
+	bool synchronizedWithObjectCode;
 
   public:
 	/// Constructor
@@ -72,14 +77,14 @@ class CodeEditor : public QPlainTextEdit
 	/// @param lineNumber a number starting at 1 indicating the line number where user made click
 	void toggleBreakpoint(QTextBlock& block);
 	/// Get access to the list of user-defined breakpoints
-	QList<GuiBreakpoint*> retrieveBreakpoints() const;
+	QList<GuiBreakpoint*> retrieveBreakpoints();
 
   signals:
-	/// Emited when user presses over a breakpoint symbol in order to remove it
+	/// Emited when user presses over a breakpoint symbol in order to create or remove it
 	/// Visualization controller requires this signal in order to clear the breakpont in
-	/// debugger when visualization is running. The breakpoint is stored as a string in format
-	/// "filename:linenumber"
-//	void breakpointRemoved(const QString& breakpointFileLine);
+	/// debugger when visualization is running. Internally the GuiBreakpoint object carries
+	/// an action atribute that tells if the breakpoint was created or removed
+	void breakpointAction(GuiBreakpoint* guiBreakpoint);
 
   public slots:
 	/// Saves if there are changes to the @a filepath document in secondary memory

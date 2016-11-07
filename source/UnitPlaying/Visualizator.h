@@ -6,6 +6,7 @@
 #include <QFileInfo>
 
 class GdbCall;
+class GuiBreakpoint;
 class UnitPlayingScene;
 
 /**
@@ -44,6 +45,11 @@ class Visualizator : public QObject
   public slots:
 	/// Called when GdbCall has responses
 	void onGdbResponse(const GdbResponse* response);
+	/// Called when user presses over a breakpoint symbol in order to create or remove it
+	/// Visualization controller requires this signal in order to clear the breakpont in
+	/// debugger when visualization is running. Internally the GuiBreakpoint object carries
+	/// an action atribute that tells if the breakpoint was created or removed
+	void breakpointAction(GuiBreakpoint* guiBreakpoint);
 
   protected:
 	/// Async records are used to notify the gdb/mi client of additional changes that have occurred.

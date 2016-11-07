@@ -13,6 +13,18 @@ class GuiBreakpoint : public QTextBlockUserData
 {
 	Q_DISABLE_COPY(GuiBreakpoint)
 
+  public:
+	/// GuiBreakpoint actions are issued when events related to breakpoints are issued, for
+	/// example, creating a breakpoint or removing it.
+	enum class Action
+	{
+		unknown,
+		created,
+		removed,
+		// disabled,
+		// updated,
+	};
+
   protected:
 	/// The source file where this breakpoint is defined
 	QString filename;
@@ -26,6 +38,8 @@ class GuiBreakpoint : public QTextBlockUserData
 	/// An invalid breakpoint is painted gray instead of red in the line number
 	/// area, to alert user that the breakpoint is not going to have effect in visualization.
 	int lineNumberInObjectCode;
+	/// This breakpoint object can be used to communicate changes in breakpoints
+	Action action;
 
   public:
 	/// Constructor
@@ -50,6 +64,10 @@ class GuiBreakpoint : public QTextBlockUserData
 	/// Builds a text in format "filename:lineNumber" where a breakpoint is set
 	/// The line number on object code is used instead of the number in editor
 	QString buildFileLineString() const;
+	/// Tells if this object transports an action related to this breakpoint
+	inline Action getAction() const { return action; }
+	/// Makes this object to transport an action related to this breakpoint
+	inline void setAction(Action action) { this->action = action; }
 };
 
 #endif // GUIBREAKPOINT_H

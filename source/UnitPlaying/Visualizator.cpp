@@ -91,6 +91,34 @@ void Visualizator::onGdbResponse(const GdbResponse* response)
 	}
 }
 
+void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
+{
+	// Only update breakpoints if there is an active debugger call
+	Q_ASSERT(guiBreakpoint);
+	if ( debuggerCall == nullptr  )
+		return;
+
+	// If breakpoints in code editor are not synchronized with debuger code, dot not continue
+	if ( guiBreakpoint->getLineNumberInObjectCode() == -1 )
+		return;
+
+	// Check if the action is creator or deletion of a breakpoint
+	switch ( guiBreakpoint->getAction() )
+	{
+		case GuiBreakpoint::Action::unknown:
+			break;
+
+		case GuiBreakpoint::Action::created:
+			debuggerCall->sendGdbCommand( QString("-break-insert %1").arg(guiBreakpoint->buildFileLineString()) );
+			break;
+
+		case GuiBreakpoint::Action::removed:
+			int breakpointNumber = -1; // ToDo: map the number to a list of breakpoints
+			debuggerCall->sendGdbCommand( QString("-break-delete %1").arg(breakpointNumber) );
+			break;
+	}
+}
+
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
 {
 	qDebug("Visualizator::onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
