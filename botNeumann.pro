@@ -69,9 +69,9 @@ HEADERS += \
 	source/ToolCall/Debugger/GdbResponse.h \
 	source/ToolCall/Debugger/GdbToken.h \
 	source/ToolCall/ToolCall.h \
-	source/UnitPlaying/CodeSegment/Breakpoint.h \
 	source/UnitPlaying/CodeSegment/CodeEditor.h \
 	source/UnitPlaying/CodeSegment/CodeSegment.h \
+	source/UnitPlaying/CodeSegment/DebuggerBreakpoint.h \
 	source/UnitPlaying/CodeSegment/GuiBreakpoint.h \
 	source/UnitPlaying/CodeSegment/LineNumberArea.h \
 	source/UnitPlaying/CodeSegment/PlayerSolution.h \
@@ -127,9 +127,9 @@ SOURCES += \
 	source/ToolCall/Debugger/GdbResponse.cpp \
 	source/ToolCall/Debugger/GdbToken.cpp \
 	source/ToolCall/ToolCall.cpp \
-	source/UnitPlaying/CodeSegment/Breakpoint.cpp \
 	source/UnitPlaying/CodeSegment/CodeEditor.cpp \
 	source/UnitPlaying/CodeSegment/CodeSegment.cpp \
+	source/UnitPlaying/CodeSegment/DebuggerBreakpoint.cpp \
 	source/UnitPlaying/CodeSegment/GuiBreakpoint.cpp \
 	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
 	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \

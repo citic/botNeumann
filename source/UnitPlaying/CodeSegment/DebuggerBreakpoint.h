@@ -33,9 +33,9 @@
 	store breakpoints in the user configuration files, in order to recover them when user continues
 	a previous session.
 */
-class Breakpoint
+class DebuggerBreakpoint
 {
-	Q_DISABLE_COPY(Breakpoint)
+	Q_DISABLE_COPY(DebuggerBreakpoint)
 
   protected:
 	/// The file where the player wants to stop the execution
@@ -55,9 +55,9 @@ class Breakpoint
 
   public:
 	/// Builds a user defined breakpoint
-	explicit Breakpoint(const QString& filename, int lineNumber);
+	explicit DebuggerBreakpoint(const QString& filename, int lineNumber);
 	/// Deletes this breakpoint
-	virtual ~Breakpoint();
+	virtual ~DebuggerBreakpoint();
 };
 
 #endif // BREAKPOINT_H
