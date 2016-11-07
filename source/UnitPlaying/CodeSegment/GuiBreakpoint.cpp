@@ -23,7 +23,7 @@ bool GuiBreakpoint::isSyncWithObjectCode(int currentLineNumber)
 	return lineNumberInEditor == lineNumberInObjectCode;
 }
 
-QString GuiBreakpoint::buildFileLineString() const
+QString GuiBreakpoint::buildOriginalLocation() const
 {
 	return QString("\"%1:%2\"").arg(QFileInfo(filename).fileName()).arg(lineNumberInObjectCode);
 }

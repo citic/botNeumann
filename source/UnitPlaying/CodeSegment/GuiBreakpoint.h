@@ -65,7 +65,8 @@ class GuiBreakpoint : public QTextBlockUserData
 	bool isSyncWithObjectCode(int currentLineNumber);
 	/// Builds a text in format "filename:lineNumber" where a breakpoint is set
 	/// The line number on object code is used instead of the number in editor
-	QString buildFileLineString() const;
+	/// "Original location" is the name used by GDB for the pair source:line
+	QString buildOriginalLocation() const;
 	/// Tells if this object transports an action related to this breakpoint
 	inline Action getAction() const { return action; }
 	/// Makes this object to transport an action related to this breakpoint

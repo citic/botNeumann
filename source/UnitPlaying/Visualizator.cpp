@@ -52,9 +52,9 @@ bool Visualizator::start()
 	const QList<GuiBreakpoint*>& editorBreakpoints = unitPlayingScene->retrieveBreakpoints();
 	foreach(const GuiBreakpoint* guiBreakpoint, editorBreakpoints)
 	{
-		const QString& breakpointFileLine = guiBreakpoint->buildFileLineString();
-		if ( debuggerCall->sendGdbCommand( "-break-insert " + breakpointFileLine ) == GDB_ERROR )
-			qWarning( "Visualizator: Error: -break-insert %s", qPrintable(breakpointFileLine) );
+		const QString& originalLocation = guiBreakpoint->buildOriginalLocation();
+		if ( debuggerCall->sendGdbCommand( "-break-insert " + originalLocation ) == GDB_ERROR )
+			qWarning( "Visualizator: Error: -break-insert %s", qPrintable(originalLocation) );
 	}
 
 	// Always stop execution at main function
@@ -113,7 +113,7 @@ void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
 			break;
 
 		case GuiBreakpoint::Action::created:
-			debuggerCall->sendGdbCommand( QString("-break-insert %1").arg(guiBreakpoint->buildFileLineString()) );
+			debuggerCall->sendGdbCommand( QString("-break-insert %1").arg(guiBreakpoint->buildOriginalLocation()) );
 			break;
 
 		case GuiBreakpoint::Action::removed:
