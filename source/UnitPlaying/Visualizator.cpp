@@ -148,9 +148,22 @@ void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 	qDebug("Visualizator::onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 }
 
-void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
+bool Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
 {
+	Q_ASSERT(debuggerCall);
 	qDebug("Visualizator::onNotifyAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+
+	switch ( asyncClass )
+	{
+		case AsyncClass::AC_THREAD_CREATED:
+			if ( debuggerCall->isStopped() )
+				return debuggerCall->sendGdbCommand("-thread-info") != GDB_ERROR;
+			qFatal("Could not ask for thread info, program is currently running");
+			return false;
+
+		default:
+			return false;
+	}
 }
 
 void Visualizator::onResult(const GdbItemTree& tree)

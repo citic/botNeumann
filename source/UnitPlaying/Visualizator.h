@@ -70,7 +70,7 @@ class Visualizator : public QObject
 	void onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass);
 	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
 	/// @see https://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Async-Records.html
-	void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass);
+	bool onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass);
 	/// Additional out-of-band notifications:
 	///   "^done[,results]": The synchronous operation was successful, results are provided
 	///   "^running": Deprecated. Equivalent to ‘^done’
