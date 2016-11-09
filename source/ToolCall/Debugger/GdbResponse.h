@@ -2,7 +2,6 @@
 #define GDBRESPONSE_H
 
 #include "GdbItemTree.h"
-//#include <QObject>
 #include <QString>
 
 /// AsyncClass (or reason)

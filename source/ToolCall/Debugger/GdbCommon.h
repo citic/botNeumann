@@ -12,4 +12,13 @@ enum GdbLogType
 	LOG_CONSOLE_OUTPUT
 };
 
+/// The state of GDB
+enum GdbState
+{
+	STATE_STOPPED,
+	STATE_RUNNING,
+	STATE_FINISHED
+};
+
+
 #endif // GDBCOMMON_H

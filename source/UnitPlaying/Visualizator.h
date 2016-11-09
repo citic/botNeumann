@@ -1,6 +1,7 @@
 #ifndef VISUALIZATOR_H
 #define VISUALIZATOR_H
 
+#include "GdbCommon.h"
 #include "GdbResponse.h"
 #include <QObject>
 #include <QFileInfo>
@@ -30,11 +31,15 @@ class Visualizator : public QObject
 	/// The model is a debugger session with the executable of the player
 	/// @todo Using GdbCall interface directly, replace it by DebuggerCall interface
 	GdbCall* debuggerCall;
+	/// The state of GDB being controlled by this object
+	GdbState state = STATE_STOPPED;
 	/// The view is the unit playing scene and its components
 	UnitPlayingScene* unitPlayingScene;
 	/// The list of breakpoints reported by debugger. They are identified by integers. The indexes
 	/// in the array match the integers used by the debugger
 	QVector<DebuggerBreakpoint*> debuggerBreakpoints;
+	/// Process id of the inferior retrieved from gdb. Needed?
+	int inferiorProcessId;
 
   public:
 	/// Constructor
@@ -46,6 +51,12 @@ class Visualizator : public QObject
 	/// Start the visualization process
 	/// @return true on success, false otherwise
 	bool start();
+	/// Gets the state of the gbd instance being controlled by this object
+	inline GdbState getState() const { return state; }
+	/// Convenience functions to get the state
+	inline bool isStopped() const { return state == STATE_STOPPED; }
+	inline bool isRunning() const { return state == STATE_RUNNING; }
+	inline bool isFinished() const { return state == STATE_FINISHED; }
 
   public slots:
 	/// Called when GdbCall has responses

@@ -32,18 +32,7 @@ class GdbCall : public DebuggerCall
 	Q_OBJECT
 	Q_DISABLE_COPY(GdbCall)
 
-  public:
-	/// The state of GDB being controlled by this object
-	enum State
-	{
-		STATE_STOPPED,
-		STATE_RUNNING,
-		STATE_FINISHED
-	};
-
   protected:
-	/// The state of GDB being controlled by this object
-	State state = STATE_STOPPED;
 	/// Identifier of the pseudoterminal where user program will be run
 	/// This id is known as Device File Descriptor un Unix jargon
 	/// This pseudoterminal will be given to gdb to control inferior
@@ -69,12 +58,6 @@ class GdbCall : public DebuggerCall
 	explicit GdbCall(QObject *parent = nullptr);
 	/// Destructor
 	virtual ~GdbCall();
-	/// Gets the state of the gbd instance being controlled by this object
-	inline State getState() const { return state; }
-	/// Convenience functions to get the state
-	inline bool isStopped() const { return state == STATE_STOPPED; }
-	inline bool isRunning() const { return state == STATE_RUNNING; }
-	inline bool isFinished() const { return state == STATE_FINISHED; }
 	/// Stats the execution of gdb and inferior
 	bool start();
 	/// Gets the inferior pseudoterminal name, something like /dev/pts/nn where

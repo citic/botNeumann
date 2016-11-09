@@ -11,6 +11,7 @@ Visualizator::Visualizator(const QFileInfo& executablePath, UnitPlayingScene* un
 	, executablePath(executablePath)
 	, debuggerCall( nullptr )
 	, unitPlayingScene(unitPlayingScene)
+	, inferiorProcessId(0)
 {
 }
 
@@ -64,10 +65,13 @@ bool Visualizator::start()
 	// ToDo: Extract source filenames. Not required by botNeumann++ for the moment
 
 	// Ask GDB to start execution of user program (inferior), only if it is not running already
-	if ( debuggerCall->getState() == GdbCall::STATE_RUNNING )
+	if ( state == STATE_RUNNING )
 		qFatal("Visualizator: gdb already running");
 	else
+	{
+		inferiorProcessId = 0;
 		debuggerCall->sendGdbCommand("-exec-run");
+	}
 /*
 	Q_ASSERT(userProgram == nullptr);
 	userProgram = new UserProgram(this);
@@ -146,6 +150,17 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
 {
 	qDebug("Visualizator::onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+
+	switch ( asyncClass )
+	{
+		case AsyncClass::AC_RUNNING:
+			state = STATE_RUNNING;
+//			emit visualizationStateChange(state);
+			break;
+
+		default:
+			break;
+	}
 }
 
 bool Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
@@ -156,7 +171,7 @@ bool Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 	switch ( asyncClass )
 	{
 		case AsyncClass::AC_THREAD_CREATED:
-			if ( debuggerCall->isStopped() )
+			if ( isStopped() )
 				return debuggerCall->sendGdbCommand("-thread-info") != GDB_ERROR;
 			qFatal("Could not ask for thread info, program is currently running");
 			return false;

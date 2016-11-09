@@ -91,8 +91,24 @@ GdbResponse::TERMINATOR: ignored</pre></td>
   times="0",
   original-location="rand.c:25"
 }
+<hr/>
 (gdb)</pre></td>
-		<td><pre>onResult: Visualizator adds/updates DebuggerBreakpoint</pre></td>
+		<td><pre>onResult: Visualizator add/update DebuggerBreakpoint
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr/>
+GdbResponse::TERMINATOR: ignored</pre></td>
 	</tr>
 </table>
 <p>Set all breakpoints currently defided by user on GUI or preferences.</p>
@@ -116,11 +132,51 @@ GdbResponse::TERMINATOR: ignored</pre></td>
   times="0",
   original-location="main"
 }
+<hr/>
 (gdb)</pre></td>
-		<td><pre>onResult: Visualizator adds/updates DebuggerBreakpoint</pre></td>
+		<td><pre>onResult: Visualizator add/update DebuggerBreakpoint
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr/>
+GdbResponse::TERMINATOR: ignored</pre></td>
 	</tr>
 </table>
 <p>botNeumann always set a hidden breakpont at main() function</p>
+
+
+
+<h3>-file-list-exec-source-files</h3>
+<table>
+	<tr>
+		<td><pre>^done,files=
+[
+  {
+    file="rand.c",
+    fullname="/full/path/to/rand.c"
+  }
+]
+<hr/>
+(gdb)
+</pre></td>
+		<td><pre>(Gede updates tree control)
+</pre></td>
+	</tr>
+</table>
+<p>Not called by botNeumann, because <code>PlayerSolution</code> object already knows the list of source files. Gede updates the tree control with source code files.</p>
+
+
+
 
 
 
@@ -190,11 +246,14 @@ core="6"
 <hr/>
 onNotifyAsyncOut: <b>cmd("-thread-info")</b>
 <hr/>
-=library-loaded,id="/lib64/ld-linux-x86-64.so.2",target-name="/lib64/ld-linux-x86-64.so.2",host-name="/lib64/ld-linux-x86-64.so.2",symbols-loaded="0",thread-group="i1"
+(Linux) ignored
+
+
+
 <hr/>
-^running
+onResult: ignored
 <hr/>
-*running,thread-id="all"
+onExecAsyncOut: AC_RUNNING
 <hr/>
 (gdb)
 <hr/>
