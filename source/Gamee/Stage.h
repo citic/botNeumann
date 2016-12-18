@@ -7,7 +7,7 @@
 	@brief The Stage where scenery is placed and actors play in the game
 
 	Do not use the inherited setScene() method from QGraphicsView. Inherit a class from Director.
-	He must know how to organize the scenes of your game.
+	Director instance will know how to organize the scenes of your game.
  */
 class Stage : public QGraphicsView
 {

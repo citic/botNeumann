@@ -14,8 +14,14 @@ class BotNeumannApp : public QApplication
 	Q_DISABLE_COPY(BotNeumannApp)
 
   protected:
-	/// Manages the list of player of this game
-	PlayerManager* playerManager;
+	/// Manages the list of players of this game
+	PlayerManager* playerManager = nullptr;
+
+  protected:
+	/// Family name of the font used for buttons
+	static QString robotFontName;
+	/// Family name of the mono-spaced font for text editor
+	static QString monospacedFontName;
 
   public:
 	/// Constructor
@@ -34,12 +40,6 @@ class BotNeumannApp : public QApplication
 	inline PlayerManager* getPlayerManager() const { return playerManager; }
 	/// Returns a pointer to the current active player using the application
 	Player* getCurrentPlayer() const;
-
-  protected:
-	/// Family name of the font used for buttons
-	static QString robotFontName;
-	/// Family name of the mono-spaced font for text editor
-	static QString monospacedFontName;
 
   protected:
 	/// Adds the font from the given resource name to the font database

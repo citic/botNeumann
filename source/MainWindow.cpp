@@ -3,6 +3,7 @@
 #include "InfoDialog.h"
 #include "MainWindow.h"
 #include "Stage.h"
+
 #include <QDockWidget>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>

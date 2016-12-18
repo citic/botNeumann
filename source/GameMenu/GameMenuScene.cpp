@@ -7,6 +7,7 @@
 #include "Prop.h"
 #include "Stage.h"
 #include "SvgButton.h"
+
 #include <QGraphicsLinearLayout>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsWidget>
@@ -78,6 +79,7 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 	// Disable if there is not an active player
 	playerChanged( BotNeumannApp::getInstance()->getCurrentPlayer() );
 
+	// Create the info, rewards and config buttons
 	setupConfigButtons(rightLayout);
 }
 
@@ -104,6 +106,11 @@ void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
 	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
 	connect(rewardsButton, SIGNAL(pressed()), this, SLOT(rewardsButtonPressed()));
 	connect(configButton, SIGNAL(pressed()), this, SLOT(configButtonPressed()));
+
+	// ToDo: implement these buttons, disabled meanwhile
+	infoButton->setEnabled(false);
+	rewardsButton->setEnabled(false);
+	configButton->setEnabled(false);
 }
 
 void GameMenuScene::playerControlPressed()
@@ -155,6 +162,9 @@ void GameMenuScene::playerChanged(Player* newPlayer)
 	// Enable the game mode buttons only when there is a actual player
 	bool activePlayer = newPlayer != nullptr;
 	if (trainingButton) trainingButton->setEnabled(activePlayer);
+
+	// ToDo: these sections are not implemented yet
+	activePlayer = false;
 	if (missionsButton) missionsButton->setEnabled(activePlayer);
 	if (collaborationButton) collaborationButton->setEnabled(activePlayer);
 	if (createButton) createButton->setEnabled(activePlayer);

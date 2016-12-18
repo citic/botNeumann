@@ -24,6 +24,8 @@ void BotNeumannDirector::begin()
 	// The game menu is the first scene, but it could different in a future, for example, when
 	// resuming the game
 	Q_ASSERT(currentScene == nullptr);
+
+	// ToDo: Restore last scene where user was working
 	showGameMenuScene();
 }
 
@@ -32,7 +34,9 @@ bool BotNeumannDirector::showGameMenuScene()
 	// If a transition is currently running, we can't replace the scene yet
 	if ( isTransitionRunning() ) return false;
 	GameMenuScene* newScene = new GameMenuScene(stage);
+	// When the user presses the a button on the game menu scene, show the unit selection scene
 	connect(newScene, SIGNAL(showUnitSelectionScene(QString,bool)), this, SLOT(showUnitSelectionScene(QString,bool)));
+	// Do not make an abrupt change, do a transition
 	return replaceScene( newScene, false );
 }
 
