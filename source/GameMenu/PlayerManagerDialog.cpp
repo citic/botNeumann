@@ -37,9 +37,9 @@ PlayerManagerDialog::PlayerManagerDialog(QWidget *parent)
 	connect(renamePlayerButton, SIGNAL(clicked()), this, SLOT(renamePlayerClicked()));
 
 	// Set the new current player
-	changePlayerButton = ui->buttonBox->addButton(tr("Change"), QDialogButtonBox::AcceptRole);
+	changePlayerButton = ui->buttonBox->addButton(tr("Select"), QDialogButtonBox::AcceptRole);
 	changePlayerButton->setEnabled(false);
-	connect(changePlayerButton, SIGNAL(clicked()), this, SLOT(changePlayerClicked()));
+	connect(changePlayerButton, SIGNAL(clicked()), this, SLOT(selectPlayerClicked()));
 }
 
 PlayerManagerDialog::~PlayerManagerDialog()
@@ -60,12 +60,14 @@ void PlayerManagerDialog::renamePlayerClicked()
 {
 }
 
-void PlayerManagerDialog::changePlayerClicked()
+void PlayerManagerDialog::selectPlayerClicked()
 {
+	// Get the selected player in the list
 	if ( ui->playerListWidget->selectedItems().size() < 0 ) return;
 	QListWidgetItem* selectedItem = ui->playerListWidget->selectedItems()[0];
 	Q_ASSERT(selectedItem);
 
+	// Tell to the player manager who is the current active player
 	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
 	Q_ASSERT(playerManager);
 	playerManager->setCurrentPlayer(selectedItem->text());
@@ -74,7 +76,7 @@ void PlayerManagerDialog::changePlayerClicked()
 void PlayerManagerDialog::nicknameLineEditChanged(const QString& text)
 {
 	addPlayerButton->setEnabled( text.length() > 0 );
-	renamePlayerButton->setEnabled( text.length() > 0 && ui->playerListWidget->count() > 0 );
+	renamePlayerButton->setEnabled( text.length() > 0 && ui->playerListWidget->selectedItems().count() > 0 );
 }
 
 void PlayerManagerDialog::selectedPlayerChanged()
