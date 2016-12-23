@@ -1,5 +1,5 @@
-#include "Player.h"
 #include "PlayerManager.h"
+#include "Player.h"
 #include <QSettings>
 
 PlayerManager::PlayerManager(QObject *parent)
@@ -10,15 +10,50 @@ PlayerManager::PlayerManager(QObject *parent)
 
 PlayerManager::~PlayerManager()
 {
+	clearPlayers();
+	delete currentPlayer;
+}
+
+int PlayerManager::loadPlayers()
+{
+	// Avoid concatenate with old previous
+	clearPlayers();
+
+	// Players are stored in settings on this device
+	QSettings settings;
+	settings.beginGroup("Players");
+
+	// There is a subfolder for each player
+	foreach ( const QVariant& id, settings.childGroups() )
+	{
+		Player* player = new Player( id.toByteArray() );
+		player->load();
+		players.append(player);
+	}
+	return players.count();
+}
+
+void PlayerManager::clearPlayers()
+{
+	for ( int index = 0; index < players.count(); ++index )
+		delete players[index];
+	players.clear();
 }
 
 bool PlayerManager::reloadLastPlayer()
 {
-	Q_ASSERT(currentPlayer == nullptr);
+	// Get the last player id from the settings
 	QSettings settings;
-	const QVariant& nickname = settings.value("Players/LastPlayer");
-	if ( nickname.isNull() ) return false;
-	currentPlayer = new Player(nickname.toString());
+	settings.clear();
+	const QVariant& playerId = settings.value("Players/LastPlayer");
+	if ( playerId.isNull() ) return false;
+	Q_ASSERT(currentPlayer == nullptr);
+
+	// Create a Player object and load it from settings using the ID
+	currentPlayer = new Player(playerId.toByteArray());
+	currentPlayer->load();
+
+	// Done
 	emit playerChanged(currentPlayer);
 	return true;
 }
@@ -27,23 +62,33 @@ void PlayerManager::saveLastPlayer()
 {
 	if ( currentPlayer == nullptr ) return;
 	QSettings settings;
-	settings.setValue("Players/LastPlayer", currentPlayer->getNickname());
+	settings.setValue("Players/LastPlayer", QVariant(currentPlayer->getId()));
 	currentPlayer->save();
 }
 
-Player* PlayerManager::setCurrentPlayer(const QString& nickname)
+Player* PlayerManager::setCurrentPlayer(Player* player)
 {
-	Q_ASSERT(nickname.isEmpty() == false);
+	Q_ASSERT(player);
 	if ( currentPlayer ) currentPlayer->deleteLater();
-	currentPlayer = new Player(nickname);
+	currentPlayer = player;
 	saveLastPlayer();
 	emit playerChanged(currentPlayer);
 	return currentPlayer;
 }
 
-QStringList PlayerManager::fetchLocalPlayerNicknames()
+Player* PlayerManager::setCurrentPlayer(const QByteArray& playerId)
 {
-	QSettings settings;
-	settings.beginGroup("Players");
-	return settings.childGroups();
+	Q_ASSERT(playerId.isEmpty() == false);
+	Player* player = new Player(playerId);
+	Q_ASSERT(player);
+	return setCurrentPlayer(player);
+}
+
+Player* PlayerManager::createPlayer(const QString& nickname)
+{
+	Player* player = new Player("", nickname);
+	player->autogenerateId();
+	player->save();
+	qDebug("Player %s created with id %s", qPrintable(nickname), qPrintable(player->getId()));
+	return setCurrentPlayer(player);
 }

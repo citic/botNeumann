@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+class Player;
+
 namespace Ui { class PlayerManagerDialog; }
 
 class PlayerManagerDialog : public QDialog
@@ -26,8 +28,13 @@ class PlayerManagerDialog : public QDialog
 	void removePlayerClicked();
 	void renamePlayerClicked();
 	void selectPlayerClicked();
-	void nicknameLineEditChanged(const QString& text);
+	void nicknameLineEditChanged(QString text);
 	void selectedPlayerChanged();
+
+  protected:
+	void loadPlayers();
+	bool isUniqueNickname(const QString& text) const;
+	void createItemForPlayer(const Player* player);
 };
 
 #endif // PLAYERMANAGERDIALOG_H

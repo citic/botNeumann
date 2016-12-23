@@ -1,8 +1,12 @@
 #include "BotNeumannApp.h"
+#include "Player.h"
 #include "PlayerManager.h"
 #include "PlayerManagerDialog.h"
 #include "ui_PlayerManagerDialog.h"
+#include <QMessageBox>
 #include <QPushButton>
+
+const int rolePlayerId = 1;
 
 PlayerManagerDialog::PlayerManagerDialog(QWidget *parent)
 	: QDialog(parent)
@@ -10,10 +14,7 @@ PlayerManagerDialog::PlayerManagerDialog(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	// Fill the list widget with the player list stored in this device
-	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
-	Q_ASSERT(playerManager);
-	ui->playerListWidget->addItems(playerManager->fetchLocalPlayerNicknames());
+	loadPlayers();
 
 	// Each time a nickname is typed in the nickname line edit
 	connect(ui->nicknameLineEdit, SIGNAL(textChanged(QString)), this, SLOT(nicknameLineEditChanged(QString)));
@@ -47,9 +48,37 @@ PlayerManagerDialog::~PlayerManagerDialog()
 	delete ui;
 }
 
+void PlayerManagerDialog::loadPlayers()
+{
+	// Fill the list widget with the player list stored in this device
+	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
+	Q_ASSERT(playerManager);
+
+	// Load players from settings and get the number of loaded players
+	int playerCount = playerManager->loadPlayers();
+
+	// Fill the list with players' nicknames and IDs
+	for ( int playerIndex = 0; playerIndex < playerCount; ++playerIndex )
+		createItemForPlayer( playerManager->getPlayerAt(playerIndex) );
+}
+
 void PlayerManagerDialog::addPlayerClicked()
 {
-	ui->playerListWidget->addItem(ui->nicknameLineEdit->text());
+	const QString& nickname = ui->nicknameLineEdit->text().trimmed();
+
+	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
+	Q_ASSERT(playerManager);
+	Player* newPlayer = playerManager->createPlayer(nickname);
+	if ( newPlayer )
+		createItemForPlayer(newPlayer);
+	else
+		QMessageBox::critical(this, tr("Error"), tr("Could not create player: ") + nickname);
+}
+
+void PlayerManagerDialog::createItemForPlayer(const Player* player)
+{
+	QListWidgetItem* item = new QListWidgetItem(player->getNickname(), ui->playerListWidget );
+	item->setData( rolePlayerId, player->getId() );
 }
 
 void PlayerManagerDialog::removePlayerClicked()
@@ -70,13 +99,23 @@ void PlayerManagerDialog::selectPlayerClicked()
 	// Tell to the player manager who is the current active player
 	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
 	Q_ASSERT(playerManager);
-	playerManager->setCurrentPlayer(selectedItem->text());
+	playerManager->setCurrentPlayer( selectedItem->data(rolePlayerId).toByteArray() );
 }
 
-void PlayerManagerDialog::nicknameLineEditChanged(const QString& text)
+void PlayerManagerDialog::nicknameLineEditChanged(QString text)
 {
-	addPlayerButton->setEnabled( text.length() > 0 );
-	renamePlayerButton->setEnabled( text.length() > 0 && ui->playerListWidget->selectedItems().count() > 0 );
+	text = text.trimmed();
+	addPlayerButton->setEnabled( text.length() > 0 && isUniqueNickname(text) );
+	renamePlayerButton->setEnabled( text.length() > 0 && ui->playerListWidget->selectedItems().count() > 0 && isUniqueNickname(text) );
+}
+
+bool PlayerManagerDialog::isUniqueNickname(const QString& text) const
+{
+	for ( int index = 0; index < ui->playerListWidget->count(); ++index )
+		if ( ui->playerListWidget->item(index)->text() == text )
+			return false;
+
+	return true;
 }
 
 void PlayerManagerDialog::selectedPlayerChanged()

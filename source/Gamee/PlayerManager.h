@@ -1,10 +1,10 @@
 #ifndef PLAYERMANAGER_H
 #define PLAYERMANAGER_H
 
+#include <QList>
 #include <QObject>
 
 class Player;
-class QStringList;
 
 /** Manages the list of players on this device or network players */
 class PlayerManager : public QObject
@@ -13,15 +13,33 @@ class PlayerManager : public QObject
 	Q_DISABLE_COPY(PlayerManager)
 
   protected:
+	/// The list of players stored on this device
+	QList<Player*> players;
 	/// Current active player, who is playing on this device, null if no players have been
-	/// registered yet
+	/// registered yet.
 	Player* currentPlayer;
 
   public:
 	/// Constructor
 	explicit PlayerManager(QObject *parent = nullptr);
 	/// Destructor
-	~PlayerManager();
+	virtual ~PlayerManager();
+	/// Load the list of all players on this device
+	/// @return The count of players loaded
+	int loadPlayers();
+	/// @return The number of players stored in this device
+	/// @remarks Call @a loadPlayers() before calling this method
+	inline int getPlayerCount() const { return players.count(); }
+	/// Get access to the i-th player in read-only mode
+	/// @remarks No index out of bounds verification is done
+	inline const Player* getPlayerAt(int index) const { return players[index]; }
+	/// Get access to the i-th player in write mode
+	/// @remarks No index out of bounds verification is done
+	inline Player* getPlayerAt(int index) { return players[index]; }
+	/// Removes all player objects from the @a players list
+	void clearPlayers();
+
+  public:
 	/// Loads the configuration of the last player who played in the previous session of this game
 	/// @return true on success, false if there is not previous player stored in settings
 	bool reloadLastPlayer();
@@ -30,15 +48,16 @@ class PlayerManager : public QObject
 	void saveLastPlayer();
 	/// Get access to the current active player on this device
 	inline Player* getCurrentPlayer() const { return currentPlayer; }
-	/// Set the current active player by its nickname
+	/// Set the current active player
 	/// @return A reference to the new player object, nullptr on error
-	Player* setCurrentPlayer(const QString& nickname);
+	Player* setCurrentPlayer(Player* player);
+	/// Set the current active player by its unique id
+	/// @return A reference to the new player object, nullptr on error
+	Player* setCurrentPlayer(const QByteArray& playerId);
 	/// Creates a new player
 	/// @param nickname Identifier of the player
-	/// @param network If true @a nickname must be unique on the world and player will be added to
-	/// the player network. If false, player will be created locally only
 	/// @return A pointer to the created player, nullptr on error
-	Player* createPlayer(const QString& nickname, bool network);
+	Player* createPlayer(const QString& nickname);
 	/// Imports player data from the network, i.e: sign in a network player on this device
 	Player* retrievePlayer(const QString& nickname);
 	/// Removers a player
@@ -48,12 +67,10 @@ class PlayerManager : public QObject
 	bool removePlayer(const QString& nickname, bool network);
 	/// Syncronize data of the current player between this device and the network database
 	bool syncCurrentPlayer();
-	/// Loads and returns the list of nicknames of local players
-	QStringList fetchLocalPlayerNicknames();
 
   signals:
 	/// Emitted when the player is changed
-	void playerChanged(Player* newPlayer);
+	void playerChanged(Player* currentPlayer);
 };
 
 #endif // PLAYERMANAGER_H

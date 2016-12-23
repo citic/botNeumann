@@ -1,4 +1,4 @@
-QT += core gui svg widgets
+QT += core gui svg widgets network
 TARGET = botNeumann
 TEMPLATE = app
 CONFIG += c++11
