@@ -4,10 +4,13 @@
 #include "MainWindow.h"
 #include "Stage.h"
 
+#include <QAction>
 #include <QDockWidget>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QGraphicsSvgItem>
+#include <QMenuBar>
+#include <QMessageBox>
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -69,6 +72,12 @@ void MainWindow::setupStage()
 	Q_ASSERT(director == nullptr);
 	director = new BotNeumannDirector(stage);
 	director->begin();
+
+	// A hidden action to reset configuration
+	QAction* resetSettingsAction = new QAction(this);
+	resetSettingsAction->setShortcut(QKeySequence("Ctrl+Shift+R"));
+	connect( resetSettingsAction, SIGNAL(triggered(bool)), this, SLOT(resetSettings()) );
+	menuBar()->addAction(resetSettingsAction);
 }
 
 void MainWindow::saveSettings()
@@ -83,4 +92,16 @@ void MainWindow::restoreSettings()
 	QSettings settings;
 	resize( settings.value("MainWindow/Size", sizeHint()).toSize() );
 	restoreState( settings.value("MainWindow/State").toByteArray() );
+}
+
+void MainWindow::resetSettings()
+{
+	const QString& text = tr("Do you want to reset the configuration. All players' progress will be deleted");
+	if ( QMessageBox::question(this, tr("Settings reset?"), text, QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes )
+	{
+		QSettings settings;
+		settings.clear();
+		settings.sync();
+		QMessageBox::warning(this, tr("Settings reset"), tr("Settings were reset. Please restart botNeumann++"));
+	}
 }

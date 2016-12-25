@@ -44,7 +44,6 @@ bool PlayerManager::reloadLastPlayer()
 {
 	// Get the last player id from the settings
 	QSettings settings;
-	settings.clear();
 	const QVariant& playerId = settings.value("Players/LastPlayer");
 	if ( playerId.isNull() ) return false;
 	Q_ASSERT(currentPlayer == nullptr);
@@ -81,6 +80,7 @@ Player* PlayerManager::setCurrentPlayer(const QByteArray& playerId)
 	Q_ASSERT(playerId.isEmpty() == false);
 	Player* player = new Player(playerId);
 	Q_ASSERT(player);
+	player->load();
 	return setCurrentPlayer(player);
 }
 

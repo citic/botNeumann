@@ -44,6 +44,10 @@ class MainWindow : public QMainWindow
 	void saveSettings();
 	/// Restore (apply) the saved window dimensions
 	void restoreSettings();
+
+  protected slots:
+	/// Triggered when user presses Cmd+Shift+R to reset the settings
+	void resetSettings();
 };
 
 #endif // MAINWINDOW_H

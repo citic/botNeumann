@@ -74,8 +74,8 @@ QDir Player::getLocalDataDirectory() const
 QString Player::generatePlainId() const
 {
 	QHostInfo hostInfo;
-	const QString& hostname = hostInfo.hostName();
-	const QString& datetime = QDateTime::currentDateTime().toString("yymmdd_hhmmss");
+	const QString& hostname = hostInfo.localHostName();
+	const QString& datetime = QDateTime::currentDateTime().toString("yyMMdd_hhmmss");
 	qDebug("Generating id from %s", qPrintable(hostname + '-' + datetime + '-' + nickname));
 	return hostname + '-' + datetime + '-' + nickname;
 }
