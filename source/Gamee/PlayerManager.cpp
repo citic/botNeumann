@@ -106,13 +106,17 @@ bool PlayerManager::renamePlayer(const QByteArray& playerId, const QString& newN
 	if ( currentPlayer && currentPlayer->getId() == playerId )
 	{
 		currentPlayer->setNickname(newNickname);
+		currentPlayer->save();
 		emit playerChanged(currentPlayer);
 	}
 	else
 	{
 		Player* player = findPlayerById(playerId);
 		if ( player )
+		{
 			player->setNickname(newNickname);
+			player->save();
+		}
 	}
 	return true;
 }

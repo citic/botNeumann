@@ -9,7 +9,9 @@
 PlayerManagerDialog::PlayerManagerDialog(QWidget *parent)
 	: QDialog(parent)
 	, ui(new Ui::PlayerManagerDialog)
+	, playerManager( BotNeumannApp::getInstance()->getPlayerManager() )
 {
+	Q_ASSERT(playerManager);
 	ui->setupUi(this);
 
 	loadPlayers();
@@ -49,9 +51,6 @@ PlayerManagerDialog::~PlayerManagerDialog()
 void PlayerManagerDialog::loadPlayers()
 {
 	// Fill the list widget with the player list stored in this device
-	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
-	Q_ASSERT(playerManager);
-
 	// Load players from settings and get the number of loaded players
 	int playerCount = playerManager->loadPlayers();
 
@@ -63,9 +62,6 @@ void PlayerManagerDialog::loadPlayers()
 void PlayerManagerDialog::createPlayerClicked()
 {
 	const QString& nickname = ui->nicknameLineEdit->text().trimmed();
-
-	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
-	Q_ASSERT(playerManager);
 	Player* newPlayer = playerManager->createPlayer(nickname);
 	if ( newPlayer )
 	{
@@ -95,8 +91,6 @@ void PlayerManagerDialog::renamePlayerClicked()
 	Q_ASSERT(selectedItem);
 
 	// Tell to the player manager who is the current active player
-	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
-	Q_ASSERT(playerManager);
 	const QByteArray& playerId = selectedItem->data(Qt::UserRole).toByteArray();
 	const QString& oldNickname = selectedItem->text();
 	if ( playerManager->renamePlayer( playerId, newNickname ) )
@@ -111,10 +105,7 @@ void PlayerManagerDialog::selectPlayerClicked()
 	if ( ui->playerListWidget->selectedItems().size() < 0 ) return;
 	QListWidgetItem* selectedItem = ui->playerListWidget->selectedItems()[0];
 	Q_ASSERT(selectedItem);
-
 	// Tell to the player manager who is the current active player
-	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
-	Q_ASSERT(playerManager);
 	playerManager->setCurrentPlayer( selectedItem->data(Qt::UserRole).toByteArray() );
 }
 

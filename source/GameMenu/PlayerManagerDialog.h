@@ -4,6 +4,7 @@
 #include <QDialog>
 
 class Player;
+class PlayerManager;
 
 namespace Ui { class PlayerManagerDialog; }
 
@@ -18,6 +19,7 @@ class PlayerManagerDialog : public QDialog
 	QPushButton* removePlayerButton;
 	QPushButton* renamePlayerButton;
 	QPushButton* changePlayerButton;
+	PlayerManager* playerManager;
 
   public:
 	explicit PlayerManagerDialog(QWidget *parent = 0);
