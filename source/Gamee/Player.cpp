@@ -29,9 +29,6 @@ bool Player::load()
 {
 	QSettings settings;
 	const QString& playerGroup = "Players/" + id;
-	if ( settings.contains(playerGroup) == false )
-		return false;
-
 	nickname = settings.value(playerGroup + "/Nickname", "").toString();
 	return true;
 }
@@ -46,6 +43,7 @@ bool Player::save()
 		settings.setValue(playerGroup + "/Created", dateTime);
 	}
 	settings.setValue(playerGroup + "/Nickname", nickname);
+	settings.sync();
 	return true;
 }
 
