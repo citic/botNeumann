@@ -6,8 +6,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 
-const int rolePlayerId = 1;
-
 PlayerManagerDialog::PlayerManagerDialog(QWidget *parent)
 	: QDialog(parent)
 	, ui(new Ui::PlayerManagerDialog)
@@ -23,9 +21,9 @@ PlayerManagerDialog::PlayerManagerDialog(QWidget *parent)
 	connect(ui->playerListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(selectedPlayerChanged()));
 
 	// Create a new player
-	addPlayerButton = ui->buttonBox->addButton(tr("Add"), QDialogButtonBox::ActionRole);
+	addPlayerButton = ui->buttonBox->addButton(tr("Create"), QDialogButtonBox::ActionRole);
 	addPlayerButton->setEnabled(false);
-	connect(addPlayerButton, SIGNAL(clicked()), this, SLOT(addPlayerClicked()));
+	connect(addPlayerButton, SIGNAL(clicked()), this, SLOT(createPlayerClicked()));
 
 	// Remove the selected  player
 	removePlayerButton = ui->buttonBox->addButton(tr("Remove"), QDialogButtonBox::ActionRole);
@@ -62,7 +60,7 @@ void PlayerManagerDialog::loadPlayers()
 		createItemForPlayer( playerManager->getPlayerAt(playerIndex) );
 }
 
-void PlayerManagerDialog::addPlayerClicked()
+void PlayerManagerDialog::createPlayerClicked()
 {
 	const QString& nickname = ui->nicknameLineEdit->text().trimmed();
 
@@ -70,7 +68,10 @@ void PlayerManagerDialog::addPlayerClicked()
 	Q_ASSERT(playerManager);
 	Player* newPlayer = playerManager->createPlayer(nickname);
 	if ( newPlayer )
+	{
 		createItemForPlayer(newPlayer);
+		emit accept();
+	}
 	else
 		QMessageBox::critical(this, tr("Error"), tr("Could not create player: ") + nickname);
 }
@@ -78,7 +79,7 @@ void PlayerManagerDialog::addPlayerClicked()
 void PlayerManagerDialog::createItemForPlayer(const Player* player)
 {
 	QListWidgetItem* item = new QListWidgetItem(player->getNickname(), ui->playerListWidget );
-	item->setData( rolePlayerId, player->getId() );
+	item->setData( Qt::UserRole, player->getId() );
 }
 
 void PlayerManagerDialog::removePlayerClicked()
@@ -87,6 +88,21 @@ void PlayerManagerDialog::removePlayerClicked()
 
 void PlayerManagerDialog::renamePlayerClicked()
 {
+	const QString& newNickname = ui->nicknameLineEdit->text().trimmed();
+
+	if ( ui->playerListWidget->selectedItems().size() < 0 ) return;
+	QListWidgetItem* selectedItem = ui->playerListWidget->selectedItems()[0];
+	Q_ASSERT(selectedItem);
+
+	// Tell to the player manager who is the current active player
+	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
+	Q_ASSERT(playerManager);
+	const QByteArray& playerId = selectedItem->data(Qt::UserRole).toByteArray();
+	const QString& oldNickname = selectedItem->text();
+	if ( playerManager->renamePlayer( playerId, newNickname ) )
+		selectedItem->setText(newNickname);
+	else
+		QMessageBox::critical(this, tr("Error"), tr("Could not rename player %1 to %2").arg(oldNickname).arg(newNickname));
 }
 
 void PlayerManagerDialog::selectPlayerClicked()
@@ -99,7 +115,7 @@ void PlayerManagerDialog::selectPlayerClicked()
 	// Tell to the player manager who is the current active player
 	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
 	Q_ASSERT(playerManager);
-	playerManager->setCurrentPlayer( selectedItem->data(rolePlayerId).toByteArray() );
+	playerManager->setCurrentPlayer( selectedItem->data(Qt::UserRole).toByteArray() );
 }
 
 void PlayerManagerDialog::nicknameLineEditChanged(QString text)

@@ -26,6 +26,8 @@ class Player : public QObject
 	inline const QByteArray& getId() const { return id; }
 	/// Get access to the nickname
 	inline const QString& getNickname() const { return nickname; }
+	/// Changes the nickname to this player. Do not save the changes
+	inline void setNickname(const QString& nickname) { this->nickname = nickname; }
 	/// Rename this player
 	bool rename(const QString& newNickname, bool save = true);
 	/// Load player data from settings

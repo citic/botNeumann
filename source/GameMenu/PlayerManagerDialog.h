@@ -24,7 +24,7 @@ class PlayerManagerDialog : public QDialog
 	~PlayerManagerDialog();
 
   protected slots:
-	void addPlayerClicked();
+	void createPlayerClicked();
 	void removePlayerClicked();
 	void renamePlayerClicked();
 	void selectPlayerClicked();

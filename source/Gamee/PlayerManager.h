@@ -36,6 +36,10 @@ class PlayerManager : public QObject
 	/// Get access to the i-th player in write mode
 	/// @remarks No index out of bounds verification is done
 	inline Player* getPlayerAt(int index) { return players[index]; }
+	/// Finds a player in @a players array that matches the given id
+	/// @remark Search is done in linear mode O(n)
+	/// @return Pointer to the player object, nullptr if not found
+	Player* findPlayerById(const QByteArray& id);
 	/// Removes all player objects from the @a players list
 	void clearPlayers();
 
@@ -58,6 +62,9 @@ class PlayerManager : public QObject
 	/// @param nickname Identifier of the player
 	/// @return A pointer to the created player, nullptr on error
 	Player* createPlayer(const QString& nickname);
+	/// Renames the player identified by @a playerId with @a newNickname
+	/// @return true if player was renamed, false on error
+	bool renamePlayer(const QByteArray& playerId, const QString& newNickname);
 	/// Imports player data from the network, i.e: sign in a network player on this device
 	Player* retrievePlayer(const QString& nickname);
 	/// Removers a player
