@@ -80,6 +80,21 @@ void PlayerManagerDialog::createItemForPlayer(const Player* player)
 
 void PlayerManagerDialog::removePlayerClicked()
 {
+	if ( ui->playerListWidget->selectedItems().size() < 0 ) return;
+	QListWidgetItem* selectedItem = ui->playerListWidget->selectedItems()[0];
+	Q_ASSERT(selectedItem);
+
+	const QByteArray& playerId = selectedItem->data(Qt::UserRole).toByteArray();
+	const QString& nickname = selectedItem->text();
+
+	const QString& text = tr("Remove player %1 and his/her progress?").arg(nickname);
+	if ( QMessageBox::question(this, tr("Remove player?"), text, QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes )
+	{
+		if ( playerManager->removePlayer( playerId ) )
+			delete selectedItem;
+		else
+			QMessageBox::critical(this, tr("Error"), tr("Could not remove player %1").arg(nickname));
+	}
 }
 
 void PlayerManagerDialog::renamePlayerClicked()
@@ -127,10 +142,10 @@ bool PlayerManagerDialog::isUniqueNickname(const QString& text) const
 
 void PlayerManagerDialog::selectedPlayerChanged()
 {
-	bool isThereSelection = ui->playerListWidget->selectedItems().size() >= 0;
-	changePlayerButton->setEnabled(isThereSelection);
-	removePlayerButton->setEnabled(isThereSelection);
-	if ( ! isThereSelection ) return;
+	int selectedPlayers = ui->playerListWidget->selectedItems().size();
+	changePlayerButton->setEnabled(selectedPlayers > 0);
+	removePlayerButton->setEnabled(selectedPlayers > 0);
+	if ( selectedPlayers <= 0 ) return;
 	QListWidgetItem* selectedItem = ui->playerListWidget->selectedItems()[0];
 	ui->nicknameLineEdit->setText( selectedItem->text() );
 }

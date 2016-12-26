@@ -68,16 +68,16 @@ bool PlayerManager::reloadLastPlayer()
 
 void PlayerManager::saveLastPlayer()
 {
-	if ( currentPlayer == nullptr ) return;
 	QSettings settings;
-	settings.setValue("Players/LastPlayer", QVariant(currentPlayer->getId()));
-	currentPlayer->save();
+	const QByteArray& playerId = currentPlayer ? currentPlayer->getId() : QByteArray();
+	settings.setValue("Players/LastPlayer", QVariant(playerId));
+	if ( currentPlayer) currentPlayer->save();
 }
 
 Player* PlayerManager::setCurrentPlayer(Player* player)
 {
-	Q_ASSERT(player);
-	if ( currentPlayer && currentPlayer != player ) currentPlayer->deleteLater();
+	if ( currentPlayer && currentPlayer != player )
+		currentPlayer->deleteLater();
 	currentPlayer = player;
 	saveLastPlayer();
 	emit playerChanged(currentPlayer);
@@ -98,7 +98,26 @@ Player* PlayerManager::createPlayer(const QString& nickname)
 	Player* player = new Player("", nickname);
 	player->autogenerateId();
 	qDebug("Player %s created with id %s", qPrintable(nickname), qPrintable(player->getId()));
-	return setCurrentPlayer(player);
+	setCurrentPlayer(player);
+	loadPlayers();
+	return player;
+}
+
+bool PlayerManager::removePlayer(const QByteArray& playerId)
+{
+	if ( currentPlayer && currentPlayer->getId() == playerId )
+	{
+		currentPlayer->remove();
+		setCurrentPlayer(nullptr);
+	}
+	else
+	{
+		Player* player = findPlayerById(playerId);
+		if ( player )
+			player->remove();
+	}
+	loadPlayers();
+	return true;
 }
 
 bool PlayerManager::renamePlayer(const QByteArray& playerId, const QString& newNickname)

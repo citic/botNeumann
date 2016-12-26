@@ -49,6 +49,8 @@ class Player : public QObject
 	/// Autogenerates an unique id
 	/// @return true if a new code was set, false if code was untouched
 	bool autogenerateId();
+	/// Removes this player from the settings
+	void remove();
 
   protected:
 	/// Returns the path to the directory in the local machine to store data for this player, for

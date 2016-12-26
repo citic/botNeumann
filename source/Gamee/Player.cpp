@@ -92,3 +92,9 @@ bool Player::autogenerateId()
 	}
 	return false;
 }
+
+void Player::remove()
+{
+	const QString& playerGroup = "Players/" + id;
+	QSettings().remove(playerGroup);
+}
