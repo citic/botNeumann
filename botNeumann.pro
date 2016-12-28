@@ -36,6 +36,7 @@ HEADERS += \
 	source/Common/Common.h \
 	source/Common/GameScene.h \
 	source/Common/InfoDialog.h \
+	source/Common/LogManager.h \
 	source/Common/PlayerStatus.h \
 	source/Gamee/Actor.h \
 	source/Gamee/Director.h \
@@ -94,6 +95,7 @@ SOURCES += \
 	source/BotNeumannDirector.cpp \
 	source/Common/GameScene.cpp \
 	source/Common/InfoDialog.cpp \
+	source/Common/LogManager.cpp \
 	source/Common/PlayerStatus.cpp \
 	source/Gamee/Actor.cpp \
 	source/Gamee/Director.cpp \

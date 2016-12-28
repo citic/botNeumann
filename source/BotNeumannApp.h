@@ -1,6 +1,7 @@
 #ifndef BOTNEUMANNAPP_H
 #define BOTNEUMANNAPP_H
 
+#include "LogManager.h"
 #include <QApplication>
 
 class Player;
@@ -14,6 +15,8 @@ class BotNeumannApp : public QApplication
 	Q_DISABLE_COPY(BotNeumannApp)
 
   protected:
+	/// Saves log events to a file and upload them to a network server
+	LogManager logManager;
 	/// Manages the list of players of this game
 	PlayerManager* playerManager = nullptr;
 
