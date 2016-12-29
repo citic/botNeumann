@@ -1,6 +1,7 @@
 #include "BotNeumannApp.h"
 #include "GameMenuScene.h"
 #include "LinearLayout.h"
+#include "LogManager.h"
 #include "PlayerManager.h"
 #include "PlayerManagerDialog.h"
 #include "PlayerStatus.h"
@@ -140,21 +141,19 @@ void GameMenuScene::createButtonPressed()
 	emit showUnitSelectionScene("create", true);
 }
 
-#include <QDebug>
-
 void GameMenuScene::infoButtonPressed()
 {
-	qDebug() << "Information asked";
+	qCDebug(logNotImplemented) << "Information asked";
 }
 
 void GameMenuScene::rewardsButtonPressed()
 {
-	qDebug() << "Rewards asked";
+	qCDebug(logNotImplemented) << "Rewards asked";
 }
 
 void GameMenuScene::configButtonPressed()
 {
-	qDebug() << "Configuration asked";
+	qCDebug(logNotImplemented) << "Configuration asked";
 }
 
 void GameMenuScene::playerChanged(Player* newPlayer)

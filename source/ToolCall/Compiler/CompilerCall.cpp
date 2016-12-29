@@ -1,5 +1,7 @@
 #include "CompilerCall.h"
 #include "CompilerDiagnostic.h"
+#include "LogManager.h"
+
 #include <QDir>
 #include <QProcess>
 #include <QRegularExpression>
@@ -41,8 +43,6 @@ void CompilerCall::clear()
 	diagnostics.clear();
 }
 
-#include <QDebug>
-
 void CompilerCall::start()
 {
 	// Ensambles a command, something such as
@@ -63,18 +63,18 @@ void CompilerCall::start()
 
 	// Start the process
 	process->start(getCxxCompiler(), arguments);
-	qDebug() << process->program() << process->arguments().join(" ");
+	qCInfo(logBuild) << process->program() << process->arguments().join(" ");
 	state = ToolCallState::started;
 }
 
 void CompilerCall::processFinished()
 {
-	qDebug() << "Compilation finished with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
+	qCInfo(logBuild) << "Compilation finished with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
 
 	// Compilers does not send data to the standard output, but if there are something, print it
 	const QString& compilerStandarOutput = process->readAllStandardOutput();
 	if (compilerStandarOutput.length() > 0 )
-		qDebug() << "stdout [" << compilerStandarOutput << "]";
+		qCInfo(logBuild) << "stdout [" << compilerStandarOutput << "]";
 
 	// Expression to know if a line starts a new error/warning:
 	// "/path/to/sourcefile.cpp:line:col: severity: short diagnostic message"
@@ -110,7 +110,7 @@ void CompilerCall::processFinished()
 			currentDiagnostic->appendExplanation(line);
 		// Some lines may be ignored
 		else
-			qDebug() << "ignored stderr line {" << line << "}";
+			qCInfo(logBuild) << "ignored stderr line {" << line << "}";
 	}
 
 	// All the compiler output was processed. This source file has finished its compiling process
@@ -120,7 +120,7 @@ void CompilerCall::processFinished()
 
 void CompilerCall::processFailed()
 {
-	qDebug() << "Compilation failed with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
+	qCInfo(logBuild) << "Compilation failed with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
 
 	// The compilation fails when the compiler executable is not found or when user has not
 	// permissions to execute it. The most common scenery is in Windows, when the compiler is

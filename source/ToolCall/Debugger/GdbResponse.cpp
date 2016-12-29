@@ -1,5 +1,5 @@
 #include "GdbResponse.h"
-#include <QDebug>
+#include "LogManager.h"
 
 #define arr_size(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -99,7 +99,7 @@ int GdbResponse::parseAsyncOutput(const QString& reasonText)
 	AsyncClass asyncType = mapTextToReason(reasonText);
 	if ( asyncType == AsyncClass::AC_UNKNOWN )
 	{
-		qFatal("Unexpected response '%s'", qPrintable(reasonText));
+		qCritical(logDebugger, "Unexpected response '%s'", qPrintable(reasonText));
 		Q_ASSERT(false);
 		return -1;
 	}

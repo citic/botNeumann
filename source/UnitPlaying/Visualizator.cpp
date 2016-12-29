@@ -2,9 +2,9 @@
 #include "DebuggerBreakpoint.h"
 #include "GdbCall.h"
 #include "GuiBreakpoint.h"
+#include "LogManager.h"
 #include "MessagesArea.h"
 #include "UnitPlayingScene.h"
-#include <QDebug>
 
 Visualizator::Visualizator(const QFileInfo& executablePath, UnitPlayingScene* unitPlayingScene)
 	: QObject(unitPlayingScene)
@@ -35,15 +35,15 @@ bool Visualizator::start()
 	bool result = debuggerCall->start();
 	if ( ! result )
 	{
-		qCritical("Visualizator: could not start gdb\n");
+		qCritical(logVisualizator(), "Could not start gdb\n");
 		return false;
 	}
 
-	qDebug("Visualizator: gdb started");
+	qCDebug(logVisualizator(), "gdb started");
 
 	// Ask GDB run user program
 	if ( debuggerCall->sendGdbCommand(QString("-file-exec-and-symbols \"%1\"").arg(executablePath.filePath())) == GDB_ERROR )
-		qFatal("Visualizator: Failed to run user program: '%s'", qPrintable(executablePath.filePath()));
+		qCritical(logVisualizator(), "Failed to run user program: '%s'", qPrintable(executablePath.filePath()));
 
 	// Give inferior parameters to GDB
 	if ( userProgramArguments.length() > 0 )
@@ -55,18 +55,18 @@ bool Visualizator::start()
 	{
 		const QString& originalLocation = guiBreakpoint->buildOriginalLocation();
 		if ( debuggerCall->sendGdbCommand( "-break-insert " + originalLocation ) == GDB_ERROR )
-			qWarning( "Visualizator: Error: -break-insert %s", qPrintable(originalLocation) );
+			qCWarning( logVisualizator, "Error: -break-insert %s", qUtf8Printable(originalLocation) );
 	}
 
 	// Always stop execution at main function
 	if ( debuggerCall->sendGdbCommand("-break-insert -f main") == GDB_ERROR )
-		qFatal("Visualizator: Failed to set breakpoint at main() function");
+		qCritical(logVisualizator(), "Failed to set breakpoint at main() function");
 
 	// ToDo: Extract source filenames. Not required by botNeumann++ for the moment
 
 	// Ask GDB to start execution of user program (inferior), only if it is not running already
 	if ( state == STATE_RUNNING )
-		qFatal("Visualizator: gdb already running");
+		qCritical(logVisualizator(), "gdb already running");
 	else
 	{
 		inferiorProcessId = 0;
@@ -144,12 +144,12 @@ int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint
 
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
 {
-	qDebug("Visualizator::onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	qCDebug(logVisualizator(), "onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 }
 
 void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
 {
-	qDebug("Visualizator::onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	qCDebug(logVisualizator(), "onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 
 	switch ( asyncClass )
 	{
@@ -166,14 +166,14 @@ void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 bool Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
 {
 	Q_ASSERT(debuggerCall);
-	qDebug("Visualizator::onNotifyAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	qCDebug(logVisualizator(), "onNotifyAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 
 	switch ( asyncClass )
 	{
 		case AsyncClass::AC_THREAD_CREATED:
 			if ( isStopped() )
 				return debuggerCall->sendGdbCommand("-thread-info") != GDB_ERROR;
-			qFatal("Could not ask for thread info, program is currently running");
+			qCritical(logVisualizator, "Could not ask for thread info, program is currently running");
 			return false;
 
 		default:
@@ -183,7 +183,7 @@ bool Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 
 void Visualizator::onResult(const GdbItemTree& tree)
 {
-	qDebug("Visualizator::onResult(%s)", qPrintable(tree.buildDescription()));
+	qCDebug(logVisualizator(), "onResult(%s)", qPrintable(tree.buildDescription()));
 	const GdbTreeNode* node = nullptr;
 
 	if ( ( node = tree.findNode("/threads") ) )
@@ -230,12 +230,12 @@ void Visualizator::onConsoleStreamOutput(const QString& text)
 
 void Visualizator::onTargetStreamOutput(const QString& str)
 {
-	qDebug("Visualizator::onTargetStreamOutput(%s)", qPrintable(str));
+	qCDebug(logVisualizator(), "onTargetStreamOutput(%s)", qPrintable(str));
 }
 
 void Visualizator::onLogStreamOutput(const QString& str)
 {
-	qDebug("Visualizator::onLogStreamOutput(%s)", qPrintable(str));
+	qCDebug(logVisualizator(), "onLogStreamOutput(%s)", qPrintable(str));
 }
 
 void Visualizator::updateThreads(const GdbTreeNode* threadsNode)

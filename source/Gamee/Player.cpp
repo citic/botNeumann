@@ -1,11 +1,12 @@
 #include "Player.h"
+#include "LogManager.h"
+
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QDir>
 #include <QHostInfo>
 #include <QSettings>
 #include <QStandardPaths>
-#include <QDebug>
 
 Player::Player(const QByteArray& id, const QString& nickname, QObject *parent)
 	: QObject(parent)
@@ -64,7 +65,7 @@ QDir Player::getLocalDataDirectory() const
 	QDir dir( getLocalDataPath() );
 	if ( ! dir.exists() )
 		if ( ! dir.mkpath( "." ) )
-			qWarning() << "Unable to create user data directory: " << dir.path();
+			qCWarning(logPlayer()) << "Unable to create user data directory:" << dir.path();
 
 	return dir;
 }
@@ -74,20 +75,23 @@ QString Player::generatePlainId() const
 	QHostInfo hostInfo;
 	const QString& hostname = hostInfo.localHostName();
 	const QString& datetime = QDateTime::currentDateTime().toString("yyMMdd_hhmmss");
-	qDebug("Generating id from %s", qPrintable(hostname + '-' + datetime + '-' + nickname));
 	return hostname + '-' + datetime + '-' + nickname;
 }
 
-QByteArray Player::generateCodedId() const
+QByteArray Player::generateCodedId(bool logUserCreation) const
 {
-	return QCryptographicHash::hash(qPrintable(generatePlainId()), QCryptographicHash::Md5).toHex();
+	const QString& plainId = generatePlainId();
+	const QByteArray& hash = QCryptographicHash::hash(qPrintable(plainId), QCryptographicHash::Md5).toHex();
+	if ( logUserCreation )
+		qCInfo(logPlayer, "Player %s created with id %s", qPrintable(plainId), qPrintable(hash));
+	return hash;
 }
 
 bool Player::autogenerateId()
 {
 	if ( this->id.isEmpty() )
 	{
-		this->id = generateCodedId();
+		this->id = generateCodedId(true);
 		return true;
 	}
 	return false;

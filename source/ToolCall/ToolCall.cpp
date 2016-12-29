@@ -65,8 +65,6 @@ QStringList ToolCall::getDefaultLinkerArguments()
 	return arguments;
 }
 
-#include <QDebug>
-
 bool ToolCall::askPlayerCompilerDirectory()
 {
 	// A first dialog informs players about the problem and let them decide if they want to

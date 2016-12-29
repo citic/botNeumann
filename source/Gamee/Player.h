@@ -44,8 +44,9 @@ class Player : public QObject
 	/// current date and the nickname of this player
 	QString generatePlainId() const;
 	/// Creates a MD5 encoded unique id for this player
+	/// @param logUserCreation Logs the user creation event
 	/// @see createPlainId()
-	QByteArray generateCodedId() const;
+	QByteArray generateCodedId(bool logUserCreation = false) const;
 	/// Autogenerates an unique id
 	/// @return true if a new code was set, false if code was untouched
 	bool autogenerateId();

@@ -3,12 +3,12 @@
 #include "Common.h"
 #include "GuiBreakpoint.h"
 #include "LineNumberArea.h"
+#include "LogManager.h"
 #include "Player.h"
 #include "PlayerSolution.h"
 #include "SyntaxHighlighter.h"
 #include "Unit.h"
 
-#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QPainter>
@@ -81,7 +81,7 @@ bool CodeEditor::loadInitialFile(const QString& filepath)
 {
 	// Store the active unit and the filepath for future use
 	this->filepath = filepath;
-	qDebug() << "CodeEditor: editing" << filepath;
+	qCInfo(logEditor) << "Editing" << filepath;
 
 	// If exists a source file load it, otherwise load the initial code provided by the unit
 	return QFile::exists(filepath) ? loadFileContents() : loadUnitInitialCode();
@@ -115,7 +115,7 @@ bool CodeEditor::loadFileContents()
 	QFile file(filepath);
 	if ( ! file.open(QIODevice::Text | QIODevice::ReadOnly) )
 	{
-		qCritical() << "CodeEditor: could not open file" << filepath;
+		qCCritical(logEditor) << "Could not open file" << filepath;
 		return false;
 	}
 
@@ -153,7 +153,7 @@ bool CodeEditor::save()
 	if ( ! dir.exists() )
 		if ( ! dir.mkpath(".") )
 		{
-			qCritical() << "CodeEditor: Could not create directory:" << dir.absolutePath();
+			qCritical(logEditor) << "Could not create directory:" << dir.absolutePath();
 			return false;
 		}
 
@@ -163,14 +163,14 @@ bool CodeEditor::save()
 	// Open the target file for writing text considering line changes format
 	if ( ! file.open(QIODevice::WriteOnly | QIODevice::Text) )
 	{
-		qCritical() << "CodeEditor: Could not open file for writing:" << filepath;
+		qCritical(logEditor) << "Could not open file for writing:" << filepath;
 		return false;
 	}
 
 	// Save the current text from textEdit to a text file with UTF-8 codification
 	if ( file.write( toPlainText().toUtf8() ) == -1 )
 	{
-		qCritical() << "CodeEditor: Could not write file:" << filepath;
+		qCritical(logEditor) << "Could not write file:" << filepath;
 		return false;
 	}
 
@@ -179,7 +179,7 @@ bool CodeEditor::save()
 
 	// If there is a pending autosave operation, cancel it
 	autoSaveTimer->stop();
-	qDebug() << "CodeEditor: File saved:" << filepath;
+	qCInfo(logEditor) << "File saved:" << filepath;
 	return true;
 }
 

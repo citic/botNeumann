@@ -97,7 +97,6 @@ Player* PlayerManager::createPlayer(const QString& nickname)
 {
 	Player* player = new Player("", nickname);
 	player->autogenerateId();
-	qDebug("Player %s created with id %s", qPrintable(nickname), qPrintable(player->getId()));
 	setCurrentPlayer(player);
 	loadPlayers();
 	return player;

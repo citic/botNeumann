@@ -1,6 +1,7 @@
 #include "Unit.h"
+#include "LogManager.h"
+
 #include <cmath>
-#include <QDebug>
 #include <QFile>
 #include <QXmlStreamReader>
 
@@ -40,11 +41,11 @@ Unit::~Unit()
 
 bool Unit::load(const QString& filename)
 {
-	qDebug() << "Unit: loading " << filename;
+	qCInfo(logPlayer) << "Unit: loading " << filename;
 	QFile file(filename);
 	if ( ! file.open(QFile::ReadOnly | QFile::Text) )
 	{
-		qDebug() << "Unit: could not open " << filename;
+		qCDebug(logApplication) << "Unit: could not open " << filename;
 		return false;
 	}
 
@@ -92,15 +93,15 @@ QString Unit::getARandomGenerator() const
 
 void Unit::print()
 {
-	qDebug() << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "min-theads:" << minThreads << "timeout:" << timeout;
+	qCDebug(logApplication) << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "min-theads:" << minThreads << "timeout:" << timeout;
 	for ( Descriptions::const_iterator itr = descriptions.begin(); itr != descriptions.end(); ++itr )
-		qDebug() << "description lang:" << itr.key() << "value:" << itr.value();
-	qDebug() << "initial-code:" << initialCodes;
+		qCDebug(logApplication) << "description lang:" << itr.key() << "value:" << itr.value();
+	qCDebug(logApplication) << "initial-code:" << initialCodes;
 	for ( int i = 0; i < solutions.size(); ++i )
-		qDebug() << "solution:" << solutions[i];
-	qDebug() << "generator:" << generators;
+		qCDebug(logApplication) << "solution:" << solutions[i];
+	qCDebug(logApplication) << "generator:" << generators;
 	for ( int i = 0; i < testCases.size(); ++i )
-		qDebug() << "test case input:" << testCases[i].first << "test case output:" << testCases[i].second;
+		qCDebug(logApplication) << "test case input:" << testCases[i].first << "test case output:" << testCases[i].second;
 }
 
 bool Unit::loadDocument(QXmlStreamReader& xmlReader)
@@ -118,7 +119,7 @@ bool Unit::loadDocument(QXmlStreamReader& xmlReader)
 		// Root element is done. Load the child elements
 		while ( xmlReader.readNextStartElement() )
 			if ( ! loadDocumentChild(xmlReader)  )
-				qDebug() << "Unit: ignoring element:" << xmlReader.name();
+				qCDebug(logApplication) << "Unit: ignoring element:" << xmlReader.name();
 	}
 	return true;
 }
@@ -144,7 +145,7 @@ bool Unit::loadDocumentAttributes(QXmlStreamReader& xmlReader)
 	ramSize = xmlReader.attributes().value("ram").toULongLong();
 	if ( ramSize < requiredRam )
 	{
-		qDebug() << QString("%1.botnu: insufficient RAM %2B, assumed %3B").arg(id).arg(ramSize).arg(requiredRam);
+		qCDebug(logApplication) << QString("%1.botnu: insufficient RAM %2B, assumed %3B").arg(id).arg(ramSize).arg(requiredRam);
 		ramSize = requiredRam;
 	}
 
@@ -213,5 +214,5 @@ void Unit::distributeMemory()
 
 	// Visible rows of the stack segment
 	stackSegmentVisibleRows = sqrt(ramSize / (35.0 * largestDataTypeSize));
-	qDebug() << "Stack segment visible rows" << stackSegmentVisibleRows << "of" << columns / cpuCores << "columns each";
+	qCDebug(logApplication) << "Stack segment visible rows" << stackSegmentVisibleRows << "of" << columns / cpuCores << "columns each";
 }

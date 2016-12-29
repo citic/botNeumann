@@ -3,12 +3,12 @@
 #include "CpuCores.h"
 #include "DataSegment.h"
 #include "HeapSegment.h"
+#include "LogManager.h"
 #include "MainWindow.h"
 #include "MessagesArea.h"
 #include "Stage.h"
 #include "UnitPlayingScene.h"
 #include "Visualizator.h"
-#include <QDebug>
 
 UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename, Stage* stage, QGraphicsItem* parent)
 	: GameScene("unit_playing", stage, parent)
@@ -27,7 +27,7 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 
 	// Load the botNeumann unit from the .botnu file
 	if ( ! unit.load(filename) )
-		qDebug() << "Error: unit not loaded" << filename;
+		qCCritical(logApplication) << "Unit not loaded:" << filename;
 
 	// Distribute the screen space between each segment according to the number of rows they require
 	double heapSegmentProportion = 0.0, cpuCoresProportion = 0.0, dataSegmentProportion;

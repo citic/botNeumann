@@ -2,6 +2,7 @@
 #include "GameScene.h"
 #include "LabelButton.h"
 #include "LinearLayout.h"
+#include "LogManager.h"
 #include "MainWindow.h"
 #include "Prop.h"
 #include "Stage.h"
@@ -86,30 +87,28 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 //	connect(rewardsButton, SIGNAL(pressed()), this, SLOT(rewardsButtonPressed()));
 }
 
-#include <QDebug>
-
 void GameScene::infoButtonPressed()
 {
-	qDebug() << "Information asked";
+	qCDebug(logNotImplemented) << "Information asked";
 }
 
 void GameScene::playerStatusPressed()
 {
-	qDebug() << "Player management dialog not implemented in this version";
+	qCDebug(logNotImplemented) << "Player management dialog not implemented in this version";
 }
 
 void GameScene::configButtonPressed()
 {
-	qDebug() << "Configuration asked";
+	qCDebug(logNotImplemented) << "Configuration asked";
 }
 
 void GameScene::codeSegmentTogglePressed()
 {
-	qDebug() << "Code Editor toggled";
+	qCDebug(logNotImplemented) << "Code Editor toggled";
 }
 
 void GameScene::rewardsButtonPressed()
 {
-	qDebug() << "Rewards asked";
+	qCDebug(logNotImplemented) << "Rewards asked";
 }
 

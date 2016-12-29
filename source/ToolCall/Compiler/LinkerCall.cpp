@@ -1,5 +1,7 @@
 #include "LinkerCall.h"
 #include "LinkerDiagnostic.h"
+#include "LogManager.h"
+
 #include <QProcess>
 #include <QTextStream>
 
@@ -15,8 +17,6 @@ LinkerCall::LinkerCall(const QStringList& objectFiles, const QFileInfo& executab
 LinkerCall::~LinkerCall()
 {
 }
-
-#include <QDebug>
 
 void LinkerCall::start()
 {
@@ -36,18 +36,18 @@ void LinkerCall::start()
 
 	// Start the process
 	process->start(getCxxCompiler(), arguments);
-	qDebug() << process->program() << process->arguments().join(" ");
+	qCInfo(logBuild) << process->program() << process->arguments().join(" ");
 	state = ToolCallState::started;
 }
 
 void LinkerCall::processFinished()
 {
-	qDebug() << "Linking finished with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
+	qCInfo(logBuild) << "Linking finished with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
 
 	// Compilers does not send data to the standard output, but if there are something, print it
 	const QString& compilerStandarOutput = process->readAllStandardOutput();
 	if (compilerStandarOutput.length() > 0 )
-		qDebug() << "stdout [" << compilerStandarOutput << "]";
+		qCDebug(logBuild) << "stdout [" << compilerStandarOutput << "]";
 
 	QTextStream errorOutput( process->readAllStandardError() );
 	while ( ! errorOutput.atEnd() )

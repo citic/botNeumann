@@ -2,6 +2,7 @@
 #include "CodeSegment.h"
 #include "Compiler.h"
 #include "Diagnostic.h"
+#include "LogManager.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
 
@@ -250,8 +251,6 @@ void CodeSegment::compilerFinished()
 		runOrPauseAction->setEnabled(true);
 }
 
-#include <QDebug>
-
 void CodeSegment::startVisualization()
 {
 	// ToDo: Call the debugger here
@@ -267,12 +266,12 @@ void CodeSegment::startVisualization()
 void CodeSegment::pauseVisualization()
 {
 	// Pause the visualization code here
-	qDebug() << "Pause visualization...";
+	qCDebug(logNotImplemented) << "Pause visualization...";
 }
 
 void CodeSegment::newFileTriggered()
 {
-	qDebug() << "New file triggered";
+	qCDebug(logNotImplemented) << "New file triggered";
 }
 
 void CodeSegment::fileSelectorIndexChanged(const QString& text)
@@ -283,22 +282,22 @@ void CodeSegment::fileSelectorIndexChanged(const QString& text)
 
 void CodeSegment::stepIntoTriggered()
 {
-	qDebug() << "Step into triggered";
+	qCDebug(logNotImplemented) << "Step into triggered";
 }
 
 void CodeSegment::stepOutTriggered()
 {
-	qDebug() << "Step out triggered";
+	qCDebug(logNotImplemented) << "Step out triggered";
 }
 
 void CodeSegment::stopTriggered()
 {
-	qDebug() << "Stop triggered";
+	qCDebug(logNotImplemented) << "Stop triggered";
 }
 
 void CodeSegment::visualizationSpeedChanged(int speed)
 {
-	qDebug() << "Visualization speed" << speed;
+	qCDebug(logNotImplemented) << "Visualization speed" << speed;
 }
 
 void CodeSegment::diagnosticSelected(int index)

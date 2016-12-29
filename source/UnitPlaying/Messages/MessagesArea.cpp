@@ -1,7 +1,9 @@
 #include "BotNeumannApp.h"
 #include "Compiler.h"
 #include "Diagnostic.h"
+#include "LogManager.h"
 #include "MessagesArea.h"
+
 #include <QListWidget>
 #include <QTabWidget>
 #include <QTextEdit>
@@ -99,7 +101,7 @@ void MessagesArea::appendDiagnostic(const Diagnostic* diagnostic)
 	listItem->setForeground( diagnostic->getSeverityColor() );
 
 	static size_t messageCount = 0;
-	qDebug("/%zu/[%s]", ++messageCount, qPrintable(diagnostic->buildUserText()) );
+	qCInfo(logBuild, "/%zu/[%s]", ++messageCount, qPrintable(diagnostic->buildUserText()) );
 }
 
 void MessagesArea::appendDebuggerMessage(GdbLogType type, const QString& message)

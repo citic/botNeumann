@@ -1,6 +1,6 @@
 #include "GdbCall.h"
 #include "GdbItemTree.h"
-#include <QDebug>
+
 #include <QProcess>
 #include <QSocketNotifier>
 
