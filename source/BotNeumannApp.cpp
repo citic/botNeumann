@@ -1,8 +1,11 @@
 #include "BotNeumannApp.h"
+#include "LogManager.h"
 #include "PlayerManager.h"
+
 #include <ctime>
 #include <QFontDatabase>
 #include <QIcon>
+#include <QSettings>
 
 // Static member variables
 QString BotNeumannApp::robotFontName;
@@ -35,6 +38,19 @@ BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
 	robotFontName = loadFont(":/fonts/fonts/tenby_five.otf");
 	monospacedFontName = loadFont(":/fonts/fonts/liberation_mono_regular.ttf");
 
+	// If last time settings were asked to be reset, do it before starting
+	QSettings settings;
+	if ( settings.value("SettingsReset", false).toBool() )
+	{
+		settings.clear();
+		settings.sync();
+		qWarning("Application settings were reset");
+	}
+
+	// Managers use the settings, create them after resetting the settings
+	// Enable logging of messages to a file
+	this->logManager = new LogManager(this);
+
 	// Reload the configuration of the last player who was playing with this game
 	this->playerManager = new PlayerManager(this);
 	this->playerManager->reloadLastPlayer();
@@ -61,8 +77,10 @@ QFont BotNeumannApp::getMonospacedFont()
 
 Player* BotNeumannApp::getCurrentPlayer() const
 {
-	Q_ASSERT(playerManager);
-	return playerManager->getCurrentPlayer();
+	if ( playerManager )
+		return playerManager->getCurrentPlayer();
+
+	return nullptr;
 }
 
 QString BotNeumannApp::loadFont(const QString& fileName)

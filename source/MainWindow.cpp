@@ -99,9 +99,7 @@ void MainWindow::resetSettings()
 	const QString& text = tr("Do you want to reset the configuration. All players' progress will be deleted");
 	if ( QMessageBox::question(this, tr("Settings reset?"), text, QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes )
 	{
-		QSettings settings;
-		settings.clear();
-		settings.sync();
-		QMessageBox::warning(this, tr("Settings reset"), tr("Settings were reset. Please restart botNeumann++"));
+		QSettings().setValue("SettingsReset", true);
+		QMessageBox::warning(this, tr("Settings reset"), tr("Please restart botNeumann++ for the changes to take effect"));
 	}
 }
