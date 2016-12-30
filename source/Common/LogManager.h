@@ -1,9 +1,9 @@
 #ifndef LOGMANAGER_H
 #define LOGMANAGER_H
 
-#include <QObject>
 #include <QFile>
 #include <QLoggingCategory>
+#include <QObject>
 
 /// Logs general events related to the botNeumann application
 Q_DECLARE_LOGGING_CATEGORY(logApplication)

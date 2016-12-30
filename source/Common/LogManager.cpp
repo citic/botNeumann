@@ -41,7 +41,7 @@ LogManager::LogManager(QObject* parent)
 		else
 		{
 			// It is a new log file, write the CSV header line and the first event
-			logFile.write("Date;Time;User;Type;Category;Details\n");
+			logFile.write("Date;Time;SessionTime;User;Type;Category;Details\n");
 			qCInfo(logApplication(), "Log file '%s' created", qUtf8Printable(filename));
 		}
 
@@ -63,8 +63,13 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	Q_ASSERT(type < sizeof(msgTypeStr) / sizeof(msgTypeStr[0]));
 	const char* typeStr = msgTypeStr[type];
 
-	// Write the date and time when the event was logged
-	const QString& datetime = QDateTime::currentDateTime().toString("yyMMdd;hhmmss");
+	// Write the date and time when the event was logged and the seconds from session start
+	const QDateTime& now = QDateTime::currentDateTime();
+	const QString& datetime = now.toString("yyMMdd;hhmmss");
+
+	// Used to calculate the ellapsed time of each event from the start of the session
+	static QDateTime sessionStart = QDateTime::currentDateTime();
+	qint64 elapsed = sessionStart.secsTo(now);
 
 	// Store the id of the current player who generated the event
 	Player* player = BotNeumannApp::getInstance()->getCurrentPlayer();
@@ -76,7 +81,7 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 
 	// A convenience object to format the text that will be sent to the logFile
 	QTextStream logStream(&logFile);
-	logStream << datetime << ';' << playerId << ';' << typeStr << ';' << context.category << ';' << message << '\n';
+	logStream << datetime << ';' << elapsed << ';' << playerId << ';' << typeStr << ';' << context.category << ';' << message << '\n';
 	logStream.flush();
 
 	// Also copy the message to the standard error, but do not report the 'default' category
