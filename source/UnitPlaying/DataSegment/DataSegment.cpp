@@ -57,11 +57,11 @@ void DataSegment::buildStandardInOut(LinearLayout* contentsLayout, const double 
 
 	// First stdin tube
 	Q_ASSERT(standardInput == nullptr);
-	standardInput = new StandardInputOutput("input", scene);
+	standardInput = new StandardInputOutput("input", unit, scene);
 	stdInOutLayout->addItem(standardInput, 0.5, zStdInOut);
 
 	// Second stdout tube
 	Q_ASSERT(standardOutput == nullptr);
-	standardOutput = new StandardInputOutput("output", scene);
+	standardOutput = new StandardInputOutput("output", unit, scene);
 	stdInOutLayout->addItem(standardOutput, 0.5, zStdInOut);
 }
