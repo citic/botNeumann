@@ -3,9 +3,17 @@
 
 #include "MemorySegment.h"
 
+class StandardInputOutput;
+
 class DataSegment : public MemorySegment
 {
 	Q_DISABLE_COPY(DataSegment)
+
+  protected:
+	/// Standard input graphic manager
+	StandardInputOutput* standardInput = nullptr;
+	/// Standard output graphic manager
+	StandardInputOutput* standardOutput = nullptr;
 
   public:
 	/// Constructor

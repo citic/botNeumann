@@ -34,6 +34,9 @@
 		<file alias="standard_output_left.svg">unit_playing/standard_output_left.svg</file>
 		<file alias="standard_output_middle.svg">unit_playing/standard_output_middle.svg</file>
 		<file alias="standard_output_right.svg">unit_playing/standard_output_right.svg</file>
+		<file alias="standard_output_test_inactive.svg">unit_playing/standard_output_test_inactive.svg</file>
+		<file alias="standard_output_test_invalid.svg">unit_playing/standard_output_test_invalid.svg</file>
+		<file alias="standard_output_test_valid.svg">unit_playing/standard_output_test_valid.svg</file>
 	</qresource>
 	<qresource prefix="/unit_playing/buttons">
 		<file alias="accept.svg">unit_playing/buttons/accept.svg</file>

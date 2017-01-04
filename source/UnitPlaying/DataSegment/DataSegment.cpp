@@ -1,7 +1,7 @@
 #include "DataSegment.h"
 #include "MemoryRow.h"
-#include "Prop.h"
 #include "Scene.h"
+#include "StandardInputOutput.h"
 #include "Unit.h"
 
 DataSegment::DataSegment(Unit& unit, Scene* scene)
@@ -51,15 +51,17 @@ void DataSegment::buildDataSegment()
 
 void DataSegment::buildStandardInOut(LinearLayout* contentsLayout, const double stdInOutProportion, const double zStdInOut)
 {
-	// Create an exclusive layout for the standard menu
+	// Create an exclusive layout for the standard input/output tubes
 	LinearLayout* stdInOutLayout = new LinearLayout(Qt::Horizontal);
 	contentsLayout->addLayout(stdInOutLayout, stdInOutProportion, zStdInOut);
 
-	// First stdin tube. ToDo: swap tube images
-	Prop* inTube = new Prop(":/unit_playing/standard_input_middle.svg", scene);
-	stdInOutLayout->addItem(inTube, 0.5, zStdInOut);
+	// First stdin tube
+	Q_ASSERT(standardInput == nullptr);
+	standardInput = new StandardInputOutput("input", scene);
+	stdInOutLayout->addItem(standardInput, 0.5, zStdInOut);
 
 	// Second stdout tube
-	Prop* outTube = new Prop(":/unit_playing/standard_output_middle.svg", scene);
-	stdInOutLayout->addItem(outTube, 0.5, zStdInOut);
+	Q_ASSERT(standardOutput == nullptr);
+	standardOutput = new StandardInputOutput("output", scene);
+	stdInOutLayout->addItem(standardOutput, 0.5, zStdInOut);
 }
