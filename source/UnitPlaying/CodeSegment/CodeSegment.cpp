@@ -193,6 +193,7 @@ void CodeSegment::loadCodeForUnit(Unit* unit)
 
 	// Ask the editor to show this source
 	const QFileInfo& lastEditedFilePath = playerSolution->getLastEditedFilePath();
+	codeEditor->setPlayerSolutionForUnit(unit, playerSolution);
 	codeEditor->loadInitialFile( lastEditedFilePath.absoluteFilePath() );
 	fileSelector->setCurrentText( lastEditedFilePath.fileName() );
 
