@@ -28,9 +28,9 @@ void DataSegment::buildDataSegment()
 	// Height is calculate as the number of rows
 	// The roof requires half row
 	const double memoryRoofRows = 0.5;
-	// The standard input/oput requires less than a complete row
+	// The standard input/output requires less than a complete row
 	const double stdInOutRows = 0.66;
-	// Each memory row requires a row, and the i/o tubes 1 more complete row
+	// The total number of rows to show
 	const double allRows = (memoryRoofRows + rowCount + stdInOutRows);
 	// Distribute 1.0 among all the rows
 	const double rowProportion = 1.0 / allRows;
@@ -51,7 +51,7 @@ void DataSegment::buildDataSegment()
 	for (size_t i = 0; i < rowCount; ++i)
 	{
 		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene);
-		contentsLayout->addItem(memoryRow, rowProportion, zContents);
+		contentsLayout->addItem(memoryRow, 1.0 * rowProportion, zContents);
 		rowStartByte += rowSize;
 	}
 
