@@ -18,8 +18,6 @@ void DataSegment::buildDataSegment()
 {
 	// The background: a shared table
 	Q_ASSERT(scene);
-	Prop* sharedTable = new Prop(":/unit_playing/memory_row_middle.svg", scene);
-	addItem(sharedTable, 1.0);
 
 	// Memory rows are over the table
 	size_t rowCount = unit.getDataSegmentRows();
