@@ -77,6 +77,7 @@ HEADERS += \
 	source/UnitPlaying/CodeSegment/LineNumberArea.h \
 	source/UnitPlaying/CodeSegment/PlayerSolution.h \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
+	source/UnitPlaying/Common/MemoryFrame.h \
 	source/UnitPlaying/Common/MemoryRow.h \
 	source/UnitPlaying/Common/MemorySegment.h \
 	source/UnitPlaying/Common/MemoryTop.h \
@@ -138,6 +139,7 @@ SOURCES += \
 	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
 	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
+	source/UnitPlaying/Common/MemoryFrame.cpp \
 	source/UnitPlaying/Common/MemoryRow.cpp \
 	source/UnitPlaying/Common/MemorySegment.cpp \
 	source/UnitPlaying/Common/MemoryTop.cpp \

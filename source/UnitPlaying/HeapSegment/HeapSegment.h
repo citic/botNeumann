@@ -3,9 +3,18 @@
 
 #include "MemorySegment.h"
 
+class MemoryFrame;
+class Prop;
+
 class HeapSegment : public MemorySegment
 {
 	Q_DISABLE_COPY(HeapSegment)
+
+  protected:
+	/// Manages the rows of memory for the heap segment
+	MemoryFrame* memoryFrame = nullptr;
+	/// The interface to access the dynamic memory segment
+	Prop* heapInterface = nullptr;
 
   public:
 	/// Constructor

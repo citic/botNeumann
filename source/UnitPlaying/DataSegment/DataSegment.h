@@ -3,6 +3,7 @@
 
 #include "MemorySegment.h"
 
+class MemoryFrame;
 class StandardInputOutput;
 
 class DataSegment : public MemorySegment
@@ -10,6 +11,8 @@ class DataSegment : public MemorySegment
 	Q_DISABLE_COPY(DataSegment)
 
   protected:
+	/// Manages the rows of memory for the data segment
+	MemoryFrame* memoryFrame = nullptr;
 	/// Standard input graphic manager
 	StandardInputOutput* standardInput = nullptr;
 	/// Standard output graphic manager

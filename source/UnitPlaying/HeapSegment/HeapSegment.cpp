@@ -1,6 +1,5 @@
 #include "HeapSegment.h"
-#include "MemoryRow.h"
-#include "MemoryTop.h"
+#include "MemoryFrame.h"
 #include "Prop.h"
 #include "Scene.h"
 #include "Unit.h"
@@ -22,33 +21,21 @@ void HeapSegment::buildSegment()
 	size_t rowStartByte = unit.getHeapSegmentStartByte();
 	size_t rowSize = unit.getHeapSegmentSize() / rowCount;
 
+	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize);
+
 	// Height is calculate as the number of rows
-	// The roof requires half row
-	const double memoryRoofRows = 0.5;
 	// The memory interface requires less than a complete row
 	const double interfaceRows = 0.66;
 	// The total number of rows to show
-	const double allRows = (memoryRoofRows + rowCount + interfaceRows);
-	// Distribute 1.0 among all the rows
-	const double rowProportion = 1.0 / allRows;
+	const double allRows = memoryFrame->getHeightInRows() + interfaceRows;
 	// ToDo: improve z-order management
 	const double zContents = 0.1;
 
-	// Create the memory roof
-	MemoryTop* memoryTop = new MemoryTop(rowSize, scene);
-	addItem(memoryTop, memoryRoofRows * rowProportion, zContents);
-
-	// Create the memory rows
-	for (size_t i = 0; i < rowCount; ++i)
-	{
-		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene);
-		addItem(memoryRow, 1.0 * rowProportion, zContents);
-		rowStartByte += rowSize;
-	}
+	addItem(memoryFrame, memoryFrame->getHeightInRows() / allRows, zContents);
 
 	// Create the heap segment interface that robots will use to access it
-	Prop* heapInterface = new Prop(":/unit_playing/heap_segment_interface.svg", scene);
-	addItem(heapInterface, interfaceRows * rowProportion, zContents);
+	heapInterface = new Prop(":/unit_playing/heap_segment_interface.svg", scene);
+	addItem(heapInterface, interfaceRows / allRows, zContents);
 }
 
 void HeapSegment::hideSegment()

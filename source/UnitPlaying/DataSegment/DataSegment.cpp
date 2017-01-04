@@ -1,6 +1,5 @@
 #include "DataSegment.h"
-#include "MemoryRow.h"
-#include "MemoryTop.h"
+#include "MemoryFrame.h"
 #include "Scene.h"
 #include "StandardInputOutput.h"
 #include "Unit.h"
@@ -25,32 +24,20 @@ void DataSegment::buildDataSegment()
 	size_t rowStartByte = unit.getDataSegmentStartByte();
 	size_t rowSize = unit.getDataSegmentSize() / rowCount;
 
+	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize);
+
 	// Height is calculate as the number of rows
-	// The roof requires half row
-	const double memoryRoofRows = 0.5;
 	// The standard input/output requires less than a complete row
 	const double stdInOutRows = 0.66;
 	// The total number of rows to show
-	const double allRows = (memoryRoofRows + rowCount + stdInOutRows);
-	// Distribute 1.0 among all the rows
-	const double rowProportion = 1.0 / allRows;
+	const double allRows = memoryFrame->getHeightInRows() + stdInOutRows;
 	// ToDo: improve z-order management
 	const double zContents = 0.1;
 
-	// Create the memory roof
-	MemoryTop* memoryTop = new MemoryTop(rowSize, scene);
-	addItem(memoryTop, memoryRoofRows * rowProportion, zContents);
-
-	// Create the memory rows
-	for (size_t i = 0; i < rowCount; ++i)
-	{
-		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene);
-		addItem(memoryRow, 1.0 * rowProportion, zContents);
-		rowStartByte += rowSize;
-	}
+	addItem(memoryFrame, memoryFrame->getHeightInRows() / allRows, zContents);
 
 	// Create the stdin and stdout pipes
-	buildStandardInOut(stdInOutRows * rowProportion, zContents);
+	buildStandardInOut(stdInOutRows / allRows, zContents);
 }
 
 void DataSegment::buildStandardInOut(const double stdInOutProportion, const double zStdInOut)
