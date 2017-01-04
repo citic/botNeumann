@@ -37,33 +37,27 @@ void DataSegment::buildDataSegment()
 	// ToDo: improve z-order management
 	const double zContents = 0.1;
 
-	// The background requires the whole segment area, but memory rows and stdin/out pipes must
-	// occupy the content area, that is, they should not cover the border of the background
-	LinearLayout* contentsLayout = new LinearLayout(Qt::Vertical);
-	contentsLayout->setMargins(2.0, 1.0, -3.0, 1.0); // px each
-	addLayout(contentsLayout, 1.0, zContents);
-
 	// Create the memory roof
 	MemoryTop* memoryTop = new MemoryTop(rowSize, scene);
-	contentsLayout->addItem(memoryTop, memoryRoofRows * rowProportion, zContents);
+	addItem(memoryTop, memoryRoofRows * rowProportion, zContents);
 
 	// Create the memory rows
 	for (size_t i = 0; i < rowCount; ++i)
 	{
 		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene);
-		contentsLayout->addItem(memoryRow, 1.0 * rowProportion, zContents);
+		addItem(memoryRow, 1.0 * rowProportion, zContents);
 		rowStartByte += rowSize;
 	}
 
 	// Create the stdin and stdout pipes
-	buildStandardInOut(contentsLayout, stdInOutRows * rowProportion, zContents);
+	buildStandardInOut(stdInOutRows * rowProportion, zContents);
 }
 
-void DataSegment::buildStandardInOut(LinearLayout* contentsLayout, const double stdInOutProportion, const double zStdInOut)
+void DataSegment::buildStandardInOut(const double stdInOutProportion, const double zStdInOut)
 {
 	// Create an exclusive layout for the standard input/output tubes
 	LinearLayout* stdInOutLayout = new LinearLayout(Qt::Horizontal);
-	contentsLayout->addLayout(stdInOutLayout, stdInOutProportion, zStdInOut);
+	addLayout(stdInOutLayout, stdInOutProportion, zStdInOut);
 
 	// First stdin tube
 	Q_ASSERT(standardInput == nullptr);
