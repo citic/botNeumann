@@ -96,8 +96,8 @@ void UnitPlayingScene::codeSegmentTogglePressed()
 void UnitPlayingScene::distributeScreenSpace(double& heapSegmentProportion, double& cpuCoresProportion, double& dataSegmentProportion)
 {
 	double heapSegmentRows = unit.getHeapSegmentRows() + 0.5; // 0.5 because the HS interface
-	double cpuCoresRows = unit.getStackSegmentVisibleRows() + 1.1; // 1 robot + space
-	double dataSegmentRows = unit.getDataSegmentRows() + 0.5; // 0.5 = 0.3 in/out tubes + 0.2 table
+	double cpuCoresRows = unit.getStackSegmentVisibleRows() + 2.1; // 2 rows for robot + space
+	double dataSegmentRows = unit.getDataSegmentRows() + 0.3; // 0.3 = in/out tubes
 	double totalRows = heapSegmentRows + cpuCoresRows + dataSegmentRows;
 	double availableProportion = 1.0 - standardMenuProportion;
 

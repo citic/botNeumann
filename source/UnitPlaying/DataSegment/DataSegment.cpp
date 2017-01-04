@@ -1,5 +1,6 @@
 #include "DataSegment.h"
 #include "MemoryRow.h"
+#include "MemoryTop.h"
 #include "Scene.h"
 #include "StandardInputOutput.h"
 #include "Unit.h"
@@ -24,11 +25,16 @@ void DataSegment::buildDataSegment()
 	size_t rowStartByte = unit.getDataSegmentStartByte();
 	size_t rowSize = unit.getDataSegmentSize() / rowCount;
 
-	// Each memory row requires a 1 complete row, and the tubes 1/3 of these height
-	const double stdInOutHeight = 0.3;
-	const double sumRowsTubes = (rowCount + stdInOutHeight);
-	const double memoryRowProportion = 1.0 * 74 / 92 / sumRowsTubes;
-	const double stdInOutProportion = stdInOutHeight * 74 / 92 / sumRowsTubes;
+	// Height is calculate as the number of rows
+	// The roof requires half row
+	const double memoryRoofRows = 0.5;
+	// The standard input/oput requires less than a complete row
+	const double stdInOutRows = 0.66;
+	// Each memory row requires a row, and the i/o tubes 1 more complete row
+	const double allRows = (memoryRoofRows + rowCount + stdInOutRows);
+	// Distribute 1.0 among all the rows
+	const double rowProportion = 1.0 / allRows;
+	// ToDo: improve z-order management
 	const double zContents = 0.1;
 
 	// The background requires the whole segment area, but memory rows and stdin/out pipes must
@@ -37,16 +43,20 @@ void DataSegment::buildDataSegment()
 	contentsLayout->setMargins(2.0, 1.0, -3.0, 1.0); // px each
 	addLayout(contentsLayout, 1.0, zContents);
 
+	// Create the memory roof
+	MemoryTop* memoryTop = new MemoryTop(rowSize, scene);
+	contentsLayout->addItem(memoryTop, memoryRoofRows * rowProportion, zContents);
+
 	// Create the memory rows
 	for (size_t i = 0; i < rowCount; ++i)
 	{
 		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene);
-		contentsLayout->addItem(memoryRow, memoryRowProportion, zContents);
+		contentsLayout->addItem(memoryRow, rowProportion, zContents);
 		rowStartByte += rowSize;
 	}
 
 	// Create the stdin and stdout pipes
-	buildStandardInOut(contentsLayout, stdInOutProportion, zContents);
+	buildStandardInOut(contentsLayout, stdInOutRows * rowProportion, zContents);
 }
 
 void DataSegment::buildStandardInOut(LinearLayout* contentsLayout, const double stdInOutProportion, const double zStdInOut)

@@ -79,6 +79,7 @@ HEADERS += \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
 	source/UnitPlaying/Common/MemoryRow.h \
 	source/UnitPlaying/Common/MemorySegment.h \
+	source/UnitPlaying/Common/MemoryTop.h \
 	source/UnitPlaying/DataSegment/DataSegment.h \
 	source/UnitPlaying/DataSegment/StandardInputOutput.h \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
@@ -139,6 +140,7 @@ SOURCES += \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
 	source/UnitPlaying/Common/MemoryRow.cpp \
 	source/UnitPlaying/Common/MemorySegment.cpp \
+	source/UnitPlaying/Common/MemoryTop.cpp \
 	source/UnitPlaying/DataSegment/DataSegment.cpp \
 	source/UnitPlaying/DataSegment/StandardInputOutput.cpp \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \

@@ -4,6 +4,7 @@
 #include "Prop.h"
 #include "Scene.h"
 #include "Spacer.h"
+
 #include <QBrush>
 #include <QFont>
 
@@ -23,6 +24,8 @@ MemoryRow::~MemoryRow()
 
 void MemoryRow::buildMemoryRow()
 {
+	Q_ASSERT(scene);
+
 	// The left and right extremes of the shelf require 1 byte each
 	const double leftRightProportion = 1.0 / (size + 2.0);
 	// The middle element occupies the rest
@@ -57,8 +60,8 @@ void MemoryRow::buildMemoryAddresses()
 	{
 		const QString& label = QString("%1 ").arg(i, 3, 10, QChar(' '));
 		LabelButton* memoryAddress = new LabelButton(label, scene);
-		memoryAddress->setMarginTop(0.85);
-		memoryAddress->setMarginBottom(0.06);
+		memoryAddress->setMarginTop(0.77);
+		memoryAddress->setMarginBottom(0.073);
 		memoryAddress->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 		memoryAddress->setBrush(QBrush(Qt::yellow));
 		addItem(memoryAddress, byteProportion, z);
