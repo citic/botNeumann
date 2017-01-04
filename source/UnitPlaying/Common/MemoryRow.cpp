@@ -57,9 +57,10 @@ void MemoryRow::buildMemoryAddresses()
 	{
 		const QString& label = QString("%1 ").arg(i, 3, 10, QChar(' '));
 		LabelButton* memoryAddress = new LabelButton(label, scene);
-		memoryAddress->setMarginTop(0.91);
+		memoryAddress->setMarginTop(0.85);
+		memoryAddress->setMarginBottom(0.06);
 		memoryAddress->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
-		memoryAddress->setBrush(QBrush(Qt::black));
+		memoryAddress->setBrush(QBrush(Qt::yellow));
 		addItem(memoryAddress, byteProportion, z);
 	}
 }
