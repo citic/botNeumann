@@ -48,9 +48,12 @@ void StandardInputOutput::buildStandardInputOutput()
 	else
 	{
 		addItem(left, elbow, zStdInOut);
-		Prop* test = new Prop(QString(":/unit_playing/standard_output_test_inactive.svg"), scene);
-		addItem(test, elbow, zStdInOut);
+		Prop* tester = new Prop(QString(":/unit_playing/standard_output_test_inactive.svg"), scene);
+		addItem(tester, elbow, zStdInOut);
 		addItem(middle, 1.0 - opening - 2 * elbow, zStdInOut);
 		addItem(right, opening, zStdInOut);
+
+		// Make the middle tube to plug to the tester
+		middle->setMarginLeft(-0.01);
 	}
 }
