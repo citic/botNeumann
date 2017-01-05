@@ -4,6 +4,9 @@
 #include "StandardInputOutput.h"
 #include "Unit.h"
 
+// The standard input/output requires less than a complete row
+const double stdInOutRows = 0.66;
+
 DataSegment::DataSegment(Unit& unit, Scene* scene)
 	: MemorySegment(unit, scene, Qt::Vertical)
 {
@@ -14,26 +17,29 @@ DataSegment::~DataSegment()
 {
 }
 
+double DataSegment::getHeightInRows() const
+{
+	Q_ASSERT(memoryFrame);
+	return memoryFrame->getHeightInRows() + stdInOutRows;
+}
+
 void DataSegment::buildDataSegment()
 {
-	// The background: a shared table
-	Q_ASSERT(scene);
-
 	// Memory rows are over the table
 	size_t rowCount = unit.getDataSegmentRows();
 	size_t rowStartByte = unit.getDataSegmentStartByte();
 	size_t rowSize = unit.getDataSegmentSize() / rowCount;
 
+	// Create the memory rows and their roof
+	Q_ASSERT(scene);
 	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize);
 
-	// Height is calculate as the number of rows
-	// The standard input/output requires less than a complete row
-	const double stdInOutRows = 0.66;
-	// The total number of rows to show
+	// Distribute child elements according to the number of rows they require
 	const double allRows = memoryFrame->getHeightInRows() + stdInOutRows;
 	// ToDo: improve z-order management
 	const double zContents = 0.1;
 
+	// Add the memory rows and their roof to the scene
 	addItem(memoryFrame, memoryFrame->getHeightInRows() / allRows, zContents);
 
 	// Create the stdin and stdout pipes

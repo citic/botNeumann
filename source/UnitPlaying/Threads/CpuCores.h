@@ -18,7 +18,10 @@ class CpuCores : public MemorySegment
 	/// Constructor
 	explicit CpuCores(Unit& unit, Scene* scene);
 	/// Destructor
-	~CpuCores();
+	virtual ~CpuCores();
+	/// Get the number of memory rows required by this object
+	/// @see MemorySegment::getHeightInRows()
+	virtual double getHeightInRows() const override;
 
   protected:
 	/// Creates a CPU core (workstation) for each CPU core requested in .botnu file

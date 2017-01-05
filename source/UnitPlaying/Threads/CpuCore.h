@@ -15,7 +15,10 @@ class CpuCore : public MemorySegment
 	/// Constructor
 	explicit CpuCore(int cpuCoreNumber, Unit& unit, Scene* scene);
 	/// Destructor
-	~CpuCore();
+	virtual ~CpuCore();
+	/// Get the number of memory rows required by this object
+	/// @see MemorySegment::getHeightInRows()
+	virtual double getHeightInRows() const override;
 
   protected:
 	/// Builds the CPU core as a workstation where a execution thread (robot) can work

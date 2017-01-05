@@ -15,12 +15,6 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	, context(context)
 	, levelUnit(levelUnit)
 	, filename(filename)
-	, codeSegment(nullptr)
-	, heapSegment(nullptr)
-	, cpuCores(nullptr)
-	, dataSegment(nullptr)
-	, messagesArea(nullptr)
-	, visualizator(nullptr)
 {
 	// Create the standar menu with back button, title, code editor toggle, config, and so on
 	createStandardMenu(context + ' ' + levelUnit, true);
@@ -29,13 +23,16 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	if ( ! unit.load(filename) )
 		qCCritical(logApplication) << "Unit not loaded:" << filename;
 
-	// Distribute the screen space between each segment according to the number of rows they require
-	double heapSegmentProportion = 0.0, cpuCoresProportion = 0.0, dataSegmentProportion;
-	distributeScreenSpace(heapSegmentProportion, cpuCoresProportion, dataSegmentProportion);
-	// Set up each component of the process/unit
-	createHeapSegment(heapSegmentProportion);
-	createCpuCores(cpuCoresProportion);
-	createDataSegment(dataSegmentProportion);
+	// Create objects for the vertical segments
+	heapSegment = new HeapSegment(unit, this);
+	cpuCores = new CpuCores(unit, this);
+	dataSegment = new DataSegment(unit, this);
+
+	// After the vertical segments are created, they can calculate their height, therefore we can
+	// distribute the screen space between each segment according to the number of rows they require
+	addVerticalSegments();
+
+	// Create the docking segments
 	createCodeSegment();
 	createMessagesArea();
 }
@@ -93,45 +90,25 @@ void UnitPlayingScene::codeSegmentTogglePressed()
 	codeSegment->setVisible( ! codeSegment->isVisible() );
 }
 
-void UnitPlayingScene::distributeScreenSpace(double& heapSegmentProportion, double& cpuCoresProportion, double& dataSegmentProportion)
+void UnitPlayingScene::addVerticalSegments()
 {
-	double heapSegmentRows = unit.getHeapSegmentRows() + 0.5; // 0.5 because the HS interface
-	double cpuCoresRows = unit.getStackSegmentVisibleRows() + 2.1; // 2 rows for robot + space
-	double dataSegmentRows = unit.getDataSegmentRows() + 0.3; // 0.3 = in/out tubes
+	Q_ASSERT(heapSegment && cpuCores && dataSegment);
+
+	double heapSegmentRows = heapSegment->getHeightInRows();
+	double cpuCoresRows = cpuCores->getHeightInRows();
+	double dataSegmentRows = dataSegment->getHeightInRows();
 	double totalRows = heapSegmentRows + cpuCoresRows + dataSegmentRows;
 	double availableProportion = 1.0 - standardMenuProportion;
 
-	heapSegmentProportion = heapSegmentRows / totalRows * availableProportion;
-	cpuCoresProportion = cpuCoresRows / totalRows * availableProportion;
-	dataSegmentProportion = dataSegmentRows / totalRows * availableProportion;
-}
+	double heapSegmentProportion = heapSegmentRows / totalRows * availableProportion;
+	double cpuCoresProportion = cpuCoresRows / totalRows * availableProportion;
+	double dataSegmentProportion = dataSegmentRows / totalRows * availableProportion;
 
-void UnitPlayingScene::createHeapSegment(double heapSegmentProportion)
-{
 	Q_ASSERT(layout);
-	Q_ASSERT(heapSegment == nullptr);
-	heapSegment = new HeapSegment(unit, this);
 	this->layout->addLayout(heapSegment, heapSegmentProportion);
-}
-
-void UnitPlayingScene::createCpuCores(double cpuCoresProportion)
-{
-	// Cpu cores are represented as available workstations
-	Q_ASSERT(layout);
-	Q_ASSERT(cpuCores == nullptr);
-	cpuCores = new CpuCores(unit, this);
 	this->layout->addLayout(cpuCores, cpuCoresProportion * 0.98);
-
 	// Leave a small separation to generate a sensation of space (the floor can be seen)
 	this->layout->addStretch(cpuCoresProportion * 0.02);
-}
-
-void UnitPlayingScene::createDataSegment(double dataSegmentProportion)
-{
-	// Cpu cores are represented as available workstations
-	Q_ASSERT(layout);
-	Q_ASSERT(dataSegment == nullptr);
-	dataSegment = new DataSegment(unit, this);
 	this->layout->addLayout(dataSegment, dataSegmentProportion);
 }
 

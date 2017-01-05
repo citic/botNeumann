@@ -22,7 +22,10 @@ class HeapSegment : public MemorySegment
 	/// hidden to avoid cognitive load
 	explicit HeapSegment(Unit& unit, Scene* scene);
 	/// Destructor
-	~HeapSegment();
+	virtual ~HeapSegment();
+	/// Get the number of memory rows required by this object
+	/// @see MemorySegment::getHeightInRows()
+	virtual double getHeightInRows() const override;
 
   protected:
 	/// Builds the segment with space to store variables (shelves)

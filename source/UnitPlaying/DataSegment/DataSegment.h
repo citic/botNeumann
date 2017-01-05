@@ -22,7 +22,10 @@ class DataSegment : public MemorySegment
 	/// Constructor
 	explicit DataSegment(Unit& unit, Scene* scene);
 	/// Destructor
-	~DataSegment();
+	virtual ~DataSegment();
+	/// Get the number of memory rows required by this object
+	/// @see MemorySegment::getHeightInRows()
+	virtual double getHeightInRows() const override;
 
   protected:
 	/// Builds the data segment represented a shared table for all the robots

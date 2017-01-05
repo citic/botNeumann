@@ -12,15 +12,21 @@ CpuCores::~CpuCores()
 {
 }
 
+double CpuCores::getHeightInRows() const
+{
+	return cpuCores.count() > 0 ? cpuCores[0]->getHeightInRows() : 0.0;
+}
+
 void CpuCores::createCpuCores()
 {
 	int coreCount = unit.getCpuCores();
 	cpuCores.reserve(coreCount);
-	for ( int i = 0; i < coreCount; ++i )
+	for ( int index = 0; index < coreCount; ++index )
 	{
-		CpuCore* cpuCore = new CpuCore(i, unit, scene);
+		CpuCore* cpuCore = new CpuCore(index, unit, scene);
+		cpuCores.append(cpuCore);
 		this->addLayout( cpuCore, 1.0 / coreCount );
 		// Overlap the workstation separator with the previous one
-		if ( i ) cpuCore->setMarginLeft(-0.04105605779343);
+		if ( index ) cpuCore->setMarginLeft(-0.04105605779343);
 	}
 }

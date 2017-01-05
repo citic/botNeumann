@@ -29,6 +29,7 @@ class MemoryFrame : public LinearLayout
 	/// Constructor
 	explicit MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize);
 	/// Get the number of memory rows required by this object
+	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const;
 
   protected:
