@@ -10,6 +10,8 @@
 #include "UnitPlayingScene.h"
 #include "Visualizator.h"
 
+#include <QSettings>
+
 UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename, Stage* stage, QGraphicsItem* parent)
 	: GameScene("unit_playing", stage, parent)
 	, context(context)
@@ -46,6 +48,11 @@ void UnitPlayingScene::startLeavingStage()
 {
 	// The Unit Playing scene is leaving the stage
 
+	// Keep visibility preferences of the user for future use
+	QSettings settings;
+	settings.setValue("CodeSegment/Visible", codeSegment->isVisible());
+	settings.setValue("MessagesArea/Visible", messagesArea->isVisible());
+
 	// Hide and remove the the code editor
 	codeSegment->setVisible(false);
 	codeSegment->deleteLater();
@@ -60,8 +67,9 @@ void UnitPlayingScene::finishedEnteringStage()
 	// The scene is ready in the stage after the transition
 
 	// Show the code segment and the messages area
-	codeSegment->setVisible(true);
-	messagesArea->setVisible(true);
+	QSettings settings;
+	codeSegment->setVisible( settings.value("CodeSegment/Visible", true).toBool() );
+	messagesArea->setVisible( settings.value("MessagesArea/Visible", true).toBool() );
 
 	// Loads or restore the code for this unit
 	codeSegment->loadCodeForUnit( &unit );
