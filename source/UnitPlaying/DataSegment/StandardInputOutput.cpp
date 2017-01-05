@@ -27,8 +27,8 @@ void StandardInputOutput::buildStandardInputOutput()
 	// The opening can extract 8-bytes values
 	double opening = 8 * byteWidth;
 
-	// The elbow requires 1.5 bytes
-	double elbow = 1.5 * byteWidth;
+	// The elbow requires almost a pair of bytes
+	double elbow = 2.0 * byteWidth;
 
 	// ToDo: review the z-order mechanism
 	const double zStdInOut = 0.1;
@@ -54,6 +54,6 @@ void StandardInputOutput::buildStandardInputOutput()
 		addItem(right, opening, zStdInOut);
 
 		// Make the middle tube to plug to the tester
-		middle->setMarginLeft(-0.01);
+		middle->setMarginLeft(-0.011);
 	}
 }
