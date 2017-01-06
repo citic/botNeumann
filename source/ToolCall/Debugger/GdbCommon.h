@@ -16,6 +16,7 @@ enum GdbLogType
 enum GdbState
 {
 	STATE_STOPPED,
+	STATE_STARTING,
 	STATE_RUNNING,
 	STATE_FINISHED
 };

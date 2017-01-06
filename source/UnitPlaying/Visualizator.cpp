@@ -65,12 +65,17 @@ bool Visualizator::start()
 	// ToDo: Extract source filenames. Not required by botNeumann++ for the moment
 
 	// Ask GDB to start execution of user program (inferior), only if it is not running already
-	if ( state == STATE_RUNNING )
+	if ( state == STATE_STARTING )
+		qCritical(logVisualizator(), "gdb already starting");
+	else if ( state == STATE_RUNNING )
 		qCritical(logVisualizator(), "gdb already running");
 	else
 	{
 		inferiorProcessId = 0;
-		debuggerCall->sendGdbCommand("-exec-run");
+		GdbState oldState = state;
+		state = STATE_STARTING;
+		if ( debuggerCall->sendGdbCommand("-exec-run") == GDB_ERROR )
+			state = oldState;
 	}
 /*
 	Q_ASSERT(userProgram == nullptr);
@@ -81,23 +86,7 @@ bool Visualizator::start()
 	return result;
 }
 
-
-void Visualizator::onGdbResponse(const GdbResponse* response)
-{
-	Q_ASSERT(response);
-	switch ( response->getType() )
-	{
-		case GdbResponse::EXEC_ASYNC_OUTPUT: onExecAsyncOut(response->getItemTree(), response->getReason()); break;
-		case GdbResponse::STATUS_ASYNC_OUTPUT: onStatusAsyncOut(response->getItemTree(), response->getReason()); break;
-		case GdbResponse::NOTIFY_ASYNC_OUTPUT: onNotifyAsyncOut(response->getItemTree(), response->getReason()); break;
-		case GdbResponse::LOG_STREAM_OUTPUT: onLogStreamOutput(response->getText()); break;
-		case GdbResponse::TARGET_STREAM_OUTPUT: onTargetStreamOutput(response->getText()); break;
-		case GdbResponse::CONSOLE_STREAM_OUTPUT: onConsoleStreamOutput(response->getText()); break;
-		case GdbResponse::RESULT: onResult(response->getItemTree()); break;
-
-		default: break;
-	}
-}
+// Setting and removing breakpoints from CodeEditor
 
 void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
 {
@@ -142,6 +131,25 @@ int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint
 	return -1;
 }
 
+// Responses received by GdbCall
+
+void Visualizator::onGdbResponse(const GdbResponse* response)
+{
+	Q_ASSERT(response);
+	switch ( response->getType() )
+	{
+		case GdbResponse::EXEC_ASYNC_OUTPUT: onExecAsyncOut(response->getItemTree(), response->getReason()); break;
+		case GdbResponse::STATUS_ASYNC_OUTPUT: onStatusAsyncOut(response->getItemTree(), response->getReason()); break;
+		case GdbResponse::NOTIFY_ASYNC_OUTPUT: onNotifyAsyncOut(response->getItemTree(), response->getReason()); break;
+		case GdbResponse::LOG_STREAM_OUTPUT: onLogStreamOutput(response->getText()); break;
+		case GdbResponse::TARGET_STREAM_OUTPUT: onTargetStreamOutput(response->getText()); break;
+		case GdbResponse::CONSOLE_STREAM_OUTPUT: onConsoleStreamOutput(response->getText()); break;
+		case GdbResponse::RESULT: onResult(response->getItemTree()); break;
+
+		default: break;
+	}
+}
+
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
 {
 	qCDebug(logVisualizator(), "onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
@@ -150,6 +158,9 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
 {
 	qCDebug(logVisualizator(), "onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+
+	// Store current state to check if there is a state change
+//	GdbState previousState = state;
 
 	switch ( asyncClass )
 	{
@@ -161,6 +172,20 @@ void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 		default:
 			break;
 	}
+/*
+	// Get the current thread id
+	const QString& threadIdStr = tree.findNodeTextValue("/thread-id");
+	if ( threadIdStr.isEmpty() == false )
+	{
+		bool ok = false;
+		int threadId = threadIdStr.toInt(&ok, 0);
+		if ( ok ) emit currentThreadChanged(threadId);
+	}
+
+	// State changed?
+	if ( previousState != state )
+		emit stateChanged(state);
+*/
 }
 
 bool Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
