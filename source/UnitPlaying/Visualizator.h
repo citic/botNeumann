@@ -1,11 +1,9 @@
 #ifndef VISUALIZATOR_H
 #define VISUALIZATOR_H
 
-#include "GdbCommon.h"
-#include "GdbResponse.h"
+#include "GdbResponseListener.h"
 
 #include <QFileInfo>
-#include <QObject>
 #include <QTimer>
 #include <QVector>
 
@@ -20,7 +18,7 @@ class UnitPlayingScene;
 	The visualizator mediates between the model (DebuggerCall) and the views (UnitPlayingScene and
 	its helping classes).
 */
-class Visualizator : public QObject
+class Visualizator : public GdbResponseListener
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(Visualizator)
@@ -70,8 +68,7 @@ class Visualizator : public QObject
 	/// with the largest duration to do the animation must assign this variable. The Visualizator
 	/// will wait these amount of milliseconds (the animation is done) until fetching the next
 	/// pending GdbResponse
-	void onGdbResponse(const GdbResponse* response, int& maxDuration);
-
+	void dispatchGdbResponse(const GdbResponse* response, int& maxDuration);
 
   public slots:
 	/// Called when there are pending GdbResponses to process.
@@ -86,40 +83,6 @@ class Visualizator : public QObject
 	void breakpointAction(GuiBreakpoint* guiBreakpoint);
 
   protected:
-	/// Async records are used to notify the gdb/mi client of additional changes that have occurred.
-	///	Those changes can either be a consequence of gdb/mi commands (e.g., a breakpoint modified)
-	///	or a result of target activity (e.g., target stopped). The following is the list of possible
-	///	async records:
-	///		*running,thread-id="thread"
-	///		*stopped,reason="reason",thread-id="id",stopped-threads="stopped",core="core"
-	///	@see https://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Async-Records.html
-	void onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass);
-	/// Notifications that begin with '+'
-	/// @see https://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Async-Records.html
-	void onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass);
-	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
-	/// @see https://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Async-Records.html
-	bool onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass);
-	/// Additional out-of-band notifications:
-	///   "^done[,results]": The synchronous operation was successful, results are provided
-	///   "^running": Deprecated. Equivalent to ‘^done’
-	///   "^connected": gdb has connected to a remote target.
-	///   "^error,msg=c-string[,code=c-string]": The operation failed.
-	///   "^exit": gdb has terminated.
-	/// @see https://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Result-Records.html
-	void onResult(const GdbItemTree& tree);
-	/// gdb internally maintains a number of output streams: the console (~), the target (@), and
-	/// the log (&). The console output stream ('~') contains text that should be displayed in the
-	/// CLI console window. It contains the textual responses to CLI commands.
-	void onConsoleStreamOutput(const QString& text);
-	/// The target output stream (@) contains any textual output from the running target. This is
-	/// only present when GDB's event loop is truly asynchronous, which is currently only the case
-	/// for remote targets.
-	void onTargetStreamOutput(const QString& str);
-	/// The log stream contains debugging messages being produced by gdb's internals.
-	void onLogStreamOutput(const QString& str);
-
-  protected:
 	/// A Gdb result brought an updated list of threads, refresh them
 	void updateThreads(const GdbTreeNode* threadsNode);
 	/// A Gdb result indicates that a new breakpoint was added
@@ -129,6 +92,29 @@ class Visualizator : public QObject
 	/// @remark Search is made sequential, therefore O(n) where n is the number of debugger
 	/// breakpoints stored in the vector
 	int findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint) const;
+
+  protected:
+	///	Notifications that begin with '*', example: *running,thread-id="thread"
+	///	@see GdbResponseListener::onExecAsyncOut()
+	virtual void onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration);
+	/// Notifications that begin with '+'
+	///	@see GdbResponseListener::onStatusAsyncOut()
+	virtual void onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration);
+	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
+	///	@see GdbResponseListener::onNotifyAsyncOut()
+	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration);
+	/// Notifications that begin with '^': ^done, ^connected, ^error, ^exit
+	///	@see GdbResponseListener::onResult()
+	virtual void onResult(const GdbItemTree& tree, int& maxDuration);
+	/// Console output stream ('~'): text that should be displayed in the CLI console window
+	///	@see GdbResponseListener::onConsoleStreamOutput()
+	virtual void onConsoleStreamOutput(const QString& text, int& maxDuration);
+	/// Target output stream (@): any textual output from the running target
+	///	@see GdbResponseListener::onTargetStreamOutput()
+	virtual void onTargetStreamOutput(const QString& str, int& maxDuration);
+	/// The log stream contains debugging messages being produced by gdb's internals.
+	///	@see GdbResponseListener::onLogStreamOutput()
+	virtual void onLogStreamOutput(const QString& str, int& maxDuration);
 };
 
 #endif // VISUALIZATOR_H

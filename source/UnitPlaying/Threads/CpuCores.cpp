@@ -2,8 +2,9 @@
 #include "CpuCores.h"
 #include "Unit.h"
 
-CpuCores::CpuCores(Unit& unit, Scene* scene)
-	: MemorySegment(unit, scene, Qt::Horizontal)
+CpuCores::CpuCores(Unit& unit, Scene* scene, QObject* parent)
+	: GdbResponseListener(parent)
+	, MemorySegment(unit, scene, Qt::Horizontal)
 {
 	createCpuCores();
 }

@@ -37,6 +37,9 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	// Create the docking segments
 	createCodeSegment();
 	createMessagesArea();
+
+	// Connect signals and slots
+	createConnections();
 }
 
 UnitPlayingScene::~UnitPlayingScene()
@@ -155,6 +158,12 @@ void UnitPlayingScene::createMessagesArea()
 
 	// When user selects a diagnostic in the tools output, point its place in the code
 	connect(messagesArea, SIGNAL(diagnosticSelected(int)), codeSegment, SLOT(diagnosticSelected(int)));
+}
+
+void UnitPlayingScene::createConnections()
+{
+	// When visualizator dispatches a GdbResponse, some segments may create an animation
+	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), cpuCores, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 }
 
 void UnitPlayingScene::buildFinished(Compiler *compiler)

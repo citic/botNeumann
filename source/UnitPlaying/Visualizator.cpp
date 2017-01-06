@@ -7,7 +7,7 @@
 #include "UnitPlayingScene.h"
 
 Visualizator::Visualizator(const QFileInfo& executablePath, UnitPlayingScene* unitPlayingScene)
-	: QObject(unitPlayingScene)
+	: GdbResponseListener(unitPlayingScene)
 	, executablePath(executablePath)
 	, debuggerCall( nullptr )
 	, unitPlayingScene(unitPlayingScene)
@@ -34,6 +34,8 @@ bool Visualizator::start()
 	connect( debuggerCall, SIGNAL(onGdbLogMessage(GdbLogType,QString)), unitPlayingScene->getMessagesArea(), SLOT(appendDebuggerMessage(GdbLogType,QString)));
 	// Each time an animation is done, process the next GdbResponse, if any
 	connect( &animationDone, SIGNAL(timeout()), this, SLOT(processGdbResponse()));
+	// This object also processes GdbResponses
+	connect( this, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), this, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
 	bool result = debuggerCall->start();
 	if ( ! result )
@@ -135,24 +137,6 @@ int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint
 }
 
 // Responses received by GdbCall
-#if 0
-void Visualizator::onGdbResponse(const GdbResponse* response, int& maxDuration)
-{
-	Q_ASSERT(response);
-	switch ( response->getType() )
-	{
-		case GdbResponse::EXEC_ASYNC_OUTPUT: onExecAsyncOut(response->getItemTree(), response->getReason()); break;
-		case GdbResponse::STATUS_ASYNC_OUTPUT: onStatusAsyncOut(response->getItemTree(), response->getReason()); break;
-		case GdbResponse::NOTIFY_ASYNC_OUTPUT: onNotifyAsyncOut(response->getItemTree(), response->getReason()); break;
-		case GdbResponse::LOG_STREAM_OUTPUT: onLogStreamOutput(response->getText()); break;
-		case GdbResponse::TARGET_STREAM_OUTPUT: onTargetStreamOutput(response->getText()); break;
-		case GdbResponse::CONSOLE_STREAM_OUTPUT: onConsoleStreamOutput(response->getText()); break;
-		case GdbResponse::RESULT: onResult(response->getItemTree()); break;
-
-		default: break;
-	}
-}
-#endif
 
 void Visualizator::processGdbResponse()
 {
@@ -176,20 +160,22 @@ void Visualizator::processGdbResponse()
 	// Notify all actors to animate this response, they will inform how many milliseconds they
 	// will take to complete the animation
 	int maxDuration = 0;
-	emit onGdbResponse(gdbResponse, maxDuration);
+	emit dispatchGdbResponse(gdbResponse, maxDuration);
 
 	// Wait until the animation is done, then call this method again to process the next pending
 	// response
 	animationDone.start(maxDuration);
 }
 
-void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
+void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
 {
+	Q_UNUSED(maxDuration);
 	qCDebug(logVisualizator(), "onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 }
 
-void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
+void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
 {
+	Q_UNUSED(maxDuration);
 	qCDebug(logVisualizator(), "onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 
 	// Store current state to check if there is a state change
@@ -221,8 +207,9 @@ void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 */
 }
 
-bool Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)
+void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
 {
+	Q_UNUSED(maxDuration);
 	Q_ASSERT(debuggerCall);
 	qCDebug(logVisualizator(), "onNotifyAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 
@@ -230,17 +217,19 @@ bool Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 	{
 		case AsyncClass::AC_THREAD_CREATED:
 			if ( isStopped() )
-				return debuggerCall->sendGdbCommand("-thread-info") != GDB_ERROR;
-			qCritical(logVisualizator, "Could not ask for thread info, program is currently running");
-			return false;
+				debuggerCall->sendGdbCommand("-thread-info");
+			else
+				qCritical(logVisualizator, "Could not ask for thread info, program is currently running");
+			break;
 
 		default:
-			return false;
+			break;
 	}
 }
 
-void Visualizator::onResult(const GdbItemTree& tree)
+void Visualizator::onResult(const GdbItemTree& tree, int& maxDuration)
 {
+	Q_UNUSED(maxDuration);
 	qCDebug(logVisualizator(), "onResult(%s)", qPrintable(tree.buildDescription()));
 	const GdbTreeNode* node = nullptr;
 
@@ -249,6 +238,31 @@ void Visualizator::onResult(const GdbItemTree& tree)
 	if ( ( node = tree.findNode("/bkpt") ) )
 		return updateDebuggerBreakpoint( node );
 }
+
+void Visualizator::onConsoleStreamOutput(const QString& text, int& maxDuration)
+{
+	Q_UNUSED(maxDuration);
+	QStringList lines = text.split('\n');
+	for ( int lineIndex = 0; lineIndex < lines.size(); ++lineIndex )
+	{
+		const QString& line = lines[lineIndex];
+		if ( ! line.isEmpty() )
+			unitPlayingScene->getMessagesArea()->appendDebuggerMessage(LOG_CONSOLE_OUTPUT, line);
+	}
+}
+
+void Visualizator::onTargetStreamOutput(const QString& str, int& maxDuration)
+{
+	Q_UNUSED(maxDuration);
+	qCDebug(logVisualizator(), "onTargetStreamOutput(%s)", qPrintable(str));
+}
+
+void Visualizator::onLogStreamOutput(const QString& str, int& maxDuration)
+{
+	Q_UNUSED(maxDuration);
+	qCDebug(logVisualizator(), "onLogStreamOutput(%s)", qPrintable(str));
+}
+
 
 void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode)
 {
@@ -273,27 +287,6 @@ void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode)
 
 	// Update the interface?
 //	emit breakpointUpdated( debuggerBreakpoints[breakpointNumber] );
-}
-
-void Visualizator::onConsoleStreamOutput(const QString& text)
-{
-	QStringList lines = text.split('\n');
-	for ( int lineIndex = 0; lineIndex < lines.size(); ++lineIndex )
-	{
-		const QString& line = lines[lineIndex];
-		if ( ! line.isEmpty() )
-			unitPlayingScene->getMessagesArea()->appendDebuggerMessage(LOG_CONSOLE_OUTPUT, line);
-	}
-}
-
-void Visualizator::onTargetStreamOutput(const QString& str)
-{
-	qCDebug(logVisualizator(), "onTargetStreamOutput(%s)", qPrintable(str));
-}
-
-void Visualizator::onLogStreamOutput(const QString& str)
-{
-	qCDebug(logVisualizator(), "onLogStreamOutput(%s)", qPrintable(str));
 }
 
 void Visualizator::updateThreads(const GdbTreeNode* threadsNode)

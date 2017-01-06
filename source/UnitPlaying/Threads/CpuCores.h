@@ -1,13 +1,16 @@
 #ifndef CPUCORES_H
 #define CPUCORES_H
 
+#include "GdbResponseListener.h"
 #include "MemorySegment.h"
+
 #include <QList>
 
 class CpuCore;
 
-class CpuCores : public MemorySegment
+class CpuCores : public GdbResponseListener, public MemorySegment
 {
+	Q_OBJECT
 	Q_DISABLE_COPY(CpuCores)
 
   protected:
@@ -16,7 +19,7 @@ class CpuCores : public MemorySegment
 
   public:
 	/// Constructor
-	explicit CpuCores(Unit& unit, Scene* scene);
+	explicit CpuCores(Unit& unit, Scene* scene, QObject* parent = nullptr);
 	/// Destructor
 	virtual ~CpuCores();
 	/// Get the number of memory rows required by this object
