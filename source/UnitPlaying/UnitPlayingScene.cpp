@@ -37,9 +37,6 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	// Create the docking segments
 	createCodeSegment();
 	createMessagesArea();
-
-	// Connect signals and slots
-	createConnections();
 }
 
 UnitPlayingScene::~UnitPlayingScene()
@@ -160,14 +157,6 @@ void UnitPlayingScene::createMessagesArea()
 	connect(messagesArea, SIGNAL(diagnosticSelected(int)), codeSegment, SLOT(diagnosticSelected(int)));
 }
 
-void UnitPlayingScene::createConnections()
-{
-	// When visualizator dispatches a GdbResponse, some segments may create an animation
-	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), heapSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
-	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), cpuCores, SLOT(onGdbResponse(const GdbResponse*,int&)) );
-	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
-}
-
 void UnitPlayingScene::buildFinished(Compiler *compiler)
 {
 	// If there are errors, do not start the visualization
@@ -181,7 +170,10 @@ void UnitPlayingScene::buildFinished(Compiler *compiler)
 	// When user creates or removes breakpoints and visualization is running, update them
 	connect( codeSegment, SIGNAL(breakpointAction(GuiBreakpoint*)), visualizator, SLOT(breakpointAction(GuiBreakpoint*)) );
 
-	// ToDo: Connect signals emitted by visualizator with each part of the window
+	// When visualizator dispatches a GdbResponse, some segments may create an animation
+	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), heapSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
+	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), cpuCores, SLOT(onGdbResponse(const GdbResponse*,int&)) );
+	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
 	// Start the animation
 	visualizator->start();

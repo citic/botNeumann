@@ -29,6 +29,9 @@ class CpuCores : public GdbResponseListener, public MemorySegment
   protected:
 	/// Creates a CPU core (workstation) for each CPU core requested in .botnu file
 	void createCpuCores();
+	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
+	///	@see GdbResponseListener::onNotifyAsyncOut()
+	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration) override;
 };
 
 #endif // CPUCORES_H

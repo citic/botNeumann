@@ -31,3 +31,20 @@ void CpuCores::createCpuCores()
 		if ( index ) cpuCore->setMarginLeft(-0.04105605779343);
 	}
 }
+
+void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
+{
+	Q_UNUSED(maxDuration);
+	switch ( asyncClass )
+	{
+		case AsyncClass::AC_THREAD_CREATED:
+		{
+			QString id = tree.findNodeTextValue("/id");
+			qDebug("------CpuCores::create thread id[%s]", qUtf8Printable(id));
+			break;
+		}
+
+		default:
+			break;
+	}
+}

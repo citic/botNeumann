@@ -105,8 +105,6 @@ class UnitPlayingScene : public GameScene
 	void createCodeSegment();
 	/// Create a dock widget that show information about the unit, messages from compilers...
 	void createMessagesArea();
-	// Connect signals and slots
-	void createConnections();
 };
 
 #endif // UNITPLAYINGSCENE_H
