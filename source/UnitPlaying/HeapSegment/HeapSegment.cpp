@@ -7,8 +7,9 @@
 // The memory interface requires less than a complete row
 const double interfaceRows = 0.66;
 
-HeapSegment::HeapSegment(Unit& unit, Scene* scene)
-	: MemorySegment(unit, scene, Qt::Vertical)
+HeapSegment::HeapSegment(Unit& unit, Scene* scene, QObject* parent)
+	: GdbResponseListener(parent)
+	, MemorySegment(unit, scene, Qt::Vertical)
 {
 	unit.requiresHeapSegment() ? buildSegment() : hideSegment();
 }

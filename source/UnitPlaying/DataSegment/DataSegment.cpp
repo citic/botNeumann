@@ -7,8 +7,9 @@
 // The standard input/output requires less than a complete row
 const double stdInOutRows = 0.66;
 
-DataSegment::DataSegment(Unit& unit, Scene* scene)
-	: MemorySegment(unit, scene, Qt::Vertical)
+DataSegment::DataSegment(Unit& unit, Scene* scene, QObject* parent)
+	: GdbResponseListener(parent)
+	, MemorySegment(unit, scene, Qt::Vertical)
 {
 	buildDataSegment();
 }

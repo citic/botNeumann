@@ -163,7 +163,9 @@ void UnitPlayingScene::createMessagesArea()
 void UnitPlayingScene::createConnections()
 {
 	// When visualizator dispatches a GdbResponse, some segments may create an animation
+	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), heapSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), cpuCores, SLOT(onGdbResponse(const GdbResponse*,int&)) );
+	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 }
 
 void UnitPlayingScene::buildFinished(Compiler *compiler)

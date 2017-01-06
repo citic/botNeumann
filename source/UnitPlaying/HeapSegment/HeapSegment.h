@@ -1,13 +1,15 @@
 #ifndef HEAPSEGMENT_H
 #define HEAPSEGMENT_H
 
+#include "GdbResponseListener.h"
 #include "MemorySegment.h"
 
 class MemoryFrame;
 class Prop;
 
-class HeapSegment : public MemorySegment
+class HeapSegment : public GdbResponseListener, public MemorySegment
 {
+	Q_OBJECT
 	Q_DISABLE_COPY(HeapSegment)
 
   protected:
@@ -20,7 +22,7 @@ class HeapSegment : public MemorySegment
 	/// Constructor
 	/// @param inUse if false the Heap Segment is not required for the current unit. It will be
 	/// hidden to avoid cognitive load
-	explicit HeapSegment(Unit& unit, Scene* scene);
+	explicit HeapSegment(Unit& unit, Scene* scene, QObject* parent = nullptr);
 	/// Destructor
 	virtual ~HeapSegment();
 	/// Get the number of memory rows required by this object

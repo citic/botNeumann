@@ -1,13 +1,15 @@
 #ifndef DATASEGMENT_H
 #define DATASEGMENT_H
 
+#include "GdbResponseListener.h"
 #include "MemorySegment.h"
 
 class MemoryFrame;
 class StandardInputOutput;
 
-class DataSegment : public MemorySegment
+class DataSegment : public GdbResponseListener, public MemorySegment
 {
+	Q_OBJECT
 	Q_DISABLE_COPY(DataSegment)
 
   protected:
@@ -20,7 +22,7 @@ class DataSegment : public MemorySegment
 
   public:
 	/// Constructor
-	explicit DataSegment(Unit& unit, Scene* scene);
+	explicit DataSegment(Unit& unit, Scene* scene, QObject* parent = nullptr);
 	/// Destructor
 	virtual ~DataSegment();
 	/// Get the number of memory rows required by this object
