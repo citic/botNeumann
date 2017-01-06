@@ -29,8 +29,11 @@ bool Visualizator::start()
 	debuggerCall = new GdbCall(this);
 
 	// Connect events
-	connect( debuggerCall, SIGNAL(onGdbResponse(const GdbResponse*)), this, SLOT(onGdbResponse(const GdbResponse*)) );
+	// When there is a pending GdbResponse process it
+	connect( debuggerCall, SIGNAL(pendingGdbResponses()), this, SLOT(processGdbResponse()) );
 	connect( debuggerCall, SIGNAL(onGdbLogMessage(GdbLogType,QString)), unitPlayingScene->getMessagesArea(), SLOT(appendDebuggerMessage(GdbLogType,QString)));
+	// Each time an animation is done, process the next GdbResponse, if any
+	connect( &animationDone, SIGNAL(timeout()), this, SLOT(processGdbResponse()));
 
 	bool result = debuggerCall->start();
 	if ( ! result )
@@ -132,8 +135,8 @@ int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint
 }
 
 // Responses received by GdbCall
-
-void Visualizator::onGdbResponse(const GdbResponse* response)
+#if 0
+void Visualizator::onGdbResponse(const GdbResponse* response, int& maxDuration)
 {
 	Q_ASSERT(response);
 	switch ( response->getType() )
@@ -148,6 +151,36 @@ void Visualizator::onGdbResponse(const GdbResponse* response)
 
 		default: break;
 	}
+}
+#endif
+
+void Visualizator::processGdbResponse()
+{
+	// If there is an active animation, wait until it is done
+	if ( animationDone.remainingTime() > 0 )
+		return;
+
+	// The last animation is finished, stop its timer
+	animationDone.stop();
+
+	// Fetch the next pending response
+	Q_ASSERT(debuggerCall);
+	GdbResponse* gdbResponse = debuggerCall->takeNextResponse();
+
+	// If there is no pending responses, we are done
+	if ( gdbResponse == nullptr )
+		return;
+
+	qCDebug(logVisualizator, "processGdbResponse: %s", qPrintable(gdbResponse->buildDescription(true)));
+
+	// Notify all actors to animate this response, they will inform how many milliseconds they
+	// will take to complete the animation
+	int maxDuration = 0;
+	emit onGdbResponse(gdbResponse, maxDuration);
+
+	// Wait until the animation is done, then call this method again to process the next pending
+	// response
+	animationDone.start(maxDuration);
 }
 
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass)

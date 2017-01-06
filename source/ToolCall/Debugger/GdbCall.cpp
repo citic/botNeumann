@@ -30,6 +30,9 @@ GdbCall::~GdbCall()
 
 	// Delete dynamic allocated objects
 	deleteProcessedTokens();
+
+	// Delete any served response, if any
+	delete lastServedResponse;
 }
 
 bool GdbCall::start()
@@ -161,7 +164,7 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultDat
 
 	--busy;
 
-	dispatchResponses();
+	emit pendingGdbResponses();
 	onReadyReadStandardOutput();
 
 	return lastResult;
@@ -576,19 +579,19 @@ int GdbCall::parseValue(GdbTreeNode* item)
 	return result;
 }
 
-void GdbCall::dispatchResponses()
+GdbResponse* GdbCall::takeNextResponse()
 {
-	// Dispatch each response to the listener, if any
-	while ( responseQueue.isEmpty() == false )
-	{
-		GdbResponse* response = responseQueue.takeFirst();
-		Q_ASSERT(response);
+	// Delete the previous served response, if any
+	delete lastServedResponse;
 
-		// Dispatch the response
-		emit onGdbResponse(response);
+	// Get the next pending response, if any
+	if ( responseQueue.isEmpty() )
+		lastServedResponse = nullptr;
+	else
+		lastServedResponse = responseQueue.takeFirst();
 
-		delete response;
-	}
+	// Return a pointer to it
+	return lastServedResponse;
 }
 
 void GdbCall::onReadyReadStandardOutput()
@@ -602,5 +605,5 @@ void GdbCall::onReadyReadStandardOutput()
 		Q_ASSERT( pendingCommands.isEmpty() == true );
 	}
 
-	dispatchResponses();
+	emit pendingGdbResponses();
 }

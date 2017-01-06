@@ -74,7 +74,7 @@ GdbResult GdbResponse::mapTextToResult(const QString& resultClass)
 	return GDB_UNKNOWN;
 }
 
-const char*GdbResponse::mapResultToString(GdbResult result)
+const char* GdbResponse::mapResultToString(GdbResult result)
 {
 	switch ( result )
 	{

@@ -3,8 +3,10 @@
 
 #include "GdbCommon.h"
 #include "GdbResponse.h"
-#include <QObject>
+
 #include <QFileInfo>
+#include <QObject>
+#include <QTimer>
 #include <QVector>
 
 class DebuggerBreakpoint;
@@ -40,6 +42,8 @@ class Visualizator : public QObject
 	QVector<DebuggerBreakpoint*> debuggerBreakpoints;
 	/// Process id of the inferior retrieved from gdb. Needed?
 	int inferiorProcessId;
+	/// Controls when the last animation is done before processing the next GdbCommand
+	QTimer animationDone;
 
   public:
 	/// Constructor
@@ -58,9 +62,23 @@ class Visualizator : public QObject
 	inline bool isRunning() const { return state == STATE_RUNNING; }
 	inline bool isFinished() const { return state == STATE_FINISHED; }
 
+  signals:
+	/// Emitted when there is a GdbResponse to process.
+	/// Actors are interested on these responses to create an animation in some cases, for example
+	/// when a function is called, an animation of a stack frame rising from the floor is done.
+	/// @param maxDuration A reference to a integer variable is passed to all actors. The actor
+	/// with the largest duration to do the animation must assign this variable. The Visualizator
+	/// will wait these amount of milliseconds (the animation is done) until fetching the next
+	/// pending GdbResponse
+	void onGdbResponse(const GdbResponse* response, int& maxDuration);
+
+
   public slots:
-	/// Called when GdbCall has responses
-	void onGdbResponse(const GdbResponse* response);
+	/// Called when there are pending GdbResponses to process.
+	/// This method fetches the next pending GdbResponse and notifies actors to do the animation.
+	/// It waits until the animation is done. When it is done, it calls itself again to check if
+	/// there is more pending GdbResponses, until there is not more.
+	void processGdbResponse();
 	/// Called when user presses over a breakpoint symbol in order to create or remove it
 	/// Visualization controller requires this signal in order to clear the breakpont in
 	/// debugger when visualization is running. Internally the GuiBreakpoint object carries
