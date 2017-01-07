@@ -4,9 +4,10 @@
 #include "GdbResponseListener.h"
 #include "MemorySegment.h"
 
-#include <QList>
+#include <QVector>
 
 class CpuCore;
+class ExecutionThread;
 
 class CpuCores : public GdbResponseListener, public MemorySegment
 {
@@ -15,7 +16,9 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 
   protected:
 	/// Available CPU cores to have execution threads (robots) working
-	QList<CpuCore*> cpuCores;
+	QVector<CpuCore*> cpuCores;
+	/// All running execution threads in player's solution (inferior)
+	QVector<ExecutionThread*> executionThreads;
 
   public:
 	/// Constructor
@@ -32,6 +35,11 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
 	///	@see GdbResponseListener::onNotifyAsyncOut()
 	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration) override;
+	/// Debugger reports the creation of a new execution thread, show it
+	void createThread(int id);
+	/// @return The index of the next available (free) CPU core to execute a thread, -1 if all cores
+	/// are busy executing threads
+	int findFirstIdleCpuCore() const;
 };
 
 #endif // CPUCORES_H

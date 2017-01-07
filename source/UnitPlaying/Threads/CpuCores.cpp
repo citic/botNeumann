@@ -1,5 +1,7 @@
 #include "CpuCore.h"
 #include "CpuCores.h"
+#include "ExecutionThread.h"
+#include "Scene.h"
 #include "Unit.h"
 
 CpuCores::CpuCores(Unit& unit, Scene* scene, QObject* parent)
@@ -11,6 +13,7 @@ CpuCores::CpuCores(Unit& unit, Scene* scene, QObject* parent)
 
 CpuCores::~CpuCores()
 {
+	// Do not delete cpuCores[] or executionThreads[]. They are deleted by the scene
 }
 
 double CpuCores::getHeightInRows() const
@@ -37,14 +40,31 @@ void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, 
 	Q_UNUSED(maxDuration);
 	switch ( asyncClass )
 	{
-		case AsyncClass::AC_THREAD_CREATED:
-		{
-			QString id = tree.findNodeTextValue("/id");
-			qDebug("------CpuCores::create thread id[%s]", qUtf8Printable(id));
-			break;
-		}
-
-		default:
-			break;
+		case AsyncClass::AC_THREAD_CREATED: createThread( tree.findNodeTextValue("/id").toInt() ); break;
+		default: break;
 	}
+}
+
+void CpuCores::createThread(int id)
+{
+	// Create an execution thread, that is represeted by a robot with racks
+	ExecutionThread* thread = new ExecutionThread(id, scene);
+	executionThreads.append(thread);
+
+	// If there is an idle CPU core, assign the new execution thread
+	int cpuCoreIndex = findFirstIdleCpuCore();
+	if ( cpuCoreIndex == -1 )
+		return;
+
+	// Assign the CPU core to the thread
+	cpuCores[cpuCoreIndex]->runThread(thread);
+}
+
+int CpuCores::findFirstIdleCpuCore() const
+{
+	for ( int index = 0; index < cpuCores.count(); ++index )
+		if ( cpuCores[index] && cpuCores[index]->isIdle() )
+			return index;
+
+	return -1;
 }

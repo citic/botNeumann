@@ -6,6 +6,7 @@
 
 class Prop : public ScenicElement<QGraphicsSvgItem>
 {
+	Q_OBJECT
 	Q_DISABLE_COPY(Prop)
 
   public:
@@ -14,7 +15,7 @@ class Prop : public ScenicElement<QGraphicsSvgItem>
 	/// Creates an actor with the given svg filename
 	explicit Prop(const QString& filename, QGraphicsItem* parentItem);
 	/// Destructor
-	~Prop();
+	virtual ~Prop();
 };
 
 #endif // PROP_H

@@ -67,4 +67,19 @@
 		<file alias="chip_damaged.svg">unit_selection/chip_damaged.svg</file>
 		<file alias="chip_restored.svg">unit_selection/chip_restored.svg</file>
 	</qresource>
+	<qresource prefix="/unit_playing/threads">
+		<file alias="thread1_back.svg">unit_playing/threads/thread1_back.svg</file>
+		<file alias="thread1_front.svg">unit_playing/threads/thread1_front.svg</file>
+		<file alias="thread1_side.svg">unit_playing/threads/thread1_side.svg</file>
+		<file alias="thread2_back.svg">unit_playing/threads/thread2_back.svg</file>
+		<file alias="thread2_front.svg">unit_playing/threads/thread2_front.svg</file>
+		<file alias="thread2_side.svg">unit_playing/threads/thread2_side.svg</file>
+		<file alias="thread3_back.svg">unit_playing/threads/thread3_back.svg</file>
+		<file alias="thread3_front.svg">unit_playing/threads/thread3_front.svg</file>
+		<file alias="thread3_side.svg">unit_playing/threads/thread3_side.svg</file>
+		<file alias="thread4_back.svg">unit_playing/threads/thread4_back.svg</file>
+		<file alias="thread4_front.svg">unit_playing/threads/thread4_front.svg</file>
+		<file alias="thread4_side.svg">unit_playing/threads/thread4_side.svg</file>
+		<file alias="wave.svg">unit_playing/threads/wave.svg</file>
+	</qresource>
 </RCC>
