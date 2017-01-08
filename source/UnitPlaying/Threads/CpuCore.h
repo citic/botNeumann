@@ -33,10 +33,15 @@ class CpuCore : public MemorySegment
 	/// Assigns an execution thread to be run on this CPU thread. The execution thread is shown
 	/// on the graphical interface, reprsented as a robot
 	void runThread(ExecutionThread* thread);
+	/// Resize this layout and all its child items
+	/// This method is called each time the Stage and Scene has been resized
+	virtual void resize(qreal left, qreal top, qreal width, qreal height) override;
 
   protected:
 	/// Builds the CPU core as a workstation where a execution thread (robot) can work
 	void buildCpuCore();
+	/// Places the execution thread in the middle of the cpu core (workstation)
+	void placeExecutionThread();
 };
 
 #endif // CPUCORE_H

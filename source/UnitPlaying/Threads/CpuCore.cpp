@@ -32,18 +32,32 @@ void CpuCore::runThread(ExecutionThread* thread)
 	// Assign the new execution thread
 	executionThread = thread;
 
-	// Place the thread in the middle of the CPU core
-	// ToDo: calculate real center
-	Q_ASSERT(workstation);
-	double x = workstation->x() + workstation->boundingRect().width() * 0.5;
-	double y = workstation->y() + workstation->boundingRect().height() * 0.66;
-	executionThread->setPos( x, y );
+//	executionThread->setParentItem(workstation);
+	placeExecutionThread();
 	executionThread->setVisible(true);
+}
+
+void CpuCore::resize(qreal left, qreal top, qreal width, qreal height)
+{
+	MemorySegment::resize(left, top, width, height);
+	placeExecutionThread();
 }
 
 void CpuCore::buildCpuCore()
 {
 	Q_ASSERT(scene);
 	workstation = new Prop(":/unit_playing/stack_segment.svg", scene);
-	addItem(workstation, 1.0);
+	addItem(workstation, 0.85);
+}
+
+void CpuCore::placeExecutionThread()
+{
+	if ( executionThread == nullptr )
+		return;
+
+	// Place the thread in the middle of the CPU core
+	Q_ASSERT(workstation);
+	double x = workstation->x() + (workstation->getResizedWidth() - executionThread->boundingRect().width()) * 0.5;
+	double y = workstation->y() + workstation->getResizedHeight() - executionThread->boundingRect().height() * 0.5;
+	executionThread->setPos( x, y );
 }
