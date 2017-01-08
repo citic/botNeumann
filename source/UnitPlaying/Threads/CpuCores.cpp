@@ -48,7 +48,7 @@ void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, 
 void CpuCores::createThread(int id)
 {
 	// Create an execution thread, that is represeted by a robot with racks
-	ExecutionThread* thread = new ExecutionThread(id, scene);
+	ExecutionThread* thread = new ExecutionThread(scene, id);
 	executionThreads.append(thread);
 
 	// If there is an idle CPU core, assign the new execution thread

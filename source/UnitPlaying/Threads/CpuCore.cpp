@@ -6,7 +6,7 @@
 #include "Unit.h"
 
 // The number of memory rows reserved for the robot
-const double robotRows = 2.0;
+const double robotRows = 3.0;
 
 CpuCore::CpuCore(int cpuCoreNumber, Unit& unit, Scene* scene)
 	: MemorySegment(unit, scene, Qt::Vertical)
@@ -31,15 +31,15 @@ void CpuCore::runThread(ExecutionThread* thread)
 		return;
 
 	// If there is an old execution thread running, hide it
-	if ( executionThread )
-		executionThread->setVisible(false);
+//	if ( executionThread )
+//		executionThread->setVisible(false);
 
 	// Assign the new execution thread
 	executionThread = thread;
 
 	// Add the execution thread as a child in a higher layer
 	addItem( executionThread, 1.0, zUnitPlaying::executionThread );
-	executionThread->setVisible(true);
+//	executionThread->setVisible(true);
 	updateLayoutItem();
 }
 

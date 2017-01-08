@@ -114,9 +114,8 @@ void UnitPlayingScene::addVerticalSegments()
 
 	Q_ASSERT(layout);
 	this->layout->addLayout(heapSegment, heapSegmentProportion);
-	this->layout->addLayout(cpuCores, cpuCoresProportion * 0.98);
+	this->layout->addLayout(cpuCores, cpuCoresProportion);
 	// Leave a small separation to generate a sensation of space (the floor can be seen)
-	this->layout->addStretch(cpuCoresProportion * 0.02);
 	this->layout->addLayout(dataSegment, dataSegmentProportion);
 }
 
