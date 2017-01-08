@@ -11,6 +11,19 @@ LayoutItem::~LayoutItem()
 {
 }
 
+void LayoutItem::resize(qreal left, qreal top, qreal width, qreal height)
+{
+	this->layoutLeft = left;
+	this->layoutTop = top;
+	this->layoutWidth = width;
+	this->layoutHeight = height;
+}
+
+void LayoutItem::updateLayoutItem()
+{
+	resize(layoutLeft, layoutTop, layoutWidth, layoutHeight);
+}
+
 void LayoutItem::setMargins(qreal top, qreal right, qreal bottom, qreal left)
 {
 	margins[marginTop] = top;

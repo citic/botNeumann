@@ -12,6 +12,7 @@ LinearLayout::~LinearLayout()
 void LinearLayout::resize(qreal left, qreal top, qreal width, qreal height)
 {
 	// Reduce the margins from the given space
+	Layout::resize(left, top, width, height);
 	applyMargins(left, top, width, height);
 
 	if ( orientation == Qt::Horizontal )

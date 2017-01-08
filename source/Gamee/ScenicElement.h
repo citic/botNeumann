@@ -15,10 +15,6 @@ class ScenicElement : public GraphicsType, public LayoutItem
   protected:
 	/// Aligns the contents of this item adjusting its left or right margins automatically
 	Qt::Alignment alignment;
-	/// The width after tranforming (resizing) this element
-	qreal resizedWidth = 0.0;
-	/// The width after tranforming (resizing) this element
-	qreal resizedHeight = 0.0;
 
   public:
 	/// Constructor
@@ -35,10 +31,6 @@ class ScenicElement : public GraphicsType, public LayoutItem
 	}
 	/// Used to differentiate between pure-layout items and scenic elements
 	virtual bool isScenicElement() const override { return true; }
-	/// The width after tranforming (resizing) this element
-	inline qreal getResizedWidth() const { return resizedWidth; }
-	/// The width after tranforming (resizing) this element
-	inline qreal getResizedHeight() const { return resizedHeight ; }
 	/// Forwards the z-value used by layout items to QGraphicItem family
 	virtual void setZ(qreal z) override { GraphicsType::setZValue(z); }
 	/// Aligns the contents of this item adjusting its left or right margins automatically
@@ -51,14 +43,13 @@ class ScenicElement : public GraphicsType, public LayoutItem
 	/// This method is called each time the Stage and Scene has been resized
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) override
 	{
+		LayoutItem::resize(left, top, width, height);
 		applyMargins(left, top, width, height);
 		qreal scaleWidth = width / GraphicsType::boundingRect().width();
 		qreal scaleHeight = height / GraphicsType::boundingRect().height();
 		if ( ! alignment.testFlag(Qt::AlignJustify) )
 			applyAlignment(left, top, width, height, scaleWidth, scaleHeight);
 		GraphicsType::setPos(left, top);
-		resizedWidth = width;
-		resizedHeight = height;
 		GraphicsType::prepareGeometryChange();
 		GraphicsType::setTransform(QTransform().scale(scaleWidth, scaleHeight));
 	}

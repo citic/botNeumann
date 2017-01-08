@@ -20,6 +20,11 @@ class LayoutItem
 	qreal proportion;
 	/// Percent of extension of each margin of this item
 	qreal margins[marginCount];
+	/// Current dimensions of this item set in the last resize event
+	qreal layoutLeft = 0.0;
+	qreal layoutTop = 0.0;
+	qreal layoutWidth = 0.0;
+	qreal layoutHeight = 0.0;
 	/// True if this item is floating over other items
 	bool floating;
 
@@ -32,7 +37,9 @@ class LayoutItem
 	virtual bool isScenicElement() const { return false; }
 	/// Resize this item and all its child items
 	/// This method is called each time the Stage and Scene has been resized
-	virtual void resize(qreal left, qreal top, qreal width, qreal height) = 0;
+	virtual void resize(qreal left, qreal top, qreal width, qreal height);
+	/// Force to update this element, in the same fashion when a resize is done
+	virtual void updateLayoutItem();
 	/// The parent item that contains this one
 	inline LayoutItem* getParentItem() const { return parentItem; }
 	inline void setParentItem(LayoutItem* parent) { this->parentItem = parent; }

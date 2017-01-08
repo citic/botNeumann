@@ -26,6 +26,10 @@ double CpuCore::getHeightInRows() const
 
 void CpuCore::runThread(ExecutionThread* thread)
 {
+	// If the thread is already set, done
+	if ( executionThread == thread )
+		return;
+
 	// If there is an old execution thread running, hide it
 	if ( executionThread )
 		executionThread->setVisible(false);
@@ -33,17 +37,10 @@ void CpuCore::runThread(ExecutionThread* thread)
 	// Assign the new execution thread
 	executionThread = thread;
 
-	// ToDo: add the execution thread as a child LayoutItem
-
-//	executionThread->setParentItem(workstation);
-	placeExecutionThread();
+	// Add the execution thread as a child in a higher layer
+	addItem( executionThread, 1.0, zUnitPlaying::executionThread );
 	executionThread->setVisible(true);
-}
-
-void CpuCore::resize(qreal left, qreal top, qreal width, qreal height)
-{
-	MemorySegment::resize(left, top, width, height);
-	placeExecutionThread();
+	updateLayoutItem();
 }
 
 void CpuCore::buildCpuCore()
@@ -51,16 +48,4 @@ void CpuCore::buildCpuCore()
 	Q_ASSERT(scene);
 	workstation = new Prop(":/unit_playing/stack_segment.svg", scene);
 	addItem(workstation, 0.85, zUnitPlaying::cpuCore);
-}
-
-void CpuCore::placeExecutionThread()
-{
-	if ( executionThread == nullptr )
-		return;
-
-	// Place the thread in the middle of the CPU core
-	Q_ASSERT(workstation);
-	double x = workstation->x() + (workstation->getResizedWidth() - executionThread->boundingRect().width()) * 0.5;
-	double y = workstation->y() + workstation->getResizedHeight() - executionThread->boundingRect().height() * 0.5;
-	executionThread->setPos( x, y );
 }
