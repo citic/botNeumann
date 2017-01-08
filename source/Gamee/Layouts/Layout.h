@@ -12,6 +12,7 @@ class Layout : public LayoutItem
 
   protected:
 	/// Items are stored in layers. Each layer has un z-index or z-value
+	/// When the layout is resized, each layer is resized independently
 	typedef QHash< qreal, QList<LayoutItem*> > ItemsType;
 	/// Items are stored in layers. Each layer has un z-index or z-value
 	/// Sub-items in order of this layout
@@ -30,6 +31,13 @@ class Layout : public LayoutItem
 	virtual void addLayout(Layout* layout, qreal proportion, qreal zValue = 0.0);
 	/// Add expansible space
 	virtual void addStretch(qreal proportion, qreal zValue = 0.0);
+	/// Find the zValue of this item in its parent, -1.0 if not added or not parent
+	/// @remarks The search is done in linear time
+	/// @remarks Implemented but not used, as well as parentItem
+	qreal findZValue() const;
+	/// Find the zValue of the given item, -1.0 if not found
+	/// @remarks The search is done in linear time
+	qreal findZValue(const LayoutItem* item) const;
 };
 
 #endif // LAYOUT_H

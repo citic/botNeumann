@@ -13,6 +13,9 @@ class LayoutItem
 	enum { marginTop, marginRight, marginBottom, marginLeft, marginCount };
 
   protected:
+	/// Pointer to the parent item that contains this one
+	/// @remarks Implemented but not used, as well as Layout::findZValue()
+	LayoutItem* parentItem = nullptr;
 	/// Percent of extension (aka proportion) this item will occupy in parent's space
 	qreal proportion;
 	/// Percent of extension of each margin of this item
@@ -30,6 +33,9 @@ class LayoutItem
 	/// Resize this item and all its child items
 	/// This method is called each time the Stage and Scene has been resized
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) = 0;
+	/// The parent item that contains this one
+	inline LayoutItem* getParentItem() const { return parentItem; }
+	inline void setParentItem(LayoutItem* parent) { this->parentItem = parent; }
 	/// The proportion of space this item occupies of its layout
 	inline qreal getProportion() const { return proportion; }
 	inline void setProportion(qreal proportion) { this->proportion = proportion; }
