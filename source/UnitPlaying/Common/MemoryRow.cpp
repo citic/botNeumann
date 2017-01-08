@@ -8,21 +8,21 @@
 #include <QBrush>
 #include <QFont>
 
-MemoryRow::MemoryRow(size_t start, size_t size, Scene* scene)
+MemoryRow::MemoryRow(size_t start, size_t size, Scene* scene, qreal zValue)
 	: LinearLayout(Qt::Horizontal)
 	, start(start)
 	, size(size)
 	, scene(scene)
 	, labelType(LabelType::memoryAddresses)
 {
-	buildMemoryRow();
+	buildMemoryRow(zValue);
 }
 
 MemoryRow::~MemoryRow()
 {
 }
 
-void MemoryRow::buildMemoryRow()
+void MemoryRow::buildMemoryRow(qreal zValue)
 {
 	Q_ASSERT(scene);
 
@@ -37,23 +37,23 @@ void MemoryRow::buildMemoryRow()
 	Prop* rightShelf = new Prop(":/unit_playing/memory_row_right.svg", scene);
 
 	// Add them to the layout
-	addItem(leftShelf, leftRightProportion);
-	addItem(middleShelf, middleProportion);
-	addItem(rightShelf, leftRightProportion);
+	addItem(leftShelf, leftRightProportion, zValue);
+	addItem(middleShelf, middleProportion, zValue);
+	addItem(rightShelf, leftRightProportion, zValue);
 
 	// Create the memory addresses in a new layer
-	buildMemoryAddresses();
+	buildMemoryAddresses(zValue);
 }
 
-void MemoryRow::buildMemoryAddresses()
+void MemoryRow::buildMemoryAddresses(qreal zValue)
 {
 	// Each memory address is for just one byte
 	const double byteProportion = 1.0 / (size + 2.0);
 	// Memory address labels are in a higher layer
-	const double z = 0.2;
+	zValue += 0.2;
 
 	// Create a spacer for the left extreme
-	addItem(new Spacer(), byteProportion, z);
+	addItem(new Spacer(), byteProportion, zValue);
 
 	// Create a label for each byte
 	for (size_t i = start; i < start + size; ++i)
@@ -64,6 +64,6 @@ void MemoryRow::buildMemoryAddresses()
 		memoryAddress->setMarginBottom(0.073);
 		memoryAddress->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 		memoryAddress->setBrush(QBrush(Qt::yellow));
-		addItem(memoryAddress, byteProportion, z);
+		addItem(memoryAddress, byteProportion, zValue);
 	}
 }

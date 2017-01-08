@@ -34,7 +34,7 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	void buildDataSegment();
 	/// Represent two important variables for I/O: stdin (std::cin) and stdout (std::cout) as
 	/// two pipes. They are global variables
-	void buildStandardInOut(const double stdInOutProportion, const double zStdInOut);
+	void buildStandardInOut(const double stdInOutProportion);
 };
 
 #endif // DATASEGMENT_H

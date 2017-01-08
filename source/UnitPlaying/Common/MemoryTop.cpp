@@ -2,15 +2,15 @@
 #include "Prop.h"
 #include "Scene.h"
 
-MemoryTop::MemoryTop(size_t size, Scene* scene)
+MemoryTop::MemoryTop(size_t size, Scene* scene, qreal zValue)
 	: LinearLayout(Qt::Horizontal)
 	, size(size)
 	, scene(scene)
 {
-	buildMemoryTop();
+	buildMemoryTop(zValue);
 }
 
-void MemoryTop::buildMemoryTop()
+void MemoryTop::buildMemoryTop(qreal zValue)
 {
 	Q_ASSERT(scene);
 
@@ -25,7 +25,7 @@ void MemoryTop::buildMemoryTop()
 	Prop* rightRoof = new Prop(":/unit_playing/memory_top_right.svg", scene);
 
 	// Add them to the layout
-	addItem(leftRoof, leftRightProportion);
-	addItem(middleRoof, middleProportion);
-	addItem(rightRoof, leftRightProportion);
+	addItem(leftRoof, leftRightProportion, zValue);
+	addItem(middleRoof, middleProportion, zValue);
+	addItem(rightRoof, leftRightProportion, zValue);
 }

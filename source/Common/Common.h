@@ -13,6 +13,18 @@ enum class SceneId
 	, sceneUnitPlaying
 };
 
+enum zUnitPlaying
+{
+	background,
+	heapSegment,
+	cpuCores,
+	cpuCore,
+	stackFrame,
+	executionThread,
+	dataSegment,
+	standardInputOutput = dataSegment,
+};
+
 typedef unsigned long long ullint;
 
 inline ullint ipow(ullint base, unsigned int exp)

@@ -1,4 +1,5 @@
 #include "StandardInputOutput.h"
+#include "Common.h"
 #include "Prop.h"
 #include "Scene.h"
 #include "Unit.h"
@@ -31,7 +32,7 @@ void StandardInputOutput::buildStandardInputOutput()
 	double elbow = 2.0 * byteWidth;
 
 	// ToDo: review the z-order mechanism
-	const double zStdInOut = 0.1;
+	const double zValue = zUnitPlaying::standardInputOutput;
 
 	// A tube has three parts: left, middle, and right
 	Prop* left = new Prop(QString(":/unit_playing/standard_%1_left.svg").arg(type), scene);
@@ -41,17 +42,17 @@ void StandardInputOutput::buildStandardInputOutput()
 	// But proportions vary depending on the type of stream
 	if ( type == "input" )
 	{
-		addItem(left, opening, zStdInOut);
-		addItem(middle, 1.0 - opening - elbow, zStdInOut);
-		addItem(right, elbow, zStdInOut);
+		addItem(left, opening, zValue);
+		addItem(middle, 1.0 - opening - elbow, zValue);
+		addItem(right, elbow, zValue);
 	}
 	else
 	{
-		addItem(left, elbow, zStdInOut);
+		addItem(left, elbow, zValue);
 		Prop* tester = new Prop(QString(":/unit_playing/standard_output_test_inactive.svg"), scene);
-		addItem(tester, elbow, zStdInOut);
-		addItem(middle, 1.0 - opening - 2 * elbow, zStdInOut);
-		addItem(right, opening, zStdInOut);
+		addItem(tester, elbow, zValue);
+		addItem(middle, 1.0 - opening - 2 * elbow, zValue);
+		addItem(right, opening, zValue);
 
 		// Make the middle tube to plug to the tester
 		middle->setMarginLeft(-0.011);

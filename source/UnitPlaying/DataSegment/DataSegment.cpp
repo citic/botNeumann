@@ -1,4 +1,5 @@
 #include "DataSegment.h"
+#include "Common.h"
 #include "MemoryFrame.h"
 #include "Scene.h"
 #include "StandardInputOutput.h"
@@ -33,33 +34,31 @@ void DataSegment::buildDataSegment()
 
 	// Create the memory rows and their roof
 	Q_ASSERT(scene);
-	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize);
+	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize, zUnitPlaying::dataSegment);
 
 	// Distribute child elements according to the number of rows they require
 	const double allRows = memoryFrame->getHeightInRows() + stdInOutRows;
-	// ToDo: improve z-order management
-	const double zContents = 0.1;
 
 	// Add the memory rows and their roof to the scene
-	addItem(memoryFrame, memoryFrame->getHeightInRows() / allRows, zContents);
+	addItem(memoryFrame, memoryFrame->getHeightInRows() / allRows, zUnitPlaying::dataSegment);
 
 	// Create the stdin and stdout pipes
-	buildStandardInOut(stdInOutRows / allRows, zContents);
+	buildStandardInOut(stdInOutRows / allRows);
 }
 
-void DataSegment::buildStandardInOut(const double stdInOutProportion, const double zStdInOut)
+void DataSegment::buildStandardInOut(const double stdInOutProportion)
 {
 	// Create an exclusive layout for the standard input/output tubes
 	LinearLayout* stdInOutLayout = new LinearLayout(Qt::Horizontal);
-	addLayout(stdInOutLayout, stdInOutProportion, zStdInOut);
+	addLayout(stdInOutLayout, stdInOutProportion, zUnitPlaying::standardInputOutput);
 
 	// First stdin tube
 	Q_ASSERT(standardInput == nullptr);
 	standardInput = new StandardInputOutput("input", unit, scene);
-	stdInOutLayout->addItem(standardInput, 0.5, zStdInOut);
+	stdInOutLayout->addItem(standardInput, 0.5, zUnitPlaying::standardInputOutput);
 
 	// Second stdout tube
 	Q_ASSERT(standardOutput == nullptr);
 	standardOutput = new StandardInputOutput("output", unit, scene);
-	stdInOutLayout->addItem(standardOutput, 0.5, zStdInOut);
+	stdInOutLayout->addItem(standardOutput, 0.5, zUnitPlaying::standardInputOutput);
 }

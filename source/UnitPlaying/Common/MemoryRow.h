@@ -36,7 +36,7 @@ class MemoryRow : public LinearLayout
 
   public:
 	/// Constructor
-	explicit MemoryRow(size_t start, size_t size, Scene* scene);
+	explicit MemoryRow(size_t start, size_t size, Scene* scene, qreal zValue);
 	/// Destructor
 	~MemoryRow();
 	/// Display memory addresses on labels
@@ -50,9 +50,9 @@ class MemoryRow : public LinearLayout
 
   protected:
 	/// Build the shelves and labels
-	void buildMemoryRow();
+	void buildMemoryRow(qreal zValue);
 	/// Build labels for memory addresses
-	void buildMemoryAddresses();
+	void buildMemoryAddresses(qreal zValue);
 };
 
 #endif // MEMORYROW_H

@@ -6,14 +6,14 @@
 // The roof requires half memory row
 const double memoryRoofRows = 0.5;
 
-MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize)
+MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, qreal zValue)
 	: LinearLayout(Qt::Vertical)
 	, scene(scene)
 	, rowCount(rowCount)
 	, startByte(startByte)
 	, rowSize(rowSize)
 {
-	buildMemoryFrame();
+	buildMemoryFrame(zValue);
 }
 
 double MemoryFrame::getHeightInRows() const
@@ -21,22 +21,19 @@ double MemoryFrame::getHeightInRows() const
 	return rowCount + memoryRoofRows;
 }
 
-void MemoryFrame::buildMemoryFrame()
+void MemoryFrame::buildMemoryFrame(qreal zValue)
 {
-	// ToDo: improve z-order management
-	Q_ASSERT(scene);
-	const double zContents = 0.1;
-
 	// Create the memory roof
-	MemoryTop* memoryTop = new MemoryTop(rowSize, scene);
-	addItem(memoryTop, memoryRoofRows / getHeightInRows(), zContents);
+	Q_ASSERT(scene);
+	MemoryTop* memoryTop = new MemoryTop(rowSize, scene, zValue);
+	addItem(memoryTop, memoryRoofRows / getHeightInRows(), zValue);
 
 	// Create the memory rows
 	size_t rowStartByte = startByte;
 	for (size_t index = 0; index < rowCount; ++index)
 	{
-		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene);
-		addItem(memoryRow, 1.0 / getHeightInRows(), zContents);
+		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene, zValue);
+		addItem(memoryRow, 1.0 / getHeightInRows(), zValue);
 		rowStartByte += rowSize;
 	}
 }

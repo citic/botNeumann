@@ -18,11 +18,11 @@ class MemoryTop : public LinearLayout
 
   public:
 	/// Constructor
-	MemoryTop(size_t size, Scene* scene);
+	MemoryTop(size_t size, Scene* scene, qreal zValue);
 
   protected:
 	/// Creates the props to display a memory roof
-	void buildMemoryTop();
+	void buildMemoryTop(qreal zValue);
 };
 
 #endif // MEMORYTOP_H

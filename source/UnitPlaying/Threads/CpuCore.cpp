@@ -1,4 +1,5 @@
 #include "CpuCore.h"
+#include "Common.h"
 #include "ExecutionThread.h"
 #include "Prop.h"
 #include "Scene.h"
@@ -32,6 +33,8 @@ void CpuCore::runThread(ExecutionThread* thread)
 	// Assign the new execution thread
 	executionThread = thread;
 
+	// ToDo: add the execution thread as a child LayoutItem
+
 //	executionThread->setParentItem(workstation);
 	placeExecutionThread();
 	executionThread->setVisible(true);
@@ -47,7 +50,7 @@ void CpuCore::buildCpuCore()
 {
 	Q_ASSERT(scene);
 	workstation = new Prop(":/unit_playing/stack_segment.svg", scene);
-	addItem(workstation, 0.85);
+	addItem(workstation, 0.85, zUnitPlaying::cpuCore);
 }
 
 void CpuCore::placeExecutionThread()

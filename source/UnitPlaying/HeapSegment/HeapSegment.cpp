@@ -1,4 +1,5 @@
 #include "HeapSegment.h"
+#include "Common.h"
 #include "MemoryFrame.h"
 #include "Prop.h"
 #include "Scene.h"
@@ -33,24 +34,22 @@ void HeapSegment::buildSegment()
 
 	// Create the memory rows and their roof
 	Q_ASSERT(scene);
-	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize);
+	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize, zUnitPlaying::heapSegment);
 
 	// Distribute child elements according to the number of rows they require
 	const double allRows = this->getHeightInRows();
-	// ToDo: improve z-order management
-	const double zContents = 0.1;
 
 	// Add the memory rows and their roof to the scene
-	addItem(memoryFrame, memoryFrame->getHeightInRows() / allRows, zContents);
+	addItem(memoryFrame, memoryFrame->getHeightInRows() / allRows, zUnitPlaying::heapSegment);
 
 	// Create the heap segment interface that robots will use to access it
 	heapInterface = new Prop(":/unit_playing/heap_segment_interface.svg", scene);
-	addItem(heapInterface, interfaceRows / allRows, zContents);
+	addItem(heapInterface, interfaceRows / allRows, zUnitPlaying::heapSegment);
 }
 
 void HeapSegment::hideSegment()
 {
 	Q_ASSERT(scene);
 	Prop* doors = new Prop(":/unit_playing/heap_segment_disabled.svg", scene);
-	addItem(doors, 1.0);
+	addItem(doors, 1.0, zUnitPlaying::heapSegment);
 }
