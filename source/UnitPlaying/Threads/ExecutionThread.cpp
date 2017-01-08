@@ -20,4 +20,5 @@ void ExecutionThread::buildExecutionThread()
 	robot->setMarginTop(0.7);
 	robot->alignCenter();
 	addItem(robot, 1.15, zUnitPlaying::executionThread + 0.2);
+	robot->appear();
 }
