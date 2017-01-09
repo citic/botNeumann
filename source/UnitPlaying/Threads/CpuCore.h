@@ -32,7 +32,8 @@ class CpuCore : public MemorySegment
 	inline ExecutionThread* getThread() { return executionThread; }
 	/// Assigns an execution thread to be run on this CPU thread. The execution thread is shown
 	/// on the graphical interface, reprsented as a robot
-	void runThread(ExecutionThread* thread);
+	/// @return the duration in milliseconds of the animation
+	int runThread(ExecutionThread* thread);
 
   protected:
 	/// Builds the CPU core as a workstation where a execution thread (robot) can work

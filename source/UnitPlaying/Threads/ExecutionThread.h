@@ -29,6 +29,9 @@ class ExecutionThread : public LinearLayout
   public:
 	/// Constructor
 	explicit ExecutionThread(Scene* scene, int id);
+	/// Animate the apparition of the robot
+	/// @return The duration of the animation in milliseconds
+	int animateAppear();
 
   protected:
 	/// Build the robot

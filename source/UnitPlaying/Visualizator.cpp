@@ -34,6 +34,7 @@ bool Visualizator::start()
 	connect( debuggerCall, SIGNAL(onGdbLogMessage(GdbLogType,QString)), unitPlayingScene->getMessagesArea(), SLOT(appendDebuggerMessage(GdbLogType,QString)));
 	// Each time an animation is done, process the next GdbResponse, if any
 	connect( &animationDone, SIGNAL(timeout()), this, SLOT(processGdbResponse()));
+	animationDone.setSingleShot(true);
 	// This object also processes GdbResponses
 	connect( this, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), this, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
@@ -216,10 +217,7 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 	switch ( asyncClass )
 	{
 		case AsyncClass::AC_THREAD_CREATED:
-			if ( isStopped() )
-				debuggerCall->sendGdbCommand("-thread-info");
-			else
-				qCritical(logVisualizator, "Could not ask for thread info, program is currently running");
+			debuggerCall->sendGdbCommand("-thread-info");
 			break;
 
 		default:

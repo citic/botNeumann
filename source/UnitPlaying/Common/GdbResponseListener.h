@@ -63,4 +63,13 @@ class GdbResponseListener : public QObject
 	virtual void onLogStreamOutput(const QString& str, int& maxDuration);
 };
 
+/// Macro to update the maxDuration parameter in virtual functions if the duration of the current
+/// animation is longer than the maxDuration value currently known
+#define updateDuration(code) \
+	{ \
+		int duration = (code); \
+		if ( duration > maxDuration ) \
+			maxDuration = duration; \
+	} \
+
 #endif // GDBRESPONSELISTENER_H

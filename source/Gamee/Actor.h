@@ -19,7 +19,9 @@ class Actor : public ScenicElement<QGraphicsSvgItem>
 	/// Creates an actor with the given svg filename
 	explicit Actor(const QString& fileName, QGraphicsItem* parentItem);
 	/// Animates this actor appearing or disappearing from the scene
-	void appear(int duration = 1000, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
+	/// @return the actual duration of the animation in milliseconds after ajusting to the user
+	/// preference in visualization speed slider
+	int appear(int duration = 1000, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
 };
 
 #endif // ACTOR_H

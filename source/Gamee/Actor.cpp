@@ -13,7 +13,7 @@ Actor::Actor(const QString& fileName, QGraphicsItem* parentItem)
 {
 }
 
-void Actor::appear(int duration, qreal fromOpacity, qreal toOpacity)
+int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity)
 {
 	// Animate the robot while it appears
 	QPropertyAnimation* robotAppearsAnimation = new QPropertyAnimation(this, "opacity", this);
@@ -22,4 +22,5 @@ void Actor::appear(int duration, qreal fromOpacity, qreal toOpacity)
 	robotAppearsAnimation->setStartValue(fromOpacity);
 	robotAppearsAnimation->setEndValue(toOpacity);
 	robotAppearsAnimation->start();
+	return duration;
 }

@@ -24,11 +24,11 @@ double CpuCore::getHeightInRows() const
 	return unit.getStackSegmentVisibleRows() + robotRows;
 }
 
-void CpuCore::runThread(ExecutionThread* thread)
+int CpuCore::runThread(ExecutionThread* thread)
 {
 	// If the thread is already set, done
 	if ( executionThread == thread )
-		return;
+		return -1;
 
 	// If there is an old execution thread running, hide it
 //	if ( executionThread )
@@ -41,6 +41,7 @@ void CpuCore::runThread(ExecutionThread* thread)
 	addItem( executionThread, 1.0, zUnitPlaying::executionThread );
 //	executionThread->setVisible(true);
 	updateLayoutItem();
+	return executionThread->animateAppear();
 }
 
 void CpuCore::buildCpuCore()

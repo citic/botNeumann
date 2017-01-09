@@ -40,12 +40,15 @@ void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, 
 	Q_UNUSED(maxDuration);
 	switch ( asyncClass )
 	{
-		case AsyncClass::AC_THREAD_CREATED: createThread( tree.findNodeTextValue("/id").toInt() ); break;
+		case AsyncClass::AC_THREAD_CREATED:
+			updateDuration( createThread( tree.findNodeTextValue("/id").toInt() ) );
+			break;
+
 		default: break;
 	}
 }
 
-void CpuCores::createThread(int id)
+int CpuCores::createThread(int id)
 {
 	// Create an execution thread, that is represeted by a robot with racks
 	ExecutionThread* thread = new ExecutionThread(scene, id);
@@ -54,10 +57,10 @@ void CpuCores::createThread(int id)
 	// If there is an idle CPU core, assign the new execution thread
 	int cpuCoreIndex = findFirstIdleCpuCore();
 	if ( cpuCoreIndex == -1 )
-		return;
+		return -1;
 
 	// Assign the CPU core to the thread
-	cpuCores[cpuCoreIndex]->runThread(thread);
+	return cpuCores[cpuCoreIndex]->runThread(thread);
 }
 
 int CpuCores::findFirstIdleCpuCore() const
