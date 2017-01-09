@@ -332,3 +332,31 @@ QList<GuiBreakpoint*> CodeSegment::retrieveBreakpoints()
 	// ToDo: for each opened source file (i.e. have several code editors open)
 	return codeEditor->retrieveBreakpoints();
 }
+
+void CodeSegment::onStateChanged(botNeumannState currentState)
+{
+	// Visualizatio control buttons enable or disable depending on the current state
+	bool run = currentState == botNeumannState::editing || currentState == botNeumannState::paused;
+	bool pause = currentState == botNeumannState::animating;
+	bool stepInto = currentState == botNeumannState::paused;
+	bool stepOut = currentState == botNeumannState::paused;
+	bool stop = currentState == botNeumannState::animating || currentState == botNeumannState::paused;
+
+	// Enable actions according to the current state
+	runOrPauseAction->setEnabled(run || pause);
+	stepIntoAction->setEnabled(stepInto);
+	stepOutAction->setEnabled(stepOut);
+	stopAction->setEnabled(stop);
+
+	// Run or pause share the same action
+	if ( run )
+	{
+		runOrPauseAction->setIcon( QIcon(":/unit_playing/buttons/run.svg") );
+		runOrPauseAction->setToolTip(tr("Run"));
+	}
+	else if ( pause )
+	{
+		runOrPauseAction->setIcon( QIcon(":/unit_playing/buttons/pause.svg") );
+		runOrPauseAction->setToolTip(tr("Pause"));
+	}
+}

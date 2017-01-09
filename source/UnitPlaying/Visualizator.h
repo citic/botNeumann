@@ -32,7 +32,7 @@ class Visualizator : public GdbResponseListener
 	/// @todo Using GdbCall interface directly, replace it by DebuggerCall interface
 	GdbCall* debuggerCall;
 	/// The state of GDB being controlled by this object
-	GdbState state = STATE_STOPPED;
+	GdbState gdbState = STATE_STOPPED;
 	/// The view is the unit playing scene and its components
 	UnitPlayingScene* unitPlayingScene;
 	/// The list of breakpoints reported by debugger. They are identified by integers. The indexes
@@ -53,12 +53,6 @@ class Visualizator : public GdbResponseListener
 	/// Start the visualization process
 	/// @return true on success, false otherwise
 	bool start();
-	/// Gets the state of the gbd instance being controlled by this object
-	inline GdbState getState() const { return state; }
-	/// Convenience functions to get the state
-	inline bool isStopped() const { return state == STATE_STOPPED; }
-	inline bool isRunning() const { return state == STATE_RUNNING; }
-	inline bool isFinished() const { return state == STATE_FINISHED; }
 
   signals:
 	/// Emitted when there is a GdbResponse to process.

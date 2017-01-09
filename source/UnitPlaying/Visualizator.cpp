@@ -71,17 +71,17 @@ bool Visualizator::start()
 	// ToDo: Extract source filenames. Not required by botNeumann++ for the moment
 
 	// Ask GDB to start execution of user program (inferior), only if it is not running already
-	if ( state == STATE_STARTING )
+	if ( gdbState == STATE_STARTING )
 		qCritical(logVisualizator(), "gdb already starting");
-	else if ( state == STATE_RUNNING )
+	else if ( gdbState == STATE_RUNNING )
 		qCritical(logVisualizator(), "gdb already running");
 	else
 	{
 		inferiorProcessId = 0;
-		GdbState oldState = state;
-		state = STATE_STARTING;
+		GdbState oldState = gdbState;
+		gdbState = STATE_STARTING;
 		if ( debuggerCall->sendGdbCommand("-exec-run") == GDB_ERROR )
-			state = oldState;
+			gdbState = oldState;
 	}
 /*
 	Q_ASSERT(userProgram == nullptr);
@@ -173,14 +173,10 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 	Q_UNUSED(maxDuration);
 	qCDebug(logVisualizator(), "onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 
-	// Store current state to check if there is a state change
-//	GdbState previousState = state;
-
 	switch ( asyncClass )
 	{
 		case AsyncClass::AC_RUNNING:
-			state = STATE_RUNNING;
-//			emit visualizationStateChange(state);
+			gdbState = STATE_RUNNING;
 			break;
 
 		default:
@@ -195,10 +191,6 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 		int threadId = threadIdStr.toInt(&ok, 0);
 		if ( ok ) emit currentThreadChanged(threadId);
 	}
-
-	// State changed?
-	if ( previousState != state )
-		emit stateChanged(state);
 */
 }
 

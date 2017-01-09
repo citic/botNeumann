@@ -41,7 +41,7 @@ Unit::~Unit()
 
 bool Unit::load(const QString& filename)
 {
-	qCInfo(logPlayer) << "Unit: loading " << filename;
+	qCInfo(logPlayer) << "Unit: loading" << filename;
 	QFile file(filename);
 	if ( ! file.open(QFile::ReadOnly | QFile::Text) )
 	{

@@ -1,6 +1,8 @@
 #ifndef CODESEGMENT_H
 #define CODESEGMENT_H
 
+#include "Common.h"
+
 #include <QDockWidget>
 
 class CodeEditor;
@@ -88,6 +90,9 @@ class CodeSegment : public QDockWidget
 	void diagnosticSelected(int index);
 	/// Get access to the breakpoints list set by the user
 	QList<GuiBreakpoint*> retrieveBreakpoints();
+	/// Called when the visualization changes it state (stopped, starting, running, finished) to
+	/// enable or disable visualization control buttons
+	void onStateChanged(botNeumannState currentState);
 
   signals:
 	/// Emitted when the run button is pressed, and therefore it is necessary to clear old output

@@ -1,6 +1,15 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+enum class botNeumannState
+{
+	editing,     // user edits code
+	building,    // compiling and linking
+	starting,    // setting debugger and visualization
+	animating,   // visualization is in progress at normal speed or seeking
+	paused,      // user paused visualization
+};
+
 enum class SceneId
 {
 	  sceneUnknown
