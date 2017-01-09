@@ -172,12 +172,6 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 {
 	Q_UNUSED(maxDuration);
 	qCDebug(logVisualizator(), "onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
-}
-
-void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
-{
-	Q_UNUSED(maxDuration);
-	qCDebug(logVisualizator(), "onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 
 	// Store current state to check if there is a state change
 //	GdbState previousState = state;
@@ -206,6 +200,12 @@ void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 	if ( previousState != state )
 		emit stateChanged(state);
 */
+}
+
+void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
+{
+	Q_UNUSED(maxDuration);
+	qCDebug(logVisualizator(), "onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 }
 
 void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
