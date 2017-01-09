@@ -1,4 +1,5 @@
 #include "Actor.h"
+#include "VisualizationSpeed.h"
 
 #include <QPropertyAnimation>
 
@@ -12,12 +13,12 @@ Actor::Actor(const QString& fileName, QGraphicsItem* parentItem)
 {
 }
 
-void Actor::appear(qreal fromOpacity, qreal toOpacity)
+void Actor::appear(int duration, qreal fromOpacity, qreal toOpacity)
 {
 	// Animate the robot while it appears
 	QPropertyAnimation* robotAppearsAnimation = new QPropertyAnimation(this, "opacity", this);
-	// ToDo: Duration must be controlled by the user slider
-	robotAppearsAnimation->setDuration(1000);
+	duration = VisualizationSpeed::getInstance().adjust(duration);
+	robotAppearsAnimation->setDuration(duration);
 	robotAppearsAnimation->setStartValue(fromOpacity);
 	robotAppearsAnimation->setEndValue(toOpacity);
 	robotAppearsAnimation->start();

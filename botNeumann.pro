@@ -82,6 +82,7 @@ HEADERS += \
 	source/UnitPlaying/Common/MemoryRow.h \
 	source/UnitPlaying/Common/MemorySegment.h \
 	source/UnitPlaying/Common/MemoryTop.h \
+	source/UnitPlaying/Common/VisualizationSpeed.h \
 	source/UnitPlaying/DataSegment/DataSegment.h \
 	source/UnitPlaying/DataSegment/StandardInputOutput.h \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
@@ -146,6 +147,7 @@ SOURCES += \
 	source/UnitPlaying/Common/MemoryRow.cpp \
 	source/UnitPlaying/Common/MemorySegment.cpp \
 	source/UnitPlaying/Common/MemoryTop.cpp \
+	source/UnitPlaying/Common/VisualizationSpeed.cpp \
 	source/UnitPlaying/DataSegment/DataSegment.cpp \
 	source/UnitPlaying/DataSegment/StandardInputOutput.cpp \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \

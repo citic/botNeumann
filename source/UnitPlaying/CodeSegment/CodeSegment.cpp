@@ -5,6 +5,7 @@
 #include "LogManager.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
+#include "VisualizationSpeed.h"
 
 #include <QAction>
 #include <QComboBox>
@@ -155,11 +156,13 @@ void CodeSegment::setupRunToolbar()
 	// Create the control that allows user to set the speed of the visualization
 	visualizationSpeedSlider = new QSlider(Qt::Horizontal, this);
 	visualizationSpeedSlider->setToolTip(tr("Visualization speed"));
+	visualizationSpeedSlider->setMaximum(0);
+	visualizationSpeedSlider->setMaximum(200);
 	visualizationSpeedSlider->setFocusPolicy(Qt::WheelFocus);
 	visualizationSpeedSlider->setTickPosition(QSlider::TicksBelow);
 	visualizationSpeedSlider->setTickInterval(20);
-	visualizationSpeedSlider->setValue(50);
-	visualizationSpeedSlider->setSingleStep(1);
+	visualizationSpeedSlider->setValue(100);
+	visualizationSpeedSlider->setSingleStep(5);
 	visualizationSpeedSlider->setPageStep(10);
 	connect(visualizationSpeedSlider, SIGNAL(valueChanged(int)), this, SLOT(visualizationSpeedChanged(int)));
 	toolBar->addWidget(visualizationSpeedSlider);
@@ -298,7 +301,8 @@ void CodeSegment::stopTriggered()
 
 void CodeSegment::visualizationSpeedChanged(int speed)
 {
-	qCDebug(logNotImplemented) << "Visualization speed" << speed;
+	qCInfo(logPlayer) << "Visualization speed set to " << speed;
+	VisualizationSpeed::getInstance().updateSpeed(speed);
 }
 
 void CodeSegment::diagnosticSelected(int index)
