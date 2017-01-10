@@ -122,14 +122,14 @@ void CodeSegment::setupRunToolbar()
 
 	// Create the Run or pause action
 	runOrPauseAction = new QAction(this);
-	setupRunAction(false);
+	setupRunAction("Run", false);
 	connect(runOrPauseAction, SIGNAL(triggered()), this, SIGNAL(userRunOrPaused()));
 	toolBar->addAction(runOrPauseAction);
 
 	// Create the step into button
 	stepIntoAction = new QAction(QIcon(":/unit_playing/buttons/step_into.svg"), tr("Step &into"), this);
 	stepIntoAction->setShortcut(QKeySequence("Ctrl+I"));
-	stepIntoAction->setStatusTip(tr("Executes next statement entering in functions"));
+	stepIntoAction->setToolTip(tr("Step into: run next statement entering in functions"));
 	stepIntoAction->setEnabled(false);
 	connect(stepIntoAction, SIGNAL(triggered()), this, SLOT(stepIntoTriggered()));
 	toolBar->addAction(stepIntoAction);
@@ -137,7 +137,7 @@ void CodeSegment::setupRunToolbar()
 	// Create the step out button
 	stepOutAction = new QAction(QIcon(":/unit_playing/buttons/step_out.svg"), tr("Step &out"), this);
 	stepOutAction->setShortcut(QKeySequence("Ctrl+O"));
-	stepOutAction->setStatusTip(tr("Executes next statement in current function"));
+	stepOutAction->setToolTip(tr("Step out: run next statement in current function"));
 	stepOutAction->setEnabled(false);
 	connect(stepOutAction, SIGNAL(triggered()), this, SLOT(stepOutTriggered()));
 	toolBar->addAction(stepOutAction);
@@ -145,14 +145,14 @@ void CodeSegment::setupRunToolbar()
 	// Create the stop button
 	stopAction = new QAction(QIcon(":/unit_playing/buttons/stop.svg"), tr("S&top"), this);
 	stopAction->setShortcut(QKeySequence("Ctrl+T"));
-	stopAction->setStatusTip(tr("Compiles the code and starts its visualization"));
+	stopAction->setToolTip(tr("Stop the visualization"));
 	stopAction->setEnabled(false);
 	connect(stopAction, SIGNAL(triggered()), this, SIGNAL(userStopped()));
 	toolBar->addAction(stopAction);
 
 	// Create the control that allows user to set the speed of the visualization
 	visualizationSpeedSlider = new QSlider(Qt::Horizontal, this);
-	visualizationSpeedSlider->setToolTip(tr("Visualization speed"));
+	visualizationSpeedSlider->setToolTip(tr("Visualization speed: left is slow, right is faster"));
 	visualizationSpeedSlider->setMaximum(0);
 	visualizationSpeedSlider->setMaximum(200);
 	visualizationSpeedSlider->setFocusPolicy(Qt::WheelFocus);
@@ -178,12 +178,11 @@ void CodeSegment::setupCodeEditor()
 	innerMainWindow->setCentralWidget(codeEditor);
 }
 
-void CodeSegment::setupRunAction(bool enabled)
+void CodeSegment::setupRunAction(const QString& name, bool enabled)
 {
-	runOrPauseAction->setObjectName("Run");
+	runOrPauseAction->setObjectName(name);
 	runOrPauseAction->setIcon( QIcon(":/unit_playing/buttons/run.svg") );
-	runOrPauseAction->setToolTip(tr("Run"));
-	runOrPauseAction->setStatusTip(tr("Compiles the code and starts its visualization"));
+	runOrPauseAction->setToolTip(name == "Run" ? tr("Run: compiles the code and starts the visualization") : tr("Resumes the visualization"));
 	runOrPauseAction->setShortcut(QKeySequence("Ctrl+R"));
 
 	runOrPauseAction->setEnabled(enabled);
@@ -193,8 +192,7 @@ void CodeSegment::setupPauseAction(bool enabled)
 {
 	runOrPauseAction->setObjectName("Pause");
 	runOrPauseAction->setIcon(QIcon(":/unit_playing/buttons/pause.svg"));
-	runOrPauseAction->setToolTip(tr("Pause"));
-	runOrPauseAction->setStatusTip(tr("Pauses the visualization"));
+	runOrPauseAction->setToolTip(tr("Pauses the visualization"));
 	runOrPauseAction->setShortcut(QKeySequence("Ctrl+P"));
 
 	runOrPauseAction->setEnabled(enabled);
@@ -316,7 +314,8 @@ QList<GuiBreakpoint*> CodeSegment::retrieveBreakpoints()
 void CodeSegment::onStateChanged(UnitPlayingState currentState)
 {
 	// Visualizatio control buttons enable or disable depending on the current state
-	bool run = currentState == UnitPlayingState::editing || currentState == UnitPlayingState::paused;
+	bool run = currentState == UnitPlayingState::editing;
+	bool resume = currentState == UnitPlayingState::paused;
 	bool pause = currentState == UnitPlayingState::animating;
 	bool stepInto = currentState == UnitPlayingState::paused;
 	bool stepOut = currentState == UnitPlayingState::paused;
@@ -329,7 +328,9 @@ void CodeSegment::onStateChanged(UnitPlayingState currentState)
 
 	// Run or pause share the same action
 	if ( run )
-		setupRunAction(true);
+		setupRunAction("Run", true);
+	else if ( resume )
+		setupRunAction("Resume", true);
 	else if ( pause )
 		setupPauseAction(true);
 	else

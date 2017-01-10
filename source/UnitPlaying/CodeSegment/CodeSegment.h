@@ -124,7 +124,8 @@ class CodeSegment : public QDockWidget
 	void setupCodeEditor();
 	/// The Run and Pause share the same action for space constraints. This method converts the
 	/// action in Run action
-	void setupRunAction(bool enabled);
+	/// @param name Send "Run" or "Resume"
+	void setupRunAction(const QString& name, bool enabled);
 	/// Converts the Run/Pause action into a Pause action
 	void setupPauseAction(bool enabled);
 
