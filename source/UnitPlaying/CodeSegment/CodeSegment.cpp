@@ -121,11 +121,8 @@ void CodeSegment::setupRunToolbar()
 	toolBar->setIconSize( QSize(toolBarIconSize, toolBarIconSize) );
 
 	// Create the Run or pause action
-	runOrPauseAction = new QAction(QIcon(":/unit_playing/buttons/run.svg"), tr("&Run or pause"), this);
-	runOrPauseAction->setObjectName("Run");
-	runOrPauseAction->setShortcut(QKeySequence("Ctrl+R"));
-	runOrPauseAction->setStatusTip(tr("Compiles the code and starts its visualization"));
-	runOrPauseAction->setEnabled(false);
+	runOrPauseAction = new QAction(this);
+	setupRunAction(false);
 	connect(runOrPauseAction, SIGNAL(triggered()), this, SLOT(runOrPauseTriggered()));
 	toolBar->addAction(runOrPauseAction);
 
@@ -181,6 +178,28 @@ void CodeSegment::setupCodeEditor()
 	innerMainWindow->setCentralWidget(codeEditor);
 }
 
+void CodeSegment::setupRunAction(bool enabled)
+{
+	runOrPauseAction->setObjectName("Run");
+	runOrPauseAction->setIcon( QIcon(":/unit_playing/buttons/run.svg") );
+	runOrPauseAction->setToolTip(tr("Run"));
+	runOrPauseAction->setStatusTip(tr("Compiles the code and starts its visualization"));
+	runOrPauseAction->setShortcut(QKeySequence("Ctrl+R"));
+
+	runOrPauseAction->setEnabled(enabled);
+}
+
+void CodeSegment::setupPauseAction(bool enabled)
+{
+	runOrPauseAction->setObjectName("Pause");
+	runOrPauseAction->setIcon(QIcon(":/unit_playing/buttons/pause.svg"));
+	runOrPauseAction->setToolTip(tr("Pause"));
+	runOrPauseAction->setStatusTip(tr("Pauses the visualization"));
+	runOrPauseAction->setShortcut(QKeySequence("Ctrl+P"));
+
+	runOrPauseAction->setEnabled(enabled);
+}
+
 void CodeSegment::loadCodeForUnit(Unit* unit)
 {
 	// If there is an old player solution, replace it
@@ -215,9 +234,6 @@ void CodeSegment::startBuild()
 	Q_ASSERT(playerSolution);
 	Q_ASSERT(playerSolution->hasFiles());
 
-	// Avoid to call two or more times to the compiler
-	runOrPauseAction->setEnabled(false);
-
 	// If there is unsaved changes, save them
 	codeEditor->saveChanges();
 
@@ -248,23 +264,6 @@ void CodeSegment::compilerFinished()
 	// Alert other object the compilation process finished, for example, show the generated
 	// diagnostics in the tools' output on messages area
 	emit buildFinished(compiler);
-
-	// If there are errors, the player's solution cannot be run. The visualization will not start
-	// The "Run" button has not changed to "Pause", just re-enable it
-	if ( compiler->getErrorCount() > 0 )
-		runOrPauseAction->setEnabled(true);
-}
-
-void CodeSegment::startVisualization()
-{
-	// ToDo: Call the debugger here
-	runOrPauseAction->setObjectName("Pause");
-	runOrPauseAction->setIcon(QIcon(":/unit_playing/buttons/pause.svg"));
-	runOrPauseAction->setStatusTip(tr("Pauses the visualization"));
-	runOrPauseAction->setEnabled(false);
-
-	// If it is successful, enable the stop button
-	stopAction->setEnabled(true);
 }
 
 void CodeSegment::pauseVisualization()
@@ -333,30 +332,25 @@ QList<GuiBreakpoint*> CodeSegment::retrieveBreakpoints()
 	return codeEditor->retrieveBreakpoints();
 }
 
-void CodeSegment::onStateChanged(botNeumannState currentState)
+void CodeSegment::onStateChanged(UnitPlayingState currentState)
 {
 	// Visualizatio control buttons enable or disable depending on the current state
-	bool run = currentState == botNeumannState::editing || currentState == botNeumannState::paused;
-	bool pause = currentState == botNeumannState::animating;
-	bool stepInto = currentState == botNeumannState::paused;
-	bool stepOut = currentState == botNeumannState::paused;
-	bool stop = currentState == botNeumannState::animating || currentState == botNeumannState::paused;
+	bool run = currentState == UnitPlayingState::editing || currentState == UnitPlayingState::paused;
+	bool pause = currentState == UnitPlayingState::animating;
+	bool stepInto = currentState == UnitPlayingState::paused;
+	bool stepOut = currentState == UnitPlayingState::paused;
+	bool stop = currentState == UnitPlayingState::animating || currentState == UnitPlayingState::paused;
 
 	// Enable actions according to the current state
-	runOrPauseAction->setEnabled(run || pause);
 	stepIntoAction->setEnabled(stepInto);
 	stepOutAction->setEnabled(stepOut);
 	stopAction->setEnabled(stop);
 
 	// Run or pause share the same action
 	if ( run )
-	{
-		runOrPauseAction->setIcon( QIcon(":/unit_playing/buttons/run.svg") );
-		runOrPauseAction->setToolTip(tr("Run"));
-	}
+		setupRunAction(true);
 	else if ( pause )
-	{
-		runOrPauseAction->setIcon( QIcon(":/unit_playing/buttons/pause.svg") );
-		runOrPauseAction->setToolTip(tr("Pause"));
-	}
+		setupPauseAction(true);
+	else
+		runOrPauseAction->setEnabled(false);
 }

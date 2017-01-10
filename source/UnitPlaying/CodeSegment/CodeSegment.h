@@ -92,7 +92,7 @@ class CodeSegment : public QDockWidget
 	QList<GuiBreakpoint*> retrieveBreakpoints();
 	/// Called when the visualization changes it state (stopped, starting, running, finished) to
 	/// enable or disable visualization control buttons
-	void onStateChanged(botNeumannState currentState);
+	void onStateChanged(UnitPlayingState currentState);
 
   signals:
 	/// Emitted when the run button is pressed, and therefore it is necessary to clear old output
@@ -119,11 +119,14 @@ class CodeSegment : public QDockWidget
 	void setupRunToolbar();
 	/// Create and configure the text editor object
 	void setupCodeEditor();
+	/// The Run and Pause share the same action for space constraints. This method converts the
+	/// action in Run action
+	void setupRunAction(bool enabled);
+	/// Converts the Run/Pause action into a Pause action
+	void setupPauseAction(bool enabled);
 	/// Starts the compilation process. It is done in background. When the compilation is finished
 	/// the @a compilationFinished() signal is emitted.
 	void startBuild();
-	/// ToDo:
-	void startVisualization();
 	/// Called when the Pause button is pressed in order to pause the visualization
 	void pauseVisualization();
 

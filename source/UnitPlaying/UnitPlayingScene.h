@@ -42,6 +42,8 @@ class UnitPlayingScene : public GameScene
 	QString filename;
 	/// Loads the unit from the .botnu xml file
 	Unit unit;
+	/// The state of the unit playing scene, e.g: editing, building, animating, paused
+	UnitPlayingState state = UnitPlayingState::editing;
 	/// The code editor, allows player to input program code in editing time. At runtime it
 	/// represents the text segment (aka code segment)
 	CodeSegment* codeSegment = nullptr;
@@ -85,6 +87,8 @@ class UnitPlayingScene : public GameScene
   signals:
 	/// Emitted when a game mode button is pressed
 	void showUnitSelectionScene(const QString& context, bool forward);
+	/// Emitted when the state of the scene changes
+	void stateChanged(UnitPlayingState currentState);
 
   protected slots:
 	/// Called when user press the Information button
@@ -93,6 +97,8 @@ class UnitPlayingScene : public GameScene
 	virtual void backButtonPressed() override;
 	/// Called when user press the code editor toggle button
 	virtual void codeSegmentTogglePressed() override;
+	/// Called when the build process starts, i.e: player pressed the Run button
+	void buildStarted();
 	/// Called when the compilation and linking process has finished
 	/// If there were no errorors, the visualization starts
 	void buildFinished(Compiler* compiler);
@@ -105,6 +111,8 @@ class UnitPlayingScene : public GameScene
 	void createCodeSegment();
 	/// Create a dock widget that show information about the unit, messages from compilers...
 	void createMessagesArea();
+	/// Change the state of the visualization and emit the @a stateChanged signal
+	void changeState(UnitPlayingState newState);
 };
 
 #endif // UNITPLAYINGSCENE_H

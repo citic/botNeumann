@@ -134,7 +134,9 @@ void UnitPlayingScene::createCodeSegment()
 
 	// When the user presses the button Run, his/her solution is compiled and linked. If there were
 	// no errors, the simulation should start
+	connect( codeSegment, SIGNAL(buildStarted()), this, SLOT(buildStarted()) );
 	connect( codeSegment, SIGNAL(buildFinished(Compiler*)), this, SLOT(buildFinished(Compiler*)) );
+	connect( this, SIGNAL(stateChanged(UnitPlayingState)), codeSegment, SLOT(onStateChanged(UnitPlayingState)) );
 }
 
 void UnitPlayingScene::createMessagesArea()
@@ -156,11 +158,27 @@ void UnitPlayingScene::createMessagesArea()
 	connect(messagesArea, SIGNAL(diagnosticSelected(int)), codeSegment, SLOT(diagnosticSelected(int)));
 }
 
+void UnitPlayingScene::changeState(UnitPlayingState newState)
+{
+	if ( this->state != newState )
+	{
+		this->state = newState;
+		emit stateChanged(state);
+	}
+}
+
+void UnitPlayingScene::buildStarted()
+{
+	changeState(UnitPlayingState::building);
+}
+
 void UnitPlayingScene::buildFinished(Compiler *compiler)
 {
 	// If there are errors, do not start the visualization
 	if ( compiler->getErrorCount() > 0 )
-		return;
+		return changeState(UnitPlayingState::editing);
+
+	changeState(UnitPlayingState::starting);
 
 	// The player solution generated an executable and we are ready to visualize it
 	delete visualizator;
@@ -175,5 +193,6 @@ void UnitPlayingScene::buildFinished(Compiler *compiler)
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
 	// Start the animation
-	visualizator->start();
+	if ( ! visualizator->start() )
+		changeState(UnitPlayingState::editing);
 }
