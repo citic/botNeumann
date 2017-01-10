@@ -13,7 +13,16 @@ VisualizationSpeed& VisualizationSpeed::getInstance()
 
 void VisualizationSpeed::updateSpeed(int userValue)
 {
-	Q_ASSERT(userValue >= 0 && userValue <= maxSpeedFactor);
-	this->speedFactor = (maxSpeedFactor - userValue) / 100.0;
-	emit speedChanged(speedFactor);
+	Q_ASSERT(userValue >= 0 && userValue <= maxDelayFactor);
+	this->delayFactor = (maxDelayFactor - userValue) / 100.0;
+	emit speedChanged( getDelayFactor() );
+}
+
+void VisualizationSpeed::setSeeking(bool seeking)
+{
+	if ( this->seeking != seeking )
+	{
+		this->seeking = seeking;
+		emit speedChanged( getDelayFactor() );
+	}
 }

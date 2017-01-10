@@ -5,6 +5,7 @@
 #include "LogManager.h"
 #include "MessagesArea.h"
 #include "UnitPlayingScene.h"
+#include "VisualizationSpeed.h"
 
 Visualizator::Visualizator(const QFileInfo& executablePath, UnitPlayingScene* unitPlayingScene)
 	: GdbResponseListener(unitPlayingScene)
@@ -63,6 +64,9 @@ bool Visualizator::start()
 		if ( debuggerCall->sendGdbCommand( "-break-insert " + originalLocation ) == GDB_ERROR )
 			qCWarning( logVisualizator, "Error: -break-insert %s", qUtf8Printable(originalLocation) );
 	}
+
+	// If user defined at least one breakpoint, animation must seek until reach the first one
+	VisualizationSpeed::getInstance().setSeeking( editorBreakpoints.count() > 0 );
 
 	// Always stop execution at main function
 	if ( debuggerCall->sendGdbCommand("-break-insert -f main") == GDB_ERROR )
