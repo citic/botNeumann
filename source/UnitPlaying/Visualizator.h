@@ -56,6 +56,12 @@ class Visualizator : public GdbResponseListener
 	/// Stops the visualization process
 	/// @return true on success, false otherwise
 	bool stop();
+	/// Pauses the visualization process
+	/// @return true on success, false otherwise
+	bool pause();
+	/// Resumes the visualization process if it is paused
+	/// @return true on success, false otherwise
+	bool resume();
 
   signals:
 	/// Emitted when there is a GdbResponse to process.

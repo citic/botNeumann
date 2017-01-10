@@ -123,7 +123,7 @@ void CodeSegment::setupRunToolbar()
 	// Create the Run or pause action
 	runOrPauseAction = new QAction(this);
 	setupRunAction(false);
-	connect(runOrPauseAction, SIGNAL(triggered()), this, SLOT(runOrPauseTriggered()));
+	connect(runOrPauseAction, SIGNAL(triggered()), this, SIGNAL(userRunOrPaused()));
 	toolBar->addAction(runOrPauseAction);
 
 	// Create the step into button
@@ -223,11 +223,6 @@ void CodeSegment::loadCodeForUnit(Unit* unit)
 	runOrPauseAction->setEnabled(true);
 }
 
-void CodeSegment::runOrPauseTriggered()
-{
-	runOrPauseAction->objectName() == "Run" ? startBuild() : pauseVisualization();
-}
-
 void CodeSegment::startBuild()
 {
 	// This method must be only called if there is a player solution with files
@@ -236,9 +231,6 @@ void CodeSegment::startBuild()
 
 	// If there is unsaved changes, save them
 	codeEditor->saveChanges();
-
-	// Alert other objects that a new compilation process has begun
-	emit buildStarted();
 
 	// ToDo: If there is an active compiling process, stop it
 	//if ( compiler && compiler->isRunning() ) compiler->stop();
@@ -264,12 +256,6 @@ void CodeSegment::compilerFinished()
 	// Alert other object the compilation process finished, for example, show the generated
 	// diagnostics in the tools' output on messages area
 	emit buildFinished(compiler);
-}
-
-void CodeSegment::pauseVisualization()
-{
-	// Pause the visualization code here
-	qCDebug(logNotImplemented) << "Pause visualization...";
 }
 
 void CodeSegment::newFileTriggered()

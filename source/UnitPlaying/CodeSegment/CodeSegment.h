@@ -83,6 +83,9 @@ class CodeSegment : public QDockWidget
 	/// Restores the last code made by player for the given unit, or the default unit's code if
 	/// player nas not played this unit
 	void loadCodeForUnit(Unit* unit);
+	/// Starts the compilation process. It is done in background. When the compilation is finished
+	/// the @a compilationFinished() signal is emitted.
+	void startBuild();
 
   public slots:
 	/// Called when user selects one of the diagnostics in the tools output
@@ -97,18 +100,14 @@ class CodeSegment : public QDockWidget
 	void clearAnimation();
 
   signals:
-	/// Emitted when the run button is pressed, and therefore it is necessary to clear old output
-	void buildStarted();
+	/// Emitted when user presses the Run/Pause button
+	void userRunOrPaused();
 	/// Emitted when the compilation and linking process have finished
 	/// @param compiler Provides a pointer to the compiler that made the compilation and linking
 	/// process. Therefore, the interested objects can get the list of diagnostics generated.
 	void buildFinished(Compiler* compiler);
 	/// Emitted when the stop button is pressed
 	void userStopped();
-	/// Emitted when the visualization has started
-	void visualizationStarted();
-	/// Emitted when the visualization has finished
-	void visualizationFinished();
 	/// Emited when user presses over a breakpoint symbol in any code editor window in order to
 	/// remove the breakpoint. Visualization controller requires this signal in order to clear
 	/// the breakpont in debugger when visualization is running.
@@ -128,11 +127,6 @@ class CodeSegment : public QDockWidget
 	void setupRunAction(bool enabled);
 	/// Converts the Run/Pause action into a Pause action
 	void setupPauseAction(bool enabled);
-	/// Starts the compilation process. It is done in background. When the compilation is finished
-	/// the @a compilationFinished() signal is emitted.
-	void startBuild();
-	/// Called when the Pause button is pressed in order to pause the visualization
-	void pauseVisualization();
 
   protected slots:
 	/// Called when a new file should be added to the solution: a new header file, or
@@ -142,8 +136,6 @@ class CodeSegment : public QDockWidget
 	void fileSelectorIndexChanged(const QString& text);
 
 	// ToDo: Move these slots to an Interpreter class
-	/// Called when the run or pause button is pressed
-	void runOrPauseTriggered();
 	/// Called when the player solution has finished to compile and link
 	void compilerFinished();
 	/// Called when the step into button is pressed

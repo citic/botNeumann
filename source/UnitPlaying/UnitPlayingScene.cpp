@@ -135,7 +135,7 @@ void UnitPlayingScene::createCodeSegment()
 	// When the user presses the button Run, his/her solution is compiled and linked. If there were
 	// no errors, the simulation should start
 	connect( this, SIGNAL(stateChanged(UnitPlayingState)), codeSegment, SLOT(onStateChanged(UnitPlayingState)) );
-	connect( codeSegment, SIGNAL(buildStarted()), this, SLOT(buildStarted()) );
+	connect( codeSegment, SIGNAL(userRunOrPaused()), this, SLOT(userRunOrPaused()) );
 	connect( codeSegment, SIGNAL(buildFinished(Compiler*)), this, SLOT(buildFinished(Compiler*)) );
 	connect( codeSegment, SIGNAL(userStopped()), this, SLOT(userStopped()) );
 }
@@ -168,9 +168,31 @@ void UnitPlayingScene::changeState(UnitPlayingState newState)
 	}
 }
 
-void UnitPlayingScene::buildStarted()
+void UnitPlayingScene::userRunOrPaused()
 {
-	changeState(UnitPlayingState::building);
+	// The Run/Pause produces several actions depending on the current state
+	if ( state == UnitPlayingState::editing )
+	{
+		// App is in state editing code, we have to build the player solution and start animation
+		changeState(UnitPlayingState::building);
+		codeSegment->startBuild();
+	}
+	else if ( state == UnitPlayingState::animating )
+	{
+		// Animation is in progress, pause it
+		if ( visualizator->pause() )
+			changeState(UnitPlayingState::paused);
+	}
+	else if ( state == UnitPlayingState::paused )
+	{
+		// Animation is paused, resume it
+		if ( visualizator->resume() )
+			changeState(UnitPlayingState::animating);
+	}
+	else
+	{
+		Q_ASSERT(false); // Run/Pause button not allowed under other state
+	}
 }
 
 void UnitPlayingScene::buildFinished(Compiler *compiler)
@@ -203,6 +225,7 @@ void UnitPlayingScene::buildFinished(Compiler *compiler)
 void UnitPlayingScene::userStopped()
 {
 	// Stop the animation
+	Q_ASSERT(visualizator);
 	if ( visualizator->stop() )
 	{
 		// Return to editing state

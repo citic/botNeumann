@@ -77,10 +77,10 @@ class UnitPlayingScene : public GameScene
 	virtual void startLeavingStage() override;
 	/// Called when a transition has finished, indicating this scene entered into the stage
 	virtual void finishedEnteringStage() override;
+	/// Return the state of the unit playing scene
+	inline UnitPlayingState getState() const { return state; }
 	/// Give access to the messages area object
 	inline MessagesArea* getMessagesArea() const { return messagesArea; }
-
-  public:
 	/// Get access to the breakpoints list set by the user
 	QList<GuiBreakpoint*> retrieveBreakpoints();
 
@@ -97,8 +97,8 @@ class UnitPlayingScene : public GameScene
 	virtual void backButtonPressed() override;
 	/// Called when user press the code editor toggle button
 	virtual void codeSegmentTogglePressed() override;
-	/// Called when the build process starts, i.e: player pressed the Run button
-	void buildStarted();
+	/// Called when user presses the Run/Pause button
+	void userRunOrPaused();
 	/// Called when the compilation and linking process has finished
 	/// If there were no errorors, the visualization starts
 	void buildFinished(Compiler* compiler);

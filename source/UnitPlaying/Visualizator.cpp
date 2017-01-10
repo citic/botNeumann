@@ -108,6 +108,21 @@ bool Visualizator::stop()
 	return debuggerCall->sendGdbCommand("-exec-interrupt") != GDB_ERROR;
 }
 
+bool Visualizator::pause()
+{
+	// Just stop the GdbResult fetching mechanism. This is not necessary because the
+	// processGdbResponse() stops when visualization is paused
+	animationDone.stop();
+	return true;
+}
+
+bool Visualizator::resume()
+{
+	// Continue processing the next available GdbResult
+	processGdbResponse();
+	return true;
+}
+
 // Setting and removing breakpoints from CodeEditor
 
 void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
@@ -163,6 +178,10 @@ void Visualizator::processGdbResponse()
 
 	// The last animation is finished, stop its timer
 	animationDone.stop();
+
+	// If animation is paused, do not animate
+	if ( unitPlayingScene->getState() == UnitPlayingState::paused )
+		return;
 
 	// Fetch the next pending response
 	Q_ASSERT(debuggerCall);
