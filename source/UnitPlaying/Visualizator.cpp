@@ -157,6 +157,21 @@ void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
 	}
 }
 
+bool Visualizator::step(const QString& gdbCommand, const QString& description)
+{
+	Q_ASSERT(debuggerCall);
+	qCInfo(logPlayer) << description;
+	if ( debuggerCall->sendGdbCommand(gdbCommand) == GDB_ERROR )
+	{
+		qCCritical(logVisualizator) << "Error sending" << description << "command";
+		return false;
+	}
+
+	inStep = true;
+	processGdbResponse();
+	return true;
+}
+
 int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint) const
 {
 	// For all debugger breakpoints, find the one that matches the GUI breakpoint and return its index
@@ -172,6 +187,9 @@ int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint
 
 void Visualizator::processGdbResponse()
 {
+//	static long long callCount = 0;
+//	qCDebug(logVisualizator, "====processGdbResponse(%lld)", ++callCount);
+
 	// If there is an active animation, wait until it is done
 	if ( animationDone.remainingTime() > 0 )
 		return;
@@ -179,8 +197,10 @@ void Visualizator::processGdbResponse()
 	// The last animation is finished, stop its timer
 	animationDone.stop();
 
+//	qCDebug(logVisualizator, "++++processGdbResponse(%lld) animation done", callCount);
+
 	// If animation is paused, do not animate
-	if ( unitPlayingScene->getState() == UnitPlayingState::paused )
+	if ( unitPlayingScene->getState() == UnitPlayingState::paused && inStep == false )
 		return;
 
 	// Fetch the next pending response
@@ -189,7 +209,10 @@ void Visualizator::processGdbResponse()
 
 	// If there is no pending responses, we are done
 	if ( gdbResponse == nullptr )
+	{
+		inStep = false;
 		return;
+	}
 
 	qCDebug(logVisualizator, "processGdbResponse: %s", qPrintable(gdbResponse->buildDescription(true)));
 
@@ -201,6 +224,7 @@ void Visualizator::processGdbResponse()
 	// Wait until the animation is done, then call this method again to process the next pending
 	// response
 	animationDone.start(maxDuration);
+//	qCDebug(logVisualizator, "----processGdbResponse(%lld) next in %dms", callCount, maxDuration);
 }
 
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)

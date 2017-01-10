@@ -131,15 +131,17 @@ void CodeSegment::setupRunToolbar()
 	stepIntoAction->setShortcut(QKeySequence("Ctrl+I"));
 	stepIntoAction->setToolTip(tr("Step into: run next statement entering in functions"));
 	stepIntoAction->setEnabled(false);
-	connect(stepIntoAction, SIGNAL(triggered()), this, SLOT(stepIntoTriggered()));
+	connect(stepIntoAction, SIGNAL(triggered()), this, SIGNAL(userSteppedInto()));
 	toolBar->addAction(stepIntoAction);
+
+	// ToDo: create step over action
 
 	// Create the step out button
 	stepOutAction = new QAction(QIcon(":/unit_playing/buttons/step_out.svg"), tr("Step &out"), this);
 	stepOutAction->setShortcut(QKeySequence("Ctrl+O"));
 	stepOutAction->setToolTip(tr("Step out: run next statement in current function"));
 	stepOutAction->setEnabled(false);
-	connect(stepOutAction, SIGNAL(triggered()), this, SLOT(stepOutTriggered()));
+	connect(stepOutAction, SIGNAL(triggered()), this, SIGNAL(userSteppedOut()));
 	toolBar->addAction(stepOutAction);
 
 	// Create the stop button
@@ -265,16 +267,6 @@ void CodeSegment::fileSelectorIndexChanged(const QString& text)
 {
 	// Get the full path to the filename and load it in the code editor
 	codeEditor->loadFile( playerSolution->getPlayerUnitSourcePath(text) );
-}
-
-void CodeSegment::stepIntoTriggered()
-{
-	qCDebug(logNotImplemented) << "Step into triggered";
-}
-
-void CodeSegment::stepOutTriggered()
-{
-	qCDebug(logNotImplemented) << "Step out triggered";
 }
 
 void CodeSegment::visualizationSpeedChanged(int speed)

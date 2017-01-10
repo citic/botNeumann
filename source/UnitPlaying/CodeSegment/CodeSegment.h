@@ -106,6 +106,12 @@ class CodeSegment : public QDockWidget
 	/// @param compiler Provides a pointer to the compiler that made the compilation and linking
 	/// process. Therefore, the interested objects can get the list of diagnostics generated.
 	void buildFinished(Compiler* compiler);
+	/// Called when the step into button is pressed
+	void userSteppedInto();
+	/// Called when the step over button is pressed
+	void userSteppedOver();
+	/// Called when the step out button is pressed
+	void userSteppedOut();
 	/// Emitted when the stop button is pressed
 	void userStopped();
 	/// Emited when user presses over a breakpoint symbol in any code editor window in order to
@@ -135,14 +141,8 @@ class CodeSegment : public QDockWidget
 	void newFileTriggered();
 	/// Called when player selects another source file in the file selector combo box
 	void fileSelectorIndexChanged(const QString& text);
-
-	// ToDo: Move these slots to an Interpreter class
 	/// Called when the player solution has finished to compile and link
 	void compilerFinished();
-	/// Called when the step into button is pressed
-	void stepIntoTriggered();
-	/// Called when the step out button is pressed
-	void stepOutTriggered();
 	/// Called when the visualization speed is changed by user
 	void visualizationSpeedChanged(int speed);
 };

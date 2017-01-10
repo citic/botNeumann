@@ -42,6 +42,9 @@ class Visualizator : public GdbResponseListener
 	int inferiorProcessId;
 	/// Controls when the last animation is done before processing the next GdbCommand
 	QTimer animationDone;
+	/// When the unit playing scene is paused, not animations are done, but if a step in/out/over
+	/// command is issued, the animation resumes until the step is done
+	bool inStep = false;
 
   public:
 	/// Constructor
@@ -84,6 +87,17 @@ class Visualizator : public GdbResponseListener
 	/// debugger when visualization is running. Internally the GuiBreakpoint object carries
 	/// an action atribute that tells if the breakpoint was created or removed
 	void breakpointAction(GuiBreakpoint* guiBreakpoint);
+	/// Called when user asks to step into, i.e: execute the next instruction and if it is a
+	/// function call, enter into the function body
+	/// @return true on success, false on error
+	inline bool stepInto() { return step("-exec-step", "Step into"); }
+	/// Called when user wants to exit from current function call and return to caller
+	/// @return true on success, false on error
+	inline bool stepOut() { return step("-exec-finish", "Step out"); }
+	/// Called when user asks to step over, i.e: execute the next instruction but not entering
+	/// in function calls
+	/// @return true on success, false on error
+	inline bool stepOver() { return step("-exec-next", "Step over"); }
 
   protected:
 	/// A Gdb result brought an updated list of threads, refresh them
@@ -95,6 +109,11 @@ class Visualizator : public GdbResponseListener
 	/// @remark Search is made sequential, therefore O(n) where n is the number of debugger
 	/// breakpoints stored in the vector
 	int findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint) const;
+	/// Called when any of the step commands is called: stepInto, stepOut, or stepOver
+	/// @param gdbCommand The GDB command that will be sent, e.g: "-exec-step"
+	/// @param description The action to be logged, e.g: "Step into"
+	/// @return true on success, false on error
+	bool step(const QString& gdbCommand, const QString& description);
 
   protected:
 	///	Notifications that begin with '*', example: *running,thread-id="thread"
