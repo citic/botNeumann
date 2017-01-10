@@ -27,6 +27,10 @@ class Layout : public LayoutItem
 	virtual void addItem(LayoutItem* item, qreal proportion, qreal zValue = 0.0);
 	/// Add any Qt graphics item, including QGraphicsWidget
 //	virtual void addItem(QGraphicsItem* widget);
+	/// Removes the item from the layout, and the scene
+	/// @param deleteObject send true if the object should be deleted from dynamic memory
+	/// @return true if object was removed, false if it was not a child of this layout
+	virtual bool removeItem(LayoutItem* item, bool deleteObject);
 	/// A layout is a layout item also
 	virtual void addLayout(Layout* layout, qreal proportion, qreal zValue = 0.0);
 	/// Add expansible space

@@ -96,6 +96,18 @@ bool Visualizator::start()
 	return result;
 }
 
+bool Visualizator::stop()
+{
+	// Stop the GdbResult fetching mechanism
+	animationDone.stop();
+
+	// Removing elements from the scene must be done at-once
+	VisualizationSpeed::getInstance().setSeeking(true);
+
+	// Stop gdb
+	return debuggerCall->sendGdbCommand("-exec-interrupt") != GDB_ERROR;
+}
+
 // Setting and removing breakpoints from CodeEditor
 
 void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)

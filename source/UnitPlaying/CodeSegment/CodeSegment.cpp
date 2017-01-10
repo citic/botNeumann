@@ -147,7 +147,7 @@ void CodeSegment::setupRunToolbar()
 	stopAction->setShortcut(QKeySequence("Ctrl+T"));
 	stopAction->setStatusTip(tr("Compiles the code and starts its visualization"));
 	stopAction->setEnabled(false);
-	connect(stopAction, SIGNAL(triggered()), this, SLOT(stopTriggered()));
+	connect(stopAction, SIGNAL(triggered()), this, SIGNAL(userStopped()));
 	toolBar->addAction(stopAction);
 
 	// Create the control that allows user to set the speed of the visualization
@@ -293,11 +293,6 @@ void CodeSegment::stepOutTriggered()
 	qCDebug(logNotImplemented) << "Step out triggered";
 }
 
-void CodeSegment::stopTriggered()
-{
-	qCDebug(logNotImplemented) << "Stop triggered";
-}
-
 void CodeSegment::visualizationSpeedChanged(int speed)
 {
 	qCInfo(logPlayer) << "Visualization speed set to " << speed;
@@ -353,4 +348,9 @@ void CodeSegment::onStateChanged(UnitPlayingState currentState)
 		setupPauseAction(true);
 	else
 		runOrPauseAction->setEnabled(false);
+}
+
+void CodeSegment::clearAnimation()
+{
+	// ToDo: clear any highlighted lines that were being executed by threads
 }

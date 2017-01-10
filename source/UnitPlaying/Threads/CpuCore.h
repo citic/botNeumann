@@ -34,6 +34,10 @@ class CpuCore : public MemorySegment
 	/// on the graphical interface, reprsented as a robot
 	/// @return the duration in milliseconds of the animation
 	int runThread(ExecutionThread* thread);
+	/// Removes the current execution thread from this CpuCore
+	/// The execution thread object keeps alive
+	/// @return the duration in milliseconds of the animation, -1 if no thread was being run
+	int removeThread();
 
   protected:
 	/// Builds the CPU core as a workstation where a execution thread (robot) can work

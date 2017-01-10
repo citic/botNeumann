@@ -134,9 +134,10 @@ void UnitPlayingScene::createCodeSegment()
 
 	// When the user presses the button Run, his/her solution is compiled and linked. If there were
 	// no errors, the simulation should start
+	connect( this, SIGNAL(stateChanged(UnitPlayingState)), codeSegment, SLOT(onStateChanged(UnitPlayingState)) );
 	connect( codeSegment, SIGNAL(buildStarted()), this, SLOT(buildStarted()) );
 	connect( codeSegment, SIGNAL(buildFinished(Compiler*)), this, SLOT(buildFinished(Compiler*)) );
-	connect( this, SIGNAL(stateChanged(UnitPlayingState)), codeSegment, SLOT(onStateChanged(UnitPlayingState)) );
+	connect( codeSegment, SIGNAL(userStopped()), this, SLOT(userStopped()) );
 }
 
 void UnitPlayingScene::createMessagesArea()
@@ -192,7 +193,25 @@ void UnitPlayingScene::buildFinished(Compiler *compiler)
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), cpuCores, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
-	// Start the animation
-	if ( ! visualizator->start() )
+	// Start the animation, if it started change the state to animating, otherwise return to editing
+	if ( visualizator->start() )
+		changeState(UnitPlayingState::animating);
+	else
 		changeState(UnitPlayingState::editing);
+}
+
+void UnitPlayingScene::userStopped()
+{
+	// Stop the animation
+	if ( visualizator->stop() )
+	{
+		// Return to editing state
+		changeState(UnitPlayingState::editing);
+
+		// Tell the segments to remove animation artifacts
+		codeSegment->clearAnimation();
+		heapSegment->clearAnimation();
+		cpuCores->clearAnimation();
+		dataSegment->clearAnimation();
+	}
 }

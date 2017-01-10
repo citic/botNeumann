@@ -27,6 +27,7 @@ double CpuCore::getHeightInRows() const
 int CpuCore::runThread(ExecutionThread* thread)
 {
 	// If the thread is already set, done
+	Q_ASSERT(thread);
 	if ( executionThread == thread )
 		return -1;
 
@@ -42,6 +43,19 @@ int CpuCore::runThread(ExecutionThread* thread)
 //	executionThread->setVisible(true);
 	updateLayoutItem();
 	return executionThread->animateAppear();
+}
+
+int CpuCore::removeThread()
+{
+	if ( executionThread == nullptr )
+		return -1;
+
+	int duration = executionThread->animateDisappear();
+
+	removeItem(executionThread, false);
+	executionThread = nullptr;
+
+	return duration;
 }
 
 void CpuCore::buildCpuCore()

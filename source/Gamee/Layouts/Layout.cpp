@@ -24,6 +24,22 @@ void Layout::addItem(LayoutItem* item, qreal proportion, qreal zValue)
 	items[zValue].append(item);
 }
 
+bool Layout::removeItem(LayoutItem* item, bool deleteObject)
+{
+	Q_ASSERT(item);
+	for (ItemsType::iterator itr = items.begin(); itr != items.end(); ++itr )
+	{
+		if ( itr.value().removeOne(item) )
+		{
+			if ( deleteObject )
+				delete item;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void Layout::addLayout(Layout* layout, qreal proportion, qreal zValue)
 {
 	return addItem(layout, proportion, zValue);

@@ -29,6 +29,10 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;
 
+  public slots:
+	/// Called when visualization has finished in order to remove execution threads
+	void clearAnimation();
+
   protected:
 	/// Creates a CPU core (workstation) for each CPU core requested in .botnu file
 	void createCpuCores();

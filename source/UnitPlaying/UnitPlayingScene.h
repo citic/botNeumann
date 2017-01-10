@@ -102,6 +102,8 @@ class UnitPlayingScene : public GameScene
 	/// Called when the compilation and linking process has finished
 	/// If there were no errorors, the visualization starts
 	void buildFinished(Compiler* compiler);
+	/// Called when the stop button is pressed in order to stop the visualization
+	void userStopped();
 
   protected:
 	/// Distribute the screen space between each segment according to the number of rows they

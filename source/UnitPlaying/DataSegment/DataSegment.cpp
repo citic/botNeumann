@@ -62,3 +62,9 @@ void DataSegment::buildStandardInOut(const double stdInOutProportion)
 	standardOutput = new StandardInputOutput("output", unit, scene);
 	stdInOutLayout->addItem(standardOutput, 0.5, zUnitPlaying::standardInputOutput);
 }
+
+void DataSegment::clearAnimation()
+{
+	// ToDo: remove any global variables and convert them to garbage
+	// ToDo: remove all input or output traversing the stddin/stdout tubes
+}

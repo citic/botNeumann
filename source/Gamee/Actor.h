@@ -22,6 +22,8 @@ class Actor : public ScenicElement<QGraphicsSvgItem>
 	/// @return the actual duration of the animation in milliseconds after ajusting to the user
 	/// preference in visualization speed slider
 	int appear(int duration = 1000, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
+	/// Convenience method to disappear an actor
+	inline int disappear(int duration = 1000) { return appear(duration, 1.0, 0.0); }
 };
 
 #endif // ACTOR_H

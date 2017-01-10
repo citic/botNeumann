@@ -32,6 +32,9 @@ class ExecutionThread : public LinearLayout
 	/// Animate the apparition of the robot
 	/// @return The duration of the animation in milliseconds
 	int animateAppear();
+	/// Animate the vanishing of the robot
+	/// @return The duration of the animation in milliseconds
+	int animateDisappear();
 
   protected:
 	/// Build the robot

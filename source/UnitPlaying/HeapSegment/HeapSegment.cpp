@@ -53,3 +53,8 @@ void HeapSegment::hideSegment()
 	Prop* doors = new Prop(":/unit_playing/heap_segment_disabled.svg", scene);
 	addItem(doors, 1.0, zUnitPlaying::heapSegment);
 }
+
+void HeapSegment::clearAnimation()
+{
+	// ToDo: remove any dynamic-allocated variables and convert them to garbage
+}

@@ -93,6 +93,8 @@ class CodeSegment : public QDockWidget
 	/// Called when the visualization changes it state (stopped, starting, running, finished) to
 	/// enable or disable visualization control buttons
 	void onStateChanged(UnitPlayingState currentState);
+	/// Called when visualization has finished in order to clear highlited lines
+	void clearAnimation();
 
   signals:
 	/// Emitted when the run button is pressed, and therefore it is necessary to clear old output
@@ -101,6 +103,8 @@ class CodeSegment : public QDockWidget
 	/// @param compiler Provides a pointer to the compiler that made the compilation and linking
 	/// process. Therefore, the interested objects can get the list of diagnostics generated.
 	void buildFinished(Compiler* compiler);
+	/// Emitted when the stop button is pressed
+	void userStopped();
 	/// Emitted when the visualization has started
 	void visualizationStarted();
 	/// Emitted when the visualization has finished
@@ -146,8 +150,6 @@ class CodeSegment : public QDockWidget
 	void stepIntoTriggered();
 	/// Called when the step out button is pressed
 	void stepOutTriggered();
-	/// Called when the stop button is pressed
-	void stopTriggered();
 	/// Called when the visualization speed is changed by user
 	void visualizationSpeedChanged(int speed);
 };

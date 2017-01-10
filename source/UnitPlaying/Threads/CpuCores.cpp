@@ -14,6 +14,7 @@ CpuCores::CpuCores(Unit& unit, Scene* scene, QObject* parent)
 CpuCores::~CpuCores()
 {
 	// Do not delete cpuCores[] or executionThreads[]. They are deleted by the scene
+	// ToDo: Remove executionThreads[] that are not visible
 }
 
 double CpuCores::getHeightInRows() const
@@ -70,4 +71,15 @@ int CpuCores::findFirstIdleCpuCore() const
 			return index;
 
 	return -1;
+}
+
+void CpuCores::clearAnimation()
+{
+	// Remove all execution threads from the cores
+	for ( int index = 0; index < cpuCores.count(); ++index )
+		cpuCores[index]->removeThread();
+
+	// Remove all execution threads, visible or not
+	for ( int index = 0; index < executionThreads.count(); ++index )
+		delete executionThreads[index];
 }

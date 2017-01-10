@@ -26,3 +26,8 @@ int ExecutionThread::animateAppear()
 {
 	return robot->appear();
 }
+
+int ExecutionThread::animateDisappear()
+{
+	return robot->disappear();
+}

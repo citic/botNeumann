@@ -29,6 +29,10 @@ class HeapSegment : public GdbResponseListener, public MemorySegment
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;
 
+  public slots:
+	/// Called when visualization has finished in order to clear variables
+	void clearAnimation();
+
   protected:
 	/// Builds the segment with space to store variables (shelves)
 	void buildSegment();

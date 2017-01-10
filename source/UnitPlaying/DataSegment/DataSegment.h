@@ -29,6 +29,10 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;
 
+  public slots:
+	/// Called when visualization has finished in order to clear variables
+	void clearAnimation();
+
   protected:
 	/// Builds the data segment represented a shared table for all the robots
 	void buildDataSegment();
