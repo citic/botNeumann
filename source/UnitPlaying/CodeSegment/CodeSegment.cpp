@@ -126,20 +126,26 @@ void CodeSegment::setupRunToolbar()
 	connect(runOrPauseAction, SIGNAL(triggered()), this, SIGNAL(userRunOrPaused()));
 	toolBar->addAction(runOrPauseAction);
 
+	// Create step over action
+	stepOverAction = new QAction(QIcon(":/unit_playing/buttons/step_over.svg"), tr("Step over (&Next)"), this);
+	stepOverAction->setShortcut(QKeySequence("Ctrl+U"));
+	stepOverAction->setToolTip(tr("Step over: run next statement in current function (Ctrl+U)"));
+	stepOverAction->setEnabled(false);
+	connect(stepOverAction, SIGNAL(triggered()), this, SIGNAL(userSteppedOver()));
+	toolBar->addAction(stepOverAction);
+
 	// Create the step into button
 	stepIntoAction = new QAction(QIcon(":/unit_playing/buttons/step_into.svg"), tr("Step &into"), this);
 	stepIntoAction->setShortcut(QKeySequence("Ctrl+I"));
-	stepIntoAction->setToolTip(tr("Step into: run next statement entering in functions"));
+	stepIntoAction->setToolTip(tr("Step into: run next statement entering in functions (Ctrl+I)"));
 	stepIntoAction->setEnabled(false);
 	connect(stepIntoAction, SIGNAL(triggered()), this, SIGNAL(userSteppedInto()));
 	toolBar->addAction(stepIntoAction);
 
-	// ToDo: create step over action
-
 	// Create the step out button
 	stepOutAction = new QAction(QIcon(":/unit_playing/buttons/step_out.svg"), tr("Step &out"), this);
 	stepOutAction->setShortcut(QKeySequence("Ctrl+O"));
-	stepOutAction->setToolTip(tr("Step out: run next statement in current function"));
+	stepOutAction->setToolTip(tr("Step out: exit from current function (Ctrl+O)"));
 	stepOutAction->setEnabled(false);
 	connect(stepOutAction, SIGNAL(triggered()), this, SIGNAL(userSteppedOut()));
 	toolBar->addAction(stepOutAction);
@@ -147,7 +153,7 @@ void CodeSegment::setupRunToolbar()
 	// Create the stop button
 	stopAction = new QAction(QIcon(":/unit_playing/buttons/stop.svg"), tr("S&top"), this);
 	stopAction->setShortcut(QKeySequence("Ctrl+T"));
-	stopAction->setToolTip(tr("Stop the visualization"));
+	stopAction->setToolTip(tr("Stop the visualization (Ctrl+T)"));
 	stopAction->setEnabled(false);
 	connect(stopAction, SIGNAL(triggered()), this, SIGNAL(userStopped()));
 	toolBar->addAction(stopAction);
@@ -184,7 +190,7 @@ void CodeSegment::setupRunAction(const QString& name, bool enabled)
 {
 	runOrPauseAction->setObjectName(name);
 	runOrPauseAction->setIcon( QIcon(":/unit_playing/buttons/run.svg") );
-	runOrPauseAction->setToolTip(name == "Run" ? tr("Run: compiles the code and starts the visualization") : tr("Resumes the visualization"));
+	runOrPauseAction->setToolTip(name == "Run" ? tr("Run: compiles the code and starts the visualization (Ctrl+R)") : tr("Resumes the visualization (Ctrl+R)"));
 	runOrPauseAction->setShortcut(QKeySequence("Ctrl+R"));
 
 	runOrPauseAction->setEnabled(enabled);
@@ -194,7 +200,7 @@ void CodeSegment::setupPauseAction(bool enabled)
 {
 	runOrPauseAction->setObjectName("Pause");
 	runOrPauseAction->setIcon(QIcon(":/unit_playing/buttons/pause.svg"));
-	runOrPauseAction->setToolTip(tr("Pauses the visualization"));
+	runOrPauseAction->setToolTip(tr("Pauses the visualization (Ctrl+P)"));
 	runOrPauseAction->setShortcut(QKeySequence("Ctrl+P"));
 
 	runOrPauseAction->setEnabled(enabled);
@@ -309,11 +315,13 @@ void CodeSegment::onStateChanged(UnitPlayingState currentState)
 	bool run = currentState == UnitPlayingState::editing;
 	bool resume = currentState == UnitPlayingState::paused;
 	bool pause = currentState == UnitPlayingState::animating;
+	bool stepOver = currentState == UnitPlayingState::paused;
 	bool stepInto = currentState == UnitPlayingState::paused;
 	bool stepOut = currentState == UnitPlayingState::paused;
 	bool stop = currentState == UnitPlayingState::animating || currentState == UnitPlayingState::paused;
 
 	// Enable actions according to the current state
+	stepOverAction->setEnabled(stepOver);
 	stepIntoAction->setEnabled(stepInto);
 	stepOutAction->setEnabled(stepOut);
 	stopAction->setEnabled(stop);

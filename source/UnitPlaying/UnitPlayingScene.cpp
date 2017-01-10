@@ -217,7 +217,7 @@ void UnitPlayingScene::buildFinished(Compiler *compiler)
 
 	// When user asks to step into or over
 	connect( codeSegment, SIGNAL(userSteppedInto()), visualizator, SLOT(stepInto()) );
-//	connect( codeSegment, SIGNAL(userSteppedOver()), visualizator, SLOT(stepOver()) );
+	connect( codeSegment, SIGNAL(userSteppedOver()), visualizator, SLOT(stepOver()) );
 	connect( codeSegment, SIGNAL(userSteppedOut()), visualizator, SLOT(stepOut()) );
 
 	// Start the animation, if it started change the state to animating, otherwise return to editing

@@ -61,10 +61,12 @@ class CodeSegment : public QDockWidget
   protected: // Run toolbar
 	/// Executes and animates the code or pauses it if already running
 	QAction* runOrPauseAction;
+	/// If visualisation is paused, executes the next code statement in the current function
+	QAction* stepOverAction;
 	/// If visualisation is paused, executes the next code statement entering in functions if they
 	/// are defined by user
 	QAction* stepIntoAction;
-	/// If visualisation is paused, executes the next code statement in the current function
+	/// If visualisation is paused, executes the exits from the current function
 	QAction* stepOutAction;
 	/// Stops the visualisation of the code, if it is running
 	QAction* stopAction;
