@@ -2,7 +2,7 @@ PROJECTS=hello_c hello_cpp ftoc_f ftoc_i rand
 CC=gcc
 CXX=g++
 
-FLAGS=-Wall -g -O0 -I.
+FLAGS=-g -g3 -O0 -Wall -Wextra -I. -pthread
 CFLAGS=$(FLAGS) -std=c99
 CXXFLAGS=$(FLAGS) -std=c++11
 

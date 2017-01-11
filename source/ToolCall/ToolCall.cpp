@@ -50,7 +50,7 @@ QString ToolCall::getCxxCompiler()
 QStringList ToolCall::getDefaultCompilerArguments()
 {
 	QStringList arguments;
-	arguments << "-g" << "-O0" << "-Wall" << "-Wextra" << "-std=c++11" << "-pthread";
+	arguments << "-g" << "-g3" << "-O0" << "-Wall" << "-Wextra" << "-std=c++11" << "-pthread";
 //	if ( getCxxCompiler() == "clang++" )
 //		arguments << "-fdiagnostics-parseable-fixits";
 	return arguments;
