@@ -239,6 +239,15 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 			gdbState = STATE_RUNNING;
 			break;
 
+		case AsyncClass::AC_STOPPED:
+			gdbState = STATE_STOPPED;
+			// Gede gets pid asking the list of threads, we got pid from AC_THREAD_GROUP_STARTED
+			// if (inferiorProcessId == 0) debuggerCall->sendGdbCommand("-list-thread-groups");
+			debuggerCall->sendGdbCommand("-thread-info");
+			debuggerCall->sendGdbCommand("-var-update --all-values *");
+			debuggerCall->sendGdbCommand("-stack-list-locals 1");
+			break;
+
 		default:
 			break;
 	}
@@ -269,6 +278,11 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 
 	switch ( asyncClass )
 	{
+		case AsyncClass::AC_THREAD_GROUP_STARTED:
+			// Get the process id of the user program
+			inferiorProcessId = tree.findNodeTextValue("/pid").toInt();
+			break;
+
 		case AsyncClass::AC_THREAD_CREATED:
 			debuggerCall->sendGdbCommand("-thread-info");
 			break;

@@ -1,0 +1,62 @@
+$ gdb -i mi -q
+=thread-group-added,id="i1"
+(gdb)
+
+-inferior-tty-set /dev/pts/2
+^done
+(gdb)
+
+-file-exec-and-symbols "rand"
+^done
+(gdb)
+
+-exec-arguments "0" "75"
+^done
+(gdb)
+
+-break-insert "rand.c:25"
+^done,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000400845",func="main",file="rand.c",fullname="/home/jhc/dev/botNeumann/tools/GdbTest/examples/rand.c",line="25",thread-groups=["i1"],times="0",original-location="rand.c:25"}
+(gdb)
+
+-break-insert -f main
+^done,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000400745",func="main",file="rand.c",fullname="/home/jhc/dev/botNeumann/tools/GdbTest/examples/rand.c",line="7",thread-groups=["i1"],times="0",original-location="main"}
+(gdb)
+
+-file-list-exec-source-files
+^done,files=[{file="rand.c",fullname="/home/jhc/dev/botNeumann/tools/GdbTest/examples/rand.c"},{file="/usr/include/stdc-predef.h",fullname="/usr/include/stdc-predef.h"},{file="/usr/include/stdio.h",fullname="/usr/include/stdio.h"},{file="/usr/include/features.h",fullname="/usr/include/features.h"},{file="/usr/include/x86_64-linux-gnu/sys/cdefs.h",fullname="/usr/include/x86_64-linux-gnu/sys/cdefs.h"},{file="/usr/include/x86_64-linux-gnu/bits/wordsize.h",fullname="/usr/include/x86_64-linux-gnu/bits/wordsize.h"},{file="/usr/include/x86_64-linux-gnu/gnu/stubs.h",fullname="/usr/include/x86_64-linux-gnu/gnu/stubs.h"},{file="/usr/include/x86_64-linux-gnu/gnu/stubs-64.h",fullname="/usr/include/x86_64-linux-gnu/gnu/stubs-64.h"},{file="/usr/lib/gcc/x86_64-linux-gnu/5/include/stddef.h",fullname="/usr/lib/gcc/x86_64-linux-gnu/5/include/stddef.h"},{file="/usr/include/x86_64-linux-gnu/bits/types.h",fullname="/usr/include/x86_64-linux-gnu/bits/types.h"},{file="/usr/include/x86_64-linux-gnu/bits/typesizes.h",fullname="/usr/include/x86_64-linux-gnu/bits/typesizes.h"},{file="/usr/include/libio.h",fullname="/usr/include/libio.h"},{file="/usr/include/_G_config.h",fullname="/usr/include/_G_config.h"},{file="/usr/include/wchar.h",fullname="/usr/include/wchar.h"},{file="/usr/lib/gcc/x86_64-linux-gnu/5/include/stdarg.h",fullname="/usr/lib/gcc/x86_64-linux-gnu/5/include/stdarg.h"},{file="/usr/include/x86_64-linux-gnu/bits/stdio_lim.h",fullname="/usr/include/x86_64-linux-gnu/bits/stdio_lim.h"},{file="/usr/include/x86_64-linux-gnu/bits/sys_errlist.h",fullname="/usr/include/x86_64-linux-gnu/bits/sys_errlist.h"},{file="/usr/include/stdlib.h",fullname="/usr/include/stdlib.h"},{file="/usr/include/x86_64-linux-gnu/bits/stdlib-float.h",fullname="/usr/include/x86_64-linux-gnu/bits/stdlib-float.h"},{file="/usr/include/time.h",fullname="/usr/include/time.h"},{file="/usr/include/x86_64-linux-gnu/bits/time.h",fullname="/usr/include/x86_64-linux-gnu/bits/time.h"}]
+(gdb)
+
+-exec-run
+=thread-group-started,id="i1",pid="8151"
+=thread-created,id="1",group-id="i1"
+=library-loaded,id="/lib64/ld-linux-x86-64.so.2",target-name="/lib64/ld-linux-x86-64.so.2",host-name="/lib64/ld-linux-x86-64.so.2",symbols-loaded="0",thread-group="i1"
+^running
+*running,thread-id="all"
+(gdb)
+=library-loaded,id="/lib/x86_64-linux-gnu/libpthread.so.0",target-name="/lib/x86_64-linux-gnu/libpthread.so.0",host-name="/lib/x86_64-linux-gnu/libpthread.so.0",symbols-loaded="0",thread-group="i1"
+=library-loaded,id="/lib/x86_64-linux-gnu/libc.so.6",target-name="/lib/x86_64-linux-gnu/libc.so.6",host-name="/lib/x86_64-linux-gnu/libc.so.6",symbols-loaded="0",thread-group="i1"
+~"[Thread debugging using libthread_db enabled]\n"
+~"Using host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n"
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000400745",func="main",file="rand.c",fullname="/home/jhc/dev/botNeumann/tools/GdbTest/examples/rand.c",line="7",thread-groups=["i1"],times="1",original-location="main"}
+~"\n"
+~"Breakpoint 2, main (argc=3, argv=0x7fffffffdf88) at rand.c:7\n"
+~"7\t\tunsigned long long seed = time(NULL);\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x0000000000400745",func="main",args=[{name="argc",value="3"},{name="argv",value="0x7fffffffdf88"}],file="rand.c",fullname="/home/jhc/dev/botNeumann/tools/GdbTest/examples/rand.c",line="7"},thread-id="1",stopped-threads="all",core="0"
+(gdb)
+
+-thread-info
+^done,threads=[{id="1",target-id="Thread 0x7ffff7fcc700 (LWP 8151)",name="rand",frame={level="0",addr="0x0000000000400745",func="main",args=[{name="argc",value="3"},{name="argv",value="0x7fffffffdf88"}],file="rand.c",fullname="/home/jhc/dev/botNeumann/tools/GdbTest/examples/rand.c",line="7"},state="stopped",core="0"}],current-thread-id="1"
+(gdb)
+
+-list-thread-groups
+^done,groups=[{id="i1",type="process",pid="8151",executable="/home/jhc/dev/botNeumann/tools/GdbTest/examples/rand",cores=["0"]}]
+(gdb)
+
+-var-update --all-values *
+^done,changelist=[]
+(gdb)
+
+-stack-list-locals 1
+^done,locals=[{name="seed",value="140737488347008"},{name="min",value="4196464"},{name="max",value="4195904"},{name="random",value="0"}]
+(gdb)
+
