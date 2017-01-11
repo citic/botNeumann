@@ -22,6 +22,14 @@ void DebuggerBreakpoint::updateFromNode(const GdbTreeNode& breakpointNode)
 	this->filepath     = breakpointNode.findTextValue("fullname");
 	this->lineNumber   = breakpointNode.findTextValue("line").toInt();
 
+	// Other available fields:
+	//	type="breakpoint"
+	//	disp="keep"
+	//	enabled="y"
+	//	thread-groups=["i1"]
+	//	times="1"
+	//	original-location="main"
+
 	qDebug("  Breakpoint[number=%d][line=%d][file=%s][function=%s][address=%zx]"
 		   , number, lineNumber, qPrintable(filename), qPrintable(functionName), address);
 }

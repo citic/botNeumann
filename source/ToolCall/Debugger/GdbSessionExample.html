@@ -134,7 +134,8 @@ GdbResponse::TERMINATOR: ignored</pre></td>
 }
 <hr/>
 (gdb)</pre></td>
-		<td><pre>onResult: Visualizator add/update DebuggerBreakpoint
+		<td><pre>onResult: /bkpt
+Visualizator::updateDebuggerBreakpoint(node)
 
 
 
@@ -242,11 +243,12 @@ core="6"
 <hr/>
 (gdb)
 </pre></td>
-		<td><pre>onNotifyAsyncOut: ignored
+
+<td><pre>onNotifyAsyncOut: ignored
 <hr/>
 onNotifyAsyncOut: <b>cmd("-thread-info")</b>
 <hr/>
-(Linux) ignored
+onLogStreamOutput: ignored
 
 
 
@@ -255,25 +257,28 @@ onResult: ignored
 <hr/>
 onExecAsyncOut: AC_RUNNING
 <hr/>
-(gdb)
+GdbResponse::TERMINATOR: ignored
 <hr/>
-=library-loaded,id="/lib/x86_64-linux-gnu/libc.so.6",target-name="/lib/x86_64-linux-gnu/libc.so.6",host-name="/lib/x86_64-linux-gnu/libc.so.6",symbols-loaded="0",thread-group="i1"
+onLogStreamOutput: ignored
+
+
+
 <hr/>
-=breakpoint-modified,bkpt=
-{
-  number="2",
-  type="breakpoint",
-  disp="keep",
-  enabled="y",
-  addr="0x0000000000400695",
-  func="main",
-  file="rand.c",
-  fullname="/full/path/to/rand.c",
-  line="7",
-  thread-groups=["i1"],
-  times="1",
-  original-location="main"
-}
+onNotifyAsyncOut: AC_BREAKPOINT_MODIFIED
+Visualizator::updateDebuggerBreakpoint()
+
+
+
+
+
+
+
+
+
+
+
+
+
 <hr/>
 ~"\n"
 <hr/>

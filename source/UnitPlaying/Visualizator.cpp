@@ -136,10 +136,11 @@ void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
 	if ( guiBreakpoint->getLineNumberInObjectCode() == -1 )
 		return;
 
-	// Check if the action is creator or deletion of a breakpoint
+	// Check if the action is creation or deletion of a breakpoint
 	switch ( guiBreakpoint->getAction() )
 	{
 		case GuiBreakpoint::Action::unknown:
+			Q_ASSERT(false);
 			break;
 
 		case GuiBreakpoint::Action::created:
@@ -264,11 +265,17 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 	Q_UNUSED(maxDuration);
 	Q_ASSERT(debuggerCall);
 	qCDebug(logVisualizator(), "onNotifyAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	const GdbTreeNode* node = nullptr;
 
 	switch ( asyncClass )
 	{
 		case AsyncClass::AC_THREAD_CREATED:
 			debuggerCall->sendGdbCommand("-thread-info");
+			break;
+
+		case AsyncClass::AC_BREAKPOINT_MODIFIED:
+			if ( ( node = tree.findNode("/bkpt") ) )
+				return updateDebuggerBreakpoint( node );
 			break;
 
 		default:
