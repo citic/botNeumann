@@ -3,7 +3,7 @@
 
 #include "LinearLayout.h"
 
-class Actor;
+class ExecutionThreadActor;
 class GdbTreeNode;
 class Scene;
 
@@ -31,7 +31,7 @@ class ExecutionThread : public LinearLayout
 	/// The function being currently executed by this thread
 	QString functionName;
 	/// The robot used to represent the execution thread
-	Actor* robot = nullptr;
+	ExecutionThreadActor* robot = nullptr;
 
 
   public:
@@ -50,6 +50,16 @@ class ExecutionThread : public LinearLayout
   protected:
 	/// Build the robot
 	void buildExecutionThread();
+	/// If the filename has changed, asks the CodeEditor to show it
+	/// @return true if there was change
+	bool updateFilename(const QString& updatedFilename, int& maxDuration);
+	/// If the line number has changed, updates the number on the robot and asks the CodeEditor
+	/// to highlight that line using the robot color
+	/// @return true if there was change
+	bool updateLineNumber(int updatedLineNumber, int& maxDuration);
+	/// If the function being executed has changed, animates a function call
+	/// @return true if there was change
+	bool updateFunctionName(const QString& updatedFunctionName, int& maxDuration);
 };
 
 #endif // EXECUTIONTHREAD_H

@@ -90,6 +90,7 @@ HEADERS += \
 	source/UnitPlaying/Threads/CpuCore.h \
 	source/UnitPlaying/Threads/CpuCores.h \
 	source/UnitPlaying/Threads/ExecutionThread.h \
+	source/UnitPlaying/Threads/ExecutionThreadActor.h \
 	source/UnitPlaying/Unit.h \
 	source/UnitPlaying/UnitPlayingScene.h \
 	source/UnitPlaying/Visualizator.h \
@@ -155,6 +156,7 @@ SOURCES += \
 	source/UnitPlaying/Threads/CpuCore.cpp \
 	source/UnitPlaying/Threads/CpuCores.cpp \
 	source/UnitPlaying/Threads/ExecutionThread.cpp \
+	source/UnitPlaying/Threads/ExecutionThreadActor.cpp \
 	source/UnitPlaying/Unit.cpp \
 	source/UnitPlaying/UnitPlayingScene.cpp \
 	source/UnitPlaying/Visualizator.cpp \
