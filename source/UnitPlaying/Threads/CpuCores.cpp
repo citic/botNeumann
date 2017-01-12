@@ -38,7 +38,6 @@ void CpuCores::createCpuCores()
 
 void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
 {
-	Q_UNUSED(maxDuration);
 	switch ( asyncClass )
 	{
 		case AsyncClass::AC_THREAD_CREATED:
@@ -94,32 +93,17 @@ void CpuCores::clearAnimation()
 
 void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 {
-	Q_UNUSED(maxDuration);
-//	m_threadList.clear();
-
 	// Each child node of threadsNode is a thread in execution, gets its information
 	for ( int childIndex = 0; childIndex < threadsNode->getChildCount(); ++childIndex )
 	{
-		// Get the child and its name
+		// Get the child and its name representing a thread
 		const GdbTreeNode* threadChildNode = threadsNode->getChild(childIndex);
 
-		// Get the properties of this thread
-		QString threadId = threadChildNode->findTextValue("id");
-		QString targetId = threadChildNode->findTextValue("target-id");
-		QString funcName = threadChildNode->findTextValue("frame/func");
+		// Get the id of the thread
+		int threadId = threadChildNode->findTextValue("id").toInt();
 
-		qDebug("  Thread[id=%s][target-id=%s][frame/func=%s]", qPrintable(threadId), qPrintable(targetId), qPrintable(funcName));
-
-#if 0
-		ThreadInfo tinfo;
-		tinfo.id = atoi(stringToCStr(threadId));
-		tinfo.m_name = targetId;
-		tinfo.m_func = funcName;
-		m_threadList[tinfo.id] = tinfo;
-	}
-
-	if(m_inf)
-		m_inf->ICore_onThreadListChanged();
-#endif
+		// Update its correspondent execution thread object
+		Q_ASSERT(threadId > 0 && threadId <= executionThreads.count());
+		executionThreads[threadId - 1]->updateFromDebugger(threadChildNode, maxDuration);
 	}
 }

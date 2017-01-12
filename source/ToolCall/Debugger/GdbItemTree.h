@@ -36,6 +36,8 @@ class GdbTreeNode
 	GdbTreeNode& operator=(GdbTreeNode&& temp);
 	/// Destructor
 	~GdbTreeNode() { clearChildren(); }
+
+  public:
 	/// Get access to the name
 	inline const QString& getName() const { return this->name; }
 	/// Changes the name of the element when it is known
@@ -62,8 +64,6 @@ class GdbTreeNode
 	/// @see findNode()
 	/// @return The string value of the node if it is found, empty string otherwise
 	QString findTextValue(const QString& nodePath) const;
-
-  public:
 	/// Get the number for child nodes
 	inline int getChildCount() const { return children.size(); }
 	/// Get access to the i-th child node

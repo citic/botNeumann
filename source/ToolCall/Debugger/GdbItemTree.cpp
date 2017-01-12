@@ -108,7 +108,7 @@ const GdbTreeNode* GdbTreeNode::findNode(QString nodePath) const
 	// The searched child index in the array
 	int childIndex = -1;
 
-	// If the index is explictely given in the path, use it, else find it
+	// If the index is explicitly given in the path, use it, else find it
 	if ( childName[0] == '#' )
 		childIndex = childName.mid(1).toInt() - 1;
 	else
@@ -118,7 +118,7 @@ const GdbTreeNode* GdbTreeNode::findNode(QString nodePath) const
 	if ( childIndex < 0 || childIndex >= children.size() )
 		return nullptr;
 
-	// We found the children
+	// We found the child
 	GdbTreeNode* child = children[childIndex];
 
 	// If path asks for more children, continue searching,

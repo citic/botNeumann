@@ -4,6 +4,7 @@
 #include "LinearLayout.h"
 
 class Actor;
+class GdbTreeNode;
 class Scene;
 
 /** An ExecutionThread is a graphical object to represent an execution thread running on the
@@ -23,8 +24,15 @@ class ExecutionThread : public LinearLayout
 	Scene* scene;
 	/// The number of execution thread, reported by Gdb
 	int id = -1;
+	/// The source file that generated the code that this thread is executing
+	QString filename;
+	/// The line number in that file being executed
+	int lineNumber = 0;
+	/// The function being currently executed by this thread
+	QString functionName;
 	/// The robot used to represent the execution thread
 	Actor* robot = nullptr;
+
 
   public:
 	/// Constructor
@@ -35,6 +43,9 @@ class ExecutionThread : public LinearLayout
 	/// Animate the vanishing of the robot
 	/// @return The duration of the animation in milliseconds
 	int animateDisappear();
+	/// Updates this execution thread from Gdb information. If execution thread is shown on the
+	/// screen, the visual update is done immediately and the maxDuration may be set
+	void updateFromDebugger(const GdbTreeNode* threadNode, int& maxDuration);
 
   protected:
 	/// Build the robot
