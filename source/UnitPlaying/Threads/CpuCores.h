@@ -39,12 +39,17 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
 	///	@see GdbResponseListener::onNotifyAsyncOut()
 	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration) override;
+	/// Notifications that begin with '^': ^done, ^connected, ^error, ^exit
+	///	@see GdbResponseListener::onResult()
+	virtual void onResult(const GdbItemTree& tree, int& maxDuration) override;
 	/// Debugger reports the creation of a new execution thread, show it
 	/// @return the duration in milliseconds of the animation
 	int createThread(int id);
 	/// @return The index of the next available (free) CPU core to execute a thread, -1 if all cores
 	/// are busy executing threads
 	int findFirstIdleCpuCore() const;
+	/// A Gdb result brought an updated list of threads, refresh them
+	void updateThreads(const GdbTreeNode* threadsNode, int& maxDuration);
 };
 
 #endif // CPUCORES_H

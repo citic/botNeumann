@@ -100,8 +100,6 @@ class Visualizator : public GdbResponseListener
 	inline bool stepOver() { return step("-exec-next", "Step over"); }
 
   protected:
-	/// A Gdb result brought an updated list of threads, refresh them
-	void updateThreads(const GdbTreeNode* threadsNode);
 	/// A Gdb result indicates that a new breakpoint was added
 	void updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode);
 	/// Returns the index of the debugger breakpoint that matches the given GUI breakpoint. The

@@ -303,8 +303,6 @@ void Visualizator::onResult(const GdbItemTree& tree, int& maxDuration)
 	qCDebug(logVisualizator(), "onResult(%s)", qPrintable(tree.buildDescription()));
 	const GdbTreeNode* node = nullptr;
 
-	if ( ( node = tree.findNode("/threads") ) )
-		return updateThreads( node );
 	if ( ( node = tree.findNode("/bkpt") ) )
 		return updateDebuggerBreakpoint( node );
 }
@@ -357,35 +355,4 @@ void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode)
 
 	// Update the interface?
 //	emit breakpointUpdated( debuggerBreakpoints[breakpointNumber] );
-}
-
-void Visualizator::updateThreads(const GdbTreeNode* threadsNode)
-{
-//	m_threadList.clear();
-
-	// Each child node of threadsNode is a thread in execution, gets its information
-	for ( int childIndex = 0; childIndex < threadsNode->getChildCount(); ++childIndex )
-	{
-		// Get the child and its name
-		const GdbTreeNode* threadChildNode = threadsNode->getChild(childIndex);
-
-		// Get the properties of this thread
-		QString threadId = threadChildNode->findTextValue("id");
-		QString targetId = threadChildNode->findTextValue("target-id");
-		QString funcName = threadChildNode->findTextValue("frame/func");
-
-		qDebug("  Thread[id=%s][target-id=%s][frame/func=%s]", qPrintable(threadId), qPrintable(targetId), qPrintable(funcName));
-
-#if 0
-		ThreadInfo tinfo;
-		tinfo.id = atoi(stringToCStr(threadId));
-		tinfo.m_name = targetId;
-		tinfo.m_func = funcName;
-		m_threadList[tinfo.id] = tinfo;
-	}
-
-	if(m_inf)
-		m_inf->ICore_onThreadListChanged();
-#endif
-	}
 }
