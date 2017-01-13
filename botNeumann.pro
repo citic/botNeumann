@@ -38,6 +38,7 @@ HEADERS += \
 	source/Common/InfoDialog.h \
 	source/Common/LogManager.h \
 	source/Common/PlayerStatus.h \
+	source/Common/Util.h \
 	source/Gamee/Actor.h \
 	source/Gamee/Director.h \
 	source/Gamee/LabelButton.h \
@@ -104,6 +105,7 @@ SOURCES += \
 	source/Common/InfoDialog.cpp \
 	source/Common/LogManager.cpp \
 	source/Common/PlayerStatus.cpp \
+	source/Common/Util.cpp \
 	source/Gamee/Actor.cpp \
 	source/Gamee/Director.cpp \
 	source/Gamee/LabelButton.cpp \

@@ -1,10 +1,12 @@
 #ifndef CODEEDITOR_H
 #define CODEEDITOR_H
 
+#include <QColor>
+#include <QHash>
+#include <QList>
 #include <QPlainTextEdit>
 
 class LineNumberArea;
-class QColor;
 class QTimer;
 class GuiBreakpoint;
 class PlayerSolution;
@@ -41,6 +43,16 @@ class CodeEditor : public QPlainTextEdit
 	/// user can set new updated breakpoints, otherwise, modifications to breakpoints will be out
 	/// of sync.
 	bool synchronizedWithObjectCode;
+	/// Because several execution threads may be running at the same time, several lines could be
+	/// highlighted simultaneously using the colors of each execution thread actor. Moreover, a
+	/// same line could be executed by several threads at the same time, and their colors are
+	/// mixed (average). We need to trace that colors are being applied to each line. This structure
+	/// maps the line number with the list of colors to be applied to that line. The line that has
+	/// the user cursor is not considered in this map.
+	typedef QHash< int, QList<QColor> > LineColorsType;
+	LineColorsType lineColors;
+	/// Traces the line where the user has the cursor, in order to update the higlihgt efficiently
+	int currentLine = -1;
 
   public:
 	/// Constructor
@@ -93,10 +105,14 @@ class CodeEditor : public QPlainTextEdit
 	bool saveChanges();
 	/// Place cursor in the given line (block) and column
 	void placeCursor(int line, int column );
-	/// Clear the highlight of the line at the given number
-	void clearHighlight(int line);
 	/// Hightlights the line with the given color
-	void highlightLine(int line, const QColor& backgroundColor);
+	/// @param updateView If true, the change will apply immediately in the interface
+	void addHighlight(int line, const QColor& backgroundColor, bool updateView = true);
+	/// Clear the highlight of the line at the given number
+	void clearHighlight(int line, const QColor& backgroundColor, bool updateView = true);
+	/// Updates the view with the @a lineColors hash
+	/// Call this method each time the @a lineColors has changed to refresh the GUI
+	void updateHighlights();
 
   protected:
 	/// Load an initial code provided by the unit. This method is called when the player has never
@@ -109,8 +125,6 @@ class CodeEditor : public QPlainTextEdit
 	/// If the given block has a breakpoint, paints a mark in the line numbers area
 	/// If the breakpoint is valid, the mark is red, else, gray
 	void paintBreakpoint(QTextBlock& block, QPainter& painter, int top, int width, int fontHeight);
-	/// Hightlights the selection with the given color
-	void highlightLine(const QTextCursor& cursor, const QColor& backgroundColor);
 
   protected slots:
 	/// Called each time the document is changed

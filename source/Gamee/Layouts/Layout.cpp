@@ -61,7 +61,7 @@ qreal Layout::findZValue() const
 
 qreal Layout::findZValue(const LayoutItem* item) const
 {
-	for (ItemsType::const_iterator itr = items.begin(); itr != items.end(); ++itr )
+	for (ItemsType::const_iterator itr = items.constBegin(); itr != items.constEnd(); ++itr )
 		for ( int i = 0; i < itr.value().size(); ++i )
 			if ( item == itr.value()[i] )
 				return itr.key();

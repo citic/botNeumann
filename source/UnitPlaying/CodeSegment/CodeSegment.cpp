@@ -354,7 +354,7 @@ void CodeSegment::executionThreadUpdated(const ExecutionThread* executionThread)
 		// Clear the previous highlighted line only if this is the shown file
 		int fileIndex = playerSolution->findFileIndex( executionThread->getPreviousFilename() );
 		if ( fileIndex >= 0 && fileIndex == fileSelector->currentIndex() )
-			codeEditor->clearHighlight( executionThread->getPreviousLineNumber() );
+			codeEditor->clearHighlight( executionThread->getPreviousLineNumber(), executionThread->getHighlightColor(), false );
 	}
 
 	// If we have to highlight the line being executed
@@ -363,6 +363,6 @@ void CodeSegment::executionThreadUpdated(const ExecutionThread* executionThread)
 		// Clear the previous highlighted line only if this is the shown file
 		int fileIndex = playerSolution->findFileIndex( executionThread->getFilename() );
 		if ( fileIndex >= 0 && fileIndex == fileSelector->currentIndex() )
-			codeEditor->highlightLine( executionThread->getLineNumber(), executionThread->getHighlightColor() );
+			codeEditor->addHighlight( executionThread->getLineNumber(), executionThread->getHighlightColor(), true );
 	}
 }

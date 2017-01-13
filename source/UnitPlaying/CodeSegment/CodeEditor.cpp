@@ -8,6 +8,7 @@
 #include "PlayerSolution.h"
 #include "SyntaxHighlighter.h"
 #include "Unit.h"
+#include "Util.h"
 
 #include <QDir>
 #include <QFile>
@@ -24,6 +25,10 @@ const int autoSaveWait = 2500; // milliseconds
 // Number of pixels to leave as breakpoint area in the line number widget
 // I set it to 0. I think it is better to mark the number with some other color
 const int breakpointEdgeWidth = 0; // pixels
+
+// The color to highlight the current line
+const QColor& currentLineColor = QColor(Qt::magenta).lighter(175);
+
 
 CodeEditor::CodeEditor(QWidget* parent)
 	: QPlainTextEdit(parent)
@@ -362,44 +367,77 @@ void CodeEditor::updateLineNumberArea(const QRect& rect, int dy)
 
 void CodeEditor::highlightCurrentLine()
 {
-	highlightLine( textCursor(), QColor(Qt::magenta).lighter(170) );
+	// Get the line number where the cursor is
+	const QTextCursor& cursor = textCursor();
+	int newCurrentLine = cursor.block().blockNumber() + 1;
+
+	// If the cursor is in the same line that is already selected, we do not need to update
+	if ( currentLine != newCurrentLine )
+	{
+		// The cursor changed of line, clear the previous highlighted line
+		if ( currentLine > 0 )
+			clearHighlight(currentLine, currentLineColor, false);
+
+		// And highlight the new selected line
+		currentLine = newCurrentLine;
+		addHighlight(newCurrentLine, currentLineColor, true);
+	}
 }
 
-void CodeEditor::clearHighlight(int line)
+void CodeEditor::addHighlight(int line, const QColor& backgroundColor, bool updateView)
 {
-	// ToDo: inneficient and inconvinient if text area changes its background color
-	return highlightLine(line, Qt::white);
-}
-
-void CodeEditor::highlightLine(int line, const QColor& backgroundColor)
-{
-	// Get the block at the given line
+	// Add the highlight to the internal hash
 	Q_ASSERT(line > 0);
-	highlightLine( QTextCursor(document()->findBlockByNumber(line - 1)), backgroundColor );
+	lineColors[line].append(backgroundColor);
+
+	// Apply the change on the view, if requested
+	if ( updateView )
+		updateHighlights();
 }
 
-void CodeEditor::highlightLine(const QTextCursor& cursor, const QColor& backgroundColor)
+void CodeEditor::clearHighlight(int line, const QColor& backgroundColor, bool updateView)
+{
+	// Remove the highlight from the internal hash
+	Q_ASSERT(line > 0);
+	lineColors[line].removeOne(backgroundColor);
+
+	// Apply the change on the view, if requested
+	if ( updateView )
+		updateHighlights();
+}
+
+void CodeEditor::updateHighlights()
 {
 	// QPlainTextEdit gives the possibility to have more than one selection at the same time.
 	// We can set the character format (QTextCharFormat) of these selections.
 	QList<QTextEdit::ExtraSelection> extraSelections;
 
-	if ( ! isReadOnly() )
+	// Traverse all the lines that have colors
+	for (LineColorsType::const_iterator itr = lineColors.constBegin(); itr != lineColors.constEnd(); ++itr )
 	{
+		// Get the line number and its colors
+		int line = itr.key();
+		const QList<QColor>& lineColors = itr.value();
+
+		// Merge all the colors for this line
+		const QColor& averageColor = Util::averageColors(lineColors);
+
+		// Create a resulting style for this line
 		QTextEdit::ExtraSelection selection;
 
-		// The style for the active line is light yellow and it is applied to the entire line/block
-		QColor lineColor = backgroundColor;
-		selection.format.setBackground(lineColor);
+		// Highlight the entire line with the resulting color
+		selection.format.setBackground(averageColor);
 		selection.format.setProperty(QTextFormat::FullWidthSelection, true);
 
-		// We clear the cursors selection before setting the new new QPlainTextEdit::ExtraSelection,
-		// else several lines would get highlighted when the user selects multiple lines with the mouse.
-		selection.cursor = cursor;
+		// Create a cursor for the line
+		selection.cursor = QTextCursor(document()->findBlockByNumber(line - 1));
 		selection.cursor.clearSelection();
+
+		// Add the style to be applied to this line with the rest of lines
 		extraSelections.append(selection);
 	}
 
+	// Apply the highlights to the view
 	setExtraSelections(extraSelections);
 }
 

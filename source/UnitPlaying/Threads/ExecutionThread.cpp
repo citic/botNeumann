@@ -79,7 +79,8 @@ const QColor& ExecutionThread::getHighlightColor() const
 ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	if ( filename == updatedFilename ) return fileIsTheSame;
+	if ( filename == updatedFilename )
+		return fileIsTheSame;
 
 	// ToDo: if the file is not part of the player's solution, do not update
 //	if ( playerSolution.hasFile(updatedFilename) == false )
@@ -88,6 +89,10 @@ ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QStr
 	// Update to the new filename
 	previousFilename = filename;
 	filename = updatedFilename;
+
+	// Avoid to keep the emtpy filename if execution thead stays on the same file all the time
+	if ( previousFilename.isEmpty() )
+		previousFilename = filename;
 
 	return newFileInPlayerSolution;
 }
@@ -113,7 +118,8 @@ bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
 bool ExecutionThread::updateFunctionName(const QString& updatedFunctionName, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	if ( functionName == updatedFunctionName ) return false;
+	if ( functionName == updatedFunctionName )
+		return false;
 
 	// Update the function name
 //	previousFunctionName = functionName;
@@ -121,4 +127,3 @@ bool ExecutionThread::updateFunctionName(const QString& updatedFunctionName, int
 
 	return true;
 }
-

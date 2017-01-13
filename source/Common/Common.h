@@ -1,6 +1,12 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#define DISABLE_COPY_CLASS(Class) \
+	Class(const Class&) = delete; \
+	Class(Class&&) = delete; \
+	Class& operator=(const Class&) = delete; \
+	Class& operator=(Class&&) = delete
+
 enum class SceneId
 {
 	  sceneUnknown
