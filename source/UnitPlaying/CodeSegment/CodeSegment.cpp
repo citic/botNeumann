@@ -340,7 +340,9 @@ void CodeSegment::onStateChanged(UnitPlayingState currentState)
 
 void CodeSegment::clearAnimation()
 {
-	// ToDo: clear any highlighted lines that were being executed by threads
+	// Remove all the highlights in code editors
+	Q_ASSERT(codeEditor);
+	codeEditor->clearHighlights();
 }
 
 void CodeSegment::executionThreadUpdated(const ExecutionThread* executionThread)

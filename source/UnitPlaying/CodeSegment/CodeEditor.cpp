@@ -441,6 +441,19 @@ void CodeEditor::updateHighlights()
 	setExtraSelections(extraSelections);
 }
 
+void CodeEditor::clearHighlights(bool keepCurrentLine)
+{
+	// Remove all mappings between lines and their background colors
+	lineColors.clear();
+
+	// Repaint current line if asked
+	if ( keepCurrentLine )
+		addHighlight(textCursor().block().blockNumber() + 1, currentLineColor, false);
+
+	// Update the interface
+	updateHighlights();
+}
+
 void CodeEditor::placeCursor(int line, int column)
 {
 	// Change the cursor only if line is valid

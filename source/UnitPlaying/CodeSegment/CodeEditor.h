@@ -113,6 +113,9 @@ class CodeEditor : public QPlainTextEdit
 	/// Updates the view with the @a lineColors hash
 	/// Call this method each time the @a lineColors has changed to refresh the GUI
 	void updateHighlights();
+	/// Remove all the highlights in code editor
+	/// @param keepCurrentLine If true, the line (where the user's cursor is) stays highlighted
+	void clearHighlights(bool keepCurrentLine = true);
 
   protected:
 	/// Load an initial code provided by the unit. This method is called when the player has never
