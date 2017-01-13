@@ -185,6 +185,9 @@ void CodeSegment::setupCodeEditor()
 
 	// Place the code editor as the central widget of this dock widget
 	innerMainWindow->setCentralWidget(codeEditor);
+
+	// Do not force users to click the editor in order to start typing on it
+	codeEditor->setFocus();
 }
 
 void CodeSegment::setupRunAction(const QString& name, bool enabled)

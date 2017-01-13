@@ -88,8 +88,18 @@ bool CodeEditor::loadInitialFile(const QString& filepath)
 	this->filepath = filepath;
 	qCInfo(logEditor) << "Editing" << filepath;
 
+	// Clear previous selections
+	clearHighlights(false);
+
 	// If exists a source file load it, otherwise load the initial code provided by the unit
-	return QFile::exists(filepath) ? loadFileContents() : loadUnitInitialCode();
+	bool result = QFile::exists(filepath) ? loadFileContents() : loadUnitInitialCode();
+
+	// Make the first line as the the active one
+	currentLine = -1;
+	setTextCursor( QTextCursor( document()->firstBlock() ) );
+	highlightCurrentLine();
+
+	return result;
 }
 
 bool CodeEditor::loadFile(const QString& filepath)
@@ -368,8 +378,8 @@ void CodeEditor::updateLineNumberArea(const QRect& rect, int dy)
 void CodeEditor::highlightCurrentLine()
 {
 	// Get the line number where the cursor is
-	const QTextCursor& cursor = textCursor();
-	int newCurrentLine = cursor.block().blockNumber() + 1;
+	// Line numbers are 1-based, block numbers are 0-based
+	int newCurrentLine = textCursor().blockNumber() + 1;
 
 	// If the cursor is in the same line that is already selected, we do not need to update
 	if ( currentLine != newCurrentLine )
@@ -448,7 +458,7 @@ void CodeEditor::clearHighlights(bool keepCurrentLine)
 
 	// Repaint current line if asked
 	if ( keepCurrentLine )
-		addHighlight(textCursor().block().blockNumber() + 1, currentLineColor, false);
+		addHighlight(textCursor().blockNumber() + 1, currentLineColor, false);
 
 	// Update the interface
 	updateHighlights();
