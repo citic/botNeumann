@@ -7,6 +7,7 @@
 
 class CodeEditor;
 class Compiler;
+class ExecutionThread;
 class GuiBreakpoint;
 class QAction;
 class QComboBox;
@@ -100,6 +101,8 @@ class CodeSegment : public QDockWidget
 	void onStateChanged(UnitPlayingState currentState);
 	/// Called when visualization has finished in order to clear highlited lines
 	void clearAnimation();
+	/// Called when an execution thread was updated from GDB in order to update the highlighted line
+	void executionThreadUpdated(const ExecutionThread* executionThread);
 
   signals:
 	/// Emitted when user presses the Run/Pause button

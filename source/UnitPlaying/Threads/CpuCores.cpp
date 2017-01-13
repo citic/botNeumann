@@ -104,6 +104,10 @@ void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 
 		// Update its correspondent execution thread object
 		Q_ASSERT(threadId > 0 && threadId <= executionThreads.count());
-		executionThreads[threadId - 1]->updateFromDebugger(threadChildNode, maxDuration);
+		if ( executionThreads[threadId - 1]->updateFromDebugger(threadChildNode, maxDuration) )
+		{
+			// The thread was updated, refresh its highlighted line on the code editor
+			emit executionThreadUpdated(executionThreads[threadId - 1]);
+		}
 	}
 }

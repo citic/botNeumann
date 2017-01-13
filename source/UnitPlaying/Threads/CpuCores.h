@@ -29,6 +29,10 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;
 
+  signals:
+	/// Emitted when an execution thread was updated from GDB
+	void executionThreadUpdated(const ExecutionThread* executionThread);
+
   public slots:
 	/// Called when visualization has finished in order to remove execution threads
 	void clearAnimation();

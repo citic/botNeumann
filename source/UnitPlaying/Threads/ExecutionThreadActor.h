@@ -7,6 +7,8 @@ class Actor;
 class LabelButton;
 class Scene;
 
+class QColor;
+
 class ExecutionThreadActor : public LinearLayout
 {
 	Q_DISABLE_COPY(ExecutionThreadActor)
@@ -38,6 +40,8 @@ class ExecutionThreadActor : public LinearLayout
 	/// Changes the line number within the actor's display
 	/// @return The duration of the animation in milliseconds
 	int updateLineNumber(int updatedLineNumber);
+	/// Returns the color of this thread, in order to highlight its running line
+	const QColor& getHighlightColor() const;
 
   protected:
 	/// Build the label to show line numbers

@@ -1,6 +1,6 @@
 #include "ExecutionThread.h"
-#include "ExecutionThreadActor.h"
 #include "Common.h"
+#include "ExecutionThreadActor.h"
 #include "GdbItemTree.h"
 #include "Scene.h"
 
@@ -31,7 +31,7 @@ int ExecutionThread::animateDisappear()
 	return robot->animateDisappear();
 }
 
-void ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& maxDuration)
+bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& maxDuration)
 {
 	/* example of Gdb node in Linux:
 		id="1",
@@ -58,23 +58,38 @@ void ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& max
 	// Only update the execution thread if it is running code that is part of the player's solution
 	// E.g: if it is running an external library function, it is considered a black-box and it is
 	// not visualized, because it is very likely to have no C/C++ source code (assembler)
-	if ( updateFilename( threadNode->findTextValue("frame/file"), maxDuration ) )
-	{
-		updateLineNumber( threadNode->findTextValue("frame/line").toInt(), maxDuration );
-		updateFunctionName( threadNode->findTextValue("frame/func"), maxDuration );
-	}
+	FilenameUpdateResult result1 = updateFilename( threadNode->findTextValue("frame/file"), maxDuration );
+	if ( result1 == fileNotInPlayerSolution )
+		return false;
+
+	// Let's check if the line number or function call changed
+	bool result2 = updateLineNumber( threadNode->findTextValue("frame/line").toInt(), maxDuration );
+	bool result3 = updateFunctionName( threadNode->findTextValue("frame/func"), maxDuration );
+
+	// If any (file, line or function) changed, the thread was updated
+	return result1 == newFileInPlayerSolution || result2 || result3;
 }
 
-bool ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)
+const QColor& ExecutionThread::getHighlightColor() const
+{
+	Q_ASSERT(robot);
+	return robot->getHighlightColor();
+}
+
+ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	if ( filename == updatedFilename ) return false;
+	if ( filename == updatedFilename ) return fileIsTheSame;
 
 	// ToDo: if the file is not part of the player's solution, do not update
+//	if ( playerSolution.hasFile(updatedFilename) == false )
+//		return fileNotInPlayerSolution;
 
-	// ToDo: emit a file change signal to show a code editor with the filename
+	// Update to the new filename
+	previousFilename = filename;
+	filename = updatedFilename;
 
-	return true;
+	return newFileInPlayerSolution;
 }
 
 bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
@@ -84,12 +99,13 @@ bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
 	if ( lineNumber == updatedLineNumber )
 		return false;
 
+	// Update to the new line number
+	previousLineNumber = lineNumber;
+	lineNumber = updatedLineNumber;
+
 	// Update the line within the robot's display
 	Q_ASSERT(robot);
-	lineNumber = updatedLineNumber;
 	robot->updateLineNumber(lineNumber);
-
-	// ToDo: emit a line number change signal to hightlight it in code editor
 
 	return true;
 }
@@ -99,7 +115,9 @@ bool ExecutionThread::updateFunctionName(const QString& updatedFunctionName, int
 	Q_UNUSED(maxDuration);
 	if ( functionName == updatedFunctionName ) return false;
 
-	// ToDo: call function
+	// Update the function name
+//	previousFunctionName = functionName;
+	functionName = updatedFunctionName;
 
 	return true;
 }

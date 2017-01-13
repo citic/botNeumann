@@ -138,6 +138,10 @@ void UnitPlayingScene::createCodeSegment()
 	connect( codeSegment, SIGNAL(userRunOrPaused()), this, SLOT(userRunOrPaused()) );
 	connect( codeSegment, SIGNAL(buildFinished(Compiler*)), this, SLOT(buildFinished(Compiler*)) );
 	connect( codeSegment, SIGNAL(userStopped()), this, SLOT(userStopped()) );
+
+	// When GDB reports a change on some execution thread, update its highlighted line
+	Q_ASSERT(cpuCores);
+	connect( cpuCores, SIGNAL(executionThreadUpdated(const ExecutionThread*)), codeSegment, SLOT(executionThreadUpdated(const ExecutionThread*)) );
 }
 
 void UnitPlayingScene::createMessagesArea()

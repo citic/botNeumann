@@ -4,9 +4,23 @@
 #include "LabelButton.h"
 #include "Scene.h"
 
+#include <QColor>
+
 /// The line number must appear within the display of the robot, but each robot has the display
 /// at different top
 const qreal lineNumberTopMargin[] = {0.795, 0.887, 0.867, 0.805};
+
+static const int alpha = 127;
+
+/// Each actor (robot) has its own color
+static const QColor threadColors[] =
+{
+	QColor(  0,  90, 170, alpha), // thread 1 #005ab3 blue
+	QColor(255, 192,   0, alpha), // thread 2 #ffc000 yellow
+	QColor( 22, 107,   0, alpha), // thread 3 #de6b00 orange
+	QColor(114, 140,   0, alpha), // thread 4 #728c00 green
+};
+
 
 ExecutionThreadActor::ExecutionThreadActor(int id, Scene* scene)
 	: LinearLayout( Qt::Vertical )
@@ -55,4 +69,10 @@ int ExecutionThreadActor::updateLineNumber(int updatedLineNumber)
 	qDebug(">>>>>>Actor %d text: %s", actorNumber, qUtf8Printable(QString::number(updatedLineNumber)) );
 	// ToDo: animate the line change
 	return 0;
+}
+
+const QColor& ExecutionThreadActor::getHighlightColor() const
+{
+	Q_ASSERT(actorNumber - 1 < sizeof(threadColors) / sizeof(threadColors[0]));
+	return threadColors[actorNumber - 1];
 }

@@ -371,7 +371,7 @@ void CodeEditor::highlightCurrentLine()
 		QTextEdit::ExtraSelection selection;
 
 		// The style for the active line is light yellow and it is applied to the entire line/block
-		QColor lineColor = QColor(Qt::yellow).lighter(160);
+		QColor lineColor = QColor(Qt::magenta).lighter(170);
 		selection.format.setBackground(lineColor);
 		selection.format.setProperty(QTextFormat::FullWidthSelection, true);
 

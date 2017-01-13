@@ -2,6 +2,7 @@
 #include "CodeSegment.h"
 #include "Compiler.h"
 #include "Diagnostic.h"
+#include "ExecutionThread.h"
 #include "LogManager.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
@@ -340,4 +341,11 @@ void CodeSegment::onStateChanged(UnitPlayingState currentState)
 void CodeSegment::clearAnimation()
 {
 	// ToDo: clear any highlighted lines that were being executed by threads
+}
+
+void CodeSegment::executionThreadUpdated(const ExecutionThread* executionThread)
+{
+	qDebug("Thread %d: old line %d, new line %d, in %s", executionThread->getId()
+		, executionThread->getPreviousLineNumber(), executionThread->getLineNumber()
+		, qUtf8Printable(executionThread->getFilename()) );
 }
