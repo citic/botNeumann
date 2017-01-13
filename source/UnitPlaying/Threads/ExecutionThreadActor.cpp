@@ -66,13 +66,12 @@ int ExecutionThreadActor::updateLineNumber(int updatedLineNumber)
 {
 	Q_ASSERT(lineNumber);
 	lineNumber->setText( QString::number(updatedLineNumber) );
-	qDebug(">>>>>>Actor %d text: %s", actorNumber, qUtf8Printable(QString::number(updatedLineNumber)) );
 	// ToDo: animate the line change
 	return 0;
 }
 
 const QColor& ExecutionThreadActor::getHighlightColor() const
 {
-	Q_ASSERT(actorNumber - 1 < sizeof(threadColors) / sizeof(threadColors[0]));
+	Q_ASSERT( actorNumber - 1 < (int)(sizeof(threadColors) / sizeof(threadColors[0])) );
 	return threadColors[actorNumber - 1];
 }

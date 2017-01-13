@@ -362,6 +362,24 @@ void CodeEditor::updateLineNumberArea(const QRect& rect, int dy)
 
 void CodeEditor::highlightCurrentLine()
 {
+	highlightLine( textCursor(), QColor(Qt::magenta).lighter(170) );
+}
+
+void CodeEditor::clearHighlight(int line)
+{
+	// ToDo: inneficient and inconvinient if text area changes its background color
+	return highlightLine(line, Qt::white);
+}
+
+void CodeEditor::highlightLine(int line, const QColor& backgroundColor)
+{
+	// Get the block at the given line
+	Q_ASSERT(line > 0);
+	highlightLine( QTextCursor(document()->findBlockByNumber(line - 1)), backgroundColor );
+}
+
+void CodeEditor::highlightLine(const QTextCursor& cursor, const QColor& backgroundColor)
+{
 	// QPlainTextEdit gives the possibility to have more than one selection at the same time.
 	// We can set the character format (QTextCharFormat) of these selections.
 	QList<QTextEdit::ExtraSelection> extraSelections;
@@ -371,13 +389,13 @@ void CodeEditor::highlightCurrentLine()
 		QTextEdit::ExtraSelection selection;
 
 		// The style for the active line is light yellow and it is applied to the entire line/block
-		QColor lineColor = QColor(Qt::magenta).lighter(170);
+		QColor lineColor = backgroundColor;
 		selection.format.setBackground(lineColor);
 		selection.format.setProperty(QTextFormat::FullWidthSelection, true);
 
 		// We clear the cursors selection before setting the new new QPlainTextEdit::ExtraSelection,
 		// else several lines would get highlighted when the user selects multiple lines with the mouse.
-		selection.cursor = textCursor();
+		selection.cursor = cursor;
 		selection.cursor.clearSelection();
 		extraSelections.append(selection);
 	}

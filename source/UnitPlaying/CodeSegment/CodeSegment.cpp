@@ -345,7 +345,24 @@ void CodeSegment::clearAnimation()
 
 void CodeSegment::executionThreadUpdated(const ExecutionThread* executionThread)
 {
-	qDebug("Thread %d: old line %d, new line %d, in %s", executionThread->getId()
-		, executionThread->getPreviousLineNumber(), executionThread->getLineNumber()
-		, qUtf8Printable(executionThread->getFilename()) );
+	// Get the file index of the execution thread
+	Q_ASSERT(playerSolution);
+
+	// If we have to clear the previous highlighted line
+	if ( executionThread->getPreviousLineNumber() > 0 )
+	{
+		// Clear the previous highlighted line only if this is the shown file
+		int fileIndex = playerSolution->findFileIndex( executionThread->getPreviousFilename() );
+		if ( fileIndex >= 0 && fileIndex == fileSelector->currentIndex() )
+			codeEditor->clearHighlight( executionThread->getPreviousLineNumber() );
+	}
+
+	// If we have to highlight the line being executed
+	if ( executionThread->getLineNumber() > 0 )
+	{
+		// Clear the previous highlighted line only if this is the shown file
+		int fileIndex = playerSolution->findFileIndex( executionThread->getFilename() );
+		if ( fileIndex >= 0 && fileIndex == fileSelector->currentIndex() )
+			codeEditor->highlightLine( executionThread->getLineNumber(), executionThread->getHighlightColor() );
+	}
 }

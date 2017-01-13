@@ -4,6 +4,7 @@
 #include <QPlainTextEdit>
 
 class LineNumberArea;
+class QColor;
 class QTimer;
 class GuiBreakpoint;
 class PlayerSolution;
@@ -92,6 +93,10 @@ class CodeEditor : public QPlainTextEdit
 	bool saveChanges();
 	/// Place cursor in the given line (block) and column
 	void placeCursor(int line, int column );
+	/// Clear the highlight of the line at the given number
+	void clearHighlight(int line);
+	/// Hightlights the line with the given color
+	void highlightLine(int line, const QColor& backgroundColor);
 
   protected:
 	/// Load an initial code provided by the unit. This method is called when the player has never
@@ -104,6 +109,8 @@ class CodeEditor : public QPlainTextEdit
 	/// If the given block has a breakpoint, paints a mark in the line numbers area
 	/// If the breakpoint is valid, the mark is red, else, gray
 	void paintBreakpoint(QTextBlock& block, QPainter& painter, int top, int width, int fontHeight);
+	/// Hightlights the selection with the given color
+	void highlightLine(const QTextCursor& cursor, const QColor& backgroundColor);
 
   protected slots:
 	/// Called each time the document is changed
