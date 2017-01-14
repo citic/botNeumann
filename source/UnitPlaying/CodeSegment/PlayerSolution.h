@@ -68,12 +68,35 @@ class PlayerSolution : public QObject
 	static QString getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename);
 	/// @see getPlayerUnitSourcePath(Player*, Unit*, const QString&)
 	inline QString getPlayerUnitSourcePath(const QString& basename) const { return getPlayerUnitSourcePath(player, unit, basename); }
+	/// Get the file path of the standard input file that will be used each time the player's
+	/// solution is executed. This file may be overwritten each time the visualization starts
+	/// @remarks Files beginning with "bn_" must be ignored in CodeSegment
+	inline QString getStandardInputFilename() const { return getPlayerUnitPath() + "/bn_input.txt"; }
+	/// Get the file path of the standard output file that will be used to capture the player's
+	/// solution output. This file will be overwritten each time the visualization starts
+	/// @remarks Files beginning with "bn_" must be ignored in CodeSegment
+	inline QString getStandardOutputFilename() const { return getPlayerUnitPath() + "/bn_output.txt"; }
+	/// Get the file path of the standard error file that will be used to capture the player's
+	/// solution standard error. This file will be overwritten each time the visualization starts
+	/// @remarks Files beginning with "bn_" must be ignored in CodeSegment
+	inline QString getStandardErrorFilename() const { return getPlayerUnitPath() + "/bn_error.txt"; }
 
   protected:
 	/// Loads the list of existing files in the unit solution directory for this player
 	/// @remarks Assume the @a player and @a unit class members have been set
 	/// @return The number of files found as player solution for this unit, -1 on error
 	int loadFileList();
+	/// Creates a directory for a unit that this player is trying to solve
+	/// If unitName is omitted and there is a ponter to the unit, its name will be used
+	bool createDirectoryForUnit();
+	/// Creates a source code file within the player solution's directory. The file contains
+	/// C code that will be evaluated later with help of GDB when the visualization is running.
+	/// The name of the file will begin with "bn_". Files with this prefix must be ignored by
+	/// CodeSegment, in order to avoid players editing that code.
+	/// @remarks If the player's solution directory does not exist, it will be created. If there
+	/// already exists a botNeumann source code file, it will overwritten
+	/// @return The path to the new created source code file in player's solution directory
+	QString createBotNeumannSourceFile();
 };
 
 #endif // PLAYERSOLUTION_H

@@ -1,5 +1,7 @@
 #include "Util.h"
 
+#include <QDir>
+
 QColor Util::mixColors(const QColor& first, const QColor& second, qreal ratio)
 {
 	int red = first.red() * ratio + second.red() * (1.0 - ratio);
@@ -27,4 +29,14 @@ QColor Util::averageColors(const QList<QColor>& colors)
 		alpha /= colors.count();
 	}
 	return QColor(red, green, blue, alpha);
+}
+
+bool Util::createDirectory(const QString& dirPath)
+{
+	QDir dir( dirPath );
+
+	if ( dir.exists() )
+		return true;
+
+	return dir.mkpath( "." );
 }

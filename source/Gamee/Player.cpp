@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "LogManager.h"
+#include "Util.h"
 
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -60,14 +61,22 @@ QString Player::getLocalDataPath() const
 	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + '/' + id;
 }
 
-QDir Player::getLocalDataDirectory() const
+QDir Player::getLocalDataDirectory(bool create)
 {
 	QDir dir( getLocalDataPath() );
-	if ( ! dir.exists() )
-		if ( ! dir.mkpath( "." ) )
-			qCWarning(logPlayer()) << "Unable to create user data directory:" << dir.path();
-
+	if ( create && ! dir.exists() )
+		createLocalDataDirectory();
 	return dir;
+}
+
+bool Player::createLocalDataDirectory()
+{
+	const QString& path = getLocalDataPath();
+	if ( Util::createDirectory( path ) )
+		return true;
+
+	qCCritical(logPlayer()) << "Unable to create user data directory:" << path;
+	return false;
 }
 
 QString Player::generatePlainId() const

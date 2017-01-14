@@ -17,6 +17,9 @@
 		<file alias="button_background.svg">game_menu/button_background.svg</file>
 		<file alias="robot.svg">game_menu/robot.svg</file>
 	</qresource>
+	<qresource prefix="/source_code">
+		<file alias="bn_player_solution.c">source_code/bn_player_solution.c</file>
+	</qresource>
 	<qresource prefix="/unit_playing">
 		<file alias="background.svg">unit_playing/background.svg</file>
 		<file alias="heap_segment_disabled.svg">unit_playing/heap_segment_disabled.svg</file>

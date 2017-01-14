@@ -39,7 +39,9 @@ class Player : public QObject
 	/// Get the data directory for this user. If the data directory does not exist, it is created
 	/// The directory existence is tested each time this function is called. This may be not
 	/// efficient, but avoids crashes if user deletes the player directories in local machine
-	QDir getLocalDataDirectory() const;
+	QDir getLocalDataDirectory(bool create);
+	/// Creates the directory for player's data
+	bool createLocalDataDirectory();
 	/// Creates and retuns an plain text unique id for this player using the machine name, the
 	/// current date and the nickname of this player
 	QString generatePlainId() const;
