@@ -1,4 +1,6 @@
 #include "ToolCall.h"
+#include "Common.h"
+
 #include <QDateTime>
 #include <QDir>
 #include <QFileDialog>
@@ -31,7 +33,7 @@ QString ToolCall::getCompilerInstallationDirectory()
 {
 	// Get installation directory from preferences
 	QSettings settings;
-	QString installationDirectory = settings.value("Compiler/InstallationDirectory", "").toString();
+	QString installationDirectory = settings.value(sk("Compiler/InstallationDirectory"), "").toString();
 	if ( installationDirectory.length() > 0 )
 		installationDirectory.append( QDir::separator() );
 	return installationDirectory;
@@ -98,7 +100,7 @@ bool ToolCall::askPlayerCompilerDirectory()
 
 			// Store the directory in the user configuration
 			QSettings settings;
-			settings.setValue("Compiler/InstallationDirectory", dirDialog.selectedFiles()[0] );
+			settings.setValue(sk("Compiler/InstallationDirectory"), dirDialog.selectedFiles()[0] );
 			return true;
 		}
 	}

@@ -1,5 +1,6 @@
 #include "LogManager.h"
 #include "BotNeumannApp.h"
+#include "Common.h"
 #include "Player.h"
 
 #include <QDateTime>
@@ -100,7 +101,7 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 QString LogManager::getLogFilename()
 {
 	// If log filename is in settings, use it, otherwise generate one
-	const QVariant& filename = QSettings().value("Log/Filename");
+	const QVariant& filename = QSettings().value(sk("Log/Filename"));
 	return filename.isNull() ? buildLogFilename(true) : filename.toString();
 }
 
@@ -120,7 +121,7 @@ QString LogManager::buildLogFilename(bool saveInSettings)
 
 	// Save the file name on the settings for future use
 	if ( saveInSettings )
-		QSettings().setValue("Log/Filename", filename);
+		QSettings().setValue( sk("Log/Filename"), filename );
 
 	return filename;
 }

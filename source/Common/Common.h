@@ -7,6 +7,9 @@
 	Class& operator=(const Class&) = delete; \
 	Class& operator=(Class&&) = delete
 
+/// Used to identify all QSettings keys in source code (sk=setting key)
+#define sk(key) key
+
 enum SceneId
 {
 	  sceneUnknown

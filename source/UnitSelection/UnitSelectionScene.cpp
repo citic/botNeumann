@@ -25,8 +25,8 @@ UnitSelectionScene::UnitSelectionScene(const QString& context, Stage* stage, QGr
 
 	// This is the last scene loaded
 	QSettings settings;
-	settings.setValue( "/Application/LastScene", sceneName );
-	settings.setValue( "/Application/LastContext", context );
+	settings.setValue( sk("Application/LastScene"), sceneName );
+	settings.setValue( sk("Application/LastContext"), context );
 }
 
 UnitSelectionScene::~UnitSelectionScene()

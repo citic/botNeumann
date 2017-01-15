@@ -40,10 +40,10 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 
 	// This is the last scene loaded
 	QSettings settings;
-	settings.setValue( "/Application/LastScene", sceneName );
-	settings.setValue( "/Application/LastContext", context );
-	settings.setValue( "/Application/LastLevelUnit", levelUnit );
-	settings.setValue( "/Application/LastUnitFilename", filename );
+	settings.setValue( sk("Application/LastScene"), sceneName );
+	settings.setValue( sk("Application/LastContext"), context );
+	settings.setValue( sk("Application/LastLevelUnit"), levelUnit );
+	settings.setValue( sk("Application/LastUnitFilename"), filename );
 }
 
 UnitPlayingScene::~UnitPlayingScene()
@@ -57,8 +57,8 @@ void UnitPlayingScene::startLeavingStage()
 
 	// Keep visibility preferences of the user for future use
 	QSettings settings;
-	settings.setValue("CodeSegment/Visible", codeSegment->isVisible());
-	settings.setValue("MessagesArea/Visible", messagesArea->isVisible());
+	settings.setValue(sk("CodeSegment/Visible"), codeSegment->isVisible());
+	settings.setValue(sk("MessagesArea/Visible"), messagesArea->isVisible());
 
 	// Hide and remove the the code editor
 	codeSegment->setVisible(false);
@@ -75,8 +75,8 @@ void UnitPlayingScene::finishedEnteringStage()
 
 	// Show the code segment and the messages area
 	QSettings settings;
-	codeSegment->setVisible( settings.value("CodeSegment/Visible", true).toBool() );
-	messagesArea->setVisible( settings.value("MessagesArea/Visible", true).toBool() );
+	codeSegment->setVisible( settings.value(sk("CodeSegment/Visible"), true).toBool() );
+	messagesArea->setVisible( settings.value(sk("MessagesArea/Visible"), true).toBool() );
 
 	// Loads or restore the code for this unit
 	codeSegment->loadCodeForUnit( &unit );

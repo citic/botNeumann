@@ -83,15 +83,15 @@ void MainWindow::setupStage()
 void MainWindow::saveSettings()
 {
 	QSettings settings;
-	settings.setValue("MainWindow/Size", size());
-	settings.setValue("MainWindow/State", saveState());
+	settings.setValue(sk("MainWindow/Size"), size());
+	settings.setValue(sk("MainWindow/State"), saveState());
 }
 
 void MainWindow::restoreSettings()
 {
 	QSettings settings;
-	resize( settings.value("MainWindow/Size", sizeHint()).toSize() );
-	restoreState( settings.value("MainWindow/State").toByteArray() );
+	resize( settings.value(sk("MainWindow/Size"), sizeHint()).toSize() );
+	restoreState( settings.value(sk("MainWindow/State")).toByteArray() );
 }
 
 void MainWindow::resetSettings()
@@ -99,7 +99,7 @@ void MainWindow::resetSettings()
 	const QString& text = tr("Do you want to reset the configuration. All players' progress will be deleted");
 	if ( QMessageBox::question(this, tr("Settings reset?"), text, QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes )
 	{
-		QSettings().setValue("SettingsReset", true);
+		QSettings().setValue(sk("Application/SettingsReset"), true);
 		QMessageBox::warning(this, tr("Settings reset"), tr("Please restart botNeumann++ for the changes to take effect"));
 	}
 }

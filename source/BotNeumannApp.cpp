@@ -1,4 +1,5 @@
 #include "BotNeumannApp.h"
+#include "Common.h"
 #include "LogManager.h"
 #include "PlayerManager.h"
 
@@ -40,7 +41,7 @@ BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
 
 	// If last time settings were asked to be reset, do it before starting
 	QSettings settings;
-	if ( settings.value("SettingsReset", false).toBool() )
+	if ( settings.value(sk("Application/SettingsReset"), false).toBool() )
 	{
 		settings.clear();
 		settings.sync();
@@ -49,12 +50,12 @@ BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
 
 	// Save in settings a flag indicating the application started
 	// It will be cleared when the application finishes cleany
-	lastSessionCrashed = settings.value("/Application/ExitClean", "") == "running";
+	lastSessionCrashed = settings.value(sk("Application/ExitClean"), "") == "running";
 	if ( lastSessionCrashed )
 		qWarning("Application crashed in last session");
 
 	// A new session started, another try
-	settings.setValue("/Application/ExitClean", "running");
+	settings.setValue(sk("Application/ExitClean"), "running");
 	settings.sync();
 
 	// Managers use the settings, create them after resetting the settings
@@ -70,7 +71,7 @@ BotNeumannApp::~BotNeumannApp()
 {
 	// An clean exit. If next time application starts, it is not clean, it crashed
 	QSettings settings;
-	settings.setValue("/Application/ExitClean", "clean");
+	settings.setValue(sk("Application/ExitClean"), "clean");
 	settings.sync();
 }
 

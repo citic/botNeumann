@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Common.h"
 #include "LogManager.h"
 #include "Util.h"
 
@@ -31,7 +32,7 @@ bool Player::load()
 {
 	QSettings settings;
 	const QString& playerGroup = "Players/" + id;
-	nickname = settings.value(playerGroup + "/Nickname", "").toString();
+	nickname = settings.value( sk(playerGroup + "/Nickname"), "").toString();
 	return true;
 }
 
@@ -39,12 +40,12 @@ bool Player::save()
 {
 	QSettings settings;
 	const QString& playerGroup = "Players/" + id;
-	if ( settings.contains(playerGroup) == false )
+	if ( settings.contains(sk(playerGroup)) == false )
 	{
 		const QString& dateTime = QDateTime::currentDateTime().toString("yyMMdd-hhmmss");
-		settings.setValue(playerGroup + "/Created", dateTime);
+		settings.setValue(sk(playerGroup + "/Created"), dateTime);
 	}
-	settings.setValue(playerGroup + "/Nickname", nickname);
+	settings.setValue(sk(playerGroup + "/Nickname"), nickname);
 	settings.sync();
 	return true;
 }
@@ -53,7 +54,7 @@ bool Player::hasCompletedUnit(const QString& unitId)
 {
 	QSettings settings;
 	const QString& key = "Players/" + id + '/' + unitId + "/Completed";
-	return settings.value(key, false).toBool();
+	return settings.value(sk(key), false).toBool();
 }
 
 QString Player::getLocalDataPath() const
@@ -109,5 +110,5 @@ bool Player::autogenerateId()
 void Player::remove()
 {
 	const QString& playerGroup = "Players/" + id;
-	QSettings().remove(playerGroup);
+	QSettings().remove( sk(playerGroup) );
 }

@@ -46,7 +46,7 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 
 	// This is the last scene loaded
 	QSettings settings;
-	settings.setValue( "/Application/LastScene", sceneName );
+	settings.setValue( sk("Application/LastScene"), sceneName );
 }
 
 GameMenuScene::~GameMenuScene()

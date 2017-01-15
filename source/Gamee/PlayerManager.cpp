@@ -1,5 +1,7 @@
 #include "PlayerManager.h"
+#include "Common.h"
 #include "Player.h"
+
 #include <QSettings>
 
 PlayerManager::PlayerManager(QObject *parent)
@@ -21,7 +23,7 @@ int PlayerManager::loadPlayers()
 
 	// Players are stored in settings on this device
 	QSettings settings;
-	settings.beginGroup("Players");
+	settings.beginGroup(sk("Players"));
 
 	// There is a subfolder for each player
 	foreach ( const QVariant& id, settings.childGroups() )
@@ -53,7 +55,7 @@ bool PlayerManager::reloadLastPlayer()
 {
 	// Get the last player id from the settings
 	QSettings settings;
-	const QVariant& playerId = settings.value("Players/LastPlayer");
+	const QVariant& playerId = settings.value(sk("Players/LastPlayer"));
 	if ( playerId.isNull() ) return false;
 	Q_ASSERT(currentPlayer == nullptr);
 
@@ -70,7 +72,7 @@ void PlayerManager::saveLastPlayer()
 {
 	QSettings settings;
 	const QByteArray& playerId = currentPlayer ? currentPlayer->getId() : QByteArray();
-	settings.setValue("Players/LastPlayer", QVariant(playerId));
+	settings.setValue(sk("Players/LastPlayer"), QVariant(playerId));
 	if ( currentPlayer) currentPlayer->save();
 }
 
