@@ -13,7 +13,7 @@
 #include <QSettings>
 
 UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename, Stage* stage, QGraphicsItem* parent)
-	: GameScene("unit_playing", stage, parent)
+	: GameScene(SceneName[sceneUnitPlaying], stage, parent)
 	, context(context)
 	, levelUnit(levelUnit)
 	, filename(filename)
@@ -37,6 +37,13 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	// Create the docking segments
 	createCodeSegment();
 	createMessagesArea();
+
+	// This is the last scene loaded
+	QSettings settings;
+	settings.setValue( "/Application/LastScene", sceneName );
+	settings.setValue( "/Application/LastContext", context );
+	settings.setValue( "/Application/LastLevelUnit", levelUnit );
+	settings.setValue( "/Application/LastUnitFilename", filename );
 }
 
 UnitPlayingScene::~UnitPlayingScene()

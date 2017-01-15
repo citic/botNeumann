@@ -7,7 +7,7 @@
 	Class& operator=(const Class&) = delete; \
 	Class& operator=(Class&&) = delete
 
-enum class SceneId
+enum SceneId
 {
 	  sceneUnknown
 	, sceneGameMenu
@@ -17,6 +17,18 @@ enum class SceneId
 	, sceneCreate
 	, sceneUnitSelection
 	, sceneUnitPlaying
+};
+
+static const char* SceneName[] =
+{
+	"unknown",
+	"game_menu",
+	"training",
+	"missions",
+	"collaboration",
+	"create",
+	"unit_selection",
+	"unit_playing",
 };
 
 enum class UnitPlayingState

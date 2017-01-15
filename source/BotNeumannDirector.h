@@ -52,6 +52,8 @@ class BotNeumannDirector : public Director
 	bool replaceScene(Scene* newScene, bool forward);
 	/// Set the new active scene, its conections
 	void setCurrentScene(Scene* newScene);
+	/// Reloads the last scene saved in settings
+	bool showLastScene();
 };
 
 #endif // BOTNEUMANNDIRECTOR_H

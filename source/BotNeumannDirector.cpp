@@ -1,9 +1,12 @@
 #include "BotNeumannDirector.h"
+#include "BotNeumannApp.h"
 #include "GameMenuScene.h"
 #include "Stage.h"
 #include "TransitionSlide.h"
 #include "UnitPlayingScene.h"
 #include "UnitSelectionScene.h"
+
+#include <QSettings>
 
 BotNeumannDirector::BotNeumannDirector(Stage* stage, QObject* parent)
 	: Director(stage, parent)
@@ -25,8 +28,34 @@ void BotNeumannDirector::begin()
 	// resuming the game
 	Q_ASSERT(currentScene == nullptr);
 
-	// ToDo: Restore last scene where user was working
-	showGameMenuScene();
+	// ToDo: if called with arguments (a source file or directory are specified), disable
+	// game menu and unit selection because there are not level units (disable gamification)
+	showLastScene();
+}
+
+bool BotNeumannDirector::showLastScene()
+{
+	// If last time the application crashed, restore the game menu
+	if ( BotNeumannApp::getInstance()->hasLastSessionCrashed() )
+		return showGameMenuScene();
+
+	// Last session botNeumann exited cleany, try to recover the last scene
+	QSettings settings;
+	const QString& lastScene = settings.value( "/Application/LastScene", SceneName[sceneUnknown] ).toString();
+
+	// Recover parameters to load the last scene
+	const QString& lastContext = settings.value( "/Application/LastContext", "" ).toString();
+	const QString& lastLevelUnit = settings.value( "/Application/LastLevelUnit", "" ).toString();
+	const QString& lastUnitFilename = settings.value( "/Application/LastUnitFilename", "" ).toString();
+
+	// Recover the scene according to its type
+	if ( lastScene == SceneName[sceneUnitPlaying] )
+		return showUnitPlayingScene(lastContext, lastLevelUnit, lastUnitFilename);
+	if ( lastScene == SceneName[sceneUnitSelection] )
+		return showUnitSelectionScene(lastContext, true);
+
+	// Unknown or default scene
+	return  showGameMenuScene();
 }
 
 bool BotNeumannDirector::showGameMenuScene()

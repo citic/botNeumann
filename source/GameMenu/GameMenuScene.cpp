@@ -13,9 +13,10 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsWidget>
 #include <QPushButton>
+#include <QSettings>
 
 GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
-	: Scene("game_menu", stage, parent)
+	: Scene(SceneName[sceneGameMenu], stage, parent)
 	, trainingButton(nullptr)
 	, missionsButton(nullptr)
 	, collaborationButton(nullptr)
@@ -42,6 +43,10 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	globalLayout->addLayout(leftLayout, 0.7);
 	globalLayout->addLayout(rightLayout, 0.3);
 	setLayout(globalLayout);
+
+	// This is the last scene loaded
+	QSettings settings;
+	settings.setValue( "/Application/LastScene", sceneName );
 }
 
 GameMenuScene::~GameMenuScene()

@@ -4,21 +4,29 @@
 #include "Prop.h"
 #include "SvgButton.h"
 #include "UnitSelectionScene.h"
+
 #include <QFileInfo>
+#include <QSettings>
 
 // Default width percent of the pneumatic tube of the whole unit
 const qreal tubeWidthPercent = 0.43;
 // Default width percent of the chip. Chip + tube must be 1
 const qreal chipWidthPercent = 1.0 - tubeWidthPercent;
 
+
 UnitSelectionScene::UnitSelectionScene(const QString& context, Stage* stage, QGraphicsItem* parent)
-	: GameScene("unit_selection", stage, parent)
+	: GameScene(SceneName[sceneUnitSelection], stage, parent)
 	, context(context)
 	, currentUnitEnabled(true)
 {
 	createStandardMenu(context, false);
 	createLevelsUnits();
 	animatePods();
+
+	// This is the last scene loaded
+	QSettings settings;
+	settings.setValue( "/Application/LastScene", sceneName );
+	settings.setValue( "/Application/LastContext", context );
 }
 
 UnitSelectionScene::~UnitSelectionScene()

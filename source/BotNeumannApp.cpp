@@ -47,6 +47,16 @@ BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
 		qWarning("Application settings were reset");
 	}
 
+	// Save in settings a flag indicating the application started
+	// It will be cleared when the application finishes cleany
+	lastSessionCrashed = settings.value("/Application/ExitClean", "") == "running";
+	if ( lastSessionCrashed )
+		qWarning("Application crashed in last session");
+
+	// A new session started, another try
+	settings.setValue("/Application/ExitClean", "running");
+	settings.sync();
+
 	// Managers use the settings, create them after resetting the settings
 	// Enable logging of messages to a file
 	this->logManager = new LogManager(this);
@@ -54,6 +64,14 @@ BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
 	// Reload the configuration of the last player who was playing with this game
 	this->playerManager = new PlayerManager(this);
 	this->playerManager->reloadLastPlayer();
+}
+
+BotNeumannApp::~BotNeumannApp()
+{
+	// An clean exit. If next time application starts, it is not clean, it crashed
+	QSettings settings;
+	settings.setValue("/Application/ExitClean", "clean");
+	settings.sync();
 }
 
 QFont BotNeumannApp::getRobotFont()
