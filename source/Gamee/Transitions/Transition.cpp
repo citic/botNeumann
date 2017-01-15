@@ -17,17 +17,25 @@ Transition::~Transition()
 
 void Transition::start(int duration, int frames)
 {
-	timeLine.setDuration(duration ? duration : defaultDuration);
-	timeLine.setFrameRange(0, frames ? frames : defaultFrameCount);
-	timeLine.setCurveShape(QTimeLine::EaseInCurve);
+	// If there are not previous scene, do not animate
+	if ( previousScene != nullptr )
+	{
+		timeLine.setDuration(duration > 0 ? duration : defaultDuration);
+		timeLine.setFrameRange(0, frames ? frames : defaultFrameCount);
+		timeLine.setCurveShape(QTimeLine::EaseInCurve);
+	}
 
 	// Notify both scenes that they will be transitioned
 	if ( previousScene ) previousScene->startLeavingStage();
 	if ( nextScene ) nextScene->startEnteringStage();
 
-	connect(&timeLine, SIGNAL(frameChanged(int)), SLOT(animate(int)));
-
-	timeLine.start();
+	if ( previousScene != nullptr )
+	{
+		connect(&timeLine, SIGNAL(frameChanged(int)), SLOT(animate(int)));
+		timeLine.start();
+	}
+	else
+		transitionFinished();
 }
 
 void Transition::run(bool deleteAfterFinish, int duration, int frames)
@@ -45,9 +53,8 @@ void Transition::transitionFinished()
 	if ( nextScene ) nextScene->finishedEnteringStage();
 
 	// Delete the previous scene if it was asked
-	if ( deletePreviousScene )
+	if ( previousScene && deletePreviousScene )
 	{
-		Q_ASSERT(previousScene);
 		previousScene->deleteLater();
 		previousScene = nullptr;
 	}

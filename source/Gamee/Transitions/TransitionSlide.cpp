@@ -5,14 +5,17 @@ TransitionSlide::TransitionSlide(Direction direction, Scene* previousScene, Scen
 	: Transition(previousScene, nextScene, deletePreviousScene, parent)
 	, direction(direction)
 {
-	const QRectF& rect = previousScene->boundingRect();
-	switch ( direction )
+	if ( previousScene )
 	{
-		case Direction::top: nextScene->setPos(0.0, rect.height()); break;
-		case Direction::right: nextScene->setPos(- rect.width(), 0.0); break;
-		case Direction::bottom: nextScene->setPos(0.0, - rect.height()); break;
-		case Direction::left: nextScene->setPos(rect.width(), 0.0); break;
-		default: Q_ASSERT(false);
+		const QRectF& rect = previousScene->boundingRect();
+		switch ( direction )
+		{
+			case Direction::top: nextScene->setPos(0.0, rect.height()); break;
+			case Direction::right: nextScene->setPos(- rect.width(), 0.0); break;
+			case Direction::bottom: nextScene->setPos(0.0, - rect.height()); break;
+			case Direction::left: nextScene->setPos(rect.width(), 0.0); break;
+			default: Q_ASSERT(false);
+		}
 	}
 }
 
@@ -22,6 +25,10 @@ TransitionSlide::~TransitionSlide()
 
 void TransitionSlide::animate(int frame)
 {
+	// Do not animate if there is not previous scene
+	if ( previousScene == nullptr )
+		return;
+
 	double completed = double(frame) / timeLine.endFrame();
 	const QRectF& rect = previousScene->boundingRect();
 	switch ( direction )

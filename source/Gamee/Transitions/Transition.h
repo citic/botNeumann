@@ -30,6 +30,8 @@ class Transition : public QObject
 
   public:
 	/// Constructor
+	/// @param previousScene Pointer to the scene that is leaving the stage. If pointer is null
+	/// not animation is done at all, and @a nextScene is shown immediately
 	/// @param deletePreviousScene If true the transition will delete the previous scene object
 	/// when the transition animation has finished. It is useful when the old scene will be not
 	/// used even more

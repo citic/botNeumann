@@ -95,7 +95,6 @@ bool BotNeumannDirector::replaceScene(Scene* newScene, bool forward)
 	setCurrentScene(newScene);
 
 	// Run a transition to make the scene replacement more obvious
-	if ( previousScene == nullptr ) return true;
 	auto direction = forward ? TransitionSlide::Direction::left : TransitionSlide::Direction::right;
 	Transition* transition = new TransitionSlide(direction, previousScene, currentScene, true, this);
 	transition->run(true);
