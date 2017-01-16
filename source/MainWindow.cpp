@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// Create each window section
 	setupStage();
+	setupHiddenActions();
 	restoreSettings();
 }
 
@@ -74,7 +75,10 @@ void MainWindow::setupStage()
 	Q_ASSERT(director == nullptr);
 	director = new BotNeumannDirector(stage);
 	director->begin();
+}
 
+void MainWindow::setupHiddenActions()
+{
 	// A hidden action to reset configuration
 	QAction* resetSettingsAction = new QAction(this);
 	resetSettingsAction->setShortcut(QKeySequence("Ctrl+Shift+R"));
@@ -86,7 +90,6 @@ void MainWindow::setupStage()
 	openLogDirAction->setShortcut(QKeySequence("Ctrl+Shift+L"));
 	connect( openLogDirAction, SIGNAL(triggered(bool)), this, SLOT(revealLogDirectory()) );
 	menuBar()->addAction(openLogDirAction);
-
 }
 
 void MainWindow::saveSettings()

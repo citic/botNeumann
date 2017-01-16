@@ -40,6 +40,8 @@ class MainWindow : public QMainWindow
   protected:
 	/// Create the control where scenes are shown and shows the first scene
 	void setupStage();
+	/// Create hidden menu options that are activated by special commands
+	void setupHiddenActions();
 	/// Save the window dimensions to be used later
 	void saveSettings();
 	/// Restore (apply) the saved window dimensions
