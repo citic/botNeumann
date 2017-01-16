@@ -41,7 +41,7 @@ bool BotNeumannDirector::showLastScene()
 
 	// Last session botNeumann exited cleany, try to recover the last scene
 	QSettings settings;
-	const QString& lastScene = settings.value( sk("Application/LastScene"), SceneName[sceneUnknown] ).toString();
+	const QString& lastScene = settings.value( sk("Application/LastScene"), mapSceneName(sceneUnknown) ).toString();
 
 	// Recover parameters to load the last scene
 	const QString& lastContext = settings.value( sk("Application/LastContext"), "" ).toString();
@@ -49,9 +49,9 @@ bool BotNeumannDirector::showLastScene()
 	const QString& lastUnitFilename = settings.value( sk("Application/LastUnitFilename"), "" ).toString();
 
 	// Recover the scene according to its type
-	if ( lastScene == SceneName[sceneUnitPlaying] )
+	if ( lastScene == mapSceneName(sceneUnitPlaying) )
 		return showUnitPlayingScene(lastContext, lastLevelUnit, lastUnitFilename);
-	if ( lastScene == SceneName[sceneUnitSelection] )
+	if ( lastScene == mapSceneName(sceneUnitSelection) )
 		return showUnitSelectionScene(lastContext, true);
 
 	// Unknown or default scene

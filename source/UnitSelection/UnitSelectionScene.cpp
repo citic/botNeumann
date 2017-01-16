@@ -15,7 +15,7 @@ const qreal chipWidthPercent = 1.0 - tubeWidthPercent;
 
 
 UnitSelectionScene::UnitSelectionScene(const QString& context, Stage* stage, QGraphicsItem* parent)
-	: GameScene(SceneName[sceneUnitSelection], stage, parent)
+	: GameScene(mapSceneName(sceneUnitSelection), stage, parent)
 	, context(context)
 	, currentUnitEnabled(true)
 {

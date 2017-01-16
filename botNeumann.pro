@@ -101,6 +101,7 @@ HEADERS += \
 SOURCES += \
 	source/BotNeumannApp.cpp \
 	source/BotNeumannDirector.cpp \
+	source/Common/Common.cpp \
 	source/Common/GameScene.cpp \
 	source/Common/InfoDialog.cpp \
 	source/Common/LogManager.cpp \

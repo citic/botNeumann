@@ -22,17 +22,7 @@ enum SceneId
 	, sceneUnitPlaying
 };
 
-static const char* SceneName[] =
-{
-	"unknown",
-	"game_menu",
-	"training",
-	"missions",
-	"collaboration",
-	"create",
-	"unit_selection",
-	"unit_playing",
-};
+const char* mapSceneName(SceneId sceneId);
 
 enum class UnitPlayingState
 {

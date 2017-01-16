@@ -16,7 +16,7 @@
 #include <QSettings>
 
 GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
-	: Scene(SceneName[sceneGameMenu], stage, parent)
+	: Scene(mapSceneName(sceneGameMenu), stage, parent)
 	, trainingButton(nullptr)
 	, missionsButton(nullptr)
 	, collaborationButton(nullptr)

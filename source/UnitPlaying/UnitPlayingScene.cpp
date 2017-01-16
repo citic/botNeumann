@@ -13,7 +13,7 @@
 #include <QSettings>
 
 UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename, Stage* stage, QGraphicsItem* parent)
-	: GameScene(SceneName[sceneUnitPlaying], stage, parent)
+	: GameScene(mapSceneName(sceneUnitPlaying), stage, parent)
 	, context(context)
 	, levelUnit(levelUnit)
 	, filename(filename)
