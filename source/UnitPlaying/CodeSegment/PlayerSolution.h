@@ -8,11 +8,16 @@ class Player;
 class Unit;
 
 /**
-@brief Manages the list of source files that compound the player's solution to an unit
+@brief Manages the list of source files that compound the player's solution for an unit
 
 	This class that manages the list of source files that the player creates to solve the problem
 	stated by a specific unit. This class create the solution directory, create source files on it,
 	retrieve the list of files if they exists, compiles the solution and interprets it.
+
+	A player solution contains several types of files. Source code files are separated in two groups
+	- Source files created by player: They can be edited by user in CodeEditor
+	- Source files injected by botNeumann. These files contain code that support the visualization
+	  process. For example, to know the number of bytes read from standard input
  */
 class PlayerSolution : public QObject
 {
@@ -27,7 +32,11 @@ class PlayerSolution : public QObject
 	/// The list of source file full paths that compound the player's solution to the current unit
 	/// These files are being edited, but just one at time is shown. A drop down (combo box) control
 	/// allows player to choose the source to edit
-	QFileInfoList sourceFiles;
+	QFileInfoList editableSourceFiles;
+	/// Some source files that are injected by botNeumann in player's solution. These files support
+	/// the data extraction during the visualization process. Player is not allowed to edit them.
+	/// These files are compiled as normal files in the build process.
+	QFileInfoList hiddenSourceFiles;
 
   public:
 	/// Constructor
@@ -47,11 +56,14 @@ class PlayerSolution : public QObject
 	/// latest modify. If player modifies files outside botNeumann, it will affect this method
 	QFileInfo getLastEditedFilePath() const;
 	/// Get access to the list of source files that compound the player's solution
-	inline const QFileInfoList& getSourcePaths() const { return sourceFiles; }
+	inline const QFileInfoList& getEditableSourceFiles() const { return editableSourceFiles; }
 	/// Get a list of source files names, without full path
-	const QStringList getSourceNames() const;
+	QStringList getEditableSourceNames() const;
+	/// Get all the source files that comprise the player's solution, including both: editable and
+	/// hidden source files. These are the files that should be compiled
+	inline QFileInfoList getAllSourceFiles() const { return editableSourceFiles + hiddenSourceFiles; }
 	/// Returns true if there is files in the solution
-	inline bool hasFiles() const { return sourceFiles.size() > 0; }
+	inline bool hasFiles() const { return editableSourceFiles.size() > 0; }
 	/// Returns the index if the given file is part of the player's solution, -1 othwerwise
 	int findFileIndex(const QFileInfo& filePath) const;
 	/// Returns the absolute path to the executable file that results of building this solution

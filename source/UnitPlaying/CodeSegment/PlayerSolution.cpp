@@ -35,7 +35,8 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 	this->unit = unit;
 
 	// Clear files from previous loads or units, if any
-	sourceFiles.clear();
+	editableSourceFiles.clear();
+	hiddenSourceFiles.clear();
 
 	// Load the list of files from the player's source
 	int fileCount = loadFileList();
@@ -43,7 +44,7 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 	// If player has never tried this unit, assume there is a "main.cpp"
 	if ( fileCount == -1 )
 	{
-		sourceFiles.append( getLastEditedFilePath() );
+		editableSourceFiles.append( getLastEditedFilePath() );
 
 		// Create a directory for the player, if it does not exist
 		createDirectoryForUnit();
@@ -51,7 +52,7 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 		// Create an injection C code file
 		const QString& path = createBotNeumannSourceFile();
 		if ( path.isEmpty() == false )
-			sourceFiles.append( QFileInfo(path) );
+			hiddenSourceFiles.append( QFileInfo(path) );
 	}
 
 	// ToDo: load breakpoints from user configuration
@@ -63,40 +64,39 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 QFileInfo PlayerSolution::getLastEditedFilePath() const
 {
 	// If there are not files, assume the last edited file is an inexistent "main.cpp"
-	if ( sourceFiles.size() <= 0 ) return QFileInfo(getPlayerUnitSourcePath("main.cpp"));
+	if ( editableSourceFiles.size() <= 0 ) return QFileInfo(getPlayerUnitSourcePath("main.cpp"));
 
 	// If there is only one file, we dont' have to compare modification dates
-	if ( sourceFiles.size() == 1 ) return sourceFiles[0];
+	if ( editableSourceFiles.size() == 1 ) return editableSourceFiles[0];
 
 	// There are files, compare their modification dates, and select the latest modified
 	int lastModifiedIndex = 0;
-	QDateTime lastModifiedDate = sourceFiles[0].lastModified();
-	for (int i = 1; i < sourceFiles.size(); ++i )
-		if ( sourceFiles[i].lastModified() > lastModifiedDate )
+	QDateTime lastModifiedDate = editableSourceFiles[0].lastModified();
+	for (int i = 1; i < editableSourceFiles.size(); ++i )
+		if ( editableSourceFiles[i].lastModified() > lastModifiedDate )
 		{
 			lastModifiedIndex = i;
-			lastModifiedDate = sourceFiles[i].lastModified();
+			lastModifiedDate = editableSourceFiles[i].lastModified();
 		}
 
 	// Return the latest modified found file path
-	return sourceFiles[lastModifiedIndex];
+	return editableSourceFiles[lastModifiedIndex];
 }
 
-const QStringList PlayerSolution::getSourceNames() const
+QStringList PlayerSolution::getEditableSourceNames() const
 {
 	// Extract only the file names, without their path, from the list of files
 	QStringList sourceNames;
-	sourceNames.reserve( sourceFiles.size() );
-	foreach ( const QFileInfo& filePath, sourceFiles )
+	foreach ( const QFileInfo& filePath, editableSourceFiles )
 		sourceNames.append( filePath.fileName() );
 	return sourceNames;
 }
 
 int PlayerSolution::findFileIndex(const QFileInfo& filePath) const
 {
-	for ( int i = 0; i < sourceFiles.size(); ++i )
-		if ( filePath == sourceFiles[i] )
-			return i;
+	for ( int index = 0; index < editableSourceFiles.count(); ++index )
+		if ( filePath == editableSourceFiles[index] )
+			return index;
 
 	return -1;
 }
@@ -136,10 +136,19 @@ int PlayerSolution::loadFileList()
 
 	// There are source files, load its list
 	dir.setFilter(QDir::Files | QDir::NoSymLinks);
-	sourceFiles = dir.entryInfoList();
+	const QFileInfoList& files = dir.entryInfoList();
+
+	// Source files in player soluton that begin with "bn_" are not editable by user
+	foreach ( const QFileInfo& fileInfo, files )
+	{
+		if ( fileInfo.fileName().startsWith("bn_") )
+			hiddenSourceFiles.append(fileInfo);
+		else
+			editableSourceFiles.append(fileInfo);
+	}
 
 	// Done
-	return sourceFiles.size();
+	return editableSourceFiles.size();
 }
 
 bool PlayerSolution::createDirectoryForUnit()

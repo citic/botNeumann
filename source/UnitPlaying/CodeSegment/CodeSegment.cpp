@@ -221,7 +221,7 @@ void CodeSegment::loadCodeForUnit(Unit* unit)
 
 	// Fill the file selector with the list of files that comprise this player solution
 	fileSelector->clear();
-	fileSelector->addItems( playerSolution->getSourceNames() );
+	fileSelector->addItems( playerSolution->getEditableSourceNames() );
 
 	// Ask the editor to show this source
 	const QFileInfo& lastEditedFilePath = playerSolution->getLastEditedFilePath();
@@ -255,7 +255,7 @@ void CodeSegment::startBuild()
 	connect(compiler, SIGNAL(finished()), this, SLOT(compilerFinished()));
 
 	// Start the compiling process with the files in the solution and the expected executable file
-	compiler->compile(playerSolution->getSourcePaths(), playerSolution->getExecutablePath());
+	compiler->compile(playerSolution->getAllSourceFiles(), playerSolution->getExecutablePath());
 }
 
 void CodeSegment::compilerFinished()
