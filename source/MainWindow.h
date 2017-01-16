@@ -48,6 +48,8 @@ class MainWindow : public QMainWindow
   protected slots:
 	/// Triggered when user presses Cmd+Shift+R to reset the settings
 	void resetSettings();
+	/// Reveals the directory where logs and user data is stored
+	void revealLogDirectory();
 };
 
 #endif // MAINWINDOW_H

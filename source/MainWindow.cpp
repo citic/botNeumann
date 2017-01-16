@@ -5,6 +5,7 @@
 #include "Stage.h"
 
 #include <QAction>
+#include <QDesktopServices>
 #include <QDockWidget>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
@@ -12,6 +13,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QSettings>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -78,6 +80,13 @@ void MainWindow::setupStage()
 	resetSettingsAction->setShortcut(QKeySequence("Ctrl+Shift+R"));
 	connect( resetSettingsAction, SIGNAL(triggered(bool)), this, SLOT(resetSettings()) );
 	menuBar()->addAction(resetSettingsAction);
+
+	// A hidden action to reveal the directory where logs and user data is stored
+	QAction* openLogDirAction = new QAction(this);
+	openLogDirAction->setShortcut(QKeySequence("Ctrl+Shift+L"));
+	connect( openLogDirAction, SIGNAL(triggered(bool)), this, SLOT(revealLogDirectory()) );
+	menuBar()->addAction(openLogDirAction);
+
 }
 
 void MainWindow::saveSettings()
@@ -102,4 +111,10 @@ void MainWindow::resetSettings()
 		QSettings().setValue(sk("Application/SettingsReset"), true);
 		QMessageBox::warning(this, tr("Settings reset"), tr("Please restart botNeumann++ for the changes to take effect"));
 	}
+}
+
+void MainWindow::revealLogDirectory()
+{
+	const QString& path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	QDesktopServices::openUrl(QUrl("file://" + path, QUrl::TolerantMode));
 }

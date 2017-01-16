@@ -37,9 +37,7 @@ LogManager::LogManager(QObject* parent)
 		qInstallMessageHandler(LogManager::messageHandler);
 
 		// Log file is ready to receive messages. If it is a new file save a header
-		if ( exists )
-			qCDebug(logApplication, "Appending to log file '%s'", qUtf8Printable(filename));
-		else
+		if ( ! exists )
 		{
 			// It is a new log file, write the CSV header line and the first event
 			logFile.write("Date;Time;SessionTime;User;Type;Category;Details\n");
