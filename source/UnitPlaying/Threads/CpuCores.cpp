@@ -1,12 +1,16 @@
 #include "CpuCore.h"
+#include "Common.h"
 #include "CpuCores.h"
 #include "ExecutionThread.h"
 #include "Scene.h"
 #include "Unit.h"
 
+// Reserve 1 more row for idle threads, and create visual separation between cores and data segment
+const double idleThreadsRows = 1.0;
+
 CpuCores::CpuCores(Unit& unit, Scene* scene, QObject* parent)
 	: GdbResponseListener(parent)
-	, MemorySegment(unit, scene, Qt::Horizontal)
+	, MemorySegment(unit, scene, Qt::Vertical)
 {
 	createCpuCores();
 }
@@ -19,21 +23,43 @@ CpuCores::~CpuCores()
 
 double CpuCores::getHeightInRows() const
 {
-	return cpuCores.count() > 0 ? cpuCores[0]->getHeightInRows() : 0.0;
+	Q_ASSERT(cpuCores.count() > 0);
+	return cpuCores[0]->getHeightInRows() + idleThreadsRows;
 }
 
 void CpuCores::createCpuCores()
 {
+	// CPU cores are in a horizontal layout
+	Q_ASSERT(cpuCoresLayout == nullptr);
+	cpuCoresLayout = new LinearLayout(Qt::Horizontal);
+
+	// Get the number of CPU cores that this Unit was configured for
 	int coreCount = unit.getCpuCores();
+	Q_ASSERT(coreCount > 0);
 	cpuCores.reserve(coreCount);
+
+	// Create a graphical CPU core for each core requested in Unit
 	for ( int index = 0; index < coreCount; ++index )
 	{
+		// Create the CPU core and add it to the topmost horizontal layout
 		CpuCore* cpuCore = new CpuCore(index, unit, scene);
 		cpuCores.append(cpuCore);
-		this->addLayout( cpuCore, 1.0 / coreCount );
+		cpuCoresLayout->addLayout( cpuCore, 1.0 / coreCount );
+
 		// Overlap the workstation separator with the previous one
 		if ( index ) cpuCore->setMarginLeft(-0.04105605779343);
 	}
+
+	// Create the layout to place future execution threads that will be sleeping (idle)
+	Q_ASSERT(idleThreadsLayout == nullptr);
+	idleThreadsLayout = new LinearLayout(Qt::Horizontal);
+
+	// Add both layouts to this segment
+	double totalRows = getHeightInRows();
+	addLayout(cpuCoresLayout, cpuCores[0]->getHeightInRows() / totalRows, zUnitPlaying::cpuCores);
+
+	// Idle threads overflow to use space behind the data segment
+	addLayout(idleThreadsLayout, (idleThreadsRows + 0.6) / totalRows, zUnitPlaying::cpuCores);
 }
 
 void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
@@ -61,13 +87,19 @@ int CpuCores::createThread(int id)
 	ExecutionThread* thread = new ExecutionThread(scene, id);
 	executionThreads.append(thread);
 
-	// If there is an idle CPU core, assign the new execution thread
+	// If there is an idle CPU core, assign the new execution thread to it
 	int cpuCoreIndex = findFirstIdleCpuCore();
-	if ( cpuCoreIndex == -1 )
-		return -1;
+	if ( cpuCoreIndex >= 0 )
+		return cpuCores[cpuCoreIndex]->runThread(thread);
 
-	// Assign the CPU core to the thread
-	return cpuCores[cpuCoreIndex]->runThread(thread);
+	// There are not available CPU cores, the thread will be sleeping in the visualization
+	// the idle layout will manage these threads
+	idleThreadsLayout->addItem( thread, 120.0 / 1024.0, zUnitPlaying::cpuCores + 0.1 );
+	idleThreadsLayout->updateLayoutItem();
+
+	// The thread is idle, it displays and behaves differently of an active thread
+	thread->setIdle(true);
+	return thread->animateAppear();
 }
 
 int CpuCores::findFirstIdleCpuCore() const

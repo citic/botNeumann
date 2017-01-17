@@ -6,7 +6,7 @@
 #include "Unit.h"
 
 // The number of memory rows reserved for the robot
-const double robotRows = 3.0;
+const double robotRows = 1.0;
 
 CpuCore::CpuCore(int cpuCoreNumber, Unit& unit, Scene* scene)
 	: MemorySegment(unit, scene, Qt::Vertical)
@@ -21,7 +21,15 @@ CpuCore::~CpuCore()
 
 double CpuCore::getHeightInRows() const
 {
-	return unit.getStackSegmentVisibleRows() + robotRows;
+	// Visible rows indicated by unit, + 1.0 for the roof, and the robot
+	return unit.getStackSegmentVisibleRows() + 1.0 + robotRows;
+}
+
+void CpuCore::buildCpuCore()
+{
+	Q_ASSERT(scene);
+	workstation = new Prop(":/unit_playing/stack_segment.svg", scene);
+	addItem(workstation, 1.0, zUnitPlaying::cpuCore);
 }
 
 int CpuCore::runThread(ExecutionThread* thread)
@@ -39,7 +47,7 @@ int CpuCore::runThread(ExecutionThread* thread)
 	executionThread = thread;
 
 	// Add the execution thread as a child in a higher layer
-	addItem( executionThread, 1.0, zUnitPlaying::executionThread );
+	addItem( executionThread, 1.33, zUnitPlaying::executionThread );
 //	executionThread->setVisible(true);
 	updateLayoutItem();
 	return executionThread->animateAppear();
@@ -56,11 +64,4 @@ int CpuCore::removeThread()
 	executionThread = nullptr;
 
 	return duration;
-}
-
-void CpuCore::buildCpuCore()
-{
-	Q_ASSERT(scene);
-	workstation = new Prop(":/unit_playing/stack_segment.svg", scene);
-	addItem(workstation, 0.85, zUnitPlaying::cpuCore);
 }

@@ -15,8 +15,12 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	Q_DISABLE_COPY(CpuCores)
 
   protected:
+	/// A horizontal layout to place the CPU cores
+	LinearLayout* cpuCoresLayout = nullptr;
 	/// Available CPU cores to have execution threads (robots) working
 	QVector<CpuCore*> cpuCores;
+	/// A horizontal layout to place idle execution threads
+	LinearLayout* idleThreadsLayout = nullptr;
 	/// All running execution threads in player's solution (inferior)
 	QVector<ExecutionThread*> executionThreads;
 

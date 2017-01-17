@@ -28,6 +28,8 @@ class ExecutionThread : public LinearLayout
 	int id = -1;
 	/// The source file that generated the code that this thread is executing
 	QString filename;
+	/// True if this thread is idle, i.e: there are not enough cores to run this thread
+	bool idle = false;
 	/// The line number in that file being executed
 	int lineNumber = -1;
 	/// The function being currently executed by this thread
@@ -56,6 +58,8 @@ class ExecutionThread : public LinearLayout
 	/// Get access to the members
 	inline int getId() const { return id; }
 	inline const QString& getFilename() const { return filename; }
+	inline bool isIdle() const { return idle; }
+	void setIdle(bool idle);
 	inline int getLineNumber() const { return lineNumber; }
 	inline const QString& getPreviousFilename() const { return previousFilename; }
 	inline int getPreviousLineNumber() const { return previousLineNumber; }

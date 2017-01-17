@@ -70,6 +70,24 @@ bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& max
 	return result1 == newFileInPlayerSolution || result2 || result3;
 }
 
+void ExecutionThread::setIdle(bool idle)
+{
+	this->idle = idle;
+
+	Q_ASSERT(robot);
+	if ( idle )
+	{
+		robot->setMarginTop(0.2);
+		robot->setOpacity(0.5);
+	}
+	else
+	{
+		robot->setMarginTop(0.7);
+		robot->setOpacity(1.0);
+	}
+	updateLayoutItem();
+}
+
 const QColor& ExecutionThread::getHighlightColor() const
 {
 	Q_ASSERT(robot);
