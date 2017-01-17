@@ -1,7 +1,7 @@
 #ifndef SCENICELEMENT_H
 #define SCENICELEMENT_H
 
-#include "LayoutItem.h"
+#include "Layout.h"
 #include <QGraphicsItem>
 
 /// Some disabled elements are shown transparent, this is the default opacity
@@ -14,20 +14,28 @@ class ScenicElement : public GraphicsType, public LayoutItem
 
   protected:
 	/// Aligns the contents of this item adjusting its left or right margins automatically
-	Qt::Alignment alignment;
+	Qt::Alignment alignment = Qt::AlignJustify;
+	/// Manages the position and size of children items of this item. When an item is added to this
+	/// item, they become children and they are managed and destroyed by QGraphicsItem class.
+	/// Changes applied to this QGraphicsItem, such as position and placing affect the children
+	/// But the initial positioning of children and their size, is managed by this layout
+	Layout* layout = nullptr;
 
   public:
 	/// Constructor
 	explicit ScenicElement(QGraphicsItem* parentItem)
 		: GraphicsType(parentItem)
-		, alignment(Qt::AlignJustify)
 	{
 	}
 	/// Creates an actor with the given svg filename
 	explicit ScenicElement(const QString& textOrFilename, QGraphicsItem* parentItem)
 		: GraphicsType(textOrFilename, parentItem)
-		, alignment(Qt::AlignJustify)
 	{
+	}
+	/// Destructor
+	virtual ~ScenicElement()
+	{
+		delete layout;
 	}
 	/// Used to differentiate between pure-layout items and scenic elements
 	virtual bool isScenicElement() const override { return true; }
@@ -43,13 +51,15 @@ class ScenicElement : public GraphicsType, public LayoutItem
 	/// This method is called each time the Stage and Scene has been resized
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) override
 	{
+		if ( layout ) layout->resize(left, top, width, height);
 		LayoutItem::resize(left, top, width, height);
 		applyMargins(left, top, width, height);
 		qreal scaleWidth = width / GraphicsType::boundingRect().width();
 		qreal scaleHeight = height / GraphicsType::boundingRect().height();
 		if ( ! alignment.testFlag(Qt::AlignJustify) )
 			applyAlignment(left, top, width, height, scaleWidth, scaleHeight);
-		GraphicsType::setPos(left, top);
+		const QPointF& posChild = GraphicsType::parentItem() ? GraphicsType::parentItem()->mapFromScene(left, top) : QPointF(left, top);
+		GraphicsType::setPos(posChild);
 		GraphicsType::prepareGeometryChange();
 		GraphicsType::setTransform(QTransform().scale(scaleWidth, scaleHeight));
 	}

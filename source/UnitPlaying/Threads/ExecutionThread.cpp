@@ -23,12 +23,12 @@ void ExecutionThread::buildExecutionThread()
 
 int ExecutionThread::animateAppear()
 {
-	return robot->animateAppear();
+	return robot->appear();
 }
 
 int ExecutionThread::animateDisappear()
 {
-	return robot->animateDisappear();
+	return robot->disappear();
 }
 
 bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& maxDuration)

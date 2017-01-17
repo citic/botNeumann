@@ -15,6 +15,8 @@ Actor::Actor(const QString& fileName, QGraphicsItem* parentItem)
 
 int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity)
 {
+	updateLayoutItem();
+
 	// Animate the robot while it appears
 	QPropertyAnimation* robotAppearsAnimation = new QPropertyAnimation(this, "opacity", this);
 	duration = VisualizationSpeed::getInstance().adjust(duration);

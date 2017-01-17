@@ -1,7 +1,7 @@
 #include "ExecutionThreadActor.h"
-#include "Actor.h"
 #include "Common.h"
 #include "LabelButton.h"
+#include "LinearLayout.h"
 #include "Scene.h"
 
 #include <QColor>
@@ -22,26 +22,25 @@ static const QColor threadColors[] =
 };
 
 
-ExecutionThreadActor::ExecutionThreadActor(int id, Scene* scene)
-	: LinearLayout( Qt::Vertical )
+ExecutionThreadActor::ExecutionThreadActor(int id, QGraphicsItem* parentItem)
+	: Actor(QString(":/unit_playing/threads/thread%1_back.svg").arg(mapActorNumber(id)), parentItem)
 	, actorNumber( mapActorNumber(id) )
-	, scene(scene)
 {
 	buildActor();
 }
 
 void ExecutionThreadActor::buildActor()
 {
-	// Create the robot
-	actor = new Actor(QString(":/unit_playing/threads/thread%1_back.svg").arg(actorNumber), scene);
-	actor->setMarginTop(0.7);
-	actor->alignCenter();
-	addItem(actor, 1.0, zUnitPlaying::executionThread + 0.2);
+	layout = new LinearLayout( Qt::Vertical );
+
+	// Adjust the robot
+	setMarginTop(0.7);
+	alignCenter();
 
 	// Create the line number
-	lineNumber = new LabelButton("00", scene);
+	lineNumber = new LabelButton("00", this);
 	lineNumber->setAlignment(Qt::AlignCenter);
-	addItem(lineNumber, 1.0, zUnitPlaying::executionThread + 0.3);
+	layout->addItem(lineNumber, 1.0, zUnitPlaying::executionThread + 0.3);
 
 	// Center the line number within the robot's display
 	const qreal lineNumberHeight = 0.06;
@@ -49,17 +48,6 @@ void ExecutionThreadActor::buildActor()
 	qreal marginTop = lineNumberTopMargin[actorNumber - 1];
 	qreal marginBottom = 1.0 - marginTop - lineNumberHeight;
 	lineNumber->setMargins(marginTop, lineNumberLeftRight, marginBottom);
-}
-
-int ExecutionThreadActor::animateAppear()
-{
-	updateLayoutItem();
-	return actor->appear();
-}
-
-int ExecutionThreadActor::animateDisappear()
-{
-	return actor->disappear();
 }
 
 int ExecutionThreadActor::updateLineNumber(int updatedLineNumber)
