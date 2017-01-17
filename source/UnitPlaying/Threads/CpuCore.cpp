@@ -47,7 +47,7 @@ int CpuCore::runThread(ExecutionThread* thread)
 	executionThread = thread;
 
 	// Add the execution thread as a child in a higher layer
-	addItem( executionThread, 1.33, zUnitPlaying::executionThread );
+	addItem( executionThread, 1.2, zUnitPlaying::executionThread );
 //	executionThread->setVisible(true);
 	updateLayoutItem();
 	return executionThread->animateAppear();

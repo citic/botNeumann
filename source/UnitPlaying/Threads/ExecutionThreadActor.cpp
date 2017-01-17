@@ -8,7 +8,7 @@
 
 /// The line number must appear within the display of the robot, but each robot has the display
 /// at different top
-const qreal lineNumberTopMargin[] = {0.795, 0.887, 0.867, 0.805};
+const qreal lineNumberTopMargin[] = {0.735, 0.847, 0.827, 0.740};
 
 static const int alpha = 127;
 
@@ -17,7 +17,7 @@ static const QColor threadColors[] =
 {
 	QColor(  0,  90, 170, alpha), // thread 1 #005ab3 blue
 	QColor(255, 192,   0, alpha), // thread 2 #ffc000 yellow
-	QColor( 22, 107,   0, alpha), // thread 3 #de6b00 orange
+	QColor(222, 107,   0, alpha), // thread 3 #de6b00 orange
 	QColor(114, 140,   0, alpha), // thread 4 #728c00 green
 };
 
@@ -34,7 +34,7 @@ void ExecutionThreadActor::buildActor()
 	layout = new LinearLayout( Qt::Vertical );
 
 	// Adjust the robot
-	setMarginTop(0.7);
+	setMarginTop(0.6);
 	alignCenter();
 
 	// Create the line number

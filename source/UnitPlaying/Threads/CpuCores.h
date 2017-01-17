@@ -23,6 +23,8 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	LinearLayout* idleThreadsLayout = nullptr;
 	/// All running execution threads in player's solution (inferior)
 	QVector<ExecutionThread*> executionThreads;
+	/// Count the number of idle threads that have are waiting for a cpu core
+	int idleThreadsCount = 0;
 
   public:
 	/// Constructor
@@ -56,6 +58,10 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// @return The index of the next available (free) CPU core to execute a thread, -1 if all cores
 	/// are busy executing threads
 	int findFirstIdleCpuCore() const;
+	/// There are not empty cpu cores to allocate a new execution thread, make room in the unit for
+	/// it between the CPU cores segment and data segment
+	/// @return the duration in milliseconds of the animation
+	int setupIdleThread(ExecutionThread* thread);
 	/// A Gdb result brought an updated list of threads, refresh them
 	void updateThreads(const GdbTreeNode* threadsNode, int& maxDuration);
 };

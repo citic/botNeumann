@@ -4,6 +4,9 @@
 #include "GdbItemTree.h"
 #include "Scene.h"
 
+// Idle threads are shown little transparent
+const double idleThreadOpacity = 0.75;
+
 ExecutionThread::ExecutionThread(Scene* scene, int id)
 	: LinearLayout(Qt::Vertical)
 	, scene(scene)
@@ -23,7 +26,7 @@ void ExecutionThread::buildExecutionThread()
 
 int ExecutionThread::animateAppear()
 {
-	return robot->appear();
+	return robot->appear(1000, 0.0, idle ? idleThreadOpacity : 1.0);
 }
 
 int ExecutionThread::animateDisappear()
@@ -77,12 +80,12 @@ void ExecutionThread::setIdle(bool idle)
 	Q_ASSERT(robot);
 	if ( idle )
 	{
-		robot->setMarginTop(0.2);
-		robot->setOpacity(0.5);
+		robot->setMarginTop(0.3);
+		robot->setOpacity(0.75);
 	}
 	else
 	{
-		robot->setMarginTop(0.7);
+		robot->setMarginTop(0.6);
 		robot->setOpacity(1.0);
 	}
 	updateLayoutItem();

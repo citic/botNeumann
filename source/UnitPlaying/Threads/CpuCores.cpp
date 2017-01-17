@@ -94,12 +94,7 @@ int CpuCores::createThread(int id)
 
 	// There are not available CPU cores, the thread will be sleeping in the visualization
 	// the idle layout will manage these threads
-	idleThreadsLayout->addItem( thread, 120.0 / 1024.0, zUnitPlaying::cpuCores + 0.1 );
-	idleThreadsLayout->updateLayoutItem();
-
-	// The thread is idle, it displays and behaves differently of an active thread
-	thread->setIdle(true);
-	return thread->animateAppear();
+	return setupIdleThread(thread);
 }
 
 int CpuCores::findFirstIdleCpuCore() const
@@ -109,6 +104,26 @@ int CpuCores::findFirstIdleCpuCore() const
 			return index;
 
 	return -1;
+}
+
+int CpuCores::setupIdleThread(ExecutionThread* thread)
+{
+	// Width of robots is calculated using a 1024px width scene as reference
+	const int refWidth = 110, refWidthScene = 1024;
+	double proportion = (double)refWidth / (double)refWidthScene;
+
+	// If there are lots of execution threads, distribute them in layers
+	int layer = ++idleThreadsCount * refWidth / refWidthScene;
+	idleThreadsLayout->addItem( thread, proportion, zUnitPlaying::cpuCores + 0.1 + layer / 100.0 );
+
+	// Distribute robots randonmly, as simulating a crowd of robots waiting for CPU cores
+	double displacementX = qrand() % (refWidth / 2) / double(refWidth);
+	thread->setMargins( 0.0, displacementX, 0.0, -displacementX );
+	idleThreadsLayout->updateLayoutItem();
+
+	// The thread is idle, it displays and behaves differently of an active thread
+	thread->setIdle(true);
+	return thread->animateAppear();
 }
 
 void CpuCores::clearAnimation()
