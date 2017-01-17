@@ -14,6 +14,9 @@ class LabelButton : public QObject, public ScenicElement<QGraphicsSimpleTextItem
 	explicit LabelButton(const QString& label, QGraphicsItem* parentItem);
 	/// Destructor
 	virtual ~LabelButton();
+	/// Overrides the setText in order to adjust the dimensions of the new text to the dimensions
+	/// of the button
+	void setText(const QString &text);
 
   signals:
 	/// Emitted when this button is pressed

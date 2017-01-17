@@ -15,6 +15,12 @@ LabelButton::~LabelButton()
 {
 }
 
+void LabelButton::setText(const QString& text)
+{
+	ScenicElement::setText(text);
+	updateLayoutItem();
+}
+
 void LabelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
 	emit pressed();
