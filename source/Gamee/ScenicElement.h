@@ -51,17 +51,27 @@ class ScenicElement : public GraphicsType, public LayoutItem
 	/// This method is called each time the Stage and Scene has been resized
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) override
 	{
+		// Resize children before changing the values (left, top, width, height)
 		if ( layout ) layout->resize(left, top, width, height);
+
+		// Update the LayoutItem part of this object
 		LayoutItem::resize(left, top, width, height);
 		applyMargins(left, top, width, height);
+
+		// Resize the QGraphicaItem part of this object
 		qreal scaleWidth = width / GraphicsType::boundingRect().width();
 		qreal scaleHeight = height / GraphicsType::boundingRect().height();
 		if ( ! alignment.testFlag(Qt::AlignJustify) )
 			applyAlignment(left, top, width, height, scaleWidth, scaleHeight);
-		const QPointF& posChild = GraphicsType::parentItem() ? GraphicsType::parentItem()->mapFromScene(left, top) : QPointF(left, top);
-		GraphicsType::setPos(posChild);
 		GraphicsType::prepareGeometryChange();
 		GraphicsType::setTransform(QTransform().scale(scaleWidth, scaleHeight));
+
+		// If this element is a nested child, map coordinates from scene to its parent
+		QPointF posChild(left, top);
+		QGraphicsItem* parent = GraphicsType::parentItem();
+		if ( parent->parentItem() )
+			posChild = parent->mapFromScene(left, top);
+		GraphicsType::setPos(posChild);		
 	}
 
   protected:
