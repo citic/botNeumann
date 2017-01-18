@@ -64,7 +64,7 @@ void Compiler::scheduleCompilerCalls(const QFileInfoList& filepaths)
 		objectFiles.append( compilerCall->getTargetPath().absoluteFilePath() );
 
 		// If this .cpp file is newer than the executable, the executable must be updated
-		if ( shouldLinkExecutable == false && compilerCall->isTargetNewerThan(executablePath) )
+//		if ( shouldLinkExecutable == false && compilerCall->isTargetNewerThan(executablePath) )
 			shouldLinkExecutable = true;
 
 		// If the source file must be compiled, schedule it, else, remove it
