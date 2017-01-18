@@ -31,6 +31,9 @@ class Layout : public LayoutItem
 	/// @param deleteObject send true if the object should be deleted from dynamic memory
 	/// @return true if object was removed, false if it was not a child of this layout
 	virtual bool removeItem(LayoutItem* item, bool deleteObject);
+	/// Deletes all items
+	/// @param removeFromScene if true, QGraphicsItems will be removed from the scene and deleted
+	void removeAllItems();
 	/// A layout is a layout item also
 	virtual void addLayout(Layout* layout, qreal proportion, qreal zValue = 0.0);
 	/// Add expansible space

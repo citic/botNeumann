@@ -134,7 +134,12 @@ void CpuCores::clearAnimation()
 
 	// Remove all execution threads, visible or not
 	for ( int index = 0; index < executionThreads.count(); ++index )
+	{
+		if ( executionThreads[index]->isIdle() )
+			executionThreads[index]->animateDisappear();
+
 		delete executionThreads[index];
+	}
 	executionThreads.clear();
 }
 

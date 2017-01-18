@@ -8,11 +8,7 @@ Layout::Layout()
 
 Layout::~Layout()
 {
-	// Delete all layout items execpt scenic elements, because they are children of the Scene
-	for (ItemsType::iterator itr = items.begin(); itr != items.end(); ++itr )
-		for ( int i = 0; i < itr.value().size(); ++i )
-			if ( ! itr.value()[i]->isScenicElement() )
-				delete itr.value()[i];
+	removeAllItems();
 }
 
 void Layout::addItem(LayoutItem* item, qreal proportion, qreal zValue)
@@ -38,6 +34,17 @@ bool Layout::removeItem(LayoutItem* item, bool deleteObject)
 	}
 
 	return false;
+}
+
+void Layout::removeAllItems()
+{
+	// Delete all layout items execpt scenic elements, because they are children of the Scene
+	for (ItemsType::iterator itr = items.begin(); itr != items.end(); ++itr )
+		for ( int index = 0; index < itr.value().size(); ++index )
+			if ( ! itr.value()[index]->isScenicElement() )
+				delete itr.value()[index];
+
+	items.clear();
 }
 
 void Layout::addLayout(Layout* layout, qreal proportion, qreal zValue)
