@@ -2,6 +2,7 @@
 #include "Common.h"
 #include "LogManager.h"
 #include "PlayerManager.h"
+#include "SvgRendererManager.h"
 
 #include <ctime>
 #include <QFontDatabase>
@@ -73,6 +74,9 @@ BotNeumannApp::~BotNeumannApp()
 	QSettings settings;
 	settings.setValue(sk("Application/ExitClean"), "clean");
 	settings.sync();
+
+	// Not needed
+	SvgRendererManager::deleteInstance();
 }
 
 QFont BotNeumannApp::getRobotFont()
