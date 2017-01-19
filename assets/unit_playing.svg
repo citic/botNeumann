@@ -438,7 +438,7 @@
 		<rect id="SVGID_1_-749" y="0" width="13.333" x="0" height="22"/>
 		<rect id="SVGID_1_-935" y="0" width="16.749" x="0" height="19.5"/>
 	</defs>
-	<sodipodi:namedview bordercolor="#666666" inkscape:pageshadow="2" guidetolerance="10" pagecolor="#ffffff" gridtolerance="10" inkscape:window-maximized="1" inkscape:zoom="1.0065104" objecttolerance="10" borderopacity="1" inkscape:current-layer="layer3" inkscape:cx="512" inkscape:cy="384" inkscape:window-y="0" inkscape:window-x="0" inkscape:guide-bbox="true" inkscape:window-width="1680" showgrid="false" inkscape:pageopacity="0" inkscape:window-height="999" showguides="true"/>
+	<sodipodi:namedview bordercolor="#666666" inkscape:pageshadow="2" guidetolerance="10" pagecolor="#ffffff" gridtolerance="10" inkscape:window-maximized="1" inkscape:zoom="1.0065104" objecttolerance="10" borderopacity="1" inkscape:current-layer="layer6" inkscape:cx="512" inkscape:cy="384" inkscape:window-y="0" inkscape:window-x="0" inkscape:guide-bbox="true" inkscape:window-width="1680" showgrid="false" inkscape:pageopacity="0" inkscape:window-height="999" showguides="true"/>
 	<g inkscape:label="layer_background" inkscape:groupmode="layer" sodipodi:insensitive="true">
 		<g id="up_background" inkscape:label="" transform="matrix(1 0 0 .99716 0 2.1814)">
 			<g id="up_menu_background" transform="matrix(1.0033 0 0 1.0033 0 -2.1882)">
@@ -2522,16 +2522,6 @@
 			<rect y="0.005" width="1" x="13.201" height="38.799"/>
 			<rect y="0.005" width="1" x="10.42" height="38.799"/>
 		</g>
-		<g id="up_standard_input_middle" inkscape:label="" transform="translate(163.04 729.59)">
-			<g>
-				<g>
-					<rect opacity=".4" height="21.522" width="187.52" y="3.954" x="0.085" enable-background="new    " fill="#563f11"/>
-					<polygon points="187.6 15.361 0.085 15.449 0.085 7.268 187.6 7.18" fill="url(#SVGID_1_-61)"/>
-				</g>
-			</g>
-			<rect y="1.797" width="187.6" x="0" height="1.031"/>
-			<rect y="23.333" width="187.6" x="0" height="1.031"/>
-		</g>
 		<g id="up_standard_input_right" inkscape:label="" transform="translate(350.46 728.15)">
 			<g>
 				<g>
@@ -2557,7 +2547,7 @@
 					<polygon opacity=".6" points="28.176 34.406 27.363 32.166 23.598 33.027 25.051 35.383" enable-background="new    " fill="url(#SVGID_1_-8)"/>
 					<path inkscape:connector-curvature="0" fill="#d3a540" d="m10.916 27.072 1.875-0.688 16.875 0.688s0.176-1.664 0.688 0.875c0.406 2.016 0.047 2.266 0.047 2.266l-19.891 0.017-0.656-2.096 1.062-1.062z"/>
 					<path opacity=".6" d="m27.115 30.227c0 0.631-0.023 0.979-0.074 1.596l-3.367 0.75c0-12.916-7.282-19.438-18.779-20.086v-3.33c0.685-0.063 1.187-0.098 1.886-0.098 12.61 0 20.336 8.558 20.334 21.168z" inkscape:connector-curvature="0" enable-background="new    " fill="url(#SVGID_2_-79)"/>
-					<polygon points="13.836 19.359 18.686 14.512 23.535 19.359 21.352 19.361 21.352 24.525 16.02 24.525 16.02 19.359" fill="#856829"/>
+					<polygon points="18.686 14.512 23.535 19.359 21.352 19.361 21.352 24.525 16.02 24.525 16.02 19.359 13.836 19.359" fill="#856829"/>
 					<path d="m0.449 25.328c0 1.092 0.887 1.984 1.984 1.984 1.094 0 1.986-0.889 1.986-1.984v-20.81c0-1.096-0.891-1.982-1.986-1.982-1.094 0-1.984 0.885-1.984 1.982v20.81z" inkscape:connector-curvature="0" stroke="#000" stroke-miterlimit="10" fill="#d3a540"/>
 					<rect opacity=".6" height="5.916" width="2.938" y="9.096" x="0.957" enable-background="new    " fill="url(#SVGID_3_-2)"/>
 					<path opacity=".4" d="m0.543 17.012c-0.064 2.188 4.063 2.125 4.063 2.125 10.188 5.188 10 12.625 10 12.625l2.5 0.5c-4.375 0.625 0.063 3.563 0.063 3.563l-6.75-1.125-1.75-1.375-0.375-1.375 0.375-1.063 1.094-0.658-0.094-0.842-1.25-2.375-1.189-0.938-2.438-0.5-0.5 0.5-1.439 1.313-1.125-0.063-1.063-1.189-0.188-6.313 0.066-2.81z" inkscape:connector-curvature="0" enable-background="new    " fill="#856829"/>
@@ -2598,7 +2588,7 @@
 						<stop stop-color="#fff" stop-opacity="0" offset=".978"/>
 					</linearGradient>
 					<path opacity=".6" d="m7.024 30.227c0 0.631 0.023 0.979 0.073 1.596l3.367 0.75c0-12.916 7.282-19.438 18.78-20.086v-3.33c-0.686-0.063-1.188-0.098-1.887-0.098-12.609 0-20.335 8.558-20.333 21.168z" inkscape:connector-curvature="0" enable-background="new    " fill="url(#SVGID_2_-2)"/>
-					<polygon points="10.604 19.678 15.454 24.525 20.303 19.678 18.119 19.676 18.119 14.512 12.788 14.512 12.788 19.678" fill="#856829"/>
+					<polygon points="15.454 24.525 20.303 19.678 18.119 19.676 18.119 14.512 12.788 14.512 12.788 19.678 10.604 19.678" fill="#856829"/>
 					<path d="m33.689 25.328c0 1.092-0.887 1.984-1.984 1.984-1.094 0-1.986-0.889-1.986-1.984v-20.81c0-1.096 0.891-1.982 1.986-1.982 1.094 0 1.984 0.885 1.984 1.982v20.81z" inkscape:connector-curvature="0" stroke="#000" stroke-miterlimit="10" fill="#d3a540"/>
 					<linearGradient id="SVGID_3_-37" y2="-1917.7" gradientUnits="userSpaceOnUse" y1="-1910.9" gradientTransform="matrix(-1 0 0 -1 1054.2 -1901.7)" x2="1022.5" x1="1022.5">
 						<stop stop-color="#fff" offset=".2849"/>
@@ -2608,16 +2598,6 @@
 					<path opacity=".4" d="m33.596 17.012c0.064 2.188-4.063 2.125-4.063 2.125-10.188 5.188-10 12.625-10 12.625l-2.5 0.5c4.375 0.625-0.063 3.563-0.063 3.563l6.75-1.125 1.75-1.375 0.375-1.375-0.375-1.063-1.094-0.658 0.094-0.842 1.25-2.375 1.188-0.938 2.438-0.5 0.5 0.5 1.439 1.313 1.125-0.063 1.063-1.189 0.188-6.313-0.065-2.81z" inkscape:connector-curvature="0" enable-background="new    " fill="#856829"/>
 				</g>
 			</g>
-		</g>
-		<g id="up_standard_output_middle" inkscape:label="" transform="translate(417.9 729.59)">
-			<g>
-				<g>
-					<rect opacity=".4" height="21.522" width="187.52" y="3.954" x="0.085" enable-background="new    " fill="#563f11"/>
-					<polygon points="187.6 7.18 187.6 15.361 0.085 15.449 0.085 7.268" fill="url(#SVGID_1_-61)"/>
-				</g>
-			</g>
-			<rect y="1.797" width="187.6" x="0" height="1.031"/>
-			<rect y="23.333" width="187.6" x="0" height="1.031"/>
 		</g>
 		<g id="up_standard_output_right" inkscape:label="" transform="translate(605.58 728.71)">
 			<path opacity=".4" d="m154.95 28.013h-2.705l-10.41-4.088v-0.665c0-1.336-0.182-2.373-0.482-3.178v-14.047-0.002h-5.701c-1.025-0.949-3.75-2.305-3.436-2.242-1.018-0.113-2.273-0.637-2.479-0.637 0 0 0.432 5.736-2.529 6.752h-122.82v-4.951c0-1.096-0.891-1.982-1.986-1.982-0.947 0-1.736 0.664-1.936 1.551h-0.471v21.523h0.45c0.138 0.963 0.959 1.703 1.957 1.703 0.039 0 0.076-0.01 0.115-0.012 0.285 0.613 0.955 1.191 2.352 1.484l5.498 0.254 144.39-0.004h0.195c0.402 0 0.73-0.326 0.73-0.729s-0.328-0.73-0.73-0.73z" inkscape:connector-curvature="0" enable-background="new    " fill="#563f11"/>
@@ -3054,130 +3034,18 @@
 			<rect y="0.005" width="1" x="148.74" height="38.799"/>
 			<rect y="0.005" width="1" x="151.52" height="38.799"/>
 		</g>
-		<g id="up_standard_output_test_inactive" inkscape:label="" transform="translate(417.91 727.92)">
-			<path opacity=".4" d="m26.899 23.289c-1.331 0-2.422 0.984-2.609 2.264h-24.29v1.385h24.437c0.386 0.986 1.34 1.688 2.463 1.688 1.464 0 2.649-1.188 2.649-2.649v-0.037c0-1.464-1.186-2.651-2.65-2.651z" inkscape:connector-curvature="0" enable-background="new    " fill="#563f11"/>
-			<g>
-				<g stroke="#000" stroke-miterlimit="10" fill="#d3a540">
-					<rect height="21.412" width="28.813" y="4.14" x=".484"/>
-					<rect height="3.055" width="4.418" y="8.942" x="27.34"/>
-					<rect height="3.055" width="4.418" y="17.936" x="27.34"/>
-					<path d="m29.459 25.271c0 1.092-0.889 1.984-1.985 1.984-1.093 0-1.985-0.889-1.985-1.984v-20.811c0-1.096 0.891-1.982 1.985-1.982 1.095 0 1.985 0.885 1.985 1.982v20.811z" inkscape:connector-curvature="0"/>
-				</g>
-				<linearGradient id="SVGID_1_-65" y2="2333.3" gradientUnits="userSpaceOnUse" y1="2326.6" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" x2="734.78" x1="734.78">
-					<stop stop-color="#fff" offset=".2849"/>
-					<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
-				</linearGradient>
-				<rect opacity=".6" height="5.916" width="2.938" y="9.038" x="26.004" enable-background="new    " fill="url(#SVGID_1_-65)"/>
-				<linearGradient id="SVGID_2_-6" y2="2334" gradientUnits="userSpaceOnUse" y1="2327.3" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" x2="740" x1="740">
-					<stop stop-color="#fff" offset=".2849"/>
-					<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
-				</linearGradient>
-				<polygon opacity=".6" points="21.893 15.67 19.542 9.755 24.954 9.755 24.954 15.67" enable-background="new    " fill="url(#SVGID_2_-6)"/>
-				<linearGradient id="SVGID_3_-9" y2="2334" gradientUnits="userSpaceOnUse" y1="2327.3" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" x2="758.66" x1="758.66">
-					<stop stop-color="#fff" offset=".2849"/>
-					<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
-				</linearGradient>
-				<polygon opacity=".6" points="1.054 15.67 1.054 9.755 6.125 9.755 3.991 15.67" enable-background="new    " fill="url(#SVGID_3_-9)"/>
-				<path opacity=".4" d="m0.736 19.152h24.619s1.976 1.374 4.192 0.312l2.418 1.189s-2.104 0.763-2.418 0.707c-0.313-0.055-0.549 5.117-0.549 5.117l-1.658 0.777-2.543-1.576-24.313 0.096 0.252-6.622z" inkscape:connector-curvature="0" enable-background="new    " fill="#856829"/>
+		<g id="up_standard_output_middle" inkscape:label="">
+			<g id="up_standard_output_middle1" inkscape:label="" transform="translate(417.9 729.59)">
 				<g>
 					<g>
-						<circle stroke-linejoin="round" stroke="#000" cy="15.112" cx="12.802" stroke-miterlimit="10" r="8.177" fill="#797979"/>
-						<circle stroke-linejoin="round" stroke="#000" cy="15.112" cx="12.802" stroke-miterlimit="10" r="5.952" fill="#6c6c6c"/>
-						<circle cy="15.112" cx="12.802" r="5.952" fill="#6c6c6c"/>
-						<g opacity=".5">
-							<circle cy="15.112" cx="12.802" r="9.597" fill="#545454"/>
-						</g>
-						<circle cy="15.821" cx="11.828" r="4.14" fill="#474747"/>
-						<circle opacity=".6" enable-background="new    " cy="13.012" cx="15.553" r="1.669" fill="#e3e3e3"/>
-					</g>
-					<g fill="#cdcdcd">
-						<ellipse opacity=".4" rx="0.521" ry="4.973" cy="15.206" cx="12.853" enable-background="new    "/>
-						<ellipse opacity=".4" rx="0.521" ry="4.269" cy="15.19" cx="10.81" enable-background="new    "/>
-						<g>
-							<path opacity=".4" d="m14.294 14.073c-0.013 0.356-0.021 0.727-0.021 1.116 0 2.359 0.233 4.27 0.521 4.27 0.289 0 0.522-1.91 0.522-4.27 0-0.19-0.004-0.375-0.007-0.559-0.407-0.061-0.761-0.255-1.015-0.557z" inkscape:connector-curvature="0" enable-background="new    "/>
-							<path opacity=".4" d="m15.04 11.448c-0.073-0.324-0.156-0.526-0.246-0.526-0.114 0-0.22 0.314-0.307 0.833 0.163-0.137 0.347-0.239 0.553-0.307z" inkscape:connector-curvature="0" enable-background="new    "/>
-						</g>
+						<rect opacity=".4" height="21.522" width="187.52" y="3.954" x="0.085" enable-background="new    " fill="#563f11"/>
+						<polygon points="187.6 7.18 187.6 15.361 0.085 15.449 0.085 7.268" fill="url(#SVGID_1_-61)"/>
 					</g>
 				</g>
+				<rect y="1.797" x="0" height="1.031" width="187.6"/>
+				<rect y="23.333" x="0" height="1.031" width="187.6"/>
 			</g>
-		</g>
-		<g id="up_standard_output_test_invalid" inkscape:label="" transform="translate(492.62 727.92)">
-			<path opacity=".4" d="m26.899 23.289c-1.331 0-2.422 0.984-2.609 2.264h-24.29v1.385h24.437c0.386 0.986 1.34 1.688 2.463 1.688 1.464 0 2.649-1.188 2.649-2.649v-0.037c0-1.464-1.186-2.651-2.65-2.651z" inkscape:connector-curvature="0" enable-background="new    " fill="#563f11"/>
-			<g>
-				<g stroke="#000" stroke-miterlimit="10" fill="#d3a540">
-					<rect height="21.412" width="28.813" y="4.14" x=".484"/>
-					<rect height="3.055" width="4.418" y="8.942" x="27.34"/>
-					<rect height="3.055" width="4.418" y="17.936" x="27.34"/>
-					<path d="m29.459 25.271c0 1.092-0.889 1.984-1.985 1.984-1.093 0-1.985-0.889-1.985-1.984v-20.811c0-1.096 0.891-1.982 1.985-1.982 1.095 0 1.985 0.885 1.985 1.982v20.811z" inkscape:connector-curvature="0"/>
-				</g>
-				<rect opacity=".6" height="5.916" width="2.938" y="9.038" x="26.004" enable-background="new    " fill="url(#SVGID_1_-65)"/>
-				<linearGradient id="SVGID_2_-4" y2="2334" gradientUnits="userSpaceOnUse" y1="2327.3" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" x2="739.34" x1="739.34">
-					<stop stop-color="#fff" offset=".2849"/>
-					<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
-				</linearGradient>
-				<polygon opacity=".6" points="24.831 15.67 21.893 15.67 20.979 9.755 24.831 9.755" enable-background="new    " fill="url(#SVGID_2_-4)"/>
-				<linearGradient id="SVGID_3_-5" y2="2334" gradientUnits="userSpaceOnUse" y1="2327.3" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" x2="759.41" x1="759.41">
-					<stop stop-color="#fff" offset=".2849"/>
-					<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
-				</linearGradient>
-				<polygon opacity=".6" points="3.991 15.67 1.054 15.67 1.054 9.755 4.625 9.755" enable-background="new    " fill="url(#SVGID_3_-5)"/>
-				<path opacity=".4" d="m0.736 19.152h24.619s1.976 1.374 4.192 0.312l2.418 1.189s-2.104 0.763-2.418 0.707c-0.313-0.055-0.549 5.117-0.549 5.117l-1.658 0.777-2.543-1.576-24.313 0.096 0.252-6.622z" inkscape:connector-curvature="0" enable-background="new    " fill="#856829"/>
-				<g>
-					<g>
-						<circle stroke-linejoin="round" stroke="#000" cy="15.112" cx="12.802" stroke-miterlimit="10" r="8.177" fill="#605530"/>
-						<circle stroke-linejoin="round" stroke="#000" cy="15.112" cx="12.802" stroke-miterlimit="10" r="5.952" fill="#ff2800"/>
-						<circle cy="15.112" cx="12.802" r="5.952" fill="#ff2800"/>
-						<g opacity=".5">
-							<circle cy="15.112" cx="12.802" r="9.597" fill="#f00"/>
-						</g>
-						<circle cy="15.821" cx="11.828" r="4.14" fill="#c20000"/>
-						<circle opacity=".6" enable-background="new    " cy="13.012" cx="15.553" r="1.669" fill="#ffdccc"/>
-					</g>
-					<g fill="#ffc136">
-						<ellipse opacity=".4" rx="0.521" ry="4.973" cy="15.206" cx="12.853" enable-background="new    "/>
-						<ellipse opacity=".4" rx="0.521" ry="4.269" cy="15.19" cx="10.81" enable-background="new    "/>
-						<g>
-							<path opacity=".4" d="m14.294 14.073c-0.013 0.356-0.021 0.727-0.021 1.116 0 2.359 0.233 4.27 0.521 4.27 0.289 0 0.522-1.91 0.522-4.27 0-0.19-0.004-0.375-0.007-0.559-0.407-0.061-0.761-0.255-1.015-0.557z" inkscape:connector-curvature="0" enable-background="new    "/>
-							<path opacity=".4" d="m15.04 11.448c-0.073-0.324-0.156-0.526-0.246-0.526-0.114 0-0.22 0.314-0.307 0.833 0.163-0.137 0.347-0.239 0.553-0.307z" inkscape:connector-curvature="0" enable-background="new    "/>
-						</g>
-					</g>
-				</g>
-			</g>
-		</g>
-		<g id="up_standard_output_test_valid" inkscape:label="" transform="translate(455.27 727.92)">
-			<path opacity=".4" d="m26.899 23.289c-1.331 0-2.422 0.984-2.609 2.264h-24.29v1.385h24.437c0.386 0.986 1.34 1.688 2.463 1.688 1.464 0 2.649-1.188 2.649-2.649v-0.037c0-1.464-1.186-2.651-2.65-2.651z" inkscape:connector-curvature="0" enable-background="new    " fill="#563f11"/>
-			<g>
-				<g stroke="#000" stroke-miterlimit="10" fill="#d3a540">
-					<rect height="21.412" width="28.813" y="4.14" x=".484"/>
-					<rect height="3.055" width="4.418" y="8.942" x="27.34"/>
-					<rect height="3.055" width="4.418" y="17.936" x="27.34"/>
-					<path d="m29.459 25.271c0 1.092-0.889 1.984-1.985 1.984-1.093 0-1.985-0.889-1.985-1.984v-20.811c0-1.096 0.891-1.982 1.985-1.982 1.095 0 1.985 0.885 1.985 1.982v20.811z" inkscape:connector-curvature="0"/>
-				</g>
-				<rect opacity=".6" height="5.916" width="2.938" y="9.038" x="26.004" enable-background="new    " fill="url(#SVGID_1_-65)"/>
-				<polygon opacity=".6" points="21.893 15.67 20.979 9.755 24.831 9.755 24.831 15.67" enable-background="new    " fill="url(#SVGID_2_-4)"/>
-				<polygon opacity=".6" points="1.054 15.67 1.054 9.755 4.625 9.755 3.991 15.67" enable-background="new    " fill="url(#SVGID_3_-5)"/>
-				<path opacity=".4" d="m0.736 19.152h24.619s1.976 1.374 4.192 0.312l2.418 1.189s-2.104 0.763-2.418 0.707c-0.313-0.055-0.549 5.117-0.549 5.117l-1.658 0.777-2.543-1.576-24.313 0.096 0.252-6.622z" inkscape:connector-curvature="0" enable-background="new    " fill="#856829"/>
-				<g>
-					<g>
-						<circle stroke-linejoin="round" stroke="#000" cy="15.112" cx="12.802" stroke-miterlimit="10" r="8.177" fill="#00eb00"/>
-						<circle stroke-linejoin="round" stroke="#000" cy="15.112" cx="12.802" stroke-miterlimit="10" r="5.952" fill="#2ebe00"/>
-						<circle cy="15.112" cx="12.802" r="5.952" fill="#2ebe00"/>
-						<g opacity=".5">
-							<circle cy="15.112" cx="12.802" r="9.597" fill="#2e9600"/>
-						</g>
-						<circle cy="15.821" cx="11.828" r="4.14" fill="#009600"/>
-						<circle opacity=".6" enable-background="new    " cy="13.012" cx="15.553" r="1.669" fill="#2eff96"/>
-					</g>
-					<g fill="#f3ff00">
-						<ellipse opacity=".4" rx="0.521" ry="4.973" cy="15.206" cx="12.853" enable-background="new    "/>
-						<ellipse opacity=".4" rx="0.521" ry="4.269" cy="15.19" cx="10.81" enable-background="new    "/>
-						<g>
-							<path opacity=".4" d="m14.294 14.073c-0.013 0.356-0.021 0.727-0.021 1.116 0 2.359 0.233 4.27 0.521 4.27 0.289 0 0.522-1.91 0.522-4.27 0-0.19-0.004-0.375-0.007-0.559-0.407-0.061-0.761-0.255-1.015-0.557z" inkscape:connector-curvature="0" enable-background="new    "/>
-							<path opacity=".4" d="m15.04 11.448c-0.073-0.324-0.156-0.526-0.246-0.526-0.114 0-0.22 0.314-0.307 0.833 0.163-0.137 0.347-0.239 0.553-0.307z" inkscape:connector-curvature="0" enable-background="new    "/>
-						</g>
-					</g>
-				</g>
-			</g>
+			<rect height="38.8" width="187.6" y="729.2" x="417.9" fill="none"/>
 		</g>
 		<g id="up_memory_row_left" inkscape:label="" transform="translate(-.038827 694.01)">
 			<linearGradient id="SVGID_1_-4" y2="-1057.9" gradientUnits="userSpaceOnUse" y1="-1047.4" gradientTransform="matrix(-1 0 0 -1 712.82 -1023.5)" x2="700.4" x1="700.4">
@@ -3223,36 +3091,6 @@
 			<path inkscape:connector-curvature="0" d="m7.884 34.879c-6.219-0.656-7.707-10.438-7.707-10.438h0.994c1.912 9.563 6.713 9.438 6.713 9.438"/>
 			<path inkscape:connector-curvature="0" d="m7.884 13.941c1.418 6.292-0.5 9.5-0.5 9.5h-1.291c2.291-2.417 0.832-9.5 0.832-9.5h0.959z"/>
 			<path inkscape:connector-curvature="0" d="m21.821 17.296c0 1.604-1.906 1.678-1.906 1.678-1.766 0-1.905-1.678-1.905-1.678h1c0 0.696 0.905 0.692 0.905 0.692 0.859 0 0.906-0.692 0.906-0.692h1z"/>
-		</g>
-		<g id="up_memory_row_middle" inkscape:label="" transform="translate(24.225 694.01)">
-			<linearGradient id="SVGID_1_-07" y2="-1057.9" gradientUnits="userSpaceOnUse" y1="-1047.4" gradientTransform="matrix(1 0 0 -1 -688.73 -1023.5)" x2="750.21" x1="750.21">
-				<stop stop-color="#C2C2C2" offset="0"/>
-				<stop stop-color="#B1B1B1" offset=".0673"/>
-				<stop stop-color="#7E7E7E" offset=".2964"/>
-				<stop stop-color="#6E6E6E" offset=".5119"/>
-				<stop stop-color="#454545" offset=".7074"/>
-				<stop stop-color="#5E5E5E" offset=".8766"/>
-				<stop stop-color="#949494" offset="1"/>
-			</linearGradient>
-			<polyline points="-0.001 24.441 -0.001 34.397 122.95 34.397 122.95 23.941 0.499 24.108 -0.001 23.946 -0.001 24.441" fill="url(#SVGID_1_-07)"/>
-			<linearGradient id="SVGID_2_-8" y2="-1036.9" gradientUnits="userSpaceOnUse" y1="-1047.4" gradientTransform="matrix(1 0 0 -1 -688.73 -1023.5)" x2="750.21" x1="750.21">
-				<stop stop-color="#C2C2C2" offset="0"/>
-				<stop stop-color="#B9B9B9" offset=".0032"/>
-				<stop stop-color="#A3A3A3" offset=".0129"/>
-				<stop stop-color="#929292" offset=".0243"/>
-				<stop stop-color="#878787" offset=".0385"/>
-				<stop stop-color="#808080" offset=".0584"/>
-				<stop stop-color="#7E7E7E" offset=".1136"/>
-				<stop stop-color="#7C7C7C" offset=".1233"/>
-				<stop stop-color="#555" offset=".3676"/>
-				<stop stop-color="#383838" offset=".5917"/>
-				<stop stop-color="#272727" offset=".7865"/>
-				<stop stop-color="#212121" offset=".9301"/>
-			</linearGradient>
-			<polyline points="-0.001 13.441 -0.001 23.946 122.95 23.941 122.95 13.441 -0.001 13.441" fill="url(#SVGID_2_-8)"/>
-			<polygon points="-0.001 13.941 -0.001 12.941 122.95 12.941 122.95 13.941"/>
-			<rect y="33.879" width="122.95" x="-.001" height="1"/>
-			<rect y="23.441" width="122.95" x="-.001" height="1"/>
 		</g>
 		<g id="up_memory_row_right" inkscape:label="" transform="translate(744.24 693.83)">
 			<linearGradient id="SVGID_1_-68" y2="-1057.9" gradientUnits="userSpaceOnUse" y1="-1047.4" gradientTransform="matrix(1 0 0 -1 -688.73 -1023.5)" x2="700.57" x1="700.57">
@@ -3336,8 +3174,188 @@
 				<polygon points="23.088 15.938 19.188 0 20.25 0 24.26 15.938"/>
 			</g>
 		</g>
+		<g id="up_standard_input_middle" inkscape:label="">
+			<g id="up_standard_input_middle1" inkscape:label="" transform="translate(163.04 729.59)">
+				<g>
+					<g>
+						<rect opacity=".4" height="21.522" width="187.52" y="3.954" x="0.085" enable-background="new    " fill="#563f11"/>
+						<polygon points="187.6 15.361 0.085 15.449 0.085 7.268 187.6 7.18" fill="url(#SVGID_1_-61)"/>
+					</g>
+				</g>
+				<rect y="1.797" x="0" height="1.031" width="187.6"/>
+				<rect y="23.333" x="0" height="1.031" width="187.6"/>
+			</g>
+			<rect height="38.8" width="187.31" y="729.2" x="163.18" fill="none"/>
+		</g>
+		<g id="up_standard_output_test_inactive" inkscape:label="">
+			<g id="up_standard_output_test_inactive1" inkscape:label="" transform="translate(417.91 727.92)">
+				<path opacity=".4" d="m26.899 23.289c-1.331 0-2.422 0.984-2.609 2.264h-24.29v1.385h24.437c0.386 0.986 1.34 1.688 2.463 1.688 1.464 0 2.649-1.188 2.649-2.649v-0.037c0-1.464-1.186-2.651-2.65-2.651z" inkscape:connector-curvature="0" enable-background="new    " fill="#563f11"/>
+				<g>
+					<g stroke="#000" stroke-miterlimit="10" fill="#d3a540">
+						<rect height="21.412" width="28.813" y="4.14" x=".484"/>
+						<rect height="3.055" width="4.418" y="8.942" x="27.34"/>
+						<rect height="3.055" width="4.418" y="17.936" x="27.34"/>
+						<path d="m29.459 25.271c0 1.092-0.889 1.984-1.985 1.984-1.093 0-1.985-0.889-1.985-1.984v-20.811c0-1.096 0.891-1.982 1.985-1.982 1.095 0 1.985 0.885 1.985 1.982v20.811z" inkscape:connector-curvature="0"/>
+					</g>
+					<linearGradient id="SVGID_1_-65" y2="2333.3" gradientUnits="userSpaceOnUse" x2="734.78" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" y1="2326.6" x1="734.78">
+						<stop stop-color="#fff" offset=".2849"/>
+						<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
+					</linearGradient>
+					<rect opacity=".6" height="5.916" width="2.938" y="9.038" x="26.004" enable-background="new    " fill="url(#SVGID_1_-65)"/>
+					<linearGradient id="SVGID_2_-6" y2="2334" gradientUnits="userSpaceOnUse" x2="740" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" y1="2327.3" x1="740">
+						<stop stop-color="#fff" offset=".2849"/>
+						<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
+					</linearGradient>
+					<polygon opacity=".6" points="21.893 15.67 19.542 9.755 24.954 9.755 24.954 15.67" enable-background="new    " fill="url(#SVGID_2_-6)"/>
+					<linearGradient id="SVGID_3_-9" y2="2334" gradientUnits="userSpaceOnUse" x2="758.66" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" y1="2327.3" x1="758.66">
+						<stop stop-color="#fff" offset=".2849"/>
+						<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
+					</linearGradient>
+					<polygon opacity=".6" points="1.054 15.67 1.054 9.755 6.125 9.755 3.991 15.67" enable-background="new    " fill="url(#SVGID_3_-9)"/>
+					<path opacity=".4" d="m0.736 19.152h24.619s1.976 1.374 4.192 0.312l2.418 1.189s-2.104 0.763-2.418 0.707c-0.313-0.055-0.549 5.117-0.549 5.117l-1.658 0.777-2.543-1.576-24.313 0.096 0.252-6.622z" inkscape:connector-curvature="0" enable-background="new    " fill="#856829"/>
+					<g>
+						<g>
+							<circle stroke-linejoin="round" cx="12.802" stroke="#000" cy="15.112" r="8.177" stroke-miterlimit="10" fill="#797979"/>
+							<circle stroke-linejoin="round" cx="12.802" stroke="#000" cy="15.112" r="5.952" stroke-miterlimit="10" fill="#6c6c6c"/>
+							<circle cy="15.112" cx="12.802" r="5.952" fill="#6c6c6c"/>
+							<g opacity=".5">
+								<circle cy="15.112" cx="12.802" r="9.597" fill="#545454"/>
+							</g>
+							<circle cy="15.821" cx="11.828" r="4.14" fill="#474747"/>
+							<circle opacity=".6" r="1.669" cy="13.012" cx="15.553" enable-background="new    " fill="#e3e3e3"/>
+						</g>
+						<g fill="#cdcdcd">
+							<ellipse opacity=".4" rx="0.521" ry="4.973" cy="15.206" cx="12.853" enable-background="new    "/>
+							<ellipse opacity=".4" rx="0.521" ry="4.269" cy="15.19" cx="10.81" enable-background="new    "/>
+							<g>
+								<path opacity=".4" d="m14.294 14.073c-0.013 0.356-0.021 0.727-0.021 1.116 0 2.359 0.233 4.27 0.521 4.27 0.289 0 0.522-1.91 0.522-4.27 0-0.19-0.004-0.375-0.007-0.559-0.407-0.061-0.761-0.255-1.015-0.557z" inkscape:connector-curvature="0" enable-background="new    "/>
+								<path opacity=".4" d="m15.04 11.448c-0.073-0.324-0.156-0.526-0.246-0.526-0.114 0-0.22 0.314-0.307 0.833 0.163-0.137 0.347-0.239 0.553-0.307z" inkscape:connector-curvature="0" enable-background="new    "/>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<rect height="38.8" width="32.274" y="729.2" x="417.9" fill="none"/>
+		</g>
+		<g inkscape:label="">
+			<g id="up_standard_output_test_valid1" inkscape:label="" transform="translate(455.27 727.92)">
+				<path opacity=".4" d="m26.899 23.289c-1.331 0-2.422 0.984-2.609 2.264h-24.29v1.385h24.437c0.386 0.986 1.34 1.688 2.463 1.688 1.464 0 2.649-1.188 2.649-2.649v-0.037c0-1.464-1.186-2.651-2.65-2.651z" inkscape:connector-curvature="0" enable-background="new    " fill="#563f11"/>
+				<g>
+					<g stroke="#000" stroke-miterlimit="10" fill="#d3a540">
+						<rect height="21.412" width="28.813" y="4.14" x=".484"/>
+						<rect height="3.055" width="4.418" y="8.942" x="27.34"/>
+						<rect height="3.055" width="4.418" y="17.936" x="27.34"/>
+						<path d="m29.459 25.271c0 1.092-0.889 1.984-1.985 1.984-1.093 0-1.985-0.889-1.985-1.984v-20.811c0-1.096 0.891-1.982 1.985-1.982 1.095 0 1.985 0.885 1.985 1.982v20.811z" inkscape:connector-curvature="0"/>
+					</g>
+					<rect opacity=".6" height="5.916" width="2.938" y="9.038" x="26.004" enable-background="new    " fill="url(#SVGID_1_-65)"/>
+					<linearGradient id="SVGID_2_-54" y2="2334" gradientUnits="userSpaceOnUse" x2="739.34" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" y1="2327.3" x1="739.34">
+						<stop stop-color="#fff" offset=".2849"/>
+						<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
+					</linearGradient>
+					<polygon opacity=".6" points="21.893 15.67 20.979 9.755 24.831 9.755 24.831 15.67" enable-background="new    " fill="url(#SVGID_2_-54)"/>
+					<linearGradient id="SVGID_3_-7" y2="2334" gradientUnits="userSpaceOnUse" x2="759.41" gradientTransform="matrix(-1 0 0 1 762.25 -2317.4)" y1="2327.3" x1="759.41">
+						<stop stop-color="#fff" offset=".2849"/>
+						<stop stop-color="#fff" stop-opacity="0" offset=".5049"/>
+					</linearGradient>
+					<polygon opacity=".6" points="1.054 15.67 1.054 9.755 4.625 9.755 3.991 15.67" enable-background="new    " fill="url(#SVGID_3_-7)"/>
+					<path opacity=".4" d="m0.736 19.152h24.619s1.976 1.374 4.192 0.312l2.418 1.189s-2.104 0.763-2.418 0.707c-0.313-0.055-0.549 5.117-0.549 5.117l-1.658 0.777-2.543-1.576-24.313 0.096 0.252-6.622z" inkscape:connector-curvature="0" enable-background="new    " fill="#856829"/>
+					<g>
+						<g>
+							<circle stroke-linejoin="round" cx="12.802" stroke="#000" cy="15.112" r="8.177" stroke-miterlimit="10" fill="#00eb00"/>
+							<circle stroke-linejoin="round" cx="12.802" stroke="#000" cy="15.112" r="5.952" stroke-miterlimit="10" fill="#2ebe00"/>
+							<circle cy="15.112" cx="12.802" r="5.952" fill="#2ebe00"/>
+							<g opacity=".5">
+								<circle cy="15.112" cx="12.802" r="9.597" fill="#2e9600"/>
+							</g>
+							<circle cy="15.821" cx="11.828" r="4.14" fill="#009600"/>
+							<circle opacity=".6" r="1.669" cy="13.012" cx="15.553" enable-background="new    " fill="#2eff96"/>
+						</g>
+						<g fill="#f3ff00">
+							<ellipse opacity=".4" rx="0.521" ry="4.973" cy="15.206" cx="12.853" enable-background="new    "/>
+							<ellipse opacity=".4" rx="0.521" ry="4.269" cy="15.19" cx="10.81" enable-background="new    "/>
+							<g>
+								<path opacity=".4" d="m14.294 14.073c-0.013 0.356-0.021 0.727-0.021 1.116 0 2.359 0.233 4.27 0.521 4.27 0.289 0 0.522-1.91 0.522-4.27 0-0.19-0.004-0.375-0.007-0.559-0.407-0.061-0.761-0.255-1.015-0.557z" inkscape:connector-curvature="0" enable-background="new    "/>
+								<path opacity=".4" d="m15.04 11.448c-0.073-0.324-0.156-0.526-0.246-0.526-0.114 0-0.22 0.314-0.307 0.833 0.163-0.137 0.347-0.239 0.553-0.307z" inkscape:connector-curvature="0" enable-background="new    "/>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<rect height="38.8" width="32.274" y="729.2" x="455.25" fill="none"/>
+		</g>
+		<g id="up_standard_output_test_invalid" inkscape:label="">
+			<g id="up_standard_output_test_invalid1" inkscape:label="" transform="translate(492.62 727.92)">
+				<path opacity=".4" d="m26.899 23.289c-1.331 0-2.422 0.984-2.609 2.264h-24.29v1.385h24.437c0.386 0.986 1.34 1.688 2.463 1.688 1.464 0 2.649-1.188 2.649-2.649v-0.037c0-1.464-1.186-2.651-2.65-2.651z" inkscape:connector-curvature="0" enable-background="new    " fill="#563f11"/>
+				<g>
+					<g stroke="#000" stroke-miterlimit="10" fill="#d3a540">
+						<rect height="21.412" width="28.813" y="4.14" x=".484"/>
+						<rect height="3.055" width="4.418" y="8.942" x="27.34"/>
+						<rect height="3.055" width="4.418" y="17.936" x="27.34"/>
+						<path d="m29.459 25.271c0 1.092-0.889 1.984-1.985 1.984-1.093 0-1.985-0.889-1.985-1.984v-20.811c0-1.096 0.891-1.982 1.985-1.982 1.095 0 1.985 0.885 1.985 1.982v20.811z" inkscape:connector-curvature="0"/>
+					</g>
+					<rect opacity=".6" height="5.916" width="2.938" y="9.038" x="26.004" enable-background="new    " fill="url(#SVGID_1_-65)"/>
+					<polygon opacity=".6" points="24.831 15.67 21.893 15.67 20.979 9.755 24.831 9.755" enable-background="new    " fill="url(#SVGID_2_-54)"/>
+					<polygon opacity=".6" points="3.991 15.67 1.054 15.67 1.054 9.755 4.625 9.755" enable-background="new    " fill="url(#SVGID_3_-7)"/>
+					<path opacity=".4" d="m0.736 19.152h24.619s1.976 1.374 4.192 0.312l2.418 1.189s-2.104 0.763-2.418 0.707c-0.313-0.055-0.549 5.117-0.549 5.117l-1.658 0.777-2.543-1.576-24.313 0.096 0.252-6.622z" inkscape:connector-curvature="0" enable-background="new    " fill="#856829"/>
+					<g>
+						<g>
+							<circle stroke-linejoin="round" cx="12.802" stroke="#000" cy="15.112" r="8.177" stroke-miterlimit="10" fill="#605530"/>
+							<circle stroke-linejoin="round" cx="12.802" stroke="#000" cy="15.112" r="5.952" stroke-miterlimit="10" fill="#ff2800"/>
+							<circle cy="15.112" cx="12.802" r="5.952" fill="#ff2800"/>
+							<g opacity=".5">
+								<circle cy="15.112" cx="12.802" r="9.597" fill="#f00"/>
+							</g>
+							<circle cy="15.821" cx="11.828" r="4.14" fill="#c20000"/>
+							<circle opacity=".6" r="1.669" cy="13.012" cx="15.553" enable-background="new    " fill="#ffdccc"/>
+						</g>
+						<g fill="#ffc136">
+							<ellipse opacity=".4" rx="0.521" ry="4.973" cy="15.206" cx="12.853" enable-background="new    "/>
+							<ellipse opacity=".4" rx="0.521" ry="4.269" cy="15.19" cx="10.81" enable-background="new    "/>
+							<g>
+								<path opacity=".4" d="m14.294 14.073c-0.013 0.356-0.021 0.727-0.021 1.116 0 2.359 0.233 4.27 0.521 4.27 0.289 0 0.522-1.91 0.522-4.27 0-0.19-0.004-0.375-0.007-0.559-0.407-0.061-0.761-0.255-1.015-0.557z" inkscape:connector-curvature="0" enable-background="new    "/>
+								<path opacity=".4" d="m15.04 11.448c-0.073-0.324-0.156-0.526-0.246-0.526-0.114 0-0.22 0.314-0.307 0.833 0.163-0.137 0.347-0.239 0.553-0.307z" inkscape:connector-curvature="0" enable-background="new    "/>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<rect height="38.8" width="32.274" y="729.2" x="492.6" fill="none"/>
+		</g>
+		<g id="up_memory_row_middle" inkscape:label="">
+			<g id="up_memory_row_middle1" inkscape:label="" transform="translate(24.225 694.01)">
+				<linearGradient id="SVGID_1_-07" y2="-1057.9" gradientUnits="userSpaceOnUse" x2="750.21" gradientTransform="matrix(1 0 0 -1 -688.73 -1023.5)" y1="-1047.4" x1="750.21">
+					<stop stop-color="#C2C2C2" offset="0"/>
+					<stop stop-color="#B1B1B1" offset=".0673"/>
+					<stop stop-color="#7E7E7E" offset=".2964"/>
+					<stop stop-color="#6E6E6E" offset=".5119"/>
+					<stop stop-color="#454545" offset=".7074"/>
+					<stop stop-color="#5E5E5E" offset=".8766"/>
+					<stop stop-color="#949494" offset="1"/>
+				</linearGradient>
+				<polyline points="-0.001 24.441 -0.001 34.397 122.95 34.397 122.95 23.941 0.499 24.108 -0.001 23.946 -0.001 24.441" fill="url(#SVGID_1_-07)"/>
+				<linearGradient id="SVGID_2_-8" y2="-1036.9" gradientUnits="userSpaceOnUse" x2="750.21" gradientTransform="matrix(1 0 0 -1 -688.73 -1023.5)" y1="-1047.4" x1="750.21">
+					<stop stop-color="#C2C2C2" offset="0"/>
+					<stop stop-color="#B9B9B9" offset=".0032"/>
+					<stop stop-color="#A3A3A3" offset=".0129"/>
+					<stop stop-color="#929292" offset=".0243"/>
+					<stop stop-color="#878787" offset=".0385"/>
+					<stop stop-color="#808080" offset=".0584"/>
+					<stop stop-color="#7E7E7E" offset=".1136"/>
+					<stop stop-color="#7C7C7C" offset=".1233"/>
+					<stop stop-color="#555" offset=".3676"/>
+					<stop stop-color="#383838" offset=".5917"/>
+					<stop stop-color="#272727" offset=".7865"/>
+					<stop stop-color="#212121" offset=".9301"/>
+				</linearGradient>
+				<polyline points="-0.001 13.441 -0.001 23.946 122.95 23.941 122.95 13.441 -0.001 13.441" fill="url(#SVGID_2_-8)"/>
+				<polygon points="-0.001 13.941 -0.001 12.941 122.95 12.941 122.95 13.941"/>
+				<rect y="33.879" x="-.001" height="1" width="122.95"/>
+				<rect y="23.441" x="-.001" height="1" width="122.95"/>
+			</g>
+			<rect height="34.879" width="122.95" y="694.01" x="24.224" fill="none"/>
+		</g>
 	</g>
-	<g inkscape:label="layer_data_types" inkscape:groupmode="layer">
+	<g inkscape:label="layer_data_types" inkscape:groupmode="layer" sodipodi:insensitive="true">
 		<g id="up_address_0" inkscape:label="" transform="translate(30.447 679.48)">
 			<g stroke="#000" stroke-miterlimit="10" fill="#868478">
 				<rect height="37.922" width="12.552" y="0" x="0"/>
@@ -3405,11 +3423,11 @@
 		</g>
 		<g id="up_char" inkscape:label="" transform="translate(129.79 738.44)">
 			<g>
-				<polygon points="3.751 0.5 16.055 0.5 12.938 13.454 0.635 13.454" fill="#ffc200"/>
+				<polygon points="12.938 13.454 0.635 13.454 3.751 0.5 16.055 0.5" fill="#ffc200"/>
 				<path inkscape:connector-curvature="0" fill="#46484e" d="m15.42 1-2.876 11.954h-11.275l2.876-11.954h11.275m1.269-1h-13.332l-3.357 13.954h13.333l3.356-13.954z"/>
 			</g>
 			<rect opacity=".3" height=".958" width="8.667" y="1.667" x="5.183" fill="#fff"/>
-			<polygon opacity=".3" points="13.329 16.681 0 16.681 0 13.954 0.44 12.123 13.329 12.123" fill="#231f20"/>
+			<polygon opacity=".3" points="0 13.954 0.44 12.123 13.329 12.123 13.329 16.681 0 16.681" fill="#231f20"/>
 		</g>
 		<g id="up_float_left" inkscape:label="" transform="translate(207.63 701.36)">
 			<g>
@@ -3521,7 +3539,7 @@
 								<path inkscape:connector-curvature="0" d="m5.145 9.102c-0.227 0-0.428-0.052-0.597-0.154-0.929-0.561-0.944-2.878 0.521-5.306 1.097-1.817 2.684-3.085 3.857-3.085 0.227 0 0.428 0.051 0.596 0.153 0.467 0.281 0.703 0.972 0.648 1.896-0.062 1.052-0.478 2.263-1.168 3.41-1.097 1.817-2.683 3.086-3.857 3.086z"/>
 								<path inkscape:connector-curvature="0" d="m8.926 1.056c0.137 0 0.246 0.026 0.338 0.082 0.293 0.177 0.449 0.728 0.408 1.439-0.057 0.959-0.457 2.118-1.098 3.18-1.115 1.848-2.6 2.845-3.43 2.845-0.136 0-0.247-0.027-0.338-0.082-0.626-0.378-0.669-2.366 0.691-4.62 1.115-1.847 2.599-2.844 3.429-2.844m0-1c-1.319 0-3.06 1.296-4.286 3.327-1.515 2.513-1.672 5.195-0.35 5.993 0.253 0.153 0.542 0.226 0.855 0.226 1.32 0 3.061-1.297 4.285-3.328 1.517-2.511 1.674-5.195 0.352-5.993-0.254-0.153-0.543-0.225-0.856-0.225z"/>
 							</g>
-							<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="7.117 6.527 3.044 3.347 3.631 2.376 8.667 3.957" stroke-miterlimit="10" fill="#b6b8ba"/>
+							<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="3.631 2.376 8.667 3.957 7.117 6.527 3.044 3.347" stroke-miterlimit="10" fill="#b6b8ba"/>
 							<path stroke-linejoin="round" d="m4.017 3.331c-0.511 0.849-1.633 1.106-2.505 0.579-0.873-0.527-1.167-1.64-0.656-2.488 0.51-0.847 1.634-1.105 2.506-0.58 0.436 0.265 0.728 0.675 0.846 1.125 0.119 0.45 0.065 0.941-0.191 1.364z" inkscape:connector-curvature="0" stroke="#46484e" stroke-linecap="round" stroke-miterlimit="10" fill="#b6b8ba"/>
 						</g>
 						<g stroke-linejoin="round" stroke="#46484e" stroke-linecap="round" stroke-miterlimit="10" fill="none">
@@ -3559,7 +3577,7 @@
 									<path inkscape:connector-curvature="0" d="m5.145 9.101c-0.227 0-0.428-0.052-0.597-0.154-0.929-0.561-0.944-2.879 0.521-5.306 1.097-1.817 2.684-3.085 3.857-3.085 0.227 0 0.428 0.051 0.596 0.153 0.467 0.281 0.703 0.972 0.648 1.896-0.063 1.052-0.479 2.263-1.168 3.41-1.097 1.817-2.683 3.086-3.857 3.086z"/>
 									<path inkscape:connector-curvature="0" d="m8.926 1.055c0.137 0 0.246 0.026 0.338 0.082 0.293 0.177 0.449 0.728 0.408 1.439-0.057 0.959-0.457 2.118-1.098 3.18-1.115 1.848-2.6 2.845-3.43 2.845-0.136 0-0.247-0.027-0.338-0.082-0.627-0.378-0.67-2.366 0.69-4.62 1.116-1.847 2.6-2.844 3.43-2.844m0-1c-1.319 0-3.06 1.296-4.286 3.327-1.515 2.512-1.672 5.195-0.35 5.992 0.253 0.153 0.542 0.226 0.855 0.226 1.32 0 3.061-1.297 4.285-3.328 1.517-2.511 1.674-5.195 0.352-5.993-0.254-0.153-0.543-0.224-0.856-0.224z"/>
 								</g>
-								<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="3.631 2.374 8.667 3.956 7.117 6.525 3.044 3.346" stroke-miterlimit="10" fill="#b6b8ba"/>
+								<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="7.117 6.525 3.044 3.346 3.631 2.374 8.667 3.956" stroke-miterlimit="10" fill="#b6b8ba"/>
 								<path stroke-linejoin="round" d="m4.017 3.33c-0.511 0.849-1.633 1.106-2.505 0.579-0.873-0.527-1.167-1.64-0.656-2.488 0.51-0.847 1.634-1.105 2.506-0.58 0.436 0.265 0.728 0.675 0.846 1.125 0.119 0.449 0.065 0.941-0.191 1.364z" inkscape:connector-curvature="0" stroke="#f0537c" stroke-linecap="round" stroke-miterlimit="10" fill="#ed1c24"/>
 							</g>
 							<g stroke-linejoin="round" stroke="#46484e" stroke-linecap="round" stroke-miterlimit="10" fill="none">
@@ -3598,7 +3616,7 @@
 									<path inkscape:connector-curvature="0" d="m5.145 9.101c-0.227 0-0.428-0.052-0.597-0.154-0.929-0.561-0.944-2.879 0.521-5.306 1.097-1.817 2.684-3.085 3.857-3.085 0.227 0 0.428 0.051 0.596 0.153 0.467 0.281 0.703 0.972 0.648 1.896-0.063 1.052-0.479 2.263-1.168 3.41-1.097 1.817-2.683 3.086-3.857 3.086z"/>
 									<path inkscape:connector-curvature="0" d="m8.926 1.055c0.137 0 0.246 0.026 0.338 0.082 0.293 0.177 0.449 0.728 0.408 1.439-0.057 0.959-0.457 2.118-1.098 3.18-1.115 1.848-2.6 2.845-3.43 2.845-0.136 0-0.247-0.027-0.338-0.082-0.627-0.378-0.67-2.366 0.69-4.62 1.116-1.847 2.6-2.844 3.43-2.844m0-1c-1.319 0-3.06 1.296-4.286 3.327-1.515 2.512-1.672 5.195-0.35 5.992 0.253 0.153 0.542 0.226 0.855 0.226 1.32 0 3.061-1.297 4.285-3.328 1.517-2.511 1.674-5.195 0.352-5.993-0.254-0.153-0.543-0.224-0.856-0.224z"/>
 								</g>
-								<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="3.631 2.374 8.667 3.956 7.117 6.525 3.044 3.346" stroke-miterlimit="10" fill="#b6b8ba"/>
+								<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="7.117 6.525 3.044 3.346 3.631 2.374 8.667 3.956" stroke-miterlimit="10" fill="#b6b8ba"/>
 								<path stroke-linejoin="round" d="m4.017 3.33c-0.511 0.849-1.633 1.106-2.505 0.579-0.873-0.527-1.167-1.64-0.656-2.488 0.51-0.847 1.634-1.105 2.506-0.58 0.436 0.265 0.728 0.675 0.846 1.125 0.119 0.449 0.065 0.941-0.191 1.364z" inkscape:connector-curvature="0" stroke="#95cc77" stroke-linecap="round" stroke-miterlimit="10" fill="#75c044"/>
 							</g>
 							<g stroke-linejoin="round" stroke="#46484e" stroke-linecap="round" stroke-miterlimit="10" fill="none">
@@ -3636,7 +3654,7 @@
 								<path inkscape:connector-curvature="0" d="m-14.856 9.102c-0.227 0-0.428-0.052-0.597-0.154-0.929-0.561-0.944-2.878 0.521-5.307 1.097-1.817 2.684-3.085 3.857-3.085 0.227 0 0.428 0.051 0.596 0.153 0.467 0.281 0.703 0.972 0.648 1.896-0.061 1.052-0.477 2.263-1.168 3.41-1.097 1.818-2.683 3.087-3.857 3.087z"/>
 								<path inkscape:connector-curvature="0" d="m-11.074 1.056c0.136 0 0.246 0.026 0.337 0.082 0.293 0.177 0.449 0.728 0.408 1.439-0.057 0.959-0.457 2.118-1.098 3.181-1.115 1.848-2.6 2.845-3.43 2.845-0.136 0-0.247-0.027-0.338-0.082-0.627-0.378-0.67-2.367 0.689-4.62 1.117-1.848 2.601-2.845 3.432-2.845m-0.001-1c-1.319 0-3.06 1.296-4.286 3.327-1.515 2.512-1.673 5.195-0.351 5.993 0.253 0.153 0.542 0.226 0.855 0.226 1.32 0 3.06-1.297 4.285-3.328 1.517-2.511 1.674-5.195 0.351-5.993-0.252-0.153-0.541-0.225-0.854-0.225z"/>
 							</g>
-							<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="-11.333 3.957 -12.884 6.527 -16.957 3.347 -16.37 2.376" stroke-miterlimit="10" fill="#b6b8ba"/>
+							<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="-16.957 3.347 -16.37 2.376 -11.333 3.957 -12.884 6.527" stroke-miterlimit="10" fill="#b6b8ba"/>
 							<path stroke-linejoin="round" d="m-15.984 3.331c-0.51 0.849-1.633 1.106-2.505 0.579-0.873-0.527-1.167-1.64-0.655-2.488 0.51-0.847 1.634-1.105 2.506-0.58 0.436 0.265 0.728 0.675 0.846 1.125s0.064 0.941-0.192 1.364z" inkscape:connector-curvature="0" stroke="#46484e" stroke-linecap="round" stroke-miterlimit="10" fill="#b6b8ba"/>
 						</g>
 						<g stroke-linejoin="round" stroke="#46484e" stroke-linecap="round" stroke-miterlimit="10" fill="none">
@@ -3673,7 +3691,7 @@
 								<path inkscape:connector-curvature="0" d="m-34.857 9.102c-0.227 0-0.428-0.052-0.597-0.154-0.929-0.562-0.944-2.878 0.521-5.307 1.097-1.817 2.684-3.085 3.857-3.085 0.227 0 0.428 0.051 0.596 0.153 0.467 0.281 0.703 0.972 0.648 1.896-0.061 1.052-0.477 2.263-1.168 3.41-1.097 1.818-2.683 3.087-3.857 3.087z"/>
 								<path inkscape:connector-curvature="0" d="m-31.075 1.056c0.136 0 0.246 0.026 0.337 0.082 0.293 0.177 0.449 0.729 0.408 1.439-0.057 0.959-0.457 2.118-1.098 3.181-1.115 1.848-2.6 2.845-3.43 2.845-0.136 0-0.247-0.027-0.338-0.082-0.627-0.378-0.67-2.367 0.689-4.62 1.117-1.848 2.601-2.845 3.432-2.845m-0.001-1c-1.319 0-3.06 1.296-4.286 3.327-1.515 2.512-1.673 5.195-0.351 5.993 0.253 0.153 0.542 0.226 0.855 0.226 1.32 0 3.06-1.297 4.285-3.328 1.517-2.511 1.674-5.195 0.351-5.993-0.252-0.153-0.541-0.225-0.854-0.225z"/>
 							</g>
-							<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="-36.371 2.376 -31.334 3.957 -32.885 6.527 -36.958 3.347" stroke-miterlimit="10" fill="#b6b8ba"/>
+							<polygon stroke-linejoin="round" stroke-linecap="round" stroke="#46484e" points="-32.885 6.527 -36.958 3.347 -36.371 2.376 -31.334 3.957" stroke-miterlimit="10" fill="#b6b8ba"/>
 							<path stroke-linejoin="round" d="m-35.985 3.331c-0.51 0.849-1.633 1.106-2.505 0.579-0.873-0.527-1.167-1.64-0.655-2.488 0.51-0.847 1.634-1.105 2.506-0.58 0.436 0.265 0.728 0.675 0.846 1.125s0.064 0.941-0.192 1.364z" inkscape:connector-curvature="0" stroke="#46484e" stroke-linecap="round" stroke-miterlimit="10" fill="#b6b8ba"/>
 						</g>
 						<g stroke-linejoin="round" stroke="#46484e" stroke-linecap="round" stroke-miterlimit="10" fill="none">
@@ -3728,16 +3746,16 @@
 		<g id="up_variable_name_left" inkscape:label="" transform="translate(162.09 703.2)">
 			<g>
 				<g opacity=".5">
-					<polygon opacity=".6" points="0.323 6.472 1.289 8.483 0.882 10.743 3.246 10.743 3.246 -0.686 0.729 -0.686 1.798 1.491 0.323 2.538 1.493 4.547" fill="#fff"/>
-					<polygon points="1.14 8.499 0.713 10.869 3.246 10.869 3.246 10.616 1.051 10.616 1.438 8.467 1.422 8.433 0.483 6.479 1.656 4.548 0.504 2.571 1.974 1.53 0.949 -0.559 3.246 -0.559 3.246 -0.812 0.51 -0.812 1.623 1.453 0.142 2.503 1.331 4.545 0.163 6.467" fill="#fcfcfc"/>
+					<polygon opacity=".6" points="0.882 10.743 3.246 10.743 3.246 -0.686 0.729 -0.686 1.798 1.491 0.323 2.538 1.493 4.547 0.323 6.472 1.289 8.483" fill="#fff"/>
+					<polygon points="3.246 10.869 3.246 10.616 1.051 10.616 1.438 8.467 1.422 8.433 0.483 6.479 1.656 4.548 0.504 2.571 1.974 1.53 0.949 -0.559 3.246 -0.559 3.246 -0.812 0.51 -0.812 1.623 1.453 0.142 2.503 1.331 4.545 0.163 6.467 1.14 8.499 0.713 10.869" fill="#fcfcfc"/>
 				</g>
 				<g opacity=".3">
-					<polygon points="0.308 -0.715 0.557 -0.715 1.623 1.453 1.445 1.58"/>
-					<polygon points="0.162 2.538 0 2.652 0 2.708 1.186 4.728 0.021 6.631 1.01 8.669 0.562 11.134 3.246 11.134 3.246 10.881 0.899 10.881 0.902 10.869 0.713 10.869 1.14 8.499 0.163 6.467 1.331 4.545"/>
+					<polygon points="1.623 1.453 1.445 1.58 0.308 -0.715 0.557 -0.715"/>
+					<polygon points="0 2.708 1.186 4.728 0.021 6.631 1.01 8.669 0.562 11.134 3.246 11.134 3.246 10.881 0.899 10.881 0.902 10.869 0.713 10.869 1.14 8.499 0.163 6.467 1.331 4.545 0.162 2.538 0 2.652"/>
 				</g>
 			</g>
 			<g opacity=".1">
-				<polygon points="1.262 0.115 3.246 0.115 3.246 1.115 1.752 1.115" fill="#fff"/>
+				<polygon points="3.246 1.115 1.752 1.115 1.262 0.115 3.246 0.115" fill="#fff"/>
 			</g>
 		</g>
 		<g id="up_variable_name_middle" inkscape:label="" transform="translate(164.66 703.98)">
@@ -3756,16 +3774,16 @@
 		<g id="up_variable_name_right" inkscape:label="" transform="translate(167.24 703.96)">
 			<g>
 				<g opacity=".5">
-					<polygon opacity=".6" points="11.816 3.769 12.617 2.083 11.51 0.704 12.582 -1.478 10.047 -1.478 10.047 9.982 12.43 9.982 12.021 7.717 12.99 6.622" fill="#fff"/>
-					<polygon points="10.047 10.109 12.6 10.109 12.17 7.732 13.15 6.615 11.979 3.767 12.799 2.047 11.687 0.666 12.803 -1.605 10.047 -1.605 10.047 -1.351 12.361 -1.351 11.334 0.743 12.434 2.116 11.654 3.77 12.83 6.628 11.887 7.667 11.871 7.701 12.26 9.855 10.047 9.855" fill="#fcfcfc"/>
+					<polygon opacity=".6" points="11.51 0.704 12.582 -1.478 10.047 -1.478 10.047 9.982 12.43 9.982 12.021 7.717 12.99 6.622 11.816 3.769 12.617 2.083" fill="#fff"/>
+					<polygon points="12.17 7.732 13.15 6.615 11.979 3.767 12.799 2.047 11.687 0.666 12.803 -1.605 10.047 -1.605 10.047 -1.351 12.361 -1.351 11.334 0.743 12.434 2.116 11.654 3.77 12.83 6.628 11.887 7.667 11.871 7.701 12.26 9.855 10.047 9.855 10.047 10.109 12.6 10.109" fill="#fcfcfc"/>
 				</g>
 				<g opacity=".3">
-					<polygon points="11.865 0.794 13.005 -1.508 12.754 -1.508 11.687 0.666"/>
-					<polygon points="10.047 10.375 12.75 10.375 12.301 7.903 13.293 6.779 12.125 3.951 12.963 2.212 12.777 2.083 11.979 3.767 13.15 6.615 12.17 7.732 12.6 10.109 12.409 10.109 12.412 10.121 10.047 10.121"/>
+					<polygon points="12.754 -1.508 11.687 0.666 11.865 0.794 13.005 -1.508"/>
+					<polygon points="12.301 7.903 13.293 6.779 12.125 3.951 12.963 2.212 12.777 2.083 11.979 3.767 13.15 6.615 12.17 7.732 12.6 10.109 12.409 10.109 12.412 10.121 10.047 10.121 10.047 10.375 12.75 10.375"/>
 				</g>
 			</g>
 			<g opacity=".1">
-				<polygon points="11.541 0.322 12.031 -0.678 10.047 -0.678 10.047 0.322" fill="#fff"/>
+				<polygon points="10.047 -0.678 10.047 0.322 11.541 0.322 12.031 -0.678" fill="#fff"/>
 			</g>
 		</g>
 		<g id="up_uninitialized_1" inkscape:label="" transform="translate(53.154 699.78)">
