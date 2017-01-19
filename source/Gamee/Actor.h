@@ -7,17 +7,17 @@
 /**
    @brief Any graphic object that moves or reacts on the scene
  */
-class Actor : public ScenicElement<QGraphicsSvgItem>
+class Actor : public ScenicElement
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(Actor)
 	Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity)
 
   public:
-	/// Constructor
-	explicit Actor(QGraphicsItem* parentItem);
-	/// Creates an actor with the given svg filename
-	explicit Actor(const QString& fileName, QGraphicsItem* parentItem);
+	/// @see ScenicElement::ScenicElement()
+	explicit Actor(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem);
+	/// @see ScenicElement::ScenicElement()
+	explicit Actor(const QString& prefixedSvgElementId, QGraphicsItem* parentItem);
 	/// Animates this actor appearing or disappearing from the scene
 	/// @return the actual duration of the animation in milliseconds after ajusting to the user
 	/// preference in visualization speed slider

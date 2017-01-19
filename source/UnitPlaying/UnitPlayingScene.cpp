@@ -18,6 +18,8 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	, levelUnit(levelUnit)
 	, filename(filename)
 {
+	setBackground("up_background");
+
 	// Create the standar menu with back button, title, code editor toggle, config, and so on
 	createStandardMenu(context + ' ' + levelUnit, true);
 

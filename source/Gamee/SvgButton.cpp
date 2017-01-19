@@ -4,22 +4,33 @@
 #include <QFont>
 #include <QGraphicsSimpleTextItem>
 
-SvgButton::SvgButton(const QString& imageFileName, QGraphicsItem* parentItem, const QString& label)
-	: ScenicElement(imageFileName, parentItem)
-	, label(nullptr)
+SvgButton::SvgButton(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem  , const QString& text)
+	: ScenicElement(sceneId, svgElementId, parentItem)
 {
-	if ( ! label.isEmpty() )
+	buildLabel(text);
+}
+
+SvgButton::SvgButton(const QString& prefixedSvgElementId, QGraphicsItem* parentItem, const QString& text)
+	: ScenicElement(prefixedSvgElementId, parentItem)
+{
+	buildLabel(text);
+}
+
+SvgButton::~SvgButton()
+{
+}
+
+void SvgButton::buildLabel(const QString& text)
+{
+	if ( ! text.isEmpty() )
 	{
-		this->label = new QGraphicsSimpleTextItem(label, parentItem);
+		// ToDo: replace parentItem by this
+		this->label = new QGraphicsSimpleTextItem(text, QGraphicsSvgItem::parentItem());
 		this->label->setFont(QFont(BotNeumannApp::getRobotFontName()));
 		this->label->setBrush(QBrush(Qt::cyan));
 	}
 	setMargins(0.1); // I am not sure if it is a good margin default for buttons
 	setFlags( flags() | QGraphicsItem::ItemIsSelectable );
-}
-
-SvgButton::~SvgButton()
-{
 }
 
 void SvgButton::resize(qreal left, qreal top, qreal width, qreal height)

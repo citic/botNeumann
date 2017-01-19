@@ -12,17 +12,21 @@
 
 enum SceneId
 {
-	  sceneUnknown
-	, sceneGameMenu
-	, sceneUnitSelection
-	, sceneUnitPlaying
+	sceneGeneral,
 
-	, sceneTraining
-	, sceneMissions
-	, sceneCollaboration
-	, sceneCreate
+	sceneGameMenu,
+	sceneUnitSelection,
+	sceneUnitPlaying,
 
-	, sceneCount
+	sceneCount
+};
+
+enum SceneContext
+{
+	contextTraining,
+	contextMissions,
+	contextCollaboration,
+	contextCreate,
 };
 
 const char* mapSceneName(SceneId sceneId);

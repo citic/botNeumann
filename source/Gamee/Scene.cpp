@@ -1,8 +1,9 @@
 #include "Layout.h"
+#include "Prop.h"
 #include "Scene.h"
 #include "Stage.h"
+
 #include <QGraphicsRectItem>
-#include <QGraphicsSvgItem>
 
 Scene::Scene(const QString& sceneName, Stage* stage, QGraphicsItem* parent)
 	: QGraphicsRectItem(0.0, 0.0, stage->width(), stage->height(), parent)
@@ -12,7 +13,6 @@ Scene::Scene(const QString& sceneName, Stage* stage, QGraphicsItem* parent)
 {
 	setPen(Qt::NoPen);
 	setBrush(Qt::NoBrush);
-	setBackground();
 	stage->getGraphicsScene().addItem(this);
 }
 
@@ -21,14 +21,9 @@ Scene::~Scene()
 	delete layout;
 }
 
-void Scene::setBackground(const QString& filename)
+void Scene::setBackground(const QString& svgElementId)
 {
-	background = new QGraphicsSvgItem(getResourcePathFor(filename), this);
-}
-
-QString Scene::getResourcePathFor(const QString& assertName) const
-{
-	return ":/" + sceneName + '/' + assertName;
+	background = new Prop(svgElementId, this);
 }
 
 void Scene::setLayout(Layout* layout)

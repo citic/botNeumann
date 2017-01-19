@@ -43,14 +43,14 @@ void HeapSegment::buildSegment()
 	addItem(memoryFrame, memoryFrame->getHeightInRows() / allRows, zUnitPlaying::heapSegment);
 
 	// Create the heap segment interface that robots will use to access it
-	heapInterface = new Prop(":/unit_playing/heap_segment_interface.svg", scene);
+	heapInterface = new Prop("up_heap_segment_interface", scene);
 	addItem(heapInterface, interfaceRows / allRows, zUnitPlaying::heapSegment);
 }
 
 void HeapSegment::hideSegment()
 {
 	Q_ASSERT(scene);
-	Prop* doors = new Prop(":/unit_playing/heap_segment_disabled.svg", scene);
+	Prop* doors = new Prop("up_heap_segment_disabled", scene);
 	addItem(doors, 1.0, zUnitPlaying::heapSegment);
 }
 

@@ -5,6 +5,7 @@
 #include <QObject>
 
 class Layout;
+class Prop;
 class QGraphicsSvgItem;
 class Stage;
 
@@ -21,7 +22,8 @@ class Scene : public QObject, public QGraphicsRectItem
 	/// Each scene has a unique name, eg: "game_menu", "unit_selection", "unit_playing"...
 	QString sceneName;
 	/// Background image for this scene
-	QGraphicsSvgItem* background;
+	/// ToDo: Make scenes inherit ScenicElement, therefore, background is their image
+	Prop* background;
 	/// The unique stage where the game is supposed to run (at least at this version)
 	Stage* stage;
 	/// Layout in charge of placing and resize elements when the window is resized
@@ -33,7 +35,7 @@ class Scene : public QObject, public QGraphicsRectItem
 	/// Destructor
 	virtual ~Scene();
 	/// Changes the background image
-	virtual void setBackground(const QString& filename = "background.svg");
+	virtual void setBackground(const QString& svgElementId);
 	/**	@brief Get full resouce filename for an assert that is contained in a folder with the same
 		name of the scene. For example
 		@code
@@ -42,7 +44,6 @@ class Scene : public QObject, public QGraphicsRectItem
 			// fullPath value would be ":/GameMenu/game_title.svg"
 		@endcode
 	**/
-	virtual QString getResourcePathFor(const QString& assertName) const;
 	/// Get access to the layout in charge of placing and resizing objects for this scene
 	/// @return A pointer to the layout, nullptr if none
 	inline Layout* getLayout() const { return layout; }

@@ -36,19 +36,19 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 	const qreal buttonWidthPercent = 0.06;
 
 	// Back button
-	this->backButton = new SvgButton(":/button_back.svg", this);
+	this->backButton = new SvgButton("ge_button_back", this);
 	this->backButton->alignCenter();
 	menuLayout->addItem(backButton, buttonWidthPercent);
 	connect(backButton, SIGNAL(pressed()), this, SLOT(backButtonPressed()));
 
 	// Game title
-	this->gameTitle = new Prop(":/game_title.svg", this);
+	this->gameTitle = new Prop("ge_game_title", this);
 	this->gameTitle->alignLeft();
 	menuLayout->addItem(gameTitle, 0.32);
 	menuLayout->addStretch(0.084);
 
 	// Info button
-	this->infoButton = new SvgButton(":/button_information.svg", this);
+	this->infoButton = new SvgButton("ge_button_information", this);
 	this->infoButton->alignCenter();
 	menuLayout->addItem(infoButton, buttonWidthPercent);
 	connect(infoButton, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));
@@ -69,20 +69,20 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 	// Code editor
 	if ( enableCodeEditorToggle )
 	{
-		this->codeEditorToggle = new SvgButton(":/button_code_editor.svg", this);
+		this->codeEditorToggle = new SvgButton("ge_button_code_editor", this);
 		this->codeEditorToggle->alignCenter();
 		menuLayout->addItem(codeEditorToggle, buttonWidthPercent);
 		connect(codeEditorToggle, SIGNAL(pressed()), this, SLOT(codeSegmentTogglePressed()));
 	}
 
 	// Config button
-	this->configButton = new SvgButton(":/button_config.svg", this);
+	this->configButton = new SvgButton("ge_button_config", this);
 	this->configButton->alignCenter();
 	menuLayout->addItem(configButton, buttonWidthPercent);
 	connect(configButton, SIGNAL(pressed()), this, SLOT(configButtonPressed()));
 
 	// Rewards button
-//	this->rewardsButton = SvgButton::createImageButton(":/button_rewards.svg", this);
+//	this->rewardsButton = SvgButton::createImageButton("ge_button_rewards", this);
 //	menuLayout->addItem(rewardsButton, buttonWidthPercent);
 //	connect(rewardsButton, SIGNAL(pressed()), this, SLOT(rewardsButtonPressed()));
 }

@@ -3,13 +3,13 @@
 
 #include <QPropertyAnimation>
 
-Actor::Actor(QGraphicsItem* parentItem)
-	: ScenicElement(parentItem)
+Actor::Actor(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem)
+	: ScenicElement(sceneId, svgElementId, parentItem)
 {
 }
 
-Actor::Actor(const QString& fileName, QGraphicsItem* parentItem)
-	: ScenicElement(fileName, parentItem)
+Actor::Actor(const QString& prefixedSvgElementId, QGraphicsItem* parentItem)
+	: ScenicElement(prefixedSvgElementId, parentItem)
 {
 }
 

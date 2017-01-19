@@ -20,9 +20,9 @@ void MemoryTop::buildMemoryTop(qreal zValue)
 	const double middleProportion = size / (size + 2.0);
 
 	// Create the images
-	Prop* leftRoof = new Prop(":/unit_playing/memory_top_left.svg", scene);
-	Prop* middleRoof = new Prop(":/unit_playing/memory_top_middle.svg", scene);
-	Prop* rightRoof = new Prop(":/unit_playing/memory_top_right.svg", scene);
+	Prop* leftRoof = new Prop("up_memory_top_left", scene);
+	Prop* middleRoof = new Prop("up_memory_top_middle", scene);
+	Prop* rightRoof = new Prop("up_memory_top_right", scene);
 
 	// Add them to the layout
 	addItem(leftRoof, leftRightProportion, zValue);

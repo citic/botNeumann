@@ -35,9 +35,9 @@ void StandardInputOutput::buildStandardInputOutput()
 	const double zValue = zUnitPlaying::standardInputOutput;
 
 	// A tube has three parts: left, middle, and right
-	Prop* left = new Prop(QString(":/unit_playing/standard_%1_left.svg").arg(type), scene);
-	Prop* middle = new Prop(QString(":/unit_playing/standard_%1_middle.svg").arg(type), scene);
-	Prop* right = new Prop(QString(":/unit_playing/standard_%1_right.svg").arg(type), scene);
+	Prop* left = new Prop(QString("up_standard_%1_left").arg(type), scene);
+	Prop* middle = new Prop(QString("up_standard_%1_middle").arg(type), scene);
+	Prop* right = new Prop(QString("up_standard_%1_right").arg(type), scene);
 
 	// But proportions vary depending on the type of stream
 	if ( type == "input" )
@@ -49,7 +49,7 @@ void StandardInputOutput::buildStandardInputOutput()
 	else
 	{
 		addItem(left, elbow, zValue);
-		Prop* tester = new Prop(QString(":/unit_playing/standard_output_test_inactive.svg"), scene);
+		Prop* tester = new Prop(QString("up_standard_output_test_inactive"), scene);
 		addItem(tester, elbow, zValue);
 		addItem(middle, 1.0 - opening - 2 * elbow, zValue);
 		addItem(right, opening, zValue);

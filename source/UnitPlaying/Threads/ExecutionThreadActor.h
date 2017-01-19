@@ -22,7 +22,7 @@ class ExecutionThreadActor : public Actor
 	/// Constructor
 	/// @param id Number of process, given by the debugger
 	/// @param scene To reparent children to the scene
-	explicit ExecutionThreadActor(int id, QGraphicsItem* parentItem);
+	explicit ExecutionThreadActor(int threadId, QGraphicsItem* parentItem);
 	/// Given the sequential number (id) of a thread, it assigns a number of actor (robot)
 	/// @remarks Assume there are 4 actors (robots) in assets
 	static inline int mapActorNumber(int id) { return (id - 1) % 4 + 1; }

@@ -2,7 +2,6 @@
 #define SVGBUTTON_H
 
 #include "ScenicElement.h"
-#include <QGraphicsSvgItem>
 
 class QGraphicsSimpleTextItem;
 
@@ -23,21 +22,23 @@ class QGraphicsSimpleTextItem;
 
 	If you need only a label, @see LabelButton class.
  */
-class SvgButton : public ScenicElement<QGraphicsSvgItem>
+class SvgButton : public ScenicElement
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(SvgButton)
 
   protected:
 	/// The text of the button
-	QGraphicsSimpleTextItem* label;
+	QGraphicsSimpleTextItem* label = nullptr;
 
   public:
 	/// Constructor: creates a graphical button
 	/// @param imageFileName Mandatory file name of the image to be used as button
 	/// @param parentItem Mandatory graphic item where this button will be shown
 	/// @param label An optional text to be drawn on top of the image (i.e., background image)
-	explicit SvgButton(const QString& imageFileName, QGraphicsItem* parentItem, const QString& label = "");
+	explicit SvgButton(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem, const QString& text = "");
+	/// @see ScenicElement::ScenicElement()
+	explicit SvgButton(const QString& prefixedSvgElementId, QGraphicsItem* parentItem, const QString& text = "");
 	/// Destructor
 	virtual ~SvgButton();
 	/// Resize this element
@@ -55,6 +56,8 @@ class SvgButton : public ScenicElement<QGraphicsSvgItem>
 	void setEnabled(bool enabled) /*override*/;
 
   protected:
+	/// Builds the label in top of the button
+	void buildLabel(const QString& text);
 	/// Overriden to manage click or tap events
 	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };

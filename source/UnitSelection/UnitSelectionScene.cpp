@@ -19,6 +19,8 @@ UnitSelectionScene::UnitSelectionScene(const QString& context, Stage* stage, QGr
 	, context(context)
 	, currentUnitEnabled(true)
 {
+	setBackground("us_background");
+
 	createStandardMenu(context, false);
 	createLevelsUnits();
 	animatePods();
@@ -92,14 +94,14 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 	bool playerCompletedUnit = BotNeumannApp::getInstance()->getCurrentPlayer()->hasCompletedUnit(unitId);
 
 	// Add a pneumatic tube
-	Prop* pneumaticTube = new Prop(":/unit_selection/air_tube_short.svg", this);
+	Prop* pneumaticTube = new Prop("us_air_tube_short", this);
 	pneumaticTube->setMargins(0.3, 0.0, 0.3);
 	levelLayout->addItem(pneumaticTube, tubeWidthPercent * averageUnitWidth);
 	if ( ! currentUnitEnabled ) pneumaticTube->setOpacity(defaultDisabledOpacity);
 
 	// Add the chip
 	const QString& label = QString("%1-%2").arg(levelIndex + 1).arg(unitIndex + 1);
-	QString buttonBackground(playerCompletedUnit ? ":/unit_selection/chip_restored.svg" : ":/unit_selection/chip_damaged.svg");
+	QString buttonBackground(playerCompletedUnit ? "us_chip_restored" : "us_chip_damaged");
 	SvgButton* button = new SvgButton(buttonBackground, this, label);
 	button->setMargins(0.0);
 	levelLayout->addItem(button, chipWidthPercent * averageUnitWidth);

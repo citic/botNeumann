@@ -40,6 +40,7 @@ HEADERS += \
 	source/Common/PlayerStatus.h \
 	source/Common/Util.h \
 	source/Gamee/Actor.h \
+	source/Gamee/AlignedItem.h \
 	source/Gamee/Director.h \
 	source/Gamee/LabelButton.h \
 	source/Gamee/Layouts/Layout.h \
@@ -109,6 +110,7 @@ SOURCES += \
 	source/Common/PlayerStatus.cpp \
 	source/Common/Util.cpp \
 	source/Gamee/Actor.cpp \
+	source/Gamee/AlignedItem.cpp \
 	source/Gamee/Director.cpp \
 	source/Gamee/LabelButton.cpp \
 	source/Gamee/Layouts/Layout.cpp \

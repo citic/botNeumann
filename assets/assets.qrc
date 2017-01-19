@@ -1,45 +1,18 @@
 <RCC>
 	<qresource prefix="/">
-		<file>button_back.svg</file>
-		<file>button_code_editor.svg</file>
-		<file>button_config.svg</file>
-		<file>button_information.svg</file>
-		<file>button_rewards.svg</file>
 		<file>game_logo.svg</file>
 		<file>game_title.svg</file>
+		<file>general.svg</file>
+		<file>game_menu.svg</file>
+		<file>unit_selection.svg</file>
+		<file>unit_playing.svg</file>
 	</qresource>
 	<qresource prefix="/fonts">
 		<file>fonts/liberation_mono_regular.ttf</file>
 		<file>fonts/tenby_five.otf</file>
 	</qresource>
-	<qresource prefix="/game_menu">
-		<file alias="background.svg">game_menu/background.svg</file>
-		<file alias="button_background.svg">game_menu/button_background.svg</file>
-		<file alias="robot.svg">game_menu/robot.svg</file>
-	</qresource>
 	<qresource prefix="/source_code">
 		<file alias="bn_player_solution.c">source_code/bn_player_solution.c</file>
-	</qresource>
-	<qresource prefix="/unit_playing">
-		<file alias="background.svg">unit_playing/background.svg</file>
-		<file alias="heap_segment_disabled.svg">unit_playing/heap_segment_disabled.svg</file>
-		<file alias="heap_segment_interface.svg">unit_playing/heap_segment_interface.svg</file>
-		<file alias="memory_row_left.svg">unit_playing/memory_row_left.svg</file>
-		<file alias="memory_row_middle.svg">unit_playing/memory_row_middle.svg</file>
-		<file alias="memory_row_right.svg">unit_playing/memory_row_right.svg</file>
-		<file alias="memory_top_left.svg">unit_playing/memory_top_left.svg</file>
-		<file alias="memory_top_middle.svg">unit_playing/memory_top_middle.svg</file>
-		<file alias="memory_top_right.svg">unit_playing/memory_top_right.svg</file>
-		<file alias="stack_segment.svg">unit_playing/stack_segment.svg</file>
-		<file alias="standard_input_left.svg">unit_playing/standard_input_left.svg</file>
-		<file alias="standard_input_middle.svg">unit_playing/standard_input_middle.svg</file>
-		<file alias="standard_input_right.svg">unit_playing/standard_input_right.svg</file>
-		<file alias="standard_output_left.svg">unit_playing/standard_output_left.svg</file>
-		<file alias="standard_output_middle.svg">unit_playing/standard_output_middle.svg</file>
-		<file alias="standard_output_right.svg">unit_playing/standard_output_right.svg</file>
-		<file alias="standard_output_test_inactive.svg">unit_playing/standard_output_test_inactive.svg</file>
-		<file alias="standard_output_test_invalid.svg">unit_playing/standard_output_test_invalid.svg</file>
-		<file alias="standard_output_test_valid.svg">unit_playing/standard_output_test_valid.svg</file>
 	</qresource>
 	<qresource prefix="/unit_playing/buttons">
 		<file alias="accept.svg">unit_playing/buttons/accept.svg</file>
@@ -62,28 +35,5 @@
 		<file alias="stop.svg">unit_playing/buttons/stop.svg</file>
 		<file alias="undo.svg">unit_playing/buttons/undo.svg</file>
 		<file alias="warning.svg">unit_playing/buttons/warning.svg</file>
-	</qresource>
-	<qresource prefix="/unit_playing/data_types"/>
-	<qresource prefix="/unit_selection">
-		<file alias="air_tube_pod.svg">unit_selection/air_tube_pod.svg</file>
-		<file alias="air_tube_short.svg">unit_selection/air_tube_short.svg</file>
-		<file alias="background.svg">unit_selection/background.svg</file>
-		<file alias="chip_damaged.svg">unit_selection/chip_damaged.svg</file>
-		<file alias="chip_restored.svg">unit_selection/chip_restored.svg</file>
-	</qresource>
-	<qresource prefix="/unit_playing/threads">
-		<file alias="thread1_back.svg">unit_playing/threads/thread1_back.svg</file>
-		<file alias="thread1_front.svg">unit_playing/threads/thread1_front.svg</file>
-		<file alias="thread1_side.svg">unit_playing/threads/thread1_side.svg</file>
-		<file alias="thread2_back.svg">unit_playing/threads/thread2_back.svg</file>
-		<file alias="thread2_front.svg">unit_playing/threads/thread2_front.svg</file>
-		<file alias="thread2_side.svg">unit_playing/threads/thread2_side.svg</file>
-		<file alias="thread3_back.svg">unit_playing/threads/thread3_back.svg</file>
-		<file alias="thread3_front.svg">unit_playing/threads/thread3_front.svg</file>
-		<file alias="thread3_side.svg">unit_playing/threads/thread3_side.svg</file>
-		<file alias="thread4_back.svg">unit_playing/threads/thread4_back.svg</file>
-		<file alias="thread4_front.svg">unit_playing/threads/thread4_front.svg</file>
-		<file alias="thread4_side.svg">unit_playing/threads/thread4_side.svg</file>
-		<file alias="wave.svg">unit_playing/threads/wave.svg</file>
 	</qresource>
 </RCC>

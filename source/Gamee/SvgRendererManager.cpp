@@ -5,14 +5,10 @@ SvgRendererManager* SvgRendererManager::manager = nullptr;
 static const char* svgFiles[] =
 {
 	":/general.svg",
+
 	":/game_menu.svg",
 	":/unit_selection.svg",
 	":/unit_playing.svg",
-
-	":/training.svg",
-	":/missions.svg",
-	":/collaboration.svg",
-	":/create.svg",
 };
 
 SvgRendererManager::SvgRendererManager()

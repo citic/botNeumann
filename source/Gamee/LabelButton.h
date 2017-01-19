@@ -1,10 +1,13 @@
 #ifndef LABELBUTTON_H
 #define LABELBUTTON_H
 
-#include "ScenicElement.h"
+#include "AlignedItem.h"
+#include "LayoutItem.h"
+
+#include <QGraphicsSimpleTextItem>
 #include <QObject>
 
-class LabelButton : public QObject, public ScenicElement<QGraphicsSimpleTextItem>
+class LabelButton : public QObject, public QGraphicsSimpleTextItem, public LayoutItem, public AlignedItem
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(LabelButton)
@@ -14,6 +17,9 @@ class LabelButton : public QObject, public ScenicElement<QGraphicsSimpleTextItem
 	explicit LabelButton(const QString& label, QGraphicsItem* parentItem);
 	/// Destructor
 	virtual ~LabelButton();
+	/// Used to differentiate between pure-layout items and scenic elements
+	/// ToDo: rename to isPureLayoutObject()
+	virtual bool isScenicElement() const override { return true; }
 	/// Overrides the setText in order to adjust the dimensions of the new text to the dimensions
 	/// of the button
 	void setText(const QString &text);

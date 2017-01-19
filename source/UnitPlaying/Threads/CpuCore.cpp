@@ -28,7 +28,7 @@ double CpuCore::getHeightInRows() const
 void CpuCore::buildCpuCore()
 {
 	Q_ASSERT(scene);
-	workstation = new Prop(":/unit_playing/stack_segment.svg", scene);
+	workstation = new Prop("up_cpu_core", scene);
 	addItem(workstation, 1.0, zUnitPlaying::cpuCore);
 }
 

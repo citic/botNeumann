@@ -32,9 +32,9 @@ void MemoryRow::buildMemoryRow(qreal zValue)
 	const double middleProportion = size / (size + 2.0);
 
 	// Create the images
-	Prop* leftShelf = new Prop(":/unit_playing/memory_row_left.svg", scene);
-	Prop* middleShelf = new Prop(":/unit_playing/memory_row_middle.svg", scene);
-	Prop* rightShelf = new Prop(":/unit_playing/memory_row_right.svg", scene);
+	Prop* leftShelf = new Prop("up_memory_row_left", scene);
+	Prop* middleShelf = new Prop("up_memory_row_middle", scene);
+	Prop* rightShelf = new Prop("up_memory_row_right", scene);
 
 	// Add them to the layout
 	addItem(leftShelf, leftRightProportion, zValue);
