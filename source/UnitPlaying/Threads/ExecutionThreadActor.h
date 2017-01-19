@@ -25,7 +25,7 @@ class ExecutionThreadActor : public Actor
 	explicit ExecutionThreadActor(int threadId, QGraphicsItem* parentItem);
 	/// Given the sequential number (id) of a thread, it assigns a number of actor (robot)
 	/// @remarks Assume there are 4 actors (robots) in assets
-	static inline int mapActorNumber(int id) { return (id - 1) % 4 + 1; }
+	static inline int mapActorNumber(int id);
 	/// Changes the line number within the actor's display
 	/// @return The duration of the animation in milliseconds
 	int updateLineNumber(int updatedLineNumber);

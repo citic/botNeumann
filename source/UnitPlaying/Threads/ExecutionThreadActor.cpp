@@ -30,6 +30,13 @@ ExecutionThreadActor::ExecutionThreadActor(int threadId, QGraphicsItem* parentIt
 	buildActor();
 }
 
+int ExecutionThreadActor::mapActorNumber(int id)
+{
+	Q_UNUSED(id);
+	// return (id - 1) % 4 + 1;
+	return qrand() % 4 + 1;
+}
+
 void ExecutionThreadActor::buildActor()
 {
 	layout = new LinearLayout( Qt::Vertical );
