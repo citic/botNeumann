@@ -23,6 +23,8 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	/// Overrides the setText in order to adjust the dimensions of the new text to the dimensions
 	/// of the button
 	void setText(const QString &text);
+	/// Overrides to force QGraphicsSimpleTextItem to resize the text
+	virtual QRectF boundingRect() const override;
 
   signals:
 	/// Emitted when this button is pressed
@@ -32,6 +34,9 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
   protected:
 	/// Overriden to manage click or tap events
 	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+	/// Resize this element
+	/// This method is called each time the Stage and Scene has been resized
+	virtual void resize(qreal left, qreal top, qreal width, qreal height) override;
 };
 
 #endif // LABELBUTTON_H
