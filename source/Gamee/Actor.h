@@ -15,8 +15,6 @@ class Actor : public ScenicElement
 
   public:
 	/// @see ScenicElement::ScenicElement()
-	explicit Actor(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem);
-	/// @see ScenicElement::ScenicElement()
 	explicit Actor(const QString& prefixedSvgElementId, QGraphicsItem* parentItem);
 	/// Animates this actor appearing or disappearing from the scene
 	/// @return the actual duration of the animation in milliseconds after ajusting to the user

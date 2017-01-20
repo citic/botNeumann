@@ -2,19 +2,14 @@
 #include "Layout.h"
 #include "SvgRendererManager.h"
 
-ScenicElement::ScenicElement(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem)
-	: QGraphicsSvgItem(parentItem)
-{
-	setRenderer(sceneId);
-	if ( ! svgElementId.isEmpty() )
-		setElementId(svgElementId);
-}
-
 ScenicElement::ScenicElement(const QString& prefixedSvgElementId, QGraphicsItem* parentItem)
 	: QGraphicsSvgItem(parentItem)
 {
-	setRenderer( mapSceneIdFromPrefix(prefixedSvgElementId) );
-	setElementId(prefixedSvgElementId);
+	if ( ! prefixedSvgElementId.isEmpty() )
+	{
+		setRenderer( mapSceneIdFromPrefix(prefixedSvgElementId) );
+		setElementId(prefixedSvgElementId);
+	}
 }
 
 ScenicElement::~ScenicElement()

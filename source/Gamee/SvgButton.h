@@ -33,10 +33,8 @@ class SvgButton : public ScenicElement
 
   public:
 	/// Constructor: creates a graphical button
-	/// @param imageFileName Mandatory file name of the image to be used as button
 	/// @param parentItem Mandatory graphic item where this button will be shown
-	/// @param label An optional text to be drawn on top of the image (i.e., background image)
-	explicit SvgButton(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem, const QString& text = "");
+	/// @param text An optional text to be drawn on top of the image (i.e., background image)
 	/// @see ScenicElement::ScenicElement()
 	explicit SvgButton(const QString& prefixedSvgElementId, QGraphicsItem* parentItem, const QString& text = "");
 	/// Destructor

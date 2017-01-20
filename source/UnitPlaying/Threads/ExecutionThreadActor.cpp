@@ -23,9 +23,10 @@ static const QColor threadColors[] =
 
 
 ExecutionThreadActor::ExecutionThreadActor(int threadId, QGraphicsItem* parentItem)
-	: Actor(sceneUnitPlaying, "", parentItem)
+	: Actor("", parentItem)
 	, actorNumber( mapActorNumber(threadId) )
 {
+	setRenderer(sceneUnitPlaying);
 	setElementId( QString("up_thread%1_back").arg(actorNumber) );
 	buildActor();
 }

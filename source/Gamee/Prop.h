@@ -12,8 +12,6 @@ class Prop : public ScenicElement
 
   public:
 	/// @see ScenicElement::ScenicElement()
-	explicit Prop(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem);
-	/// @see ScenicElement::ScenicElement()
 	explicit Prop(const QString& prefixedSvgElementId, QGraphicsItem* parentItem);
 	/// Destructor
 	virtual ~Prop();

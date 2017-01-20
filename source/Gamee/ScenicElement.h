@@ -34,11 +34,10 @@ class ScenicElement : public QGraphicsSvgItem, public LayoutItem, public Aligned
 	/// Creates a scenic element with the given SVG ID
 	/// @param parentItem The new element will nested as child of this parentItem. Only scenes
 	/// can send this parameter null
-	/// @param scenId The scene to choose the renderer that contains the svg with the @svgId
-	/// @param svgElementId the id of the object within the SVG to be rendered. If empty, id can be
-	/// set later using the setElementId() method.
-	explicit ScenicElement(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem);
-	/// Creates a scenic element infering the scene from @a prefixedSvgElementId
+	/// @param prefixedSvgElementId the id of the object within the SVG to be rendered. If empty,
+	/// id can be set later using the setElementId() method. The scene is infered from the first
+	/// letters of @a prefixedSvgElementId
+	/// @see mapSceneIdFromPrefix() to get the list of supported prefixes
 	explicit ScenicElement(const QString& prefixedSvgElementId, QGraphicsItem* parentItem);
 	/// Destructor
 	virtual ~ScenicElement();

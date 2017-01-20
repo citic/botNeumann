@@ -1,14 +1,10 @@
 #include "BotNeumannApp.h"
 #include "SvgButton.h"
+
 #include <QBrush>
 #include <QFont>
 #include <QGraphicsSimpleTextItem>
 
-SvgButton::SvgButton(SceneId sceneId, const QString& svgElementId, QGraphicsItem* parentItem  , const QString& text)
-	: ScenicElement(sceneId, svgElementId, parentItem)
-{
-	buildLabel(text);
-}
 
 SvgButton::SvgButton(const QString& prefixedSvgElementId, QGraphicsItem* parentItem, const QString& text)
 	: ScenicElement(prefixedSvgElementId, parentItem)

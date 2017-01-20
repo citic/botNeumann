@@ -17,10 +17,6 @@
 
 GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	: Scene(mapSceneName(sceneGameMenu), stage, parent)
-	, trainingButton(nullptr)
-	, missionsButton(nullptr)
-	, collaborationButton(nullptr)
-	, createButton(nullptr)
 {
 	setBackground("gm_background");
 

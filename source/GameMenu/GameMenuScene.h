@@ -19,12 +19,12 @@ class GameMenuScene : public Scene
 
   protected:
 	/// Game mode buttons
-	SvgButton* trainingButton;
-	SvgButton* missionsButton;
-	SvgButton* collaborationButton;
-	SvgButton* createButton;
+	SvgButton* trainingButton = nullptr;
+	SvgButton* missionsButton = nullptr;
+	SvgButton* collaborationButton = nullptr;
+	SvgButton* createButton = nullptr;
 	/// A label showing the current player and allows to change the player
-	PlayerStatus* playerStatus;
+	PlayerStatus* playerStatus = nullptr;
 
   public:
 	/// Constructor
