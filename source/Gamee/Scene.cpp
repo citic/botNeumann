@@ -9,7 +9,6 @@ Scene::Scene(const QString& sceneName, Stage* stage, QGraphicsItem* parent)
 	: QGraphicsRectItem(0.0, 0.0, stage->width(), stage->height(), parent)
 	, sceneName(sceneName)
 	, stage(stage)
-	, layout(nullptr)
 {
 	setPen(Qt::NoPen);
 	setBrush(Qt::NoBrush);
@@ -36,11 +35,10 @@ void Scene::setLayout(Layout* layout)
 
 void Scene::resize(qreal width, qreal height)
 {
+	// This scene is a invisible QGraphicsRectItem, resize it, and its background
 	setRect(0.0, 0.0, width, height);
+	background->resize(0.0, 0.0, width, height);
 
-	qreal sw = width / background->boundingRect().width();
-	qreal sh = height / background->boundingRect().height();
-	background->setTransform(QTransform().scale(sw, sh));
-
+	// Resize any child elements
 	if ( layout ) layout->resize(0.0, 0.0, width, height);
 }

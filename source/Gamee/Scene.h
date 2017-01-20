@@ -23,11 +23,11 @@ class Scene : public QObject, public QGraphicsRectItem
 	QString sceneName;
 	/// Background image for this scene
 	/// ToDo: Make scenes inherit ScenicElement, therefore, background is their image
-	Prop* background;
+	Prop* background = nullptr;
 	/// The unique stage where the game is supposed to run (at least at this version)
-	Stage* stage;
+	Stage* stage = nullptr;
 	/// Layout in charge of placing and resize elements when the window is resized
-	Layout* layout;
+	Layout* layout = nullptr;
 
   public:
 	/// Constructor
@@ -36,14 +36,6 @@ class Scene : public QObject, public QGraphicsRectItem
 	virtual ~Scene();
 	/// Changes the background image
 	virtual void setBackground(const QString& svgElementId);
-	/**	@brief Get full resouce filename for an assert that is contained in a folder with the same
-		name of the scene. For example
-		@code
-			Scene gameMenuScene(stage, "GameMenu", stage->width(), stage->heigth());
-			const QString& fullPath = gameMenuScene.getResourcePathFor("game_title.svg");
-			// fullPath value would be ":/GameMenu/game_title.svg"
-		@endcode
-	**/
 	/// Get access to the layout in charge of placing and resizing objects for this scene
 	/// @return A pointer to the layout, nullptr if none
 	inline Layout* getLayout() const { return layout; }

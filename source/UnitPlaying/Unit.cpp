@@ -214,5 +214,4 @@ void Unit::distributeMemory()
 
 	// Visible rows of the stack segment
 	stackSegmentVisibleRows = sqrt(ramSize / (35.0 * largestDataTypeSize));
-	qCDebug(logApplication) << "Stack segment visible rows" << stackSegmentVisibleRows << "of" << columns / cpuCores << "columns each";
 }
