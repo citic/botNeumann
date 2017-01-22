@@ -11,6 +11,7 @@
 #include "Visualizator.h"
 
 #include <QSettings>
+#include <QTimer>
 
 UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename, Stage* stage, QGraphicsItem* parent)
 	: GameScene(mapSceneName(sceneUnitPlaying), stage, parent)
@@ -57,17 +58,11 @@ void UnitPlayingScene::startLeavingStage()
 {
 	// The Unit Playing scene is leaving the stage
 
-	// Keep visibility preferences of the user for future use
-	QSettings settings;
-	settings.setValue(sk("CodeSegment/Visible"), codeSegment->isVisible());
-	settings.setValue(sk("MessagesArea/Visible"), messagesArea->isVisible());
-
-	// Hide and remove the the code editor
-	codeSegment->setVisible(false);
+	// Code segment and messages area were hidden when the back button was pressed,
+	// just release their memory
+	Q_ASSERT(codeSegment);
+	Q_ASSERT(messagesArea);
 	codeSegment->deleteLater();
-
-	// Hide and remove the messages area
-	messagesArea->setVisible(false);
 	messagesArea->deleteLater();
 }
 
@@ -100,14 +95,19 @@ void UnitPlayingScene::backButtonPressed()
 {
 	Q_ASSERT(codeSegment);
 	Q_ASSERT(messagesArea);
+
+	// Keep visibility preferences of the user for future use
+	QSettings settings;
+	settings.setValue(sk("CodeSegment/Visible"), codeSegment->isVisible());
+	settings.setValue(sk("MessagesArea/Visible"), messagesArea->isVisible());
+
 	codeSegment->setVisible(false);
 	messagesArea->setVisible(false);
 
-	// Wait until the docks have been completely hidden to allow the QGraphicsView widget to
-	// resize before starting the transition to the unit selection scene
-	docksHidingTimer.setSingleShot(true);
-	connect( &docksHidingTimer, SIGNAL(timeout()), this, SLOT(callUnitSelectionScene()) );
-	docksHidingTimer.start(0);
+	// We use a timer to wait until the docks (code segment and messages area) have been completely
+	// hidden to allow the QGraphicsView widget to resize before starting the transition to the unit
+	// selection scene
+	QTimer::singleShot(0, this, SLOT(callUnitSelectionScene()) );
 }
 
 void UnitPlayingScene::callUnitSelectionScene()

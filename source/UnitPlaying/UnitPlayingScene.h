@@ -4,8 +4,6 @@
 #include "GameScene.h"
 #include "Unit.h"
 
-#include <QTimer>
-
 class CodeSegment;
 class Compiler;
 class CpuCores;
@@ -66,11 +64,6 @@ class UnitPlayingScene : public GameScene
 	MessagesArea* messagesArea = nullptr;
 	/// Controller in charge of visualizing the executable
 	Visualizator* visualizator = nullptr;
-	/// Used to hide the code segment and messages area before return to the unit selection scene
-	/// This is required because hiding these docks resize the scene, and the layouts start to
-	/// resize before the event queue has processed the hiding of the docks. Therefore we use a
-	/// timer to wait
-	QTimer docksHidingTimer;
 
   public:
 	/// Constructor
