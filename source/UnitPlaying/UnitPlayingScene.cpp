@@ -98,6 +98,20 @@ void UnitPlayingScene::infoButtonPressed()
 
 void UnitPlayingScene::backButtonPressed()
 {
+	Q_ASSERT(codeSegment);
+	Q_ASSERT(messagesArea);
+	codeSegment->setVisible(false);
+	messagesArea->setVisible(false);
+
+	// Wait until the docks have been completely hidden to allow the QGraphicsView widget to
+	// resize before starting the transition to the unit selection scene
+	docksHidingTimer.setSingleShot(true);
+	connect( &docksHidingTimer, SIGNAL(timeout()), this, SLOT(callUnitSelectionScene()) );
+	docksHidingTimer.start(0);
+}
+
+void UnitPlayingScene::callUnitSelectionScene()
+{
 	emit showUnitSelectionScene(context, false);
 }
 

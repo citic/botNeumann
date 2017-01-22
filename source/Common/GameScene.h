@@ -19,21 +19,21 @@ class GameScene : public Scene
 
   protected:
 	/// Button to return to the previous screen
-	SvgButton* backButton;
+	SvgButton* backButton = nullptr;
 	/// Sprite containing the name of the scene
-	Prop* gameTitle;
+	Prop* gameTitle = nullptr;
 	/// Button to show info about this scene, e.g: the task description on unit playing scene
-	SvgButton* infoButton;
+	SvgButton* infoButton = nullptr;
 	/// A label showing the title of the scene, e.g: "Training" or "Challenges"
-	LabelButton* sceneTitle;
+	LabelButton* sceneTitle = nullptr;
 	/// A gauge showing the name of the player, his/her score, and level
 //	PlayerStatus* playerStatus;
 	/// Gear button to configure the game
-	SvgButton* configButton;
+	SvgButton* configButton = nullptr;
 	/// Button for accessing the rewards
 //	SvgButton* rewardsButton;
 	/// When pressed, shows or hiddes the code editor
-	SvgButton* codeEditorToggle;
+	SvgButton* codeEditorToggle = nullptr;
 
   public:
 	/// Constructor

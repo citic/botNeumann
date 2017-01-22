@@ -50,8 +50,8 @@ bool UnitSelectionScene::createLevelsUnits()
 	const QList<UnitLevel>& levels = unitManager.getLevels();
 
 	// For each level, create a line of chips
-	for ( int i = 0; i < levels.size(); ++i )
-		createLevel(i, levels[i]);
+	for ( int index = 0; index < levels.size(); ++index )
+		createLevel(index, levels[index]);
 
 	return true;
 }
@@ -78,8 +78,8 @@ void UnitSelectionScene::createLevel(int levelIndex, const UnitLevel& level)
 	int maxUnitCountPerLevel = unitManager.calculateMaxUnitsPerLevel();
 
 	// For each unit in this level, create a chip
-	for (int i = 0, count = level.units.size(); i < count; ++i )
-		createUnit(levelIndex, i, maxUnitCountPerLevel, level.units[i], levelLayout);
+	for (int index = 0, count = level.units.size(); index < count; ++index )
+		createUnit(levelIndex, index, maxUnitCountPerLevel, level.units[index], levelLayout);
 }
 
 void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCountInLevel, const QString& filename, LinearLayout* levelLayout)

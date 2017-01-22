@@ -10,14 +10,6 @@
 
 GameScene::GameScene(const QString& sceneName, Stage* stage, QGraphicsItem* parent)
 	: Scene(sceneName, stage, parent)
-	, backButton(nullptr)
-	, gameTitle(nullptr)
-	, infoButton(nullptr)
-	, sceneTitle(nullptr)
-//	, playerStatus(nullptr)
-	, configButton(nullptr)
-//	, rewardsButton(nullptr)
-	, codeEditorToggle(nullptr)
 {
 }
 
@@ -28,7 +20,8 @@ GameScene::~GameScene()
 void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorToggle)
 {
 	// A global layout is required
-	if ( this->layout == nullptr ) layout = new LinearLayout(Qt::Vertical);
+	if ( this->layout == nullptr )
+		this->layout = new LinearLayout(Qt::Vertical);
 
 	// Create an exclusive layout for the standard menu
 	LinearLayout* menuLayout = new LinearLayout(Qt::Horizontal);
