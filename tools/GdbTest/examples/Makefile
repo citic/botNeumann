@@ -1,4 +1,4 @@
-PROJECTS=hello_c hello_cpp ftoc_f ftoc_i rand threads1 input1
+PROJECTS=hello_c hello_cpp ftoc_f ftoc_i rand rand2 threads1 input1
 CC=gcc
 CXX=g++
 
