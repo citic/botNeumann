@@ -453,11 +453,39 @@ current-thread-id="1"
 
 
 
-<h3>gdbCommand</h3>
+<h3>-exec-next</h3>
 <table>
 <tr>
 <td>
-<pre>gdbOutput
+<pre>^running
+*running,thread-id="all"
+<hr/>
+(gdb)
+</pre>
+</td>
+<td>
+<pre>botNeumannReaction
+</pre>
+</td>
+</tr>
+</table>
+
+
+
+
+
+<h3>-var-create bn_stdin @ stdin->_IO_read_ptr</h3>
+<table>
+<tr>
+<td>
+<pre>^done
+,name="bn_stdin"
+,numchild="1"
+,value="0x602012 \"line 1\\nline \\\"2\\\"\\n\""
+,type="char *"
+,has_more="0"
+<hr/>
+(gdb)
 </pre>
 </td>
 <td>

@@ -4,6 +4,10 @@ void AlignedItem::applyAlignment(QGraphicsItem* item, qreal& left, qreal& top, q
 {
 	Q_ASSERT(item);
 
+	// Justified alignment uses the whole width and height, we do not need to inject space
+	if ( alignment.testFlag(Qt::AlignJustify) )
+		return;
+
 	if ( scaleWidth > scaleHeight )
 	{
 		//if ( alignment.testFlag(Qt::AlignLeft) ) left += 0; else
@@ -29,8 +33,7 @@ void AlignedItem::resizeItem(QGraphicsItem* item, qreal& left, qreal& top, qreal
 	Q_ASSERT(item);
 	qreal scaleWidth = width / item->boundingRect().width();
 	qreal scaleHeight = height / item->boundingRect().height();
-	if ( ! alignment.testFlag(Qt::AlignJustify) )
-		applyAlignment(item, left, top, width, height, scaleWidth, scaleHeight);
+	applyAlignment(item, left, top, width, height, scaleWidth, scaleHeight);
 	item->setTransform(QTransform().scale(scaleWidth, scaleHeight));
 
 	// If this element is a nested child, map coordinates from scene to its parent
