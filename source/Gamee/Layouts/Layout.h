@@ -40,7 +40,6 @@ class Layout : public LayoutItem
 	virtual void addStretch(qreal proportion, qreal zValue = 0.0);
 	/// Find the zValue of this item in its parent, -1.0 if not added or not parent
 	/// @remarks The search is done in linear time
-	/// @remarks Implemented but not used, as well as parentItem
 	qreal findZValue() const;
 	/// Find the zValue of the given item, -1.0 if not found
 	/// @remarks The search is done in linear time

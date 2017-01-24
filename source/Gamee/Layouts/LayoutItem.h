@@ -15,7 +15,7 @@ class LayoutItem
   protected:
 	/// Pointer to the parent item that contains this one
 	/// @remarks Implemented but not used, as well as Layout::findZValue()
-	LayoutItem* parentItem = nullptr;
+	LayoutItem* parentLayoutItem = nullptr;
 	/// Percent of extension (aka proportion) this item will occupy in parent's space
 	qreal proportion;
 	/// Percent of extension of each margin of this item
@@ -41,8 +41,8 @@ class LayoutItem
 	/// Force to update this element, in the same fashion when a resize is done
 	virtual void updateLayoutItem();
 	/// The parent item that contains this one
-	inline LayoutItem* getParentItem() const { return parentItem; }
-	inline void setParentItem(LayoutItem* parent) { this->parentItem = parent; }
+	inline LayoutItem* getParentLayoutItem() const { return parentLayoutItem; }
+	inline void setParentLayoutItem(LayoutItem* parent) { this->parentLayoutItem = parent; }
 	/// The proportion of space this item occupies of its layout
 	inline qreal getProportion() const { return proportion; }
 	inline void setProportion(qreal proportion) { this->proportion = proportion; }

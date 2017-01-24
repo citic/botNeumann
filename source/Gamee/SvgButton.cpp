@@ -21,7 +21,7 @@ void SvgButton::buildLabel(const QString& text)
 	if ( ! text.isEmpty() )
 	{
 		// ToDo: replace parentItem by this
-		this->label = new QGraphicsSimpleTextItem(text, QGraphicsSvgItem::parentItem());
+		this->label = new QGraphicsSimpleTextItem(text, parentItem());
 		this->label->setFont(QFont(BotNeumannApp::getRobotFontName()));
 		this->label->setBrush(QBrush(Qt::cyan));
 	}
