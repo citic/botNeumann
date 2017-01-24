@@ -39,9 +39,6 @@ class SvgButton : public ScenicElement
 	explicit SvgButton(const QString& prefixedSvgElementId, QGraphicsItem* parentItem, const QString& text = "");
 	/// Destructor
 	virtual ~SvgButton();
-	/// Resize this element
-	/// This method is called each time the Stage and Scene has been resized
-	virtual void resize(qreal left, qreal top, qreal width, qreal height) override;
 
   signals:
 	/// Emitted when this button is pressed
