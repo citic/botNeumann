@@ -20,7 +20,9 @@ class AlignedItem
 
   protected:
 	/// Applies alignment when resizing this element
-	virtual void applyAlignment(qreal& left, qreal& top, qreal width, qreal height, qreal& scaleWidth, qreal& scaleHeight);
+	virtual void applyAlignment(QGraphicsItem* item, qreal& left, qreal& top, qreal width, qreal height, qreal& scaleWidth, qreal& scaleHeight);
+	/// Resizes the graphic part of the given element and applies the alignment
+	void resizeItem(QGraphicsItem* item, qreal& left, qreal& top, qreal width, qreal height);
 };
 
 #endif // ALIGNEDITEM_H

@@ -23,8 +23,6 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	/// Overrides the setText in order to adjust the dimensions of the new text to the dimensions
 	/// of the button
 	void setText(const QString &text);
-	/// Overrides to force QGraphicsSimpleTextItem to resize the text
-	virtual QRectF boundingRect() const override;
 
   signals:
 	/// Emitted when this button is pressed

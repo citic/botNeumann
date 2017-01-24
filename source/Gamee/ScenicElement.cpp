@@ -42,16 +42,5 @@ void ScenicElement::resize(qreal left, qreal top, qreal width, qreal height)
 	applyMargins(left, top, width, height);
 
 	// Resize the QGraphicaItem part of this object
-	qreal scaleWidth = width / boundingRect().width();
-	qreal scaleHeight = height / boundingRect().height();
-	if ( ! alignment.testFlag(Qt::AlignJustify) )
-		applyAlignment(left, top, width, height, scaleWidth, scaleHeight);
-	setTransform(QTransform().scale(scaleWidth, scaleHeight));
-
-	// If this element is a nested child, map coordinates from scene to its parent
-	QPointF posChild(left, top);
-	QGraphicsItem* parent = QGraphicsSvgItem::parentItem();
-	if ( parent )
-		posChild = parent->mapFromScene(posChild);
-	setPos(posChild);
+	resizeItem(this, left, top, width, height);
 }

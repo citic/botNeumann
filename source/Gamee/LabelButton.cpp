@@ -22,11 +22,6 @@ void LabelButton::setText(const QString& text)
 	updateLayoutItem();
 }
 
-QRectF LabelButton::boundingRect() const
-{
-	return QRectF(0.0, 0.0, layoutWidth, layoutHeight);
-}
-
 void LabelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
 	emit pressed();
@@ -35,7 +30,10 @@ void LabelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void LabelButton::resize(qreal left, qreal top, qreal width, qreal height)
 {
-	prepareGeometryChange();
-	setPos(left, top);
+	// Update the LayoutItem part of this object
 	LayoutItem::resize(left, top, width, height);
+	applyMargins(left, top, width, height);
+
+	// Resize the QGraphicaItem part of this object
+	resizeItem(this, left, top, width, height);
 }
