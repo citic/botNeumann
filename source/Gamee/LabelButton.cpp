@@ -16,10 +16,11 @@ LabelButton::~LabelButton()
 {
 }
 
-void LabelButton::setText(const QString& text)
+void LabelButton::setText(const QString& text, bool updateLayout)
 {
 	QGraphicsSimpleTextItem::setText(text);
-	updateLayoutItem();
+	if ( updateLayout )
+		updateLayoutItem();
 }
 
 void LabelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)

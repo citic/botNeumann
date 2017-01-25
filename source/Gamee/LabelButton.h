@@ -22,7 +22,9 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	virtual bool isScenicElement() const override { return true; }
 	/// Overrides the setText in order to adjust the dimensions of the new text to the dimensions
 	/// of the button
-	void setText(const QString &text);
+	/// @param updateLayout true if the LayoutItem::updateLayoutItem() should be called
+	/// to update the dimensions of the label
+	void setText(const QString &text, bool updateLayout);
 
   signals:
 	/// Emitted when this button is pressed

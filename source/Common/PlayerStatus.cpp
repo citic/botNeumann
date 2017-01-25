@@ -18,5 +18,5 @@ PlayerStatus::~PlayerStatus()
 void PlayerStatus::playerChanged(Player* newPlayer)
 {
 	const QString& nickname = newPlayer ? newPlayer->getNickname() : tr("NoPlayer");
-	setText(nickname);
+	setText(nickname, true);
 }

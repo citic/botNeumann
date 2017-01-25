@@ -39,6 +39,8 @@ class ExecutionThread : public LinearLayout
 	/// The previous line number that this thread was executing before the last update
 	/// It is used by code editors to clear highlighted lines
 	int previousLineNumber = -1;
+	/// A layer to place the actor
+	LinearLayout* actorLayout = nullptr;
 	/// The robot used to represent the execution thread
 	ExecutionThreadActor* robot = nullptr;
 

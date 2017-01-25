@@ -19,9 +19,18 @@ void ExecutionThread::buildExecutionThread()
 {
 	setMargins(0.1);
 
+	// Create an actor (robot) for the execution thread with its line number
 	Q_ASSERT(robot == nullptr);
 	robot = new ExecutionThreadActor(id, scene);
-	addItem(robot, 1.15, zUnitPlaying::executionThread + 0.2);
+
+	// The actor is in the bottom part of the execution thread, almost under the call stack
+	Q_ASSERT(actorLayout == nullptr);
+	actorLayout = new LinearLayout(Qt::Vertical);
+	const qreal zActor = zUnitPlaying::executionThread + 0.2;
+	actorLayout->addStretch(0.7, zActor);
+	actorLayout->addItem(robot, 0.4, zActor);
+
+	addItem(actorLayout, 1.0, zActor);
 }
 
 int ExecutionThread::animateAppear()
@@ -79,15 +88,9 @@ void ExecutionThread::setIdle(bool idle)
 
 	Q_ASSERT(robot);
 	if ( idle )
-	{
-		robot->setMarginTop(0.3);
 		robot->setOpacity(0.75);
-	}
 	else
-	{
-		robot->setMarginTop(0.6);
 		robot->setOpacity(1.0);
-	}
 	updateLayoutItem();
 }
 

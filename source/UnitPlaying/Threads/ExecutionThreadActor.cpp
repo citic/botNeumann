@@ -8,7 +8,9 @@
 
 /// The line number must appear within the display of the robot, but each robot has the display
 /// at different top
-const qreal lineNumberTopMargin[] = {0.735, 0.847, 0.827, 0.740};
+const qreal lineNumberTopMargin[] = {34, 64, 62, 38};
+const qreal lineNumberRefWidth =  33; // px
+//const qreal lineNumberRefHeight = 14; // px
 
 static const int alpha = 127;
 
@@ -40,29 +42,23 @@ int ExecutionThreadActor::mapActorNumber(int id)
 
 void ExecutionThreadActor::buildActor()
 {
-	layout = new LinearLayout( Qt::Vertical );
-
 	// Adjust the robot
-	setMarginTop(0.6);
 	alignCenter();
 
 	// Create the line number
 	lineNumber = new LabelButton("00", this);
 	lineNumber->setAlignment(Qt::AlignCenter);
-	layout->addItem(lineNumber, 1.0, zUnitPlaying::executionThread + 0.3);
 
 	// Center the line number within the robot's display
-	const qreal lineNumberHeight = 0.06;
-	const qreal lineNumberLeftRight = 0.42;
-	qreal marginTop = lineNumberTopMargin[actorNumber - 1];
-	qreal marginBottom = 1.0 - marginTop - lineNumberHeight;
-	lineNumber->setMargins(marginTop, lineNumberLeftRight, marginBottom);
+	qreal lineNumberLeft = (this->boundingRect().width() - lineNumberRefWidth) * 0.5;
+	qreal lineNumberTop = lineNumberTopMargin[actorNumber - 1];
+	lineNumber->setPos(lineNumberLeft, lineNumberTop);
 }
 
 int ExecutionThreadActor::updateLineNumber(int updatedLineNumber)
 {
 	Q_ASSERT(lineNumber);
-	lineNumber->setText( QString::number(updatedLineNumber) );
+	lineNumber->setText( QString::number(updatedLineNumber), false );
 	// ToDo: animate the line change
 	return 0;
 }
