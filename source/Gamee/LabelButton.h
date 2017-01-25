@@ -25,6 +25,8 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	/// @param updateLayout true if the LayoutItem::updateLayoutItem() should be called
 	/// to update the dimensions of the label
 	void setText(const QString &text, bool updateLayout);
+	/// Sets the Z-index provided by layouts to the QGraphicsItem system
+	virtual void setZ(qreal zValue) override { setZValue(zValue); }
 
   signals:
 	/// Emitted when this button is pressed

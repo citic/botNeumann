@@ -3,9 +3,11 @@
 #include "ExecutionThreadActor.h"
 #include "GdbItemTree.h"
 #include "Scene.h"
+#include "Spacer.h"
 
-// Idle threads are shown little transparent
-const double idleThreadOpacity = 0.75;
+// Proportion of the callStackSpacer on top of the robot when it is active/busy (non idle)
+const qreal busyCallStackSpacerProportion = 0.9;
+
 
 ExecutionThread::ExecutionThread(Scene* scene, int id)
 	: LinearLayout(Qt::Vertical)
@@ -17,7 +19,7 @@ ExecutionThread::ExecutionThread(Scene* scene, int id)
 
 void ExecutionThread::buildExecutionThread()
 {
-	setMargins(0.1);
+	setMargins(0.05, 0.05, 0.0);
 
 	// Create an actor (robot) for the execution thread with its line number
 	Q_ASSERT(robot == nullptr);
@@ -27,15 +29,16 @@ void ExecutionThread::buildExecutionThread()
 	Q_ASSERT(actorLayout == nullptr);
 	actorLayout = new LinearLayout(Qt::Vertical);
 	const qreal zActor = zUnitPlaying::executionThread + 0.2;
-	actorLayout->addStretch(0.7, zActor);
-	actorLayout->addItem(robot, 0.4, zActor);
+	callStackSpacer = new Spacer();
+	actorLayout->addItem(callStackSpacer, busyCallStackSpacerProportion, zActor);
+	actorLayout->addItem(robot, 1.0 / 3.0, zActor);
 
 	addItem(actorLayout, 1.0, zActor);
 }
 
 int ExecutionThread::animateAppear()
 {
-	return robot->appear(1000, 0.0, idle ? idleThreadOpacity : 1.0);
+	return robot->appear();
 }
 
 int ExecutionThread::animateDisappear()
@@ -87,17 +90,22 @@ void ExecutionThread::setIdle(bool idle)
 	this->idle = idle;
 
 	Q_ASSERT(robot);
-	if ( idle )
-		robot->setOpacity(0.75);
-	else
-		robot->setOpacity(1.0);
-	updateLayoutItem();
+	callStackSpacer->setProportion( idle ? 0.0 : busyCallStackSpacerProportion );
+
+	// Caller must call updateLayoutItem when this thread is finished to be setup as idle or not
+//	updateLayoutItem();
 }
 
 const QColor& ExecutionThread::getHighlightColor() const
 {
 	Q_ASSERT(robot);
 	return robot->getHighlightColor();
+}
+
+qreal ExecutionThread::getActorReferenceWidth() const
+{
+	Q_ASSERT(robot);
+	return robot->boundingRect().width();
 }
 
 ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)

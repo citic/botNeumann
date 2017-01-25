@@ -6,6 +6,7 @@
 class ExecutionThreadActor;
 class GdbTreeNode;
 class Scene;
+class Spacer;
 
 class QColor;
 
@@ -29,6 +30,10 @@ class ExecutionThread : public LinearLayout
 	/// The source file that generated the code that this thread is executing
 	QString filename;
 	/// True if this thread is idle, i.e: there are not enough cores to run this thread
+	/// An idle thread is supposed to be shown in the area for idle threads in the middle of the
+	/// CPU cores and data segment. Active (busy) execution threads are assigned to a CPU core
+	/// and have a call stack. Idle threads have a call stack as well, but it is not shown for
+	/// screen space limitations. Therefore, idle execution threads only contains the actor (robot)
 	bool idle = false;
 	/// The line number in that file being executed
 	int lineNumber = -1;
@@ -41,6 +46,9 @@ class ExecutionThread : public LinearLayout
 	int previousLineNumber = -1;
 	/// A layer to place the actor
 	LinearLayout* actorLayout = nullptr;
+	/// Spacer on top of the actor to reserve space for the call stack when the execution thread
+	/// is active (busy). It is collapsed (height 0%) when the thread is idle
+	Spacer* callStackSpacer = nullptr;
 	/// The robot used to represent the execution thread
 	ExecutionThreadActor* robot = nullptr;
 
@@ -60,13 +68,18 @@ class ExecutionThread : public LinearLayout
 	/// Get access to the members
 	inline int getId() const { return id; }
 	inline const QString& getFilename() const { return filename; }
+	/// @return true if this thread is in the idle zone, therefore, waiting for a free cpu core
 	inline bool isIdle() const { return idle; }
+	/// Set this execution thread as idle or busy.
+	/// @see idle property
 	void setIdle(bool idle);
 	inline int getLineNumber() const { return lineNumber; }
 	inline const QString& getPreviousFilename() const { return previousFilename; }
 	inline int getPreviousLineNumber() const { return previousLineNumber; }
 	/// Returns the color of this thread, in order to highlight its running line
 	const QColor& getHighlightColor() const;
+	/// Get the default (reference) width in pixels of the actor (robot)
+	qreal getActorReferenceWidth() const;
 
   protected:
 	/// Build the robot

@@ -57,9 +57,10 @@ void CpuCores::createCpuCores()
 	// Add both layouts to this segment
 	double totalRows = getHeightInRows();
 	addLayout(cpuCoresLayout, cpuCores[0]->getHeightInRows() / totalRows, zUnitPlaying::cpuCores);
-
+	// Separate idle threads from busy threads
+	addStretch( 0.5 / totalRows, zUnitPlaying::cpuCores);
 	// Idle threads overflow to use space behind the data segment
-	addLayout(idleThreadsLayout, (idleThreadsRows + 0.6) / totalRows, zUnitPlaying::cpuCores);
+	addLayout(idleThreadsLayout, (idleThreadsRows + 2.0) / totalRows, zUnitPlaying::cpuCores);
 }
 
 void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
@@ -108,21 +109,20 @@ int CpuCores::findFirstIdleCpuCore() const
 
 int CpuCores::setupIdleThread(ExecutionThread* thread)
 {
+	// The thread is idle, it displays and behaves differently of an active thread
+	thread->setIdle(true);
+
 	// Width of robots is calculated using a 1024px width scene as reference
-	const int refWidth = 110, refWidthScene = 1024;
+	const int refWidthScene = 1024;
+	const int refWidth = thread->getActorReferenceWidth();
 	double proportion = (double)refWidth / (double)refWidthScene;
 
 	// If there are lots of execution threads, distribute them in layers
 	int layer = ++idleThreadsCount * refWidth / refWidthScene;
 	idleThreadsLayout->addItem( thread, proportion, zUnitPlaying::cpuCores + 0.1 + layer / 100.0 );
 
-	// Distribute robots randonmly, as simulating a crowd of robots waiting for CPU cores
-	double displacementX = qrand() % (refWidth / 2) / double(refWidth);
-	thread->setMargins( 0.0, displacementX, 0.0, -displacementX );
+	// Resize idle threads within the idle layout
 	idleThreadsLayout->updateLayoutItem();
-
-	// The thread is idle, it displays and behaves differently of an active thread
-	thread->setIdle(true);
 	return thread->animateAppear();
 }
 
