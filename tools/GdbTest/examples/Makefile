@@ -1,8 +1,8 @@
-PROJECTS=hello_c hello_cpp ftoc_f ftoc_i rand rand2 threads1 input1
+PROJECTS=hello_c hello_cpp ftoc_f ftoc_i input1 rand rand2 threads1 vars
 CC=gcc
 CXX=g++
 
-FLAGS=-ggdb3 -Og -Wall -Wextra -I. -pthread -lpthread
+FLAGS=-ggdb3 -Og -Wall -Wextra -Wno-uninitialized -I. -pthread -lpthread
 CFLAGS=$(FLAGS) -std=c99
 CXXFLAGS=$(FLAGS) -std=c++11
 
