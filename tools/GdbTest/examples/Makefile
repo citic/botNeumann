@@ -14,8 +14,12 @@ all: $(PROJECTS)
 %: %.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $< bn_player_solution.cpp
 
+# ToDo: include header files in tags
+tags: *.c *.cpp
+	ctags --c-kinds=v --fields=fsnt --if0=yes --sort=no -f tags.txt *.c *.cpp
+
 clean:
-	rm -rf $(PROJECTS) *.exe *.dSYM
+	rm -rf $(PROJECTS) *.exe *.dSYM tags*
 
 clean-dos:
 	del /f/q *.exe
