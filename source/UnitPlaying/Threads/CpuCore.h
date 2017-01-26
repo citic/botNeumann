@@ -4,6 +4,7 @@
 #include "MemorySegment.h"
 
 class ExecutionThread;
+class Actor;
 class Prop;
 
 class CpuCore : public MemorySegment
@@ -15,8 +16,11 @@ class CpuCore : public MemorySegment
 	int cpuCoreNumber = -1;
 	/// If this core is busy, an execution thread will be running on it. Otherwise, this is idle.
 	ExecutionThread* executionThread = nullptr;
-	/// The CPU graphical representation
+	/// The graphical representation of a CPU core (a workstation)
 	Prop* workstation = nullptr;
+	/// The graphical representation of the interface between the CPU core and the process memory
+	/// A door in the floor is used to bring memory frames/rows up and down
+	Actor* memoryInterface = nullptr;
 
   public:
 	/// Constructor

@@ -1,4 +1,5 @@
 #include "CpuCore.h"
+#include "Actor.h"
 #include "Common.h"
 #include "ExecutionThread.h"
 #include "Prop.h"
@@ -29,7 +30,11 @@ void CpuCore::buildCpuCore()
 {
 	Q_ASSERT(scene);
 	workstation = new Prop("up_cpu_core", scene);
-	addItem(workstation, 1.0, zUnitPlaying::cpuCore);
+	addItem(workstation, 1.0, zUnitPlaying::cpuCore + 0.0);
+
+	memoryInterface = new Actor("up_stack_segment_allocator_closed", scene);
+	memoryInterface->setMargins(0.85, 0.075, 0.0);
+	addItem(memoryInterface, 1.0, zUnitPlaying::cpuCore + 0.1);
 }
 
 int CpuCore::runThread(ExecutionThread* thread)
