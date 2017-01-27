@@ -35,6 +35,17 @@ void CpuCore::buildCpuCore()
 	memoryInterface = new Actor("up_stack_segment_allocator_closed", scene);
 	memoryInterface->setMargins(0.85, 0.075, 0.0);
 	addItem(memoryInterface, 1.0, zUnitPlaying::cpuCore + 0.1);
+
+	QStringList memoryInterfaceFaces;
+	memoryInterfaceFaces << "up_stack_segment_allocator_closed";
+	memoryInterfaceFaces << "up_stack_segment_allocator_open_33";
+	memoryInterfaceFaces << "up_stack_segment_allocator_open_66";
+	memoryInterfaceFaces << "up_stack_segment_allocator_open_100";
+	memoryInterface->setFaces( memoryInterfaceFaces );
+
+	// ToDo: slice memory interface into:
+	// 1. "up_stack_segment_allocator_open_upper"
+	// 2. "up_stack_segment_allocator_open_lower"
 }
 
 int CpuCore::runThread(ExecutionThread* thread)
@@ -50,6 +61,7 @@ int CpuCore::runThread(ExecutionThread* thread)
 
 	// Assign the new execution thread
 	executionThread = thread;
+	executionThread->setCpuCore(this);
 
 	// Add the execution thread as a child in a higher layer
 	addItem( executionThread, 1.0, zUnitPlaying::executionThread );
@@ -65,8 +77,22 @@ int CpuCore::removeThread()
 
 	int duration = executionThread->animateDisappear();
 
+	executionThread->setCpuCore(nullptr);
+
 	removeItem(executionThread, false);
 	executionThread = nullptr;
 
 	return duration;
+}
+
+int CpuCore::openMemoryInterface()
+{
+	Q_ASSERT(memoryInterface);
+	return memoryInterface->transitionFaces(QTimeLine::Forward);
+}
+
+int CpuCore::closeMemoryInterface()
+{
+	Q_ASSERT(memoryInterface);
+	return memoryInterface->transitionFaces(QTimeLine::Backward);
 }

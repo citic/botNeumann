@@ -21,7 +21,7 @@ void Transition::start(int duration, int frames)
 	if ( previousScene != nullptr )
 	{
 		timeLine.setDuration(duration > 0 ? duration : defaultDuration);
-		timeLine.setFrameRange(0, frames ? frames : defaultFrameCount);
+		timeLine.setFrameRange(0, frames > 0 ? frames : defaultFrameCount);
 		timeLine.setCurveShape(QTimeLine::EaseInCurve);
 	}
 

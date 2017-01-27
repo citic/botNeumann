@@ -3,6 +3,7 @@
 
 #include "LinearLayout.h"
 
+class CpuCore;
 class ExecutionThreadActor;
 class GdbTreeNode;
 class Scene;
@@ -51,6 +52,9 @@ class ExecutionThread : public LinearLayout
 	Spacer* callStackSpacer = nullptr;
 	/// The robot used to represent the execution thread
 	ExecutionThreadActor* robot = nullptr;
+	/// If this execution thread is assigned to a CPU core, this will point to it. If this thread
+	/// is detached from the CPU core (for example, is set to sleep), this pointer will be nullptr
+	CpuCore* cpuCore = nullptr;
 
   public:
 	/// Constructor
@@ -80,6 +84,11 @@ class ExecutionThread : public LinearLayout
 	const QColor& getHighlightColor() const;
 	/// Get the default (reference) width in pixels of the actor (robot)
 	qreal getActorReferenceWidth() const;
+	/// @return A pointer to the CPU core, if this thread is running, nullptr otherwise
+	inline CpuCore* getCpuCore() const { return cpuCore; }
+	/// Sets the CPU core where this thread is running. This method is called by the CPU core
+	/// itself when the execution thread is receives CPU time
+	inline void setCpuCore(CpuCore* cpuCore) { this->cpuCore = cpuCore; }
 
   protected:
 	/// Build the robot

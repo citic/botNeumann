@@ -3,12 +3,15 @@
 
 #include "MemorySegment.h"
 
+#include <QObject>
+
 class ExecutionThread;
 class Actor;
 class Prop;
 
-class CpuCore : public MemorySegment
+class CpuCore : public QObject, public MemorySegment
 {
+	Q_OBJECT
 	Q_DISABLE_COPY(CpuCore)
 
   protected:
@@ -42,6 +45,14 @@ class CpuCore : public MemorySegment
 	/// The execution thread object keeps alive
 	/// @return the duration in milliseconds of the animation, -1 if no thread was being run
 	int removeThread();
+
+  public slots:
+	/// Animates the memory interface to open
+	/// @return the duration in milliseconds of the animation
+	int openMemoryInterface();
+	/// Animates the memory interface to close
+	/// @return the duration in milliseconds of the animation
+	int closeMemoryInterface();
 
   protected:
 	/// Builds the CPU core as a workstation where a execution thread (robot) can work

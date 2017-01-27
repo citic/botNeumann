@@ -1,7 +1,9 @@
 #include "ExecutionThread.h"
 #include "Common.h"
+#include "CpuCore.h"
 #include "ExecutionThreadActor.h"
 #include "GdbItemTree.h"
+#include "GdbResponseListener.h" // updateMaxDuration()
 #include "Scene.h"
 #include "Spacer.h"
 
@@ -147,15 +149,22 @@ bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
 	return true;
 }
 
+#include <QTimer>
+
 bool ExecutionThread::updateFunctionName(const QString& updatedFunctionName, int& maxDuration)
 {
-	Q_UNUSED(maxDuration);
 	if ( functionName == updatedFunctionName )
 		return false;
 
 	// Update the function name
 //	previousFunctionName = functionName;
 	functionName = updatedFunctionName;
+
+	Q_ASSERT(cpuCore);
+	updateMaxDuration( cpuCore->openMemoryInterface() );
+
+	// For testing only: close the interface after the function is called
+	QTimer::singleShot( maxDuration + 2000, cpuCore, SLOT(closeMemoryInterface()) );
 
 	return true;
 }

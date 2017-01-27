@@ -68,7 +68,7 @@ void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, 
 	switch ( asyncClass )
 	{
 		case AsyncClass::AC_THREAD_CREATED:
-			updateDuration( createThread( tree.findNodeTextValue("/id").toInt() ) );
+			updateMaxDuration( createThread( tree.findNodeTextValue("/id").toInt() ) );
 			break;
 
 		default: break;
