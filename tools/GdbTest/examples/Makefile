@@ -1,4 +1,4 @@
-PROJECTS=hello_c hello_cpp ftoc_f ftoc_i input1 rand rand2 threads1 threads2 vars
+PROJECTS=all_inclusive hello_c hello_cpp ftoc_f ftoc_i heap1 input1 rand rand2 threads1 threads2 vars
 CC=gcc
 CXX=g++
 
