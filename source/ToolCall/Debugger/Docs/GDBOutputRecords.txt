@@ -1,0 +1,76 @@
+GDB output records
+
+RESULT RECORD: Response to each command sent (synchronised)
+
+	^done[,results]:  Success execution of the command and produced the given result
+	^error,message=str,code=undefined-command:  Frontent typed a wrong command
+	^exit:  GDB has terminated
+
+STREAM RECORD
+
+	^str:  Console output, pass it to user
+	@str:  Target output (inferior output?) only in remote targets
+	&str:  Log output: debugging messages from GDB internals
+
+ASYNC RECORDS: additional changes that occurred during a command, i.e: asynchronic
+
+	*running,thread-id=#:  The target is now running the main thread # or "all" threads
+	*stopped,reason=str,thread-id=#,stopped-threads=str,core=str: The target stopped. See below.
+
+	=thread-group-added,id=gid: A thread group was added
+	=thread-group-removed,id=gid: The thread group gid was removed and gid is now invalid
+	=thread-group-started,id=gid,pid=pid: Inferior just started with OS'pid or group was attached
+	=thread-group-exited,id=gid[,exit-code=#]: Inferior exited with code # [opt] or group detached
+	=thread-created,id=id,group-id=gid: The thread id was created in group gid
+	=thread-exited,id=id,group-id=gid: The thread id in group gid exited
+	=thread-selected,id=id[,frame=obj]: The selected thread or frame changed [when thread stopped]
+
+	=library-loaded,id=.,target-name=.,host-name=., symbols-loaded=.: Inferior loaded a local
+	 or remote library, with symbols (not reliable).
+	=library-unloaded,id=.,target-name=.,host-name=.: A library was unloaded by inferior.
+
+	=traceframe-changed,num=tfnum,tracepoint=tpnum: The trace frame was changed to number tfnum.
+	=traceframe-changed,end: The number of the tracepoint associated with this trace frame is tpnum.
+	=tsv-created,name=str,initial=val: A new trace state variable name was created with that value.
+	=tsv-deleted,name=str: The trace state variable name is deleted
+	=tsv-deleted: All trace state variables are deleted.
+	=tsv-modified,name=str,initial=val[,current=val]: A trace state variable name was modified
+
+	=breakpoint-created,bkpt={..}: A breakpoint was created
+	=breakpoint-modified,bkpt={..}: A breakpoint was modified/updated
+	=breakpoint-deleted,id=number: The breakpoint id was deleted
+
+	=record-started,thread-group="gid",method="str"[,format="format"]: Execution log recording
+	=record-stopped,thread-group="gid": was either started or stopped on inferior.
+
+	=cmd-param-changed,param=par,value=val: A parameter of the command set param changed to value.
+	=memory-changed,thread-group=gid,addr=#,len=len[,type="code"]: Bytes from addr to data + len
+	 were written in an inferior. The type="code" is reported if the memory was executable code.
+
+
+Async stop record
+	*stopped,reason=str,thread-id=#,stopped-threads=ids,core=#:
+
+	id: ID of the thread that directly caused the stop, eg: by hitting a breakpoint.
+	stopped-threads=ids: list of all stopped threads, "all"if all-stop mode is in effect
+	core=#: the processor core on which the stop event has happened if available.
+	reasons:
+
+	breakpoint-hit: A breakpoint was reached.
+	watchpoint-trigger: A watchpoint was triggered.
+	read-watchpoint-trigger: A read watchpoint was triggered.
+	access-watchpoint-trigger: An access watchpoint was triggered.
+	function-finished: An -exec-finish or similar CLI command was accomplished.
+	location-reached: An -exec-until or similar CLI command was accomplished.
+	watchpoint-scope: A watchpoint has gone out of scope.
+	end-stepping-range: -exec-next/-exec-next-instruction/-exec-step/-exec-step-instruction was acc
+	exited-signalled: The inferior exited because of a signal.
+	exited: The inferior exited.
+	exited-normally: The inferior exited normally.
+	signal-received: A signal was received by the inferior.
+	solib-event: Inferior stopped due to a library being loaded or unloaded (catch un/load).
+	fork: The inferior has forked and a fork catchpoint was triggered
+	vfork: The inferior has vforked and a catchpoint was used.
+	syscall-entry: The inferior entered a system call and a catchpoint was used.
+	syscall-return: The inferior returned from a system call and a catchpoint was used.
+	exec: The inferior called exec and a catchpoint was used.
