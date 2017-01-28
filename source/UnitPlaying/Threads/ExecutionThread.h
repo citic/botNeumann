@@ -8,6 +8,7 @@ class ExecutionThreadActor;
 class GdbTreeNode;
 class Scene;
 class Spacer;
+class CallStack;
 
 class QColor;
 
@@ -55,6 +56,11 @@ class ExecutionThread : public LinearLayout
 	/// If this execution thread is assigned to a CPU core, this will point to it. If this thread
 	/// is detached from the CPU core (for example, is set to sleep), this pointer will be nullptr
 	CpuCore* cpuCore = nullptr;
+	/// The stack of function calls (frames) that this thread has executed
+	/// The call stack is visible if this thread is assigned to a CPU core, otherwise they are
+	/// invisible on the visualization, but not deleted. The call stack gets deleted only when the
+	/// execution thread is finished
+	CallStack* callStack = nullptr;
 
   public:
 	/// Constructor

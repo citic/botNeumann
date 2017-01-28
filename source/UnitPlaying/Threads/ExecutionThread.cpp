@@ -1,4 +1,5 @@
 #include "ExecutionThread.h"
+#include "CallStack.h"
 #include "Common.h"
 #include "CpuCore.h"
 #include "ExecutionThreadActor.h"
@@ -36,6 +37,11 @@ void ExecutionThread::buildExecutionThread()
 	actorLayout->addItem(robot, 1.0 / 3.0, zActor);
 
 	addItem(actorLayout, 1.0, zActor);
+
+	// Create the object in charge of managing the function calls for this execution thread
+	// No functions are added to the call stack until the execution thread gets updated form GDB
+	Q_ASSERT(callStack == nullptr);
+	callStack = new CallStack();
 }
 
 int ExecutionThread::animateAppear()
@@ -155,6 +161,14 @@ bool ExecutionThread::updateFunctionName(const QString& updatedFunctionName, int
 {
 	if ( functionName == updatedFunctionName )
 		return false;
+
+	// If the new function name is the same than the previous name on the stack, it is a return
+	// ToDo: Function name cannot be used to determine if a function was called or returned
+	// e.g. recursive functions. The gdb level and stack depth must be used instead
+//	if ( updatedFunctionName == previousFunctionName )
+//		animateFunctionReturn();
+//	else
+//		animateFunctionCall();
 
 	// Update the function name
 //	previousFunctionName = functionName;
