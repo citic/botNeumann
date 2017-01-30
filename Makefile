@@ -16,11 +16,11 @@ build:
 	qmake -makefile -o build/Makefile botNeumann.pro
 
 api:
-	doxygen doc/api.doxygen
+	doxygen docs/api.doxygen
 
 installer: installer/license.xml
 	# Make sure BitRock InstallBuilder executable is reachable through your $PATH
 	builder-cli build installer/botNeumann.xml --license installer/license.xml
 	
 clean:
-	rm -rf assets/*.png doc/api build/
+	rm -rf assets/*.png docs/api build/

@@ -43,12 +43,12 @@ if %ERRORLEVEL% NEQ 0 goto error
 goto success
 
 :doc
-doxygen doc/api.doxygen
+doxygen docs/api.doxygen
 if %ERRORLEVEL% NEQ 0 goto error
 goto success
 
 :clean
-del /q /s assets/*.png build/ doc/api installer/windows
+del /q /s assets/*.png build/ docs/api installer/windows
 
 :success
 echo Build successful
