@@ -1,0 +1,602 @@
+1. Preparation
+===================================================================================================
+
+### $ gdb -q -i mi
+
+	=thread-group-added,id="i1"
+	(gdb)
+
+- Call GDB. It will wait for commands.
+
+
+### -file-exec-and-symbols "/tmp/all_inclusive"
+
+	^done
+	(gdb)
+
+- Provide the path and name for executable. It may be included in the previous GDB call altenatively.
+
+
+### -exec-arguments [args] </tmp/bn_input.txt >/tmp/bn_output.txt 2>/tmp/bn_error.txt
+
+	^done
+	(gdb)
+
+- Generate `/path/to/input000.txt` from botnu test case.
+- If test case n botnu has arguments, provide them
+- If Unix-like OS: redirect standard input, output and error
+
+
+### -break-insert "/tmp/all_inclusive.c:25"
+
+	^done,bkpt=
+	{
+	  number="1",
+	  type="breakpoint",
+	  disp="keep",
+	  enabled="y",
+	  addr="0x0000000000400795",
+	  func="main",
+	  file="rand.c",
+	  fullname="/full/path/to/rand.c",
+	  line="25",
+	  thread-groups=["i1"],
+	  times="0",
+	  original-location="rand.c:25"
+	}
+	(gdb)
+
+Set all user-defined breakpoints
+
+- Collect user breakpoints from code editors
+- Send them to GDB
+- Collect the breakpoint numbers, they will begin with first integers
+- Trace the number of user-defined breakpoints in an integer variable:
+  `breakpointIndex[lastUserBreakpoint] = number`
+- Create GdbBreakpoint objects with role UserDefined and add them to a breakpoints[] array
+
+
+### -interpreter-exec console "rbreak /tmp/all_inclusive.c:."
+
+	~"Breakpoint 1 at 0x400bdb: file solution.c, line 86.\n"
+
+	=breakpoint-created,bkpt=
+	{
+		number="1",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x0000000000400bdb",
+		func="count_empty_cells",
+		file="solution.c",
+		fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",
+		line="86",
+		thread-groups=
+		[
+		  "i1"
+		],
+		times="0",
+		original-location="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c:count_empty_cells"
+	}
+
+	~"long long count_empty_cells(char **, size_t);\n"
+
+	~"Breakpoint 2 at 0x400e3b: file solution.c, line 146.\n"
+	=breakpoint-created,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000400e3b",func="count_lines_for",file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="146",thread-groups=["i1"],times="0",original-location="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c:count_lines_for"}
+
+	~"long long count_lines_for(char **, size_t, char);\n"
+
+	~"Breakpoint 11 at 0x400a8f: file solution.c, line 52.\n"
+	=breakpoint-created,bkpt={number="11",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000400a8f",func="read_grid",file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="52",thread-groups=["i1"],times="0",original-location="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c:read_grid"}
+
+	~"int read_grid(char **, size_t);\n"
+
+	^done
+
+	(gdb)
+
+Set breakpoints for all functions in player's solution. When these breakpoints are triggered, a function call will be animated.
+
+- For each file in player solution that does not begin with bn_: send the command
+- For each breakpoint, create a GdbBreakpoint object with role FunctionBody
+- Add the GdbBreakpoint to the breakpoints[] array
+
+
+
+
+2. Start player solution (program entry point)
+===================================================================================================
+
+### -exec-run --start
+
+	=breakpoint-created,bkpt={number="12",type="breakpoint",disp="del",enabled="y",addr="0x00000000004008ce",func="main",file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="13",thread-groups=["i1"],times="0",original-location="main"}
+
+	=thread-group-started,id="i1",pid="23146"
+
+	=thread-created,id="1",group-id="i1"
+	=library-loaded,id="/lib64/ld-linux-x86-64.so.2",target-name="/lib64/ld-linux-x86-64.so.2",host-name="/lib64/ld-linux-x86-64.so.2",symbols-loaded="0",thread-group="i1"
+
+	^running
+
+	*running,thread-id="all"
+	(gdb)
+	=library-loaded,id="/lib/x86_64-linux-gnu/libpthread.so.0",target-name="/lib/x86_64-linux-gnu/libpthread.so.0",host-name="/lib/x86_64-linux-gnu/libpthread.so.0",symbols-loaded="0",thread-group="i1"
+	=library-loaded,id="/lib/x86_64-linux-gnu/libc.so.6",target-name="/lib/x86_64-linux-gnu/libc.so.6",host-name="/lib/x86_64-linux-gnu/libc.so.6",symbols-loaded="0",thread-group="i1"
+	~"[Thread debugging using libthread_db enabled]\n"
+	~"Using host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n"
+	=breakpoint-modified,bkpt={number="10",type="breakpoint",disp="keep",enabled="y",addr="0x00000000004008ce",func="main",file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="13",thread-groups=["i1"],times="1",original-location="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c:main"}
+	=breakpoint-modified,bkpt={number="12",type="breakpoint",disp="del",enabled="y",addr="0x00000000004008ce",func="main",file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="13",thread-groups=["i1"],times="1",original-location="main"}
+
+	~"\n"
+
+	~"Breakpoint 10, main () at solution.c:13\n"
+
+	~"13\t{\n"
+	*stopped,reason="breakpoint-hit",disp="keep",bkptno="10",frame={addr="0x00000000004008ce",func="main",args=[],file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="13"},thread-id="1",stopped-threads="all",core="7"
+
+	=breakpoint-deleted,id="12"
+
+	(gdb)
+
+Start the execution of inferior and stop in the program entry point
+
+- Add the entry point breakpoint to breakpoints[]
+- Collect the process id from =thread-group-started
+- Animate creation of main thread when =thread-created. See Create execution thread
+- Ignore all =library-loaded responses. Maybe trace 'libc' load and store a flag it is being used
+- Change inferior state to *running
+- Update breakpoints
+- When stopped at program entry point *stopped,reason="breakpoint-hit", do section: "Breakpoint
+  hit". It will animate a function call by the thread-id=1
+- Remove deleted breakpoint from breakpoints[] array
+  Breakpoint was likely removed because there is a user-defined breakpoint in the same line
+  Each time a breakpoint is added to the breakpoints[] array, look if there is a previous
+  breakpoint in the same file and line that is not in deleted state (referenceBreakpoint).
+  Add the roles of the just inserted breakpoint in the referenceBreakpoint.roles flags
+
+
+
+2.1 Dynamic memory breakpoints
+---------------------------------------------------------------------------------------------------
+
+### -break-insert -f __libc_malloc
+
+	^done,bkpt={number="13",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7874580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900",thread-groups=["i1"],times="0",original-location="__libc_malloc"}
+	(gdb)
+
+Set breakpoint for the dynamic memory management functions. These breakpoints are set after the libc library has been loaded.
+
+- Set break to stop inferior each time dynamic memory is allocated
+- Create a GdbBreakpoint with role MallocCall and add to breakpoints[] array
+- Future work: check if it works with GCC/MinGW for MsWin
+
+
+### -break-insert -f __libc_calloc
+
+	^done,bkpt={number="14",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7875160",func="__libc_calloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="3170",thread-groups=["i1"],times="0",original-location="__libc_calloc"}
+	(gdb)
+
+- Set break to stop inferior each time initialized dynamic memory is allocated
+- Create a GdbBreakpoint with role CallocCall and add to breakpoints[] array
+
+
+
+### -break-insert -f __libc_realloc
+
+	^done,bkpt={number="15",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7874b10",func="__GI___libc_realloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2972",thread-groups=["i1"],times="0",original-location="__libc_realloc"}
+	(gdb)
+
+- Set break to stop inferior each time dynamic memory is re-allocated
+- Create a GdbBreakpoint with role ReallocCall and add to breakpoints[] array
+
+
+### -break-insert -f __libc_free
+
+	^done,bkpt={number="16",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7874940",func="__GI___libc_free",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2932",thread-groups=["i1"],times="0",original-location="__libc_free"}
+	(gdb)
+
+- Set break to stop inferior each time dynamic memory is de-allocated
+- Create a GdbBreakpoint with role FreeCall and add to breakpoints[] array
+
+
+
+2.2 Watch standard input/output
+---------------------------------------------------------------------------------------------------
+
+### -var-create bn_io_stdin @ stdin->_IO_read_ptr
+
+	^done,name="bn_stdin",numchild="1",value="0x0",type="char *",has_more="0"
+	(gdb)
+
+- In Unix: Create object variables watching changes in io, using notation `bn_io_iofile`
+- Future work: check if it works with GCC/MinGW for MsWin
+
+
+### -var-create bn_io_stdout @ stdout->_IO_write_ptr
+
+	^done,name="bn_stdout",numchild="1",value="0x0",type="char *",has_more="0"
+	(gdb)
+
+
+
+### -var-create bn_io_stderr @ stderr->_IO_write_ptr
+
+	^done,name="bn_stderr",numchild="1",value="0x0",type="char *",has_more="0"
+	(gdb)
+
+
+
+### -data-evaluate-expression bn_reopen_stdin()
+
+	^done,value="{_flags = -72540024, _IO_read_ptr = 0x0, _IO_read_end = 0x0, _IO_read_base = 0x0, _IO_write_base = 0x0, _IO_write_ptr = 0x0, _IO_write_end = 0x0, _IO_buf_base = 0x0, _IO_buf_end = 0x0, _IO_save_base = 0x0, _IO_backup_base = 0x0, _IO_save_end = 0x0, _markers = 0x0, _chain = 0x0, _fileno = 0, _flags2 = 0, _old_offset = -1, _cur_column = 0, _vtable_offset = 0 '\\000', _shortbuf = \"\", _lock = 0x7ffff7bb6790 <_IO_stdfile_0_lock>, _offset = -1, _codecvt = 0x0, _wide_data = 0x7ffff7bb49c0 <_IO_wide_data_0>, _freeres_list = 0x0, _freeres_buf = 0x0, __pad5 = 0, _mode = 0, _unused2 = '\\000' <repeats 19 times>}"
+	(gdb)
+
+Only in MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluate-expression bn_reopen_stdout()`, `-data-evaluate-expression bn_reopen_stderr()`
+
+
+
+2.3 Watch global variables
+---------------------------------------------------------------------------------------------------
+
+### -var-create bn_gv_1 @ global_variable_name_1
+
+
+- Get global variables from PlayerSolution (collected with ctags in building process)
+- For each global variable, create a GDB-variable object with2 name `bn_gv_num`
+- Future work: detect static local variables
+
+
+
+
+3 Execution threads
+===================================================================================================
+
+
+
+3.1 Create execution thread
+---------------------------------------------------------------------------------------------------
+
+Each time `=thread-created,id="#"` is issued, create an ExecutionThread object. If there is an idle processor core, animate a robot appearing in the core with no line number. Ask gdb:
+
+* `-thread-info`
+* `-stack-info-depth`
+
+
+### -thread-info
+
+	^done,threads=[{id="1",target-id="Thread 0x7ffff7fcc700 (LWP 23146)",name="solution",frame={level="0",addr="0x00000000004008ce",func="main",args=[],file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="13"},state="stopped",core="7"}],current-thread-id="1"
+	(gdb)
+
+- Locate the Execution thread with the given id, and have it to update fields
+- If there is a line number change, animate it (may require a change of source file)
+- If executionThread.callStack.isEmpty() and thread-info/frame/file is not in player solution:
+  animate a function call with an empty frame, because there will not breakpoint-hit
+
+
+### -stack-info-depth
+All threads? or ` --thread 1`
+
+	^done,depth="1"
+	(gdb)
+
+- Update the ExecutionThread::callStackDepth integer value. If decreased animate a function return.
+
+
+
+3.2 Remove execution thread
+---------------------------------------------------------------------------------------------------
+
+Each time `=thread-exited,id=#` is issued:
+
+- Locate the ExecutionThread with given id and ask to remove.
+- If thread has a cpu core assigned, remove thread from cpu core
+- Remove thread from the scene, including its hidden or visible call stack
+- Remove thread memory from CpuCores::executionThreads[] array
+
+
+
+
+4. Breakpoint hit
+===================================================================================================
+
+Player solution (inferior) stopped for hitting a breakpoint. If breakpoint has one or more roles:
+
+	FunctionBody:  Animate function call (ProgramEntryPoint does this too)
+	UserDefined:   Change visualization state to Paused
+	MallocCalled:  Process memory allocation (uninitialized)
+	CallocCalled:  Process memory allocation (initialized)
+	ReallocCalled: Process memory reallocation
+	FreeCalled:    Process memory deallocation
+	NewObject:     ToDo:
+	NewArray:      ToDo:
+	DeleteObject:  ToDo:
+	DeleteArray:   ToDo:
+
+
+
+4.1 Function call
+---------------------------------------------------------------------------------------------------
+	*stopped,reason="end-stepping-range",frame={addr="0x0000000000400910",func="main",args=[],file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="18"},thread-id="1",stopped-threads="all",core="3"
+	(gdb)
+
+
+Player solution hit a breakpoint that has the role of `FunctionCall`. The breakpoint must be at the beginning of the body of a function in a file that is part of player solution.
+
+- Get the thread-id="#" from *stopped response, locate the ExecutionThread object
+- If ExecutionThread is active, animate the door opening in its cpu core
+- Build a memory frame for the new stack frame with the function name in the roof
+- Raise the memory roof to the cpu core door
+
+
+### -stack-list-arguments 2
+
+	^done,stack-args=[frame={level="0",args=[]}]
+	(gdb)
+
+- Calculate the size required for all parameters, and the number required memory rows with garbage
+- Raise the min(required memory rows, max allowed stack frame size/rowsize) rows and stop
+- Create all variables in the memory rows
+- If there is overflow, animate a stack overflow (see Program termination)
+- Initialize each parameter with the argument, they will replace the garbage
+
+
+### -stack-list-locals 2
+
+	^done,locals=[{name="n",type="size_t",value="4196304"},{name="grid",type="char **",value="0x7fffffffdf50"},{name="error",type="int",value="0"}]
+	(gdb)
+
+- Do the same than arguments, but some values may be unitialized (keep their garbage)
+- Add the "memory frame legs" to the last memory row
+
+
+### -stack-info-depth
+
+	^done,depth="2"
+	(gdb)
+
+- Check if it matches the number of stack frames
+- Update the ExecutionThread::callStackDepth integer value.
+
+
+
+4.2 User defined breakpoint
+---------------------------------------------------------------------------------------------------
+
+- Set Visualization state to paused
+- Set VisualizationSpeed::seeking to false
+
+
+
+4.3 Dynamic memory management breakpoint
+---------------------------------------------------------------------------------------------------
+
+The execution stopped at a breakpoint set to a dynamic memory management function. The call may be done for the player solution directly or indirectly for any library function called by player. Eg:
+
+	char* buffer = (char*) malloc(1024); // explicit call to malloc
+	Fraction* fractions = new Fraction[10]; // explicit call to new[]
+	printf("Average = %lf", average); // implicit call to malloc
+
+Explicit calls are always reflected in the animation. Implicit calls sometimes may be reflected in the visualization. The way we determine the function call should or not be animated, is storing information about the call, and use this information later to know if some user variable was modified (a GDB variable-object changed).
+
+### [e.g:] -exec-next
+
+	^running
+	*running,thread-id="all"
+	(gdb)
+	=breakpoint-modified,bkpt={number="13",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7874580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900",thread-groups=["i1"],times="1",original-location="__libc_malloc"}
+
+	~"\n"
+
+	~"Breakpoint 13, __GI___libc_malloc (bytes=4096) at malloc.c:2900\n"
+	&"2900\tmalloc.c: No such file or directory.\n"
+	*stopped,reason="breakpoint-hit",disp="keep",bkptno="13",frame={addr="0x00007ffff7874580",func="__GI___libc_malloc",args=[{name="bytes",value="4096"}],file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900"},thread-id="1",stopped-threads="all",core="0"
+	(gdb)
+
+
+- Create an object with the following information
+
+	class DynamicMemoryBlock
+	{
+		enum functionCalled; // malloc/calloc/realloc/free/new/new[]/delete/delete[]
+		size_t size; // from value of frame/args/bytes
+		void* address; // from return value
+	}
+
+- Store the object in HeapSegment::dynamicMemoryBlocks[] (or VariableManager::?)
+
+
+### -exec-finish
+
+	^running
+	*running,thread-id="all"
+	(gdb)
+	*stopped,reason="function-finished",frame={addr="0x00007ffff785e1d5",func="__GI__IO_file_doallocate",args=[{name="fp",value="0x7ffff7bb48e0 <_IO_2_1_stdin_>"}],file="filedoalloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/filedoalloc.c",line="127"},gdb-result-var="$1",return-value="(void *) 0x603010",thread-id="1",stopped-threads="all",core="1"
+	(gdb)
+
+We are not interested in debugging the body of the library's memory function. We force the function
+to return. From /return-value"(void *) addr" we get the return address.
+
+	dynamicMemoryBlock.address = extractAddressFrom( tree.valueOf("/return-value") );
+
+
+
+### -stack-info-depth
+
+	^done,depth="8"
+	(gdb)
+
+We need to go back to the player's code where the execution thread was running. I have not had luck with `step` (in not debugging code) or `until` commands. As a workaround, ask for the number of functions running on the call stack of the execution thread (in previous example, currentLevel=8). We know the level of the returning point in ExecutionThread::callStack.level (returnToLevel). Simply ask `-exec-finish` to GDB `currentLevel - returnToLevel` times, until the returnToLevel has been reahed, and ignore their results.
+
+
+* `-exec-finish`
+* `-stack-info-depth`
+
+When finally arrived to the player's function before the dynamic memory function was stopped by breakpoint, we can decide if an animation must be produced or not:
+
+
+### -var-update --all-values *
+
+	^done,changelist=[]
+	(gdb)
+
+- If some variable-object changed its value to dynamicMemoryBlock.address an animation must be done.
+- If the distance between the player's function and the dynamic memory function stopped is 1 (or 2?)
+  the player directly called the memory management function, and an animation must be done.
+- Otherwise, animation is skipped and the DynamicMemoryBlock object can be deleted.
+
+If an animation must be done:
+- Pass the DynamicMemoryBlock to the HeapSegment object
+- If block was allocated:
+
+	- Look for the first empty space larger or equal than block.size
+	- Fet the pointed data type (from gdb info?)
+	- Animate allocation of size/sizeof(data_type) values
+	- If values were allocated with malloc, keep garbage, otherwise, try to init using gdb values
+	- If there is not enough space, animate segmentation fault (see Program termination)
+	- (Else) Update the pointer that changed in changelist[] from -var-update command
+
+If block was deallocated:
+
+	- Look for the corresponding memory allocation block, if not found, animate segmentation fault
+	- If the operator for deallocating matches the operator used for allocation (xalloc-free,
+	  new-delete, new[]-delete[]), remove block.size bytes from heap and remove blocks
+	- (Else) Animate removal of one object (ToDo: study removing delete[] to single object)
+
+If block was reallocated (i.e. using realloc)
+
+	- If the address is nullptr, nothing was re-allocated, and ignore the event
+	- If the address is the same and size is 0, act as a call to free() [?]
+	- If the address is the same and size is smaller than the previous, shrink data
+	- If the address is not null and size is larger than the previous, look for enough free space
+	  in HeapSegment. Act as a normal allocation (malloc, not calloc). If not segmentation fault,
+	  finally act as deallocation (free) of the previous address.
+
+
+
+
+5 Execution loop
+===================================================================================================
+
+Each step of this loop is considered a step of the visualization. When visualization is paused and player presses the `Step` button, one **visualization step** is done (animated). When visualization is in seeking state, a visualization step is issued each time there is no pending commands to be sent to GDB.
+
+
+### -stack-list-variables 2
+
+	^done,variables=[{name="n",type="size_t",value="4196304"},{name="grid",type="char **",value="0x7fffffffdf50"},{name="error",type="int",value="0"}]
+	(gdb)
+
+Update local variables
+
+- Get the value of all the local variables, and pass them to the CallStack or VariableManager
+- If some variable has changed its value, animate it
+- ToDo: If we create variable-objects for each local variable in all threads, this comparison
+  step may be not necessary
+- ToDo: GDB consider local static variables as normal local variables. We have to separe them
+
+
+
+### -var-update --all-values *
+
+	^done,changelist=[]
+	(gdb)
+
+Update global variables and standard input/output streams
+
+- If no variables have changed their values, done
+- If a global variable changed its value, pass the message to the DataSegment, and animate change
+- If a standard input/output stream changed its value, replace FILE for the stream and issue:
+
+
+### -data-evaluate-expression bn_tell_FILE()
+
+	[ToDo]
+	$1 = 2
+
+- Capture the number of bytes moved
+- If FILE is stdin, animate Robot consuming n chars from stdin
+  Locate what variable received the read input (it should be included in -var-update result)
+  Animate robot converting to the data type of the changed variable
+  If no target variable is found, animate robot discarding the read bytes
+- If FILE is stdout, it is so difficult to determine which variables were involved to produce the
+  output. Animate the robot building the output message and sending it by the stdout
+- If file is stderr, ToDo: ignore the event, for now
+
+
+
+### -exec-next
+
+	^running
+	*running,thread-id="all"
+	(gdb)
+	*stopped,reason="end-stepping-range",frame={addr="0x00000000004008dd",func="main",args=[],file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="14"},thread-id="1",stopped-threads="all",core="7"
+	(gdb)
+
+The visualization step finishes executing the next instruction, y acting according to the response.
+
+
+
+
+6 Program termination (visualization stop)
+===================================================================================================
+
+Program may terminate for these reasons:
+
+- Player stopped visualization
+- Program finished normally
+- Program received a signal from OS (eg: segmentation fault)
+- Program failed to run in the virtualized environment (unit) (eg: stack overflow)
+
+
+If player stopped visualization or program failed to run in the constrained environmentof the unit, stop inferior execution:
+
+### -exec-interrupt
+
+	^done
+	(gdb)
+
+
+- Stop gdb also?:
+
+### -gdb-exit
+
+	^exit
+	=thread-exited,id="1",group-id="i1"
+	=thread-group-exited,id="i1"
+
+
+If inferior was finished normally or by a signal, GDB will stop it and emit a *stopped async record. The reasons may be:
+
+* exited: The inferior exited.
+* exited-normally: The inferior exited normally.
+* signal-received: A signal was received by the inferior.
+
+Provide some feedback to user. Stop the visualization and move to state inferior-exited, where only Stop button is enable. When user presses it, visualization returns to editing state.
+
+
+
+
+A. Miscellaneous commands (reference)
+===================================================================================================
+
+### -thread-info
+
+	^done,threads=[{id="1",target-id="Thread 0x7ffff7fcc700 (LWP 23146)",name="solution",frame={level="0",addr="0x00007ffff7874580",func="__GI___libc_malloc",args=[{name="bytes",value="4096"}],file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900"},state="stopped",core="0"}],current-thread-id="1"
+	(gdb)
+
+
+
+### -stack-list-frames
+
+	^done,stack=[frame={level="0",addr="0x00007ffff7874580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900"},frame={level="1",addr="0x00007ffff785e1d5",func="__GI__IO_file_doallocate",file="filedoalloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/filedoalloc.c",line="127"},frame={level="2",addr="0x00007ffff786c594",func="__GI__IO_doallocbuf",file="genops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",line="398"},frame={level="3",addr="0x00007ffff786b69c",func="_IO_new_file_underflow",file="fileops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/fileops.c",line="556"},frame={level="4",addr="0x00007ffff786c60e",func="__GI__IO_default_uflow",file="genops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",line="413"},frame={level="5",addr="0x00007ffff784d260",func="_IO_vfscanf_internal",file="vfscanf.c",fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/vfscanf.c",line="634"},frame={level="6",addr="0x00007ffff785c5df",func="__isoc99_scanf",file="isoc99_scanf.c",fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/isoc99_scanf.c",line="37"},frame={level="7",addr="0x00000000004008fb",func="main",file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="15"}]
+	(gdb)
+
+
+
+### -exec-until solution.c:15
+
+	^running
+	*running,thread-id="all"
+	(gdb)
+	*stopped,reason="location-reached",frame={addr="0x00007ffff786b69c",func="_IO_new_file_underflow",args=[{name="fp",value="0x7ffff7bb48e0 <_IO_2_1_stdin_>"}],file="fileops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/fileops.c",line="556"},thread-id="1",stopped-threads="all",core="2"
+	(gdb)
+

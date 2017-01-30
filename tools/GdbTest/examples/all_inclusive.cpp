@@ -10,10 +10,15 @@ inherit a C++ class with constructor, virtual destructor
 one global variable is an instance of sub-class
 set breakpoints for all functions in all sources
 set breakpoints for dynamic memory management: malloc/calloc/realloc/free
+has three threads
 have variable-objects for stdin/stdout/stderr
+use new, new[], delete, delete[]
+throw an exception
+has a template
+overloads two operators (free function and member function)
 
 When a function is called list arguments, then locals
-Always exec-next, do not exec-step (into, out)
+Always exec-next and exec-finish, do not exec-step (into, out)
 After each exec-next:
 If stopped for range (still in the same function):
 	List frame variables (stack-list-variables 2)
