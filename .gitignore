@@ -34,7 +34,7 @@ cocos2d
 cocos2dx
 
 # Output directories
-doc/api/
+docs/api/
 
 # Mac OS X
 .DS_Store

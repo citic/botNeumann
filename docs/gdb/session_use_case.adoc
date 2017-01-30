@@ -1,7 +1,10 @@
 = Interaction botNeumann - GDB, session example
 :toc:
+:toclevels: 3
 
-This document explains how botNeumann gets information from the player's solution executable running under GDB, and how that information is used to produce the visualization. This is considered the main algorithm to produce the visualization. Sections titles include commands sent to https://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI.html[GDB Machine Interface].
+This document explains how botNeumann gets information from the player's solution executable running under GDB, and how that information is used to produce the visualization.
+This is considered the main algorithm to produce the visualization.
+Sections titles include commands sent to https://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI.html[GDB Machine Interface].
 
 
 
@@ -14,7 +17,7 @@ This document explains how botNeumann gets information from the player's solutio
 	=thread-group-added,id="i1"
 	(gdb)
 
-- Call GDB. It will wait for commands.
+Call GDB. It will wait for commands.
 
 
 ==== -file-exec-and-symbols "/tmp/all_inclusive"
@@ -22,7 +25,7 @@ This document explains how botNeumann gets information from the player's solutio
 	^done
 	(gdb)
 
-- Provide the path and name for executable. It may be included in the previous GDB call altenatively.
+Provide the path and name for executable. It may be included in the previous GDB call altenatively.
 
 
 ==== -exec-arguments [args] </tmp/bn_input.txt >/tmp/bn_output.txt 2>/tmp/bn_error.txt
@@ -30,9 +33,9 @@ This document explains how botNeumann gets information from the player's solutio
 	^done
 	(gdb)
 
-- Generate `/path/to/input000.txt` from botnu test case.
-- If test case n botnu has arguments, provide them
-- If Unix-like OS: redirect standard input, output and error
+. Generate `/path/to/input000.txt` from botnu test case.
+. If test case n botnu has arguments, provide them
+. If Unix-like OS: redirect standard input, output and error
 
 
 ==== -break-insert "/tmp/all_inclusive.c:25"
@@ -56,12 +59,12 @@ This document explains how botNeumann gets information from the player's solutio
 
 Set all user-defined breakpoints
 
-- Collect user breakpoints from code editors
-- Send them to GDB
-- Collect the breakpoint numbers, they will begin with first integers
-- Trace the number of user-defined breakpoints in an integer variable:
+. Collect user breakpoints from code editors
+. Send them to GDB
+. Collect the breakpoint numbers, they will begin with first integers
+. Trace the number of user-defined breakpoints in an integer variable:
   `breakpointIndex[lastUserBreakpoint] = number`
-- Create GdbBreakpoint objects with role UserDefined and add them to a breakpoints[] array
+. Create GdbBreakpoint objects with role UserDefined and add them to a breakpoints[] array
 
 
 ==== -interpreter-exec console "rbreak /tmp/all_inclusive.c:."
@@ -105,9 +108,9 @@ Set all user-defined breakpoints
 
 Set breakpoints for all functions in player's solution. When these breakpoints are triggered, a function call will be animated.
 
-- For each file in player solution that does not begin with bn_: send the command
-- For each breakpoint, create a GdbBreakpoint object with role FunctionBody
-- Add the GdbBreakpoint to the breakpoints[] array
+. For each file in player solution that does not begin with bn_: send the command
+. For each breakpoint, create a GdbBreakpoint object with role FunctionBody
+. Add the GdbBreakpoint to the breakpoints[] array
 
 
 
@@ -148,15 +151,15 @@ Set breakpoints for all functions in player's solution. When these breakpoints a
 
 Start the execution of inferior and stop in the program entry point
 
-- Add the entry point breakpoint to breakpoints[]
-- Collect the process id from =thread-group-started
-- Animate creation of main thread when =thread-created. See Create execution thread
-- Ignore all =library-loaded responses. Maybe trace 'libc' load and store a flag it is being used
-- Change inferior state to *running
-- Update breakpoints
-- When stopped at program entry point *stopped,reason="breakpoint-hit", do section: "Breakpoint
+. Add the entry point breakpoint to breakpoints[]
+. Collect the process id from =thread-group-started
+. Animate creation of main thread when =thread-created. See Create execution thread
+. Ignore all =library-loaded responses. Maybe trace 'libc' load and store a flag it is being used
+. Change inferior state to *running
+. Update breakpoints
+. When stopped at program entry point *stopped,reason="breakpoint-hit", do section: "Breakpoint
   hit". It will animate a function call by the thread-id=1
-- Remove deleted breakpoint from breakpoints[] array
+. Remove deleted breakpoint from breakpoints[] array
   Breakpoint was likely removed because there is a user-defined breakpoint in the same line
   Each time a breakpoint is added to the breakpoints[] array, look if there is a previous
   breakpoint in the same file and line that is not in deleted state (referenceBreakpoint).
@@ -174,9 +177,9 @@ Start the execution of inferior and stop in the program entry point
 
 Set breakpoint for the dynamic memory management functions. These breakpoints are set after the libc library has been loaded.
 
-- Set break to stop inferior each time dynamic memory is allocated
-- Create a GdbBreakpoint with role MallocCall and add to breakpoints[] array
-- Future work: check if it works with GCC/MinGW for MsWin
+. Set break to stop inferior each time dynamic memory is allocated
+. Create a GdbBreakpoint with role MallocCall and add to breakpoints[] array
+. Future work: check if it works with GCC/MinGW for MsWin
 
 
 ==== -break-insert -f __libc_calloc
@@ -184,8 +187,8 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 	^done,bkpt={number="14",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7875160",func="__libc_calloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="3170",thread-groups=["i1"],times="0",original-location="__libc_calloc"}
 	(gdb)
 
-- Set break to stop inferior each time initialized dynamic memory is allocated
-- Create a GdbBreakpoint with role CallocCall and add to breakpoints[] array
+. Set break to stop inferior each time initialized dynamic memory is allocated
+. Create a GdbBreakpoint with role CallocCall and add to breakpoints[] array
 
 
 
@@ -194,8 +197,8 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 	^done,bkpt={number="15",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7874b10",func="__GI___libc_realloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2972",thread-groups=["i1"],times="0",original-location="__libc_realloc"}
 	(gdb)
 
-- Set break to stop inferior each time dynamic memory is re-allocated
-- Create a GdbBreakpoint with role ReallocCall and add to breakpoints[] array
+. Set break to stop inferior each time dynamic memory is re-allocated
+. Create a GdbBreakpoint with role ReallocCall and add to breakpoints[] array
 
 
 ==== -break-insert -f __libc_free
@@ -203,8 +206,8 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 	^done,bkpt={number="16",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7874940",func="__GI___libc_free",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2932",thread-groups=["i1"],times="0",original-location="__libc_free"}
 	(gdb)
 
-- Set break to stop inferior each time dynamic memory is de-allocated
-- Create a GdbBreakpoint with role FreeCall and add to breakpoints[] array
+. Set break to stop inferior each time dynamic memory is de-allocated
+. Create a GdbBreakpoint with role FreeCall and add to breakpoints[] array
 
 
 
@@ -216,8 +219,8 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 	^done,name="bn_stdin",numchild="1",value="0x0",type="char *",has_more="0"
 	(gdb)
 
-- In Unix: Create object variables watching changes in io, using notation `bn_io_iofile`
-- Future work: check if it works with GCC/MinGW for MsWin
+. In Unix: Create object variables watching changes in io, using notation `bn_io_iofile`
+. Future work: check if it works with GCC/MinGW for MsWin
 
 
 ==== -var-create bn_io_stdout @ stdout->_IO_write_ptr
@@ -249,9 +252,9 @@ Only in MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluat
 ==== -var-create bn_gv_1 @ global_variable_name_1
 
 
-- Get global variables from PlayerSolution (collected with ctags in building process)
-- For each global variable, create a GDB-variable object with2 name `bn_gv_num`
-- Future work: detect static local variables
+. Get global variables from PlayerSolution (collected with ctags in building process)
+. For each global variable, create a GDB-variable object with2 name `bn_gv_num`
+. Future work: detect static local variables
 
 
 
@@ -274,9 +277,9 @@ Each time `=thread-created,id="#"` is issued, create an ExecutionThread object. 
 	^done,threads=[{id="1",target-id="Thread 0x7ffff7fcc700 (LWP 23146)",name="solution",frame={level="0",addr="0x00000000004008ce",func="main",args=[],file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="13"},state="stopped",core="7"}],current-thread-id="1"
 	(gdb)
 
-- Locate the Execution thread with the given id, and have it to update fields
-- If there is a line number change, animate it (may require a change of source file)
-- If executionThread.callStack.isEmpty() and thread-info/frame/file is not in player solution:
+. Locate the Execution thread with the given id, and have it to update fields
+. If there is a line number change, animate it (may require a change of source file)
+. If executionThread.callStack.isEmpty() and thread-info/frame/file is not in player solution:
   animate a function call with an empty frame, because there will not breakpoint-hit
 
 
@@ -286,7 +289,7 @@ All threads? or ` --thread 1`
 	^done,depth="1"
 	(gdb)
 
-- Update the ExecutionThread::callStackDepth integer value. If decreased animate a function return.
+. Update the ExecutionThread::callStackDepth integer value. If decreased animate a function return.
 
 
 
@@ -295,10 +298,10 @@ All threads? or ` --thread 1`
 
 Each time `=thread-exited,id=#` is issued:
 
-- Locate the ExecutionThread with given id and ask to remove.
-- If thread has a cpu core assigned, remove thread from cpu core
-- Remove thread from the scene, including its hidden or visible call stack
-- Remove thread memory from CpuCores::executionThreads[] array
+. Locate the ExecutionThread with given id and ask to remove.
+. If thread has a cpu core assigned, remove thread from cpu core
+. Remove thread from the scene, including its hidden or visible call stack
+. Remove thread memory from CpuCores::executionThreads[] array
 
 
 
@@ -328,10 +331,12 @@ Player solution (inferior) stopped for hitting a breakpoint. If breakpoint has o
 
 Player solution hit a breakpoint that has the role of `FunctionCall`. The breakpoint must be at the beginning of the body of a function in a file that is part of player solution.
 
-- Get the thread-id="#" from *stopped response, locate the ExecutionThread object
-- If ExecutionThread is active, animate the door opening in its cpu core
-- Build a memory frame for the new stack frame with the function name in the roof
-- Raise the memory roof to the cpu core door
+. Get the `thread-id="#"` from `*stopped` response, locate the `ExecutionThread` object.
+. ToDo: check call stack depth? If there is not an increase in the level, stop animation.
+. If `ExecutionThread` is active, animate the door opening in its CPU core.
+. Build a memory frame for the new stack frame with the function name in the roof.
+. Raise the memory roof to the CPU core door.
+. ToDo: If execution thread has not a CPU core, it should be stopped at inferior through GDB.
 
 
 ==== -stack-list-arguments 2
@@ -339,11 +344,11 @@ Player solution hit a breakpoint that has the role of `FunctionCall`. The breakp
 	^done,stack-args=[frame={level="0",args=[]}]
 	(gdb)
 
-- Calculate the size required for all parameters, and the number required memory rows with garbage
-- Raise the min(required memory rows, max allowed stack frame size/rowsize) rows and stop
-- Create all variables in the memory rows
-- If there is overflow, animate a stack overflow (see Program termination)
-- Initialize each parameter with the argument, they will replace the garbage
+. Calculate the size required for all parameters, and the number required memory rows with garbage
+. Raise the min(required memory rows, max allowed stack frame size/rowsize) rows and stop
+. Create all variables in the memory rows
+. If there is overflow, animate a stack overflow (see Program termination)
+. Initialize each parameter with the argument, they will replace the garbage
 
 
 ==== -stack-list-locals 2
@@ -351,8 +356,8 @@ Player solution hit a breakpoint that has the role of `FunctionCall`. The breakp
 	^done,locals=[{name="n",type="size_t",value="4196304"},{name="grid",type="char **",value="0x7fffffffdf50"},{name="error",type="int",value="0"}]
 	(gdb)
 
-- Do the same than arguments, but some values may be unitialized (keep their garbage)
-- Add the "memory frame legs" to the last memory row
+. Do the same than arguments, but some values may be unitialized (keep their garbage)
+. Add the "memory frame legs" to the last memory row
 
 
 ==== -stack-info-depth
@@ -360,16 +365,16 @@ Player solution hit a breakpoint that has the role of `FunctionCall`. The breakp
 	^done,depth="2"
 	(gdb)
 
-- Check if it matches the number of stack frames
-- Update the ExecutionThread::callStackDepth integer value.
+. Check if it matches the number of stack frames
+. Update the ExecutionThread::callStackDepth integer value.
 
 
 
 === 4.2 User defined breakpoint
 
 
-- Set Visualization state to paused
-- Set VisualizationSpeed::seeking to false
+. Set Visualization state to paused
+. Set VisualizationSpeed::seeking to false
 
 
 
@@ -399,7 +404,7 @@ Explicit calls are always reflected in the animation. Implicit calls sometimes m
 	(gdb)
 
 
-- Create an object with the following information
+. Create an object with the following information
 
 	class DynamicMemoryBlock
 	{
@@ -408,7 +413,7 @@ Explicit calls are always reflected in the animation. Implicit calls sometimes m
 		void* address; // from return value
 	}
 
-- Store the object in HeapSegment::dynamicMemoryBlocks[] (or VariableManager::?)
+. Store the object in HeapSegment::dynamicMemoryBlocks[] (or VariableManager::?)
 
 
 ==== -exec-finish
@@ -445,14 +450,14 @@ When finally arrived to the player's function before the dynamic memory function
 	^done,changelist=[]
 	(gdb)
 
-- If some variable-object changed its value to dynamicMemoryBlock.address an animation must be done.
-- If the distance between the player's function and the dynamic memory function stopped is 1 (or 2?)
+. If some variable-object changed its value to dynamicMemoryBlock.address an animation must be done.
+. If the distance between the player's function and the dynamic memory function stopped is 1 (or 2?)
   the player directly called the memory management function, and an animation must be done.
-- Otherwise, animation is skipped and the DynamicMemoryBlock object can be deleted.
+. Otherwise, animation is skipped and the DynamicMemoryBlock object can be deleted.
 
 If an animation must be done:
-- Pass the DynamicMemoryBlock to the HeapSegment object
-- If block was allocated:
+. Pass the DynamicMemoryBlock to the HeapSegment object
+. If block was allocated:
 
 	- Look for the first empty space larger or equal than block.size
 	- Fet the pointed data type (from gdb info?)
@@ -493,11 +498,11 @@ Each step of this loop is considered a step of the visualization. When visualiza
 
 Update local variables
 
-- Get the value of all the local variables, and pass them to the CallStack or VariableManager
-- If some variable has changed its value, animate it
-- ToDo: If we create variable-objects for each local variable in all threads, this comparison
+. Get the value of all the local variables, and pass them to the CallStack or VariableManager
+. If some variable has changed its value, animate it
+. ToDo: If we create variable-objects for each local variable in all threads, this comparison
   step may be not necessary
-- ToDo: GDB consider local static variables as normal local variables. We have to separe them
+. ToDo: GDB consider local static variables as normal local variables. We have to separe them
 
 
 
@@ -508,9 +513,9 @@ Update local variables
 
 Update global variables and standard input/output streams
 
-- If no variables have changed their values, done
-- If a global variable changed its value, pass the message to the DataSegment, and animate change
-- If a standard input/output stream changed its value, replace FILE for the stream and issue:
+. If no variables have changed their values, done
+. If a global variable changed its value, pass the message to the DataSegment, and animate change
+. If a standard input/output stream changed its value, replace FILE for the stream and issue:
 
 
 ==== -data-evaluate-expression bn_tell_FILE()
@@ -518,14 +523,15 @@ Update global variables and standard input/output streams
 	[ToDo]
 	$1 = 2
 
-- Capture the number of bytes moved
-- If FILE is stdin, animate Robot consuming n chars from stdin
+. Capture the number of bytes moved
+. If FILE is stdin, animate Robot consuming n chars from stdin (robot turns)
   Locate what variable received the read input (it should be included in -var-update result)
   Animate robot converting to the data type of the changed variable
   If no target variable is found, animate robot discarding the read bytes
-- If FILE is stdout, it is so difficult to determine which variables were involved to produce the
-  output. Animate the robot building the output message and sending it by the stdout
-- If file is stderr, ToDo: ignore the event, for now
+. If FILE is stdout, it is so difficult to determine which variables were involved to produce the
+  output. Animate the robot building the output message and sending it by the stdout. Check if output matches expected output and turn on/off the output tester accordingly.
+. If file is stderr, ToDo: ignore the event, for now
+. ToDo: provide more tubes for user own files (FILE*, std::istream, std::fstream...)
 
 
 
@@ -537,7 +543,8 @@ Update global variables and standard input/output streams
 	*stopped,reason="end-stepping-range",frame={addr="0x00000000004008dd",func="main",args=[],file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="14"},thread-id="1",stopped-threads="all",core="7"
 	(gdb)
 
-The visualization step finishes executing the next instruction, y acting according to the response.
+The _visualization step_ finished executing the next instruction.
+Just act according to the response as stated in previous sections.
 
 
 
@@ -546,10 +553,10 @@ The visualization step finishes executing the next instruction, y acting accordi
 
 Program may terminate for these reasons:
 
-- Player stopped visualization
-- Program finished normally
-- Program received a signal from OS (eg: segmentation fault)
-- Program failed to run in the virtualized environment (unit) (eg: stack overflow)
+. Player stopped visualization
+. Program finished normally
+. Program received a signal from OS (eg: segmentation fault)
+. Program failed to run in the virtualized environment (unit) (eg: stack overflow)
 
 
 If player stopped visualization or program failed to run in the constrained environmentof the unit, stop inferior execution:
@@ -560,7 +567,7 @@ If player stopped visualization or program failed to run in the constrained envi
 	(gdb)
 
 
-- Stop gdb also?:
+. Stop gdb also?:
 
 ==== -gdb-exit
 
