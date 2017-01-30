@@ -1,9 +1,9 @@
-![Game logo](doc/img/game_title.png)
+![Game logo](docs/img/game_title.png)
 
 
 **bot Neumann\+\+** is a gamified visualisation of the von Neumann architecture intended to help students learn C/C++ programming.
 
-![Future game scene](doc/img/unit_playing_scene.png)
+![Future game scene](docs/img/unit_playing_scene.png)
 
 ## Story
 
@@ -42,9 +42,9 @@ The  second level of metaphors can be considered as just one extended metaphor, 
 
 bot Neumann++ is developed by Jeisson Hidalgo-Céspedes, as a research project of [Centro de Investigaciones en Tecnologías de la Información y Comunicación](http://www.citic.ucr.ac.cr/) (CITIC) of [Universidad de Costa Rica](http://www.ucr.ac.cr/), with support from the Ministerio de Ciencia, Tecnología y Telecomunicaciones (MICITT) de Costa Rica. It is licensed under GPL v2. More information:
 
-- Game design document: English | [Spanish](doc/gdd.es.md).
-- [API documentation](doc/api/)
+- Game design document: English | [Spanish](docs/gdd.es.md).
+- [API documentation](docs/api/)
 - [Project oficial web page at CITIC](http://www.citic.ucr.ac.cr/proyecto/incentivo_lenguaje_programacion_en_estudiantes) (in Spanish)
-- Informal document with [Requirements](doc/requirements.md)
-- Build instructions can be found in [BUILD.md](doc/BUILD.md) file.
-- License: [GPL v2](doc/LICENSE.txt)
+- Informal document with [Requirements](docs/requirements.md)
+- Build instructions can be found in [BUILD.md](docs/BUILD.md) file.
+- License: [GPL v2](docs/LICENSE.txt)
