@@ -1,75 +1,167 @@
-/* Brainstorming:
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <climits>
 
-redirect stdin, stdout, stderr
-call main with arguments
-have all types of global variables
-find global variables with ctags
-create variable-objects for all global variables
-have a C++ struct with private/protected/public members
-inherit a C++ class with constructor, virtual destructor
-one global variable is an instance of sub-class
-set breakpoints for all functions in all sources
-set breakpoints for dynamic memory management: malloc/calloc/realloc/free
-has three threads
-have variable-objects for stdin/stdout/stderr
-use new, new[], delete, delete[]
-throw an exception
-has a template
-overloads two operators (free function and member function)
+#include <algorithm>
+#include <stdexcept>
+#include <iostream>
+#include <string>
+#include <thread>
+#include <vector>
 
-When a function is called list arguments, then locals
-Always exec-next and exec-finish, do not exec-step (into, out)
-After each exec-next:
-If stopped for range (still in the same function):
-	List frame variables (stack-list-variables 2)
-	Update all variable-objects
-If stopped in a function with symbols
-	Create function calls and do as same with main()
-If stopped in dynamic memory function
-	Store size: -stack-list-arguments 2
-	Call exec-finish
-	Store return address
-	If memory function called by user code
-		Animate memory creation
-		Call exec-next to go back to user code
+#define DISABLE_COPY_CLASS(Class) \
+	Class(const Class&) = delete; \
+	Class(Class&&) = delete; \
+	Class& operator=(const Class&) = delete; \
+	Class& operator=(Class&&) = delete
 
-If execution-thread created
-	Animate it
-	Ask for thread-info
-If execution-thread finished
-	Destroy it
+typedef unsigned long long ull;
 
-If any variable-object changed for io
-	Animate stdin/out/err consuming/generating chars
-	Animate robot reading or writing
-	Check if output matches expected ouput and turn on the output tester
-*/
+template <typename DataType>
+struct AbstractArgument
+{
+	DISABLE_COPY_CLASS(AbstractArgument);
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+  private:
+	ull number = ULLONG_MAX;
 
-char* program_name = NULL;
+  protected:
+	DataType value1;
+
+  public:
+	explicit AbstractArgument(ull number, const DataType& value)
+		: number(number)
+		, value1(value)
+	{
+	}
+
+	virtual ~AbstractArgument() { }
+	inline ull getNumber() const { return number; }
+	virtual std::ostream& print(std::ostream& out) const = 0;
+	virtual int print(FILE* file) const = 0;
+};
+
+template <typename DataType>
+inline std::ostream& operator<<(std::ostream& out, const AbstractArgument<DataType>& arg)
+{
+	return arg.print(out);
+}
+
+class InputArgument : public AbstractArgument<char*>
+{
+	DISABLE_COPY_CLASS(InputArgument);
+
+  protected:
+	std::string value2;
+
+  public:
+	InputArgument(ull number, char* value)
+		: AbstractArgument(number, value)
+		, value2(value)
+	{
+		std::transform(value2.begin(), value2.end(), value2.begin(), ::tolower);
+	}
+
+	inline void setValue2(const std::string& value2)
+	{
+		this->value2 = value2;
+	}
+
+	inline ull valueToUll() const
+	{
+		return std::stoull(value2);
+	}
+
+	virtual std::ostream& print(std::ostream& out) const override
+	{
+		return out << getNumber() << ": '" << value2 << "'\n";
+	}
+
+	virtual int print(FILE* file) const override
+	{
+		return fprintf(file, "%llu: %s\n", getNumber(), value1);
+	}
+
+	inline bool operator<(const AbstractArgument& other) const
+	{
+		return this->value2 < other.value2;
+	}
+
+	inline bool operator==(const AbstractArgument& other) const
+	{
+		return this->value2 == other.value2;
+	}
+};
+
+static std::vector<InputArgument*> arguments;
+InputArgument* sorted_arguments;
+InputArgument global_program_name(0, "all_inclusive");
+static size_t sorted_argument_count = 0;
+
+inline bool compare(const InputArgument* arg1, const InputArgument* arg2)
+{
+	return *arg1 < *arg2;
+}
+
+void read_arguments()
+{
+	for ( int index = 1; index < sorted_argument_count; ++index )
+	{
+		std::string value;
+		std::cin >> value;
+		arguments.push_back( new InputArgument(index, value );
+	}
+}
+
+void sort_arguments()
+{
+	std::sort(sorted_arguments, sorted_arguments + sorted_argument_count, compare);
+};
+
+template <typename Output>
+void print_arguments(Output& out)
+{
+	for ( int index = 1; index < sorted_argument_count; ++index )
+		arguments.push_back( new InputArgument(index, argv[index]) );
+}
+
+void clean_arguments()
+{
+	for ( int index = 0; index < arguments.size(); ++index )
+		delete arguments;
+}
 
 int main(int argc, char* argv[])
 {
-	long long* argc_copy = (long long*) malloc( sizeof(long long) );
-	if ( argc_copy == NULL )
+	global_program_name.setValue2( argv[0] );
+	sorted_arguments = (InputArgument*) malloc( argc * sizeof(InputArgument*) );
+
+	try
+	{
+		assert(argc >= 2);
+		InputArgument input_count(1, argv[1]);
+
+		sorted_argument_count = input_count.valueToUll();
+
+		read_arguments();
+
+		std::thread printer1( print_arguments, stdout );
+
+		sorted_arguments = realloc( arguments, sorted_argument_count * sizeof(InputArgument*) );
+		std::thread sorter( print_arguments, sort_arguments );
+
+		// ToDo: also use new, new[], delete, delete[]
+
+		std::thread printer2( print_arguments, std::cout );
+
+		free(arguments);
+		return 0;
+	}
+	catch(std::exception& exc)
+	{
+		std::cerr << exc.what() << std::endl;
 		return 1;
-
-	*argc_copy = argc;
-
-	if ( ( program_name = calloc(strlen(argv[0]) + 1, sizeof(char)) ) == NULL )
-		return 2;
-
-	strcpy(program_name, argv[0]);
-
-	printf("%lli: %s\n", *argc_copy, program_name);
-
-	free(argc_copy);
-
-	// Memory leak:
-	// free(program_name);
-
-	return 0;
+	}
 }
