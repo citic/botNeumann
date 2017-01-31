@@ -1,7 +1,6 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
-#include <ctime>
 #include <climits>
 
 #include <algorithm>
@@ -31,7 +30,7 @@ struct AbstractArgument
 	DataType value1;
 
   public:
-	explicit AbstractArgument(ull number, const DataType& value)
+	explicit AbstractArgument(ull number, DataType value)
 		: number(number)
 		, value1(value)
 	{
@@ -49,7 +48,7 @@ inline std::ostream& operator<<(std::ostream& out, const AbstractArgument<DataTy
 	return arg.print(out);
 }
 
-class InputArgument : public AbstractArgument<char*>
+class InputArgument : public AbstractArgument<const char*>
 {
 	DISABLE_COPY_CLASS(InputArgument);
 
@@ -57,9 +56,9 @@ class InputArgument : public AbstractArgument<char*>
 	std::string value2;
 
   public:
-	InputArgument(ull number, char* value)
+	InputArgument(ull number, const char* value)
 		: AbstractArgument(number, value)
-		, value2(value)
+		, value2( std::string(value) )
 	{
 		std::transform(value2.begin(), value2.end(), value2.begin(), ::tolower);
 	}
@@ -84,21 +83,22 @@ class InputArgument : public AbstractArgument<char*>
 		return fprintf(file, "%llu: %s\n", getNumber(), value1);
 	}
 
-	inline bool operator<(const AbstractArgument& other) const
+	virtual bool operator<(const InputArgument& other) const
 	{
 		return this->value2 < other.value2;
 	}
 
-	inline bool operator==(const AbstractArgument& other) const
+	virtual bool operator==(const InputArgument& other) const
 	{
 		return this->value2 == other.value2;
 	}
 };
 
 static std::vector<InputArgument*> arguments;
-InputArgument* sorted_arguments;
+char** buffer = nullptr;
+InputArgument** sorted_arguments;
 InputArgument global_program_name(0, "all_inclusive");
-static size_t sorted_argument_count = 0;
+static size_t argument_count = 0;
 
 inline bool compare(const InputArgument* arg1, const InputArgument* arg2)
 {
@@ -107,56 +107,62 @@ inline bool compare(const InputArgument* arg1, const InputArgument* arg2)
 
 void read_arguments()
 {
-	for ( int index = 1; index < sorted_argument_count; ++index )
+	buffer = new char*[argument_count];
+	for ( ull index = 0; index < argument_count; ++index )
 	{
-		std::string value;
-		std::cin >> value;
-		arguments.push_back( new InputArgument(index, value );
+		buffer[index] = new char[1024];
+		fgets(buffer[index], 1024, stdin);
+		arguments.push_back( new InputArgument(index, buffer[index] ) );
 	}
 }
 
 void sort_arguments()
 {
-	std::sort(sorted_arguments, sorted_arguments + sorted_argument_count, compare);
+	std::sort(sorted_arguments, sorted_arguments + argument_count, compare);
 };
 
-template <typename Output>
-void print_arguments(Output& out)
+void print_arguments_1()
 {
-	for ( int index = 1; index < sorted_argument_count; ++index )
-		arguments.push_back( new InputArgument(index, argv[index]) );
+	for ( ull index = 0; index < argument_count; ++index )
+		sorted_arguments[index]->print( stdout );
+}
+
+void print_arguments_2()
+{
+	for ( ull index = 0; index < argument_count; ++index )
+		std::cout << *sorted_arguments[index];
 }
 
 void clean_arguments()
 {
-	for ( int index = 0; index < arguments.size(); ++index )
-		delete arguments;
+	for ( ull index = 0; index < arguments.size(); ++index )
+		delete arguments[index];
 }
 
 int main(int argc, char* argv[])
 {
 	global_program_name.setValue2( argv[0] );
-	sorted_arguments = (InputArgument*) malloc( argc * sizeof(InputArgument*) );
+	sorted_arguments = (InputArgument**) malloc( argc * sizeof(InputArgument*) );
 
 	try
 	{
 		assert(argc >= 2);
 		InputArgument input_count(1, argv[1]);
 
-		sorted_argument_count = input_count.valueToUll();
+		argument_count = input_count.valueToUll();
 
 		read_arguments();
 
-		std::thread printer1( print_arguments, stdout );
+		std::thread printer1( print_arguments_1 );
 
-		sorted_arguments = realloc( arguments, sorted_argument_count * sizeof(InputArgument*) );
-		std::thread sorter( print_arguments, sort_arguments );
+		sorted_arguments = (InputArgument**) realloc( sorted_arguments, argument_count * sizeof(InputArgument*) );
+		std::thread sorter( sort_arguments );
+		free(sorted_arguments);
 
 		// ToDo: also use new, new[], delete, delete[]
 
-		std::thread printer2( print_arguments, std::cout );
+		std::thread printer2( print_arguments_2 );
 
-		free(arguments);
 		return 0;
 	}
 	catch(std::exception& exc)
