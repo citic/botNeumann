@@ -17,10 +17,10 @@ Sections titles include commands sent to https://sourceware.org/gdb/onlinedocs/g
 	=thread-group-added,id="i1"
 	(gdb)
 
-Call GDB. It will wait for commands.
+Start a new GDB session using Machine Interface (MI).
 
 
-==== -file-exec-and-symbols "/tmp/all_inclusive"
+==== -file-exec-and-symbols "/tmp/alli"
 
 	^done
 	(gdb)
@@ -28,17 +28,17 @@ Call GDB. It will wait for commands.
 Provide the path and name for executable. It may be included in the previous GDB call altenatively.
 
 
-==== -exec-arguments [args] </tmp/bn_input.txt >/tmp/bn_output.txt 2>/tmp/bn_error.txt
+==== -exec-arguments 3 </tmp/bn_01_input.txt >/tmp/bn_01_output_ps.txt 2>/tmp/bn_01_error_ps.txt
 
 	^done
 	(gdb)
 
-. Generate `/path/to/input000.txt` from botnu test case.
+. Generate `/path/to/bn_01_input.txt` from botnu test case.
 . If test case n botnu has arguments, provide them
 . If Unix-like OS: redirect standard input, output and error
 
 
-==== -break-insert "/tmp/all_inclusive.c:25"
+==== -break-insert "/tmp/alli.cpp:25"
 
 	^done,bkpt=
 	{
@@ -67,7 +67,7 @@ Set all user-defined breakpoints
 . Create GdbBreakpoint objects with role UserDefined and add them to a breakpoints[] array
 
 
-==== -interpreter-exec console "rbreak /tmp/all_inclusive.c:."
+==== -interpreter-exec console "rbreak /tmp/alli.cpp:."
 
 	~"Breakpoint 1 at 0x400bdb: file solution.c, line 86.\n"
 

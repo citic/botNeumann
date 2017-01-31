@@ -3,7 +3,7 @@ CC=gcc
 CXX=g++
 
 FLAGS=-ggdb3 -O0 -Wall -Wextra -Wno-uninitialized -I. -pthread -lpthread
-CFLAGS=$(FLAGS) -std=c99
+CFLAGS=$(FLAGS) -std=c11
 CXXFLAGS=$(FLAGS) -std=c++11
 TAGS=--c-kinds=v --fields=fsnt --if0=yes --sort=no
 
