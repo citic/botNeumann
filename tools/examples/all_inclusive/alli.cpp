@@ -1,6 +1,11 @@
+// All Inclusive: a convoluted program to use many features of C/C++
+// The program considers lines in standard input as command line arguments,
+// and prints all arguments sorted alphabetically in lowercase.
+
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <climits>
 
 #include <algorithm>
@@ -73,74 +78,84 @@ class InputArgument : public AbstractArgument<const char*>
 		return std::stoull(value2);
 	}
 
-	virtual std::ostream& print(std::ostream& out) const override
-	{
-		return out << getNumber() << ": '" << value2 << "'\n";
-	}
-
-	virtual int print(FILE* file) const override
-	{
-		return fprintf(file, "%llu: %s\n", getNumber(), value1);
-	}
-
 	virtual bool operator<(const InputArgument& other) const
 	{
 		return this->value2 < other.value2;
 	}
 
-	virtual bool operator==(const InputArgument& other) const
+	virtual std::ostream& print(std::ostream& out) const override
 	{
-		return this->value2 == other.value2;
+		return out << getNumber() << "\t" << value2 << '\n';
+	}
+
+	virtual int print(FILE* file) const override
+	{
+		return fprintf(file, "%llu\t%s\n", getNumber(), value1);
 	}
 };
 
-static std::vector<InputArgument*> arguments;
+static std::vector<InputArgument*> all_arguments;
 char** buffer = nullptr;
+ull input_count;
 InputArgument** sorted_arguments;
+static size_t sorted_count = 0;
 InputArgument global_program_name(0, "all_inclusive");
-static size_t argument_count = 0;
+
+void read_arguments(ull input_count)
+{
+	buffer = (char**) calloc( input_count, sizeof(char*) );
+	static const size_t buffer_size = 128;
+	for ( ull index = 0; index < input_count; ++index )
+	{
+		buffer[index] = static_cast<char*>( malloc(buffer_size * sizeof(char) ) );
+		fgets(buffer[index], buffer_size, stdin);
+		size_t len = strlen(buffer[index]);
+		buffer[index][len - 1] = '\0';
+		buffer[index] = reinterpret_cast<char*>( realloc(buffer[index], len + 1) );
+		all_arguments.push_back( new InputArgument( all_arguments.size(), buffer[index] ) );
+	}
+
+	::input_count = input_count;
+}
+
+void print_arguments_1()
+{
+	for ( size_t index = 0; index < all_arguments.size(); ++index )
+		all_arguments[index]->print( stdout );
+}
+
+void print_arguments_2()
+{
+	std::cout << std::endl;
+	for ( ull index = 0; index < sorted_count; ++index )
+		std::cout << *sorted_arguments[index];
+}
 
 inline bool compare(const InputArgument* arg1, const InputArgument* arg2)
 {
 	return *arg1 < *arg2;
 }
 
-void read_arguments()
-{
-	buffer = new char*[argument_count];
-	for ( ull index = 0; index < argument_count; ++index )
-	{
-		buffer[index] = new char[1024];
-		fgets(buffer[index], 1024, stdin);
-		arguments.push_back( new InputArgument(index, buffer[index] ) );
-	}
-}
-
-void print_arguments_1()
-{
-	for ( size_t index = 0; index < arguments.size(); ++index )
-		arguments[index]->print( stdout );
-}
-
-void print_arguments_2()
-{
-	for ( ull index = 0; index < argument_count; ++index )
-		std::cout << *sorted_arguments[index];
-}
-
 void sort_arguments()
 {
-	std::sort(sorted_arguments, sorted_arguments + argument_count, compare);
-};
+	sorted_arguments = new InputArgument*[ all_arguments.size() ];
+	for ( sorted_count = 0; sorted_count < all_arguments.size(); ++ sorted_count )
+		sorted_arguments[sorted_count] = all_arguments[sorted_count];
 
-void clean_arguments()
+	std::sort(sorted_arguments, sorted_arguments + sorted_count, compare);
+}
+
+void delete_arguments()
 {
-	for ( ull index = 0; index < arguments.size(); ++index )
-		delete arguments[index];
+	for ( ull index = 0; index < all_arguments.size(); ++index )
+		delete all_arguments[index];
 
-	for ( ull index = 0; index < argument_count; ++index )
-		delete buffer[index];
-	delete [] buffer;
+	for ( ull index = 0; index < input_count; ++index )
+		free( buffer[index] );
+
+	free( buffer );
+
+	delete [] sorted_arguments;
 }
 
 int main(int argc, char* argv[])
@@ -150,28 +165,28 @@ int main(int argc, char* argv[])
 
 	try
 	{
+		for ( int index = 0; index < argc; ++index )
+			all_arguments.push_back( new InputArgument(index, argv[index]) );
+
 		assert(argc >= 2);
 		InputArgument input_count(1, argv[1]);
-
-		argument_count = input_count.valueToUll();
-
-		read_arguments();
+		read_arguments( input_count.valueToUll() );
 
 		std::thread printer1( print_arguments_1 );
-
-		sorted_arguments = (InputArgument**) realloc( sorted_arguments, argument_count * sizeof(InputArgument*) );
-		memcpy(sorted_arguments, & arguments[0], arguments.size() * sizeof(InputArgument*));
 		std::thread sorter( sort_arguments );
 
+		printer1.join();
+		sorter.join();
 		std::thread printer2( print_arguments_2 );
 
-		free(sorted_arguments);
+		printer2.join();
+		delete_arguments();
 
 		return 0;
 	}
 	catch(std::exception& exc)
 	{
-		std::cerr << exc.what() << std::endl;
+		std::cerr << "Exception: " << exc.what() << std::endl;
 		return 1;
 	}
 }
