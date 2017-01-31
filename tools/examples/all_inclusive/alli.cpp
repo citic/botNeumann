@@ -116,15 +116,10 @@ void read_arguments()
 	}
 }
 
-void sort_arguments()
-{
-	std::sort(sorted_arguments, sorted_arguments + argument_count, compare);
-};
-
 void print_arguments_1()
 {
-	for ( ull index = 0; index < argument_count; ++index )
-		sorted_arguments[index]->print( stdout );
+	for ( size_t index = 0; index < arguments.size(); ++index )
+		arguments[index]->print( stdout );
 }
 
 void print_arguments_2()
@@ -133,10 +128,19 @@ void print_arguments_2()
 		std::cout << *sorted_arguments[index];
 }
 
+void sort_arguments()
+{
+	std::sort(sorted_arguments, sorted_arguments + argument_count, compare);
+};
+
 void clean_arguments()
 {
 	for ( ull index = 0; index < arguments.size(); ++index )
 		delete arguments[index];
+
+	for ( ull index = 0; index < argument_count; ++index )
+		delete buffer[index];
+	delete [] buffer;
 }
 
 int main(int argc, char* argv[])
@@ -156,12 +160,12 @@ int main(int argc, char* argv[])
 		std::thread printer1( print_arguments_1 );
 
 		sorted_arguments = (InputArgument**) realloc( sorted_arguments, argument_count * sizeof(InputArgument*) );
+		memcpy(sorted_arguments, & arguments[0], arguments.size() * sizeof(InputArgument*));
 		std::thread sorter( sort_arguments );
-		free(sorted_arguments);
-
-		// ToDo: also use new, new[], delete, delete[]
 
 		std::thread printer2( print_arguments_2 );
+
+		free(sorted_arguments);
 
 		return 0;
 	}
