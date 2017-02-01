@@ -38,24 +38,16 @@ Provide the path and name for executable. It may be included in the previous GDB
 . If Unix-like OS: redirect standard input, output and error
 
 
-==== -break-insert "/tmp/alli.cpp:25"
+==== -break-insert "alli.cpp:111"
 
-	^done,bkpt=
-	{
-	  number="1",
-	  type="breakpoint",
-	  disp="keep",
-	  enabled="y",
-	  addr="0x0000000000400795",
-	  func="main",
-	  file="rand.c",
-	  fullname="/full/path/to/rand.c",
-	  line="25",
-	  thread-groups=["i1"],
-	  times="0",
-	  original-location="rand.c:25"
-	}
+	^done,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000401de7",func="read_arguments(unsigned long long)",file="alli.cpp",fullname="/tmp/alli.cpp",line="111",thread-groups=["i1"],times="0",original-location="alli.cpp:111"}
 	(gdb)
+
+Also `-break-insert "alli.cpp:67"`
+
+	^done,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000402816",func="InputArgument::InputArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/tmp/alli.cpp",line="67",thread-groups=["i1"],times="0",original-location="alli.cpp:67"}
+	(gdb)
+
 
 Set all user-defined breakpoints
 
@@ -67,7 +59,7 @@ Set all user-defined breakpoints
 . Create GdbBreakpoint objects with role UserDefined and add them to a breakpoints[] array
 
 
-==== -interpreter-exec console "rbreak /tmp/alli.cpp:."
+==== -interpreter-exec console "rbreak alli.cpp:."
 
 	~"Breakpoint 1 at 0x400bdb: file solution.c, line 86.\n"
 

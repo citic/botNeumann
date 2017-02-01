@@ -118,10 +118,11 @@ void read_arguments(ull input_count)
 	::input_count = input_count;
 }
 
-void print_arguments_1()
+void print_arguments_1(size_t index = 0)
 {
-	for ( size_t index = 0; index < all_arguments.size(); ++index )
-		all_arguments[index]->print( stdout );
+	all_arguments[index]->print( stdout );
+	if ( ++index < all_arguments.size() )
+		print_arguments_1(index);
 }
 
 void print_arguments_2()
@@ -172,7 +173,7 @@ int main(int argc, char* argv[])
 		InputArgument input_count(1, argv[1]);
 		read_arguments( input_count.valueToUll() );
 
-		std::thread printer1( print_arguments_1 );
+		std::thread printer1( print_arguments_1, 0 );
 		std::thread sorter( sort_arguments );
 
 		printer1.join();
