@@ -190,7 +190,7 @@ class Unit : public QObject
 	inline size_t getCoreInvisibleStartByte(int core) const { return getCoreStartByte(core) + getCoreVisibleSize(); }
 
 	/// d: rows. Data segment has sv/2 rows, but if sv is 1, data segment should have a least 1 row
-	inline size_t getDataSegmentRows() const { return stackSegmentVisibleRows % 2 ? (stackSegmentVisibleRows + 1) / 2 : stackSegmentVisibleRows / 2; }
+	inline size_t getDataSegmentRows() const { return (stackSegmentVisibleRows % 2) ? (stackSegmentVisibleRows + 1) / 2 : stackSegmentVisibleRows / 2; }
 	/// db: row
 	inline size_t getDataSegmentStartRow() const { return getStackSegmentVisibleStartRow() + getStackSegmentVisibleRows(); }
 	/// D: bytes

@@ -5,10 +5,6 @@
 
 Compiler::Compiler(QObject *parent)
 	: QObject(parent)
-	, errorCount(-1)
-	, warningCount(-1)
-	, currentCompilerCall(-1)
-	, linkerCall(nullptr)
 {
 }
 

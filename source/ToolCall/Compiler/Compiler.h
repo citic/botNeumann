@@ -30,15 +30,15 @@ class Compiler : public QObject
   protected:
 	/// For each .c/.cpp source file a compiler call is scheduled in this list
 	QList<CompilerCall*> compilerCalls;
-	/// True if the executable is scheduled to be compiled
-	bool shouldLinkExecutable;
+	/// True if the executable is scheduled to be linked
+	bool shouldLinkExecutable = true;
 	/// Indicates the number of error collected during the compilation process. If value is 0
 	/// the solution can be run, even it would have warnings. This value is valid only
 	/// after a compilation process has finished.
-	int errorCount;
+	int errorCount = -1;
 	/// The number of warnings collected during the compilation process. -1 if no compilation
 	/// has been done This value is valid only after a compilation process has finished.
-	int warningCount;
+	int warningCount = -1;
 	/// A concatenation of all generated diagnostics in all compiler calls
 	QList<Diagnostic*> allDiagnostics;
 	/// Path of the target executable file. It will be linked only if it is out-dated
@@ -46,9 +46,9 @@ class Compiler : public QObject
 	/// The list of objectfiles to link
 	QStringList objectFiles;
 	/// Index of the current compiler call being executed
-	int currentCompilerCall;
+	int currentCompilerCall = -1;
 	/// Pointer to the linker call, if it is being called
-	LinkerCall* linkerCall;
+	LinkerCall* linkerCall = nullptr;
 
   public:
 	/// Constructor

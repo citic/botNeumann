@@ -14,7 +14,7 @@ class CompilerDiagnostic : public Diagnostic
 
   public:
 	/// Constructor
-	CompilerDiagnostic(const QRegularExpressionMatch& match);
+	explicit CompilerDiagnostic(const QRegularExpressionMatch& match);
 	/// Destructor
 	~CompilerDiagnostic();
 	/// Generates a text line to the user, in order to understand the diagnostic
