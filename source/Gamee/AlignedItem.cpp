@@ -28,7 +28,7 @@ void AlignedItem::applyAlignment(QGraphicsItem* item, qreal& left, qreal& top, q
 	}
 }
 
-void AlignedItem::resizeItem(QGraphicsItem* item, qreal& left, qreal& top, qreal width, qreal height)
+void AlignedItem::resizeItem(QGraphicsItem* item, qreal& left, qreal& top, qreal width, qreal height, bool mapToParent)
 {
 	Q_ASSERT(item);
 	qreal scaleWidth = width / item->boundingRect().width();
@@ -39,7 +39,7 @@ void AlignedItem::resizeItem(QGraphicsItem* item, qreal& left, qreal& top, qreal
 	// If this element is a nested child, map coordinates from scene to its parent
 	QPointF posChild(left, top);
 	QGraphicsItem* parent = item->parentItem();
-	if ( parent )
+	if ( mapToParent && parent )
 		posChild = parent->mapFromScene(posChild);
 	item->setPos(posChild);
 }

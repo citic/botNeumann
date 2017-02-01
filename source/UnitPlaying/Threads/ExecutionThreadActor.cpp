@@ -8,9 +8,9 @@
 
 /// The line number must appear within the display of the robot, but each robot has the display
 /// at different top
-const qreal lineNumberTopMargin[] = {34, 64, 62, 38};
+const qreal lineNumberTopMargin[] = {30, 60, 58, 34};
 const qreal lineNumberRefWidth =  33; // px
-//const qreal lineNumberRefHeight = 14; // px
+const qreal lineNumberRefHeight = 19; // px
 
 static const int alpha = 127;
 
@@ -52,7 +52,7 @@ void ExecutionThreadActor::buildActor()
 	// Center the line number within the robot's display
 	qreal lineNumberLeft = (this->boundingRect().width() - lineNumberRefWidth) * 0.5;
 	qreal lineNumberTop = lineNumberTopMargin[actorNumber - 1];
-	lineNumber->setPos(lineNumberLeft, lineNumberTop);
+	lineNumber->resizeItem(lineNumber, lineNumberLeft, lineNumberTop, lineNumberRefWidth, lineNumberRefHeight, false);
 }
 
 int ExecutionThreadActor::updateLineNumber(int updatedLineNumber)
