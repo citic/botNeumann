@@ -41,7 +41,6 @@ QString ToolCall::getCompilerInstallationDirectory()
 
 QString ToolCall::getCxxCompiler()
 {
-
   #if defined(Q_OS_MACX)
 	return getCompilerInstallationDirectory() + "clang++";
   #else
@@ -52,7 +51,13 @@ QString ToolCall::getCxxCompiler()
 QStringList ToolCall::getDefaultCompilerArguments()
 {
 	QStringList arguments;
-	arguments << "-ggdb3" << "-O0" << "-Wall" << "-Wextra" << "-std=c++11" << "-pthread";
+	arguments << "-ggdb3" << "-O0" << "-Wall" << "-Wextra" << "-std=c++11";
+
+  #ifndef Q_OS_MACX
+	// CLang produces a warning for this parameter
+	arguments << "-pthread";
+  #endif
+
 //	if ( getCxxCompiler() == "clang++" )
 //		arguments << "-fdiagnostics-parseable-fixits";
 	return arguments;
