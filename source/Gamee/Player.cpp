@@ -76,7 +76,7 @@ bool Player::createLocalDataDirectory()
 	if ( Util::createDirectory( path ) )
 		return true;
 
-	qCCritical(logPlayer()) << "Unable to create user data directory:" << path;
+	qCCritical(logPlayer) << "Unable to create user data directory:" << path;
 	return false;
 }
 

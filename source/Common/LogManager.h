@@ -7,10 +7,12 @@
 
 /// Logs general events related to the botNeumann application
 Q_DECLARE_LOGGING_CATEGORY(logApplication)
-/// Logs events related to building player solution and its compiling errors
+/// Logs events related to building player solution such as compiling errors
 Q_DECLARE_LOGGING_CATEGORY(logBuild)
 /// Logs events related to the debugger extraction objects
 Q_DECLARE_LOGGING_CATEGORY(logDebugger)
+Q_DECLARE_LOGGING_CATEGORY(logDebuggerRequest)
+Q_DECLARE_LOGGING_CATEGORY(logDebuggerResponse)
 /// Logs events related to the editing process
 Q_DECLARE_LOGGING_CATEGORY(logEditor)
 /// Logs events related to not-implemented functionality
@@ -45,6 +47,10 @@ class LogManager : public QObject
 	/// Builds a new file name for this device
 	/// This function is only called once on a device
 	static QString buildLogFilename(bool saveInSettings);
+	/// Return true if events of the given category should be recorded in log file
+	static bool logCategoryToFile(QtMsgType type, const char* category);
+	/// Return true if events of the given category should be printed to standard error
+	static bool logCategoryToStdErr(QtMsgType type, const char* category);
 };
 
 #endif // LOGMANAGER_H

@@ -32,7 +32,6 @@ bool Visualizator::start()
 	// Connect events
 	// When there is a pending GdbResponse process it
 	connect( debuggerCall, SIGNAL(pendingGdbResponses()), this, SLOT(processGdbResponse()) );
-	connect( debuggerCall, SIGNAL(onGdbLogMessage(GdbLogType,QString)), unitPlayingScene->getMessagesArea(), SLOT(appendDebuggerMessage(GdbLogType,QString)));
 	// Each time an animation is done, process the next GdbResponse, if any
 	connect( &animationDone, SIGNAL(timeout()), this, SLOT(processGdbResponse()));
 	animationDone.setSingleShot(true);

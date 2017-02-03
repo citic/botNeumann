@@ -11,15 +11,20 @@
 #include <QStandardPaths>
 #include <QTextStream>
 
-Q_LOGGING_CATEGORY(logApplication, "app")
-Q_LOGGING_CATEGORY(logBuild, "player.build")
-Q_LOGGING_CATEGORY(logDebugger, "app.debugger")
-Q_LOGGING_CATEGORY(logEditor, "app.editor")
-Q_LOGGING_CATEGORY(logNotImplemented, "app.notimplemented")
-Q_LOGGING_CATEGORY(logPlayer, "player")
-Q_LOGGING_CATEGORY(logVisualizator, "app.visualizator")
+Q_LOGGING_CATEGORY(logApplication,      "app")
+Q_LOGGING_CATEGORY(logEditor,           "app.editor")
+Q_LOGGING_CATEGORY(logDebugger,         "app.debugger")
+Q_LOGGING_CATEGORY(logDebuggerRequest,  "app.debugger.request")
+Q_LOGGING_CATEGORY(logDebuggerResponse, "app.debugger.response")
+Q_LOGGING_CATEGORY(logNotImplemented,   "app.notimplemented")
+Q_LOGGING_CATEGORY(logVisualizator,     "app.visualizator")
+Q_LOGGING_CATEGORY(logPlayer,           "player")
+Q_LOGGING_CATEGORY(logBuild,            "player.build")
 
 QFile LogManager::logFile;
+
+// Separator used in the log file
+static const char sep = '\t';
 
 // Text versios of QtMsgType
 const char* const msgTypeStr[] = { "Debug", "Warning", "Critical", "Fatal", "Info" };
@@ -78,18 +83,24 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	static QMutex mutex;
 	QMutexLocker lock(&mutex);
 
-	// A convenience object to format the text that will be sent to the logFile
-	QTextStream logStream(&logFile);
-	logStream << datetime << ';' << elapsed << ';' << playerId << ';' << typeStr << ';' << context.category << ';' << message << '\n';
-	logStream.flush();
+	if ( logCategoryToFile(type, context.category) )
+	{
+		// A convenience object to format the text that will be sent to the logFile
+		QTextStream logStream(&logFile);
+		logStream << datetime << sep << elapsed << sep << playerId << sep << typeStr << sep << context.category << sep << message << '\n';
+		logStream.flush();
+	}
 
 	// Also copy the message to the standard error, but do not report the 'default' category
-	QTextStream stderrStream(stderr);
-	stderrStream << typeStr;
-	if ( qstrcmp(context.category, "default") != 0 )
-		stderrStream << ": " << context.category;
-	stderrStream << ": " << message << '\n';
-	stderrStream.flush();
+	if ( logCategoryToStdErr(type, context.category) )
+	{
+		QTextStream stderrStream(stderr);
+		stderrStream << typeStr;
+		if ( qstrcmp(context.category, "default") != 0 )
+			stderrStream << ": " << context.category;
+		stderrStream << ": " << message << '\n';
+		stderrStream.flush();
+	}
 
 	// Fatal messages cause application to stop
 	if ( type == QtFatalMsg )
@@ -122,4 +133,20 @@ QString LogManager::buildLogFilename(bool saveInSettings)
 		QSettings().setValue( sk("Log/Filename"), filename );
 
 	return filename;
+}
+
+bool LogManager::logCategoryToFile(QtMsgType type, const char* category)
+{
+	Q_UNUSED(category);
+	if ( type == QtDebugMsg )
+		return false;
+
+	return true;
+}
+
+bool LogManager::logCategoryToStdErr(QtMsgType type, const char* category)
+{
+	Q_UNUSED(type);
+	Q_UNUSED(category);
+	return true;
 }

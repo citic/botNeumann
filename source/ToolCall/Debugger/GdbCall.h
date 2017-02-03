@@ -122,8 +122,6 @@ class GdbCall : public DebuggerCall
 	int parseValue(GdbTreeNode* item);
 
   signals:
-	/// Emitted when there is a message from GdbCall that is useful to display into a log widget
-	void onGdbLogMessage(GdbLogType type, const QString& message);
 	/// Emitted when there are GdbResponses pending to be processed
 	/// Observers can fetch the next pending response with @a takeNextResponse()
 	void pendingGdbResponses();
