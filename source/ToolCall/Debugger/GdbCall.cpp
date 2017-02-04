@@ -48,7 +48,7 @@ bool GdbCall::start()
 	connect( process, SIGNAL(readyReadStandardOutput()), this, SLOT(onReadyReadStandardOutput()) );
 
 	const QString& command = QStringLiteral("%1 -q --interpreter=mi2").arg(gdbPath);
-	qCInfo(logDebuggerRequest) << command;
+	qCInfo(logDebuggerRequest).noquote() << command;
 	process->start(command);
 	process->waitForStarted();
 	if ( process->state() == QProcess::NotRunning )
@@ -145,7 +145,7 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultDat
 	GdbCommand gdbCommand(command);
 	pendingCommands.append(gdbCommand);
 
-	qCInfo(logDebuggerRequest) << command;
+	qCInfo(logDebuggerRequest).noquote() << command;
 	process->write( qPrintable( gdbCommand.getCommand() ) );
 
 	GdbResult lastResult = GDB_UNKNOWN;
@@ -314,7 +314,7 @@ GdbToken* GdbCall::eatToken(GdbToken::Type tokenType)
 	if ( token->getType() == tokenType )
 		return popToken();
 
-	qCDebug(logDebugger) << QString("GdbCall::eatToken: Expected '%1' but got '%1'")
+	qCDebug(logDebugger).noquote() << QString("GdbCall::eatToken: Expected '%1' but got '%1'")
 		.arg( GdbToken::mapTypeToString(tokenType) )
 		.arg( token ? qPrintable(token->getText()) : "<null>" );
 
@@ -363,7 +363,7 @@ void GdbCall::parseGdbOutputLine(const QString& line)
 	if ( line.isEmpty() )
 		return;
 
-	qCInfo(logDebuggerResponse) << line;
+	qCInfo(logDebuggerResponse).noquote() << line;
 
 	char firstChar = line[0].toLatin1();
 	if ( strchr("(^*+~@&=", firstChar) )
@@ -373,7 +373,7 @@ void GdbCall::parseGdbOutputLine(const QString& line)
 		pendingTokens.append( newTokens );
 	  #ifdef LOG_GDB_PARSER
 		foreach ( GdbToken* token, newTokens )
-			qCDebug(logDebugger) << "  " << token->buildDescription();
+			qCDebug(logDebugger).noquote() << "  " << token->buildDescription();
 	  #endif
 	}
 //	else if(m_listener)
@@ -463,7 +463,7 @@ GdbResponse* GdbCall::parseResultRecord()
 	if ( ! pendingCommands.isEmpty() )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
-		qCDebug(logDebugger) << cmd.getText() << "command done!";
+		qCDebug(logDebugger).noquote() << cmd.getText() << "command done!";
 	}
 
 	return response;
@@ -571,7 +571,7 @@ int GdbCall::parseValue(GdbTreeNode* item)
 			return -1;
 	}
 	else
-		qCCritical(logDebugger) << QString("Unexpected token: '%1'").arg(token->getText());
+		qCCritical(logDebugger) << "Unexpected token:" << token->getText();
 
 	return result;
 }

@@ -11,15 +11,15 @@
 #include <QStandardPaths>
 #include <QTextStream>
 
-Q_LOGGING_CATEGORY(logApplication,      "app")
-Q_LOGGING_CATEGORY(logEditor,           "app.editor")
-Q_LOGGING_CATEGORY(logDebugger,         "app.debugger")
-Q_LOGGING_CATEGORY(logDebuggerRequest,  "app.debugger.request")
-Q_LOGGING_CATEGORY(logDebuggerResponse, "app.debugger.response")
-Q_LOGGING_CATEGORY(logNotImplemented,   "app.notimplemented")
-Q_LOGGING_CATEGORY(logVisualizator,     "app.visualizator")
-Q_LOGGING_CATEGORY(logPlayer,           "player")
-Q_LOGGING_CATEGORY(logBuild,            "player.build")
+Q_LOGGING_CATEGORY(logApplication,      "A---")
+Q_LOGGING_CATEGORY(logEditor,           "AEdt")
+Q_LOGGING_CATEGORY(logDebugger,         "ADbg")
+Q_LOGGING_CATEGORY(logDebuggerRequest,  "ADbC")
+Q_LOGGING_CATEGORY(logDebuggerResponse, "ADbR")
+Q_LOGGING_CATEGORY(logNotImplemented,   "ANIm")
+Q_LOGGING_CATEGORY(logVisualizator,     "AVis")
+Q_LOGGING_CATEGORY(logPlayer,           "P---")
+Q_LOGGING_CATEGORY(logBuild,            "PBld")
 
 QFile LogManager::logFile;
 
@@ -41,6 +41,7 @@ LogManager::LogManager(QObject* parent)
 		// The file was opened successfully. Install the message handler that will use it
 		qInstallMessageHandler(LogManager::messageHandler);
 
+		// Log file is ready to receive messages. If it is a new file save a header
 		// Log file is ready to receive messages. If it is a new file save a header
 		if ( ! exists )
 		{
@@ -95,10 +96,7 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	if ( logCategoryToStdErr(type, context.category) )
 	{
 		QTextStream stderrStream(stderr);
-		stderrStream << typeStr;
-		if ( qstrcmp(context.category, "default") != 0 )
-			stderrStream << ": " << context.category;
-		stderrStream << ": " << message << '\n';
+		stderrStream << '[' << typeStr[0] << context.category << "] [" << message << "]\n";
 		stderrStream.flush();
 	}
 
