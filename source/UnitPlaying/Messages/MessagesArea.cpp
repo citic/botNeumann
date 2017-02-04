@@ -37,11 +37,15 @@ MessagesArea::MessagesArea(QWidget* parent, Qt::WindowFlags flags)
 	QIcon toolsOutputIcon(":/unit_playing/buttons/info.svg");
 	messagesTabWidget->addTab(toolsOutput, toolsOutputIcon, tr("Compile output"));
 
+	// Some messages received by the LogManager may be shown in the GUI
+	LogManager::setMessagesArea(this);
+
 	// ToDo: Add a third tab: for player's solution input/output
 }
 
 MessagesArea::~MessagesArea()
 {
+	LogManager::setMessagesArea(nullptr);
 }
 
 void MessagesArea::setUnitDescription(const QString &description, bool makeActiveTab)
@@ -104,25 +108,31 @@ void MessagesArea::appendDiagnostic(const Diagnostic* diagnostic)
 	qCInfo(logBuild, "/%zu/[%s]", ++messageCount, qPrintable(diagnostic->buildUserText()) );
 }
 
-void MessagesArea::appendDebuggerMessage(GdbLogType type, const QString& message)
+void MessagesArea::appendDebuggerMessage(QtMsgType type, const QString& category, const QString& message)
 {
-  #ifdef QT_NO_DEBUG
-	// In release mode ignore the library events reported by debugger
-	if ( message.indexOf("=library-loaded") >= 0 )
-		return;
-  #endif
-
 	QColor color = Qt::black;
 	QIcon icon;
 
-	switch ( type )
+	if ( category == "ADbR" )
 	{
-		case LOG_WARNING: color = Qt::magenta; icon.addFile(":/unit_playing/buttons/warning.svg"); break;
-		case LOG_ERROR: color = Qt::red; icon.addFile(":/unit_playing/buttons/error.svg"); break;
-		case LOG_DEBUG: color = Qt::darkGray; icon.addFile(":/unit_playing/buttons/link_broken.svg"); break;
-		case LOG_COMMAND_SENT: color = Qt::darkGreen; icon.addFile(":/unit_playing/buttons/info.svg"); break;
-		case LOG_CONSOLE_OUTPUT: color = Qt::black; icon.addFile(":/unit_playing/buttons/monitor.svg"); break;
-		default: icon.addFile(":/unit_playing/buttons/info.svg"); break;
+		color = Qt::black;
+		icon.addFile(":/unit_playing/buttons/monitor.svg");
+	}
+	else if ( category == "ADbC")
+	{
+		color = Qt::darkGreen;
+		icon.addFile(":/unit_playing/buttons/info.svg");
+	}
+	else
+	{
+		switch ( type )
+		{
+			case QtWarningMsg: color = Qt::magenta; icon.addFile(":/unit_playing/buttons/warning.svg"); break;
+			case QtFatalMsg:
+			case QtCriticalMsg: color = Qt::red; icon.addFile(":/unit_playing/buttons/error.svg"); break;
+			case QtDebugMsg: color = Qt::darkGray; icon.addFile(":/unit_playing/buttons/link_broken.svg"); break;
+			default: icon.addFile(":/unit_playing/buttons/info.svg"); break;
+		}
 	}
 
 	QListWidgetItem* listItem = new QListWidgetItem(icon, message, toolsOutput);

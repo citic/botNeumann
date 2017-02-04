@@ -314,7 +314,7 @@ void Visualizator::onConsoleStreamOutput(const QString& text, int& maxDuration)
 	{
 		const QString& line = lines[lineIndex];
 		if ( ! line.isEmpty() )
-			unitPlayingScene->getMessagesArea()->appendDebuggerMessage(LOG_CONSOLE_OUTPUT, line);
+			unitPlayingScene->getMessagesArea()->appendDebuggerMessage(QtInfoMsg, "", line);
 	}
 }
 

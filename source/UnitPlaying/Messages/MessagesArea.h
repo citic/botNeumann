@@ -55,7 +55,7 @@ class MessagesArea : public QDockWidget
 	/// made active. If there are not errors, the tools output tab is just cleared.
 	void buildFinished(Compiler* compiler);
 	/// Appends a message sent by the debugger (e.g. GDB)
-	void appendDebuggerMessage(GdbLogType type, const QString& message);
+	void appendDebuggerMessage(QtMsgType type, const QString& category, const QString& message);
 
   protected slots:
 	/// Called when user selects a diagnostic in the tools output list

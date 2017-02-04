@@ -1,6 +1,7 @@
 #include "LogManager.h"
 #include "BotNeumannApp.h"
 #include "Common.h"
+#include "MessagesArea.h"
 #include "Player.h"
 
 #include <QDateTime>
@@ -23,6 +24,7 @@ Q_LOGGING_CATEGORY(logBuild,            "PBld")
 Q_LOGGING_CATEGORY(logTemporary,        "!!!!")
 
 QFile LogManager::logFile;
+MessagesArea* LogManager::messagesArea = nullptr;
 
 // Separator used in the log file
 static const char sep = '\t';
@@ -62,7 +64,6 @@ LogManager::~LogManager()
 	logFile.close();
 }
 
-
 void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message)
 {
 	// Hack: do not log =library-load gdb messages
@@ -91,7 +92,7 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 
 	QString category(context.category);
 
-	if ( logCategoryToFile(type, category) )
+	if ( shouldLogToFile(type, category) )
 	{
 		// A convenience object to format the text that will be sent to the logFile
 		QTextStream logStream(&logFile);
@@ -100,12 +101,16 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	}
 
 	// Also copy the message to the standard error, but do not report the 'default' category
-	if ( logCategoryToStdErr(type, category) )
+	if ( shouldLogToStdErr(type, category) )
 	{
 		QTextStream stderrStream(stderr);
 		stderrStream << '[' << typeStr[0] << context.category << "] [" << message << "]\n";
 		stderrStream.flush();
 	}
+
+	// Some messsages may be shown in the GUI
+	if ( shouldLogToGui(type, category) )
+		messagesArea->appendDebuggerMessage(type, category, message);
 
 	// Fatal messages cause application to stop
 	if ( type == QtFatalMsg )
@@ -140,24 +145,6 @@ QString LogManager::buildLogFilename(bool saveInSettings)
 	return filename;
 }
 
-bool LogManager::logCategoryToFile(QtMsgType type, const QString& category)
-{
-	if ( type == QtDebugMsg )
-		return false;
-	if ( category.startsWith("ADb") )
-		return false;
-
-	return true;
-}
-
-bool LogManager::logCategoryToStdErr(QtMsgType type, const QString& category)
-{
-	if ( type == QtDebugMsg && category == "!!!!" )
-		return false;
-
-	return true;
-}
-
 bool LogManager::shouldIgnoreMessage(const QString& message)
 {
 	if ( message.startsWith("=library-loaded") )
@@ -172,3 +159,33 @@ bool LogManager::shouldIgnoreMessage(const QString& message)
 
 	return false;
 }
+
+bool LogManager::shouldLogToFile(QtMsgType type, const QString& category)
+{
+	if ( type == QtDebugMsg )
+		return false;
+	if ( category.startsWith("ADb") )
+		return false;
+
+	return true;
+}
+
+bool LogManager::shouldLogToStdErr(QtMsgType type, const QString& category)
+{
+	if ( type == QtDebugMsg && category == "!!!!" )
+		return false;
+
+	return true;
+}
+
+bool LogManager::shouldLogToGui(QtMsgType type, const QString& category)
+{
+	Q_UNUSED(type);
+	return category == "ADbC" || category == "ADbR";
+}
+
+void LogManager::setMessagesArea(MessagesArea* messagesArea)
+{
+	LogManager::messagesArea = messagesArea;
+}
+
