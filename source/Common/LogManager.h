@@ -19,6 +19,9 @@ Q_DECLARE_LOGGING_CATEGORY(logEditor)
 Q_DECLARE_LOGGING_CATEGORY(logNotImplemented)
 /// Logs events related to the user progress through the game
 Q_DECLARE_LOGGING_CATEGORY(logPlayer)
+/// Temporary debug messages to call attention of programmer
+/// Debug temporary are usually disbled, and Critical are shown with code [!!!!!]
+Q_DECLARE_LOGGING_CATEGORY(logTemporary)
 /// Logs events related to the controller in charge of the visualization process
 Q_DECLARE_LOGGING_CATEGORY(logVisualizator)
 

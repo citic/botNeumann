@@ -214,7 +214,7 @@ void Visualizator::processGdbResponse()
 		return;
 	}
 
-	qCDebug(logVisualizator, "processGdbResponse: %s", qPrintable(gdbResponse->buildDescription(true)));
+	qCDebug(logTemporary) << "processGdbResponse: " << gdbResponse->buildDescription(true);
 
 	// Notify all actors to animate this response, they will inform how many milliseconds they
 	// will take to complete the animation
@@ -230,7 +230,7 @@ void Visualizator::processGdbResponse()
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logVisualizator(), "onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	qCDebug(logTemporary, "onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 
 	switch ( asyncClass )
 	{
@@ -265,14 +265,14 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logVisualizator(), "onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	qCDebug(logTemporary, "onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 }
 
 void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
 	Q_ASSERT(debuggerCall);
-	qCDebug(logVisualizator(), "onNotifyAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	qCDebug(logTemporary, "onNotifyAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
 	const GdbTreeNode* node = nullptr;
 
 	switch ( asyncClass )
@@ -299,7 +299,7 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 void Visualizator::onResult(const GdbItemTree& tree, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logVisualizator(), "onResult(%s)", qPrintable(tree.buildDescription()));
+	qCDebug(logTemporary, "onResult(%s)", qPrintable(tree.buildDescription()));
 	const GdbTreeNode* node = nullptr;
 
 	if ( ( node = tree.findNode("/bkpt") ) )
@@ -321,13 +321,13 @@ void Visualizator::onConsoleStreamOutput(const QString& text, int& maxDuration)
 void Visualizator::onTargetStreamOutput(const QString& str, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logVisualizator(), "onTargetStreamOutput(%s)", qPrintable(str));
+	qCDebug(logTemporary, "onTargetStreamOutput(%s)", qPrintable(str));
 }
 
 void Visualizator::onLogStreamOutput(const QString& str, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logVisualizator(), "onLogStreamOutput(%s)", qPrintable(str));
+	qCDebug(logTemporary, "onLogStreamOutput(%s)", qPrintable(str));
 }
 
 

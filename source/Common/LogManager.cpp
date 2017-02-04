@@ -20,6 +20,7 @@ Q_LOGGING_CATEGORY(logNotImplemented,   "ANIm")
 Q_LOGGING_CATEGORY(logVisualizator,     "AVis")
 Q_LOGGING_CATEGORY(logPlayer,           "P---")
 Q_LOGGING_CATEGORY(logBuild,            "PBld")
+Q_LOGGING_CATEGORY(logTemporary,        "!!!!")
 
 QFile LogManager::logFile;
 
@@ -144,7 +145,8 @@ bool LogManager::logCategoryToFile(QtMsgType type, const char* category)
 
 bool LogManager::logCategoryToStdErr(QtMsgType type, const char* category)
 {
-	Q_UNUSED(type);
-	Q_UNUSED(category);
+	if ( type == QtDebugMsg && qstrcmp(category, "!!!!") == 0 )
+		return false;
+
 	return true;
 }
