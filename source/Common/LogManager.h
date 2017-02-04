@@ -51,9 +51,13 @@ class LogManager : public QObject
 	/// This function is only called once on a device
 	static QString buildLogFilename(bool saveInSettings);
 	/// Return true if events of the given category should be recorded in log file
-	static bool logCategoryToFile(QtMsgType type, const char* category);
+	static bool logCategoryToFile(QtMsgType type, const QString& category);
 	/// Return true if events of the given category should be printed to standard error
-	static bool logCategoryToStdErr(QtMsgType type, const char* category);
+	static bool logCategoryToStdErr(QtMsgType type, const QString& category);
+
+  protected:
+	/// Return true if this a very repetitive message that should be not logged
+	static bool shouldIgnoreMessage(const QString& message);
 };
 
 #endif // LOGMANAGER_H

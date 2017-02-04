@@ -1,5 +1,6 @@
 #include "DebuggerBreakpoint.h"
 #include "GdbItemTree.h"
+#include "LogManager.h"
 
 DebuggerBreakpoint::DebuggerBreakpoint(const GdbTreeNode& breakpointNode)
 	: number(-1)
@@ -30,6 +31,6 @@ void DebuggerBreakpoint::updateFromNode(const GdbTreeNode& breakpointNode)
 	//	times="1"
 	//	original-location="main"
 
-	qDebug("  Breakpoint[number=%d][line=%d][file=%s][function=%s][address=%zx]"
+	qCDebug(logTemporary(), "Breakpoint[number=%d][line=%d][file=%s][function=%s][address=%zx]"
 		   , number, lineNumber, qPrintable(filename), qPrintable(functionName), address);
 }

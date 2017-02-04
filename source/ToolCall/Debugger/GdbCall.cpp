@@ -188,7 +188,7 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 
 		if ( response )
 		{
-			qCDebug(logDebugger) << "GdbCall::readFromGdb:response:" << response->buildDescription(true);
+			qCDebug(logTemporary) << "GdbCall::readFromGdb:" << response->buildDescription(true);
 
 			deleteProcessedTokens();
 

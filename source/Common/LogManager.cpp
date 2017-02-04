@@ -65,6 +65,10 @@ LogManager::~LogManager()
 
 void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message)
 {
+	// Hack: do not log =library-load gdb messages
+	if ( shouldIgnoreMessage(message) )
+		return;
+
 	// Convert the type to a string
 	Q_ASSERT(type < sizeof(msgTypeStr) / sizeof(msgTypeStr[0]));
 	const char* typeStr = msgTypeStr[type];
@@ -85,7 +89,9 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	static QMutex mutex;
 	QMutexLocker lock(&mutex);
 
-	if ( logCategoryToFile(type, context.category) )
+	QString category(context.category);
+
+	if ( logCategoryToFile(type, category) )
 	{
 		// A convenience object to format the text that will be sent to the logFile
 		QTextStream logStream(&logFile);
@@ -94,7 +100,7 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	}
 
 	// Also copy the message to the standard error, but do not report the 'default' category
-	if ( logCategoryToStdErr(type, context.category) )
+	if ( logCategoryToStdErr(type, category) )
 	{
 		QTextStream stderrStream(stderr);
 		stderrStream << '[' << typeStr[0] << context.category << "] [" << message << "]\n";
@@ -134,19 +140,35 @@ QString LogManager::buildLogFilename(bool saveInSettings)
 	return filename;
 }
 
-bool LogManager::logCategoryToFile(QtMsgType type, const char* category)
+bool LogManager::logCategoryToFile(QtMsgType type, const QString& category)
 {
-	Q_UNUSED(category);
 	if ( type == QtDebugMsg )
+		return false;
+	if ( category.startsWith("ADb") )
 		return false;
 
 	return true;
 }
 
-bool LogManager::logCategoryToStdErr(QtMsgType type, const char* category)
+bool LogManager::logCategoryToStdErr(QtMsgType type, const QString& category)
 {
-	if ( type == QtDebugMsg && qstrcmp(category, "!!!!") == 0 )
+	if ( type == QtDebugMsg && category == "!!!!" )
 		return false;
 
 	return true;
+}
+
+bool LogManager::shouldIgnoreMessage(const QString& message)
+{
+	if ( message.startsWith("=library-loaded") )
+		return true;
+	if ( message.contains("OSO archive file") )
+		return true;
+
+  #ifdef Q_OS_MAC
+	if ( message.contains("/private/var") )
+		return true;
+  #endif
+
+	return false;
 }
