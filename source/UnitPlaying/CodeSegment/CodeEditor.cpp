@@ -111,7 +111,10 @@ bool CodeEditor::loadFile(const QString& filepath)
 bool CodeEditor::loadUnitInitialCode()
 {
 	Q_ASSERT(unit);
-	setPlainText( unit->getARandomInitialCode() );
+	const ProgramText* initialCode = unit->getARandomInitialCode();
+	if ( initialCode )
+		setPlainText( initialCode->code );
+
 	document()->setModified(true);
 
 	// Each time the document is changed, update the pending time to autosave/autocompile

@@ -10,6 +10,10 @@
 /// Used to identify all QSettings keys in source code (sk=setting key)
 #define sk(key) key
 
+#define DELETE_POINTERS_ARRAY(array) \
+	for ( int index = 0; index < array.count(); ++index ) \
+		delete array[index]
+
 enum SceneId
 {
 	sceneGeneral,

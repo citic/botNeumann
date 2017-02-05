@@ -13,6 +13,25 @@ class QXmlStreamReader;
 /// It is represented by 'a' in the math model. The default is a double value (8 bytes)
 static const int largestDataTypeSize = sizeof(double); // bytes
 
+/// A piece of text containing a complete or partial program in some programming language
+struct ProgramText
+{
+	///
+	enum Type { unknown, initialCode, standardGenerator, fileGenerator, solution };
+	/// The type of generator
+	Type type = unknown;
+	/// The programming language. Current supported values are: "c" or "cpp"
+	QString language = "cpp";
+	/// The entire code of the program
+	QString code;
+
+  public:
+	/// Constructor
+	explicit ProgramText(Type type, QXmlStreamReader& xmlReader) : type(type) { load(xmlReader); }
+	/// Loads this text from
+	bool load(QXmlStreamReader& xmlReader);
+};
+
 class Unit : public QObject
 {
 	Q_OBJECT
@@ -64,11 +83,12 @@ class Unit : public QObject
 	/// Task description in one or several languages
 	Descriptions descriptions;
 	/// Partial solution or initial code provided in botnu xml file
-	QStringList initialCodes;
+	QList<ProgramText*> initialCodes;
 	/// A solution to the problem asked
-	QStringList solutions;
-	/// Code to generate test cases
-	QStringList generators;
+	QList<ProgramText*> solutions;
+	/// C/C++ code to generate test cases writing them to standard output and standard error
+	/// (standard generator) or writing them directly to test case files (file generator)
+	QList<ProgramText*> generators;
 	/// Test cases provided in .botnu file, they are pairs of input/ouput text
 	TestCases testCases;
 	/// Number of columns in the memory distribution model (k). It is calculated after loading the
@@ -114,21 +134,20 @@ class Unit : public QObject
 	/// Get the description for the given language, it it does not exist, returns the default
 	const QString getDescription(const QString& language) const;
 	/// Partial solution or initial code provided in botnu xml file
-	inline const QStringList& getInitialCodes() const { return initialCodes; }
+	inline const QList<ProgramText*>& getInitialCodes() const { return initialCodes; }
 	/// Gets a random selected initial code
-	QString getARandomInitialCode() const;
+	/// @return Pointer to the selected initial code, nullptr if no initial codes were loaded
+	const ProgramText* getARandomInitialCode() const;
 	/// A solution to the problem asked
-	inline const QStringList& getSolutions() const { return solutions; }
+	inline const QList<ProgramText*>& getSolutions() const { return solutions; }
 	/// Gets a random selected solution
-	QString getARandomSolution() const;
+	const ProgramText* getARandomSolution() const;
 	/// Code to generate test cases
-	inline const QStringList& getGenerators() const { return generators; }
+	inline const QList<ProgramText*>& getGenerators() const { return generators; }
 	/// Gets a random selected generator
-	QString getARandomGenerator() const;
+	const ProgramText* getARandomGenerator() const;
 	/// Test cases provided in .botnu file, they are pairs of input/ouput text
 	inline const TestCases& getTestCases() const { return testCases; }
-	/// For debugging purposes
-	void print();
 
   public: // Memory distribution model
 	/// Rv: bytes

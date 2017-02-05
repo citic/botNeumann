@@ -1,4 +1,5 @@
 #include "Unit.h"
+#include "Common.h"
 #include "LogManager.h"
 
 #include <cmath>
@@ -37,6 +38,9 @@ Unit::Unit(QObject* parent)
 
 Unit::~Unit()
 {
+	DELETE_POINTERS_ARRAY(initialCodes);
+	DELETE_POINTERS_ARRAY(solutions);
+	DELETE_POINTERS_ARRAY(generators);
 }
 
 bool Unit::load(const QString& filename)
@@ -76,32 +80,24 @@ const QString Unit::getDescription(const QString& language) const
 	return QString();
 }
 
-QString Unit::getARandomInitialCode() const
+#define RANDOM_SELECT(list) \
+	if ( list.size() > 0 ) \
+		return list[ qrand() % list.size() ]; \
+	return nullptr;
+
+const ProgramText* Unit::getARandomInitialCode() const
 {
-	return initialCodes.size() > 0 ? initialCodes[qrand() % initialCodes.size()] : QString();
+	RANDOM_SELECT(initialCodes)
 }
 
-QString Unit::getARandomSolution() const
+const ProgramText* Unit::getARandomSolution() const
 {
-	return solutions.size() > 0 ? solutions[qrand() % solutions.size()] : QString();
+	RANDOM_SELECT(solutions)
 }
 
-QString Unit::getARandomGenerator() const
+const ProgramText* Unit::getARandomGenerator() const
 {
-	return generators.size() > 0 ? generators[qrand() % generators.size()] : QString();
-}
-
-void Unit::print()
-{
-	qCDebug(logApplication) << "id:" << id << "version:" << version << "ram:" << ramSize << "heap-segment:" << heapSegment << "cpu-cores:" << cpuCores << "min-theads:" << minThreads << "timeout:" << timeout;
-	for ( Descriptions::const_iterator itr = descriptions.begin(); itr != descriptions.end(); ++itr )
-		qCDebug(logApplication) << "description lang:" << itr.key() << "value:" << itr.value();
-	qCDebug(logApplication) << "initial-code:" << initialCodes;
-	for ( int i = 0; i < solutions.size(); ++i )
-		qCDebug(logApplication) << "solution:" << solutions[i];
-	qCDebug(logApplication) << "generator:" << generators;
-	for ( int i = 0; i < testCases.size(); ++i )
-		qCDebug(logApplication) << "test case input:" << testCases[i].first << "test case output:" << testCases[i].second;
+	RANDOM_SELECT(generators)
 }
 
 bool Unit::loadDocument(QXmlStreamReader& xmlReader)
@@ -173,13 +169,15 @@ bool Unit::loadDocumentChild(QXmlStreamReader& xmlReader)
 {
 	// xmlREader has found a new element, load it according to its tag name
 	if ( xmlReader.name() == "description" )
-		descriptions.insert(xmlReader.attributes().value("lang").toString(), xmlReader.readElementText());
+		descriptions.insert( xmlReader.attributes().value("lang").toString(), xmlReader.readElementText() );
 	else if ( xmlReader.name() == "initial-code" )
-		initialCodes.append( xmlReader.readElementText() );
+		initialCodes.append( new ProgramText(ProgramText::initialCode, xmlReader)  );
 	else if ( xmlReader.name() == "solution" )
-		solutions.append( xmlReader.readElementText() );
-	else if ( xmlReader.name() == "generator" )
-		generators.append( xmlReader.readElementText() );
+		solutions.append( new ProgramText(ProgramText::solution, xmlReader)  );
+	else if ( xmlReader.name() == "standard-generator" )
+		generators.append( new ProgramText(ProgramText::standardGenerator, xmlReader) );
+	else if ( xmlReader.name() == "file-generator" )
+		generators.append( new ProgramText(ProgramText::fileGenerator, xmlReader)  );
 	else if ( xmlReader.name() == "test-case" )
 		loadTestCase(xmlReader);
 	else
@@ -214,4 +212,13 @@ void Unit::distributeMemory()
 
 	// Visible rows of the stack segment
 	stackSegmentVisibleRows = sqrt(ramSize / (35.0 * largestDataTypeSize));
+}
+
+bool ProgramText::load(QXmlStreamReader& xmlReader)
+{
+	language = xmlReader.attributes().value("lang").toString();
+	if ( language.isEmpty() ) language = "cpp";
+
+	code = xmlReader.readElementText();
+	return true;
 }

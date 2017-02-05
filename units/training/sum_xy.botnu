@@ -51,7 +51,7 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 
 
 
-<initial-code><![CDATA[#include <iostream>
+<initial-code lang="cpp"><![CDATA[#include <iostream>
 
 int main()
 {
@@ -67,7 +67,7 @@ int main()
 
 
 
-<solution><![CDATA[#include <iostream>
+<solution lang="cpp"><![CDATA[#include <iostream>
 
 int main()
 {
@@ -84,7 +84,7 @@ int main()
 
 
 
-<generator><![CDATA[#include <cstdlib>
+<standard-generator lang="cpp"><![CDATA[#include <cstdlib>
 #include <ctime>
 #include <iostream>
 
@@ -100,7 +100,7 @@ int main()
 		std::cout << grand(-1000000, 1000000) << ' ' << grand(-1000000, 1000000);
 	return 0;
 }
-]]></generator>
+]]></standard-generator>
 
 
 
