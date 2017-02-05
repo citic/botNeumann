@@ -117,7 +117,8 @@ bool Unit::loadDocument(QXmlStreamReader& xmlReader)
 			if ( ! loadDocumentChild(xmlReader)  )
 				qCDebug(logApplication) << "Unit: ignoring element:" << xmlReader.name();
 	}
-	return true;
+
+	return validateUnit();
 }
 
 bool Unit::loadDocumentAttributes(QXmlStreamReader& xmlReader)
@@ -201,6 +202,45 @@ bool Unit::loadTestCase(QXmlStreamReader& xmlReader)
 	else return false;
 
 	testCases.append( QPair<QString, QString>(input, output) );
+	return true;
+}
+
+bool Unit::validateUnit()
+{
+	// A description is mandatory
+	if ( descriptions.count() <= 0 )
+	{
+		qCCritical(logApplication).noquote() << "Unit" << id << "has no any description";
+		return false;
+	}
+
+	// An initial code is mandatory
+	if ( initialCodes.count() <= 0 )
+	{
+		qCCritical(logApplication).noquote() << "Unit" << id << "has no any initial code";
+		return false;
+	}
+
+	// At least an input is mandatory
+	if ( testCases.count() <= 0 && generators.count() <= 0 )
+	{
+		qCCritical(logApplication).noquote() << "Unit" << id << "has no test cases nor generators";
+		return false;
+	}
+
+	// Count the number of standard generators provided
+	int standardGeneratorCount = 0;
+	for ( int index = 0; index < generators.count(); ++index )
+		if ( generators[index]->type == ProgramText::standardGenerator )
+			++standardGeneratorCount;
+
+	// If there are standard generators, a least one solution must be provided
+	if ( standardGeneratorCount > 0 && solutions.count() <= 0 )
+	{
+		qCCritical(logApplication).noquote() << "Unit" << id << "has standard generators but no solutions";
+		return false;
+	}
+
 	return true;
 }
 

@@ -227,6 +227,9 @@ class Unit : public QObject
 	bool loadDocumentChild(QXmlStreamReader& xmlReader);
 	/// Load a test case pair of input/ouput data
 	bool loadTestCase(QXmlStreamReader& xmlReader);
+	/// Check that the data loaded from the XML botnu file is valid. This method should be called
+	/// after a successful load process.
+	bool validateUnit();
 	/// Distributes the memory among the memory segments
 	void distributeMemory();
 };
