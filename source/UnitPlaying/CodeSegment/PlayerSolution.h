@@ -5,6 +5,7 @@
 #include <QObject>
 
 class Player;
+struct ProgramText;
 class Unit;
 
 /**
@@ -26,9 +27,11 @@ class PlayerSolution : public QObject
 
   protected:
 	/// The player who created the files that compound this solution
-	Player* player;
+	Player* player = nullptr;
 	/// The unit that the player is trying to solve
-	Unit* unit;
+	Unit* unit = nullptr;
+	/// The initial code if it is the first time user tries a problem
+	const ProgramText* initialCode = nullptr;
 	/// The list of source file full paths that compound the player's solution to the current unit
 	/// These files are being edited, but just one at time is shown. A drop down (combo box) control
 	/// allows player to choose the source to edit
@@ -49,6 +52,8 @@ class PlayerSolution : public QObject
 	/// Load solution created for the given player for the given unit
 	/// @return The number of files found as player solution for this unit, -1 on error
 	int loadPlayerSolutionForUnit(Player* player, Unit* unit);
+	/// Get the initial code if it is the first time user tries a problem, otherwise nullptr
+	inline const ProgramText* getInitialCode() const { return initialCode; }
 	/// Returns the full file path of the last edited file for the player in this solution
 	/// If the player has never tried to solve this unit before (i.e. there are not solution
 	/// files), it will assume an inexistent "main.cpp" in the solution folder.

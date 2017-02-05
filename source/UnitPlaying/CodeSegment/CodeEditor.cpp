@@ -110,8 +110,8 @@ bool CodeEditor::loadFile(const QString& filepath)
 
 bool CodeEditor::loadUnitInitialCode()
 {
-	Q_ASSERT(unit);
-	const ProgramText* initialCode = unit->getARandomInitialCode();
+	Q_ASSERT(playerSolution);
+	const ProgramText* initialCode = playerSolution->getInitialCode();
 	if ( initialCode )
 		setPlainText( initialCode->code );
 

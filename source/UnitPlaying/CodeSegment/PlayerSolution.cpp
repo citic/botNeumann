@@ -13,8 +13,6 @@
 
 PlayerSolution::PlayerSolution(QObject *parent)
 	: QObject(parent)
-	, player(nullptr)
-	, unit(nullptr)
 {
 }
 
@@ -44,7 +42,13 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 	// If player has never tried this unit, assume there is a "main.cpp"
 	if ( fileCount == -1 )
 	{
-		editableSourceFiles.append( getLastEditedFilePath() );
+		// Ask an initial code for player solution
+		Q_ASSERT(unit);
+		initialCode = unit->getARandomInitialCode();
+
+		Q_ASSERT(initialCode);
+		QFileInfo initialCodeFilePath(getPlayerUnitSourcePath("main.") + initialCode->language);
+		editableSourceFiles.append( initialCodeFilePath );
 
 		// Create a directory for the player, if it does not exist
 		createDirectoryForUnit();
@@ -64,7 +68,7 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 QFileInfo PlayerSolution::getLastEditedFilePath() const
 {
 	// If there are not files, assume the last edited file is an inexistent "main.cpp"
-	if ( editableSourceFiles.size() <= 0 ) return QFileInfo(getPlayerUnitSourcePath("main.cpp"));
+	Q_ASSERT( editableSourceFiles.size() > 0 );
 
 	// If there is only one file, we dont' have to compare modification dates
 	if ( editableSourceFiles.size() == 1 ) return editableSourceFiles[0];
