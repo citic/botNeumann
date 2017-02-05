@@ -137,10 +137,21 @@ a least one solution element. If some standard error output must be produced for
 the solution program must produce it.
 
 Any output sent to the standard error by the standard-generator will be concatenated and sent
-as command line arguments to the student's solution.
+as command line arguments to the student's solution. Attributes:
+
+lang
+	The generator is written in this programming language. Currently "c" and "cpp" are supported.
+	This value is used to choose the compiler and the compiler options to build the generator
+	executable when the test cases are required.
+
+default-runs
+	The expected number of test cases that the botnu's author desires to be produced by botNeumann
+	at runtime. The default is 10.
 -->
 <!ELEMENT standard-generator (#PCDATA)>
-<!ATTLIST standard-generator lang (c|cpp) "cpp">
+<!ATTLIST standard-generator
+	lang                (c|cpp)     "cpp"
+	default-runs        CDATA       "10">
 
 
 <!--
@@ -262,7 +273,9 @@ of test cases. If several generator programs are provided, botNeumann will choos
 time students run their code.
 -->
 <!ELEMENT file-generator (#PCDATA)>
-<!ATTLIST file-generator lang (c|cpp) "cpp">
+<!ATTLIST file-generator
+	lang                (c|cpp)     "cpp"
+	default-runs        CDATA       "10">
 
 
 <!--

@@ -259,6 +259,9 @@ bool ProgramText::load(QXmlStreamReader& xmlReader)
 	language = xmlReader.attributes().value("lang").toString();
 	if ( language.isEmpty() ) language = "cpp";
 
+	defaultRuns = xmlReader.attributes().value("default-runs").toInt();
+	if ( defaultRuns == 0 ) defaultRuns = 10;
+
 	code = xmlReader.readElementText();
 	return true;
 }

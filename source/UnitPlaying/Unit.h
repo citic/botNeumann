@@ -24,6 +24,8 @@ struct ProgramText
 	QString language = "cpp";
 	/// The entire code of the program
 	QString code;
+	/// The default amount of runs (usually test cases) to be performed with this program
+	int defaultRuns = 10;
 
   public:
 	/// Constructor
