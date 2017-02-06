@@ -242,18 +242,22 @@ int PlayerSolution::generateUnitTestCases()
 	// Copy each test case to their respective files
 	for ( testCasesCount = 0; testCasesCount < testCases.count(); ++testCasesCount )
 	{
-		ResourceToFileDumper inputDumper;
-		const QString& inputFilename = QString("bn_%1_input.txt").arg(testCasesCount + 1, 2, 10, QLatin1Char('0'));
-		if ( ! inputDumper.dumpString(testCases[testCasesCount].first, getPlayerUnitSourcePath(inputFilename)) )
-			return testCasesCount;
+		const TestCase& testCase = testCases[testCasesCount];
 
-		ResourceToFileDumper outputDumper;
-		const QString& outputFilename = QString("bn_%1_output_ex.txt").arg(testCasesCount + 1, 2, 10, QLatin1Char('0'));
-		if ( ! outputDumper.dumpString(testCases[testCasesCount].second, getPlayerUnitSourcePath(outputFilename)) )
-			return testCasesCount;
+		if ( ! dumpTestCase("args", testCase.args) ) return testCasesCount;
+		if ( ! dumpTestCase("input", testCase.input) ) return testCasesCount;
+		if ( ! dumpTestCase("output_ex", testCase.output) ) return testCasesCount;
+		if ( ! dumpTestCase("error_ex", testCase.error) ) return testCasesCount;
 	}
 
 	return testCasesCount;
+}
+
+bool PlayerSolution::dumpTestCase(const QString& caseType, const QString& data) const
+{
+	ResourceToFileDumper dumper;
+	const QString& basename = QString("bn_%1_%2.txt").arg(testCasesCount + 1, 2, 10, QLatin1Char('0')).arg(caseType);
+	return dumper.dumpString( data, getPlayerUnitSourcePath(basename) );
 }
 
 int PlayerSolution::generateExtraTestCases(const ProgramText* generator)

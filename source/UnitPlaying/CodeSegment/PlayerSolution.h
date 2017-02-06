@@ -142,6 +142,8 @@ class PlayerSolution : public QObject
 	/// This method updates the testCasesCount class member
 	/// @return The number of test cases generated
 	int generateUnitTestCases();
+	/// Convenience function to dump a test case to a file
+	bool dumpTestCase(const QString& caseType, const QString& data) const;
 	/// Generate more test cases using the given test case generator
 	/// The testCasesCount class member is updated with each extra test case
 	/// @return The number of extra test cases generated

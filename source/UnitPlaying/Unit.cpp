@@ -108,9 +108,13 @@ bool Unit::loadDocument(QXmlStreamReader& xmlReader)
 		loadDocumentAttributes(xmlReader);
 
 		// Root element is done. Load the child elements
-		while ( xmlReader.readNextStartElement() )
-			if ( ! loadDocumentChild(xmlReader)  )
+		bool stayInCurrentElement = false;
+		while ( stayInCurrentElement || xmlReader.readNextStartElement() )
+		{
+			if ( ! loadDocumentChild(xmlReader, stayInCurrentElement)  )
 				qCDebug(logApplication) << "Unit: ignoring element:" << xmlReader.name();
+			stayInCurrentElement = false;
+		}
 	}
 
 	return validateUnit();
@@ -161,7 +165,7 @@ bool Unit::loadDocumentAttributes(QXmlStreamReader& xmlReader)
 	return true;
 }
 
-bool Unit::loadDocumentChild(QXmlStreamReader& xmlReader)
+bool Unit::loadDocumentChild(QXmlStreamReader& xmlReader, bool& stayInCurrentElement)
 {
 	// xmlREader has found a new element, load it according to its tag name
 	if ( xmlReader.name() == "description" )
@@ -175,28 +179,39 @@ bool Unit::loadDocumentChild(QXmlStreamReader& xmlReader)
 	else if ( xmlReader.name() == "file-generator" )
 		generators.append( new ProgramText(ProgramText::fileGenerator, xmlReader)  );
 	else if ( xmlReader.name() == "test-case" )
-		loadTestCase(xmlReader);
+		loadTestCase(xmlReader, stayInCurrentElement);
 	else
 		return false;
 
 	return true;
 }
 
-bool Unit::loadTestCase(QXmlStreamReader& xmlReader)
+bool Unit::loadTestCase(QXmlStreamReader& xmlReader, bool& stayInCurrentElement)
 {
-	QString input, output;
+	TestCase testCase;
+
+	// Extract test-case arguments, if any
+	testCase.args = xmlReader.attributes().value("args").toString();
 
 	// An input element is mandatory
 	if ( xmlReader.readNextStartElement() && xmlReader.name() == "input" )
-		input = xmlReader.readElementText();
-	else return false;
+		testCase.input = xmlReader.readElementText();
+	else
+		return false;
 
 	// Followed by an output element
 	if ( xmlReader.readNextStartElement() && xmlReader.name() == "output" )
-		output = xmlReader.readElementText();
-	else return false;
+		testCase.output = xmlReader.readElementText();
+	else
+		return false;
 
-	testCases.append( QPair<QString, QString>(input, output) );
+	// An standard error element is optional
+	if ( xmlReader.readNextStartElement() && xmlReader.name() == "error" )
+		testCase.error = xmlReader.readElementText();
+	else
+		stayInCurrentElement = true;
+
+	testCases.append( testCase );
 	return true;
 }
 

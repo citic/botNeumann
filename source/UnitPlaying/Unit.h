@@ -34,6 +34,19 @@ struct ProgramText
 	bool load(QXmlStreamReader& xmlReader);
 };
 
+/// A literal test case
+struct TestCase
+{
+	/// Command line arguments
+	QString args;
+	/// Text to be sent as standard input
+	QString input;
+	/// Expected standard output to be generated to consider the case passed
+	QString output;
+	/// Expected standard error output to consider the case passed
+	QString error;
+};
+
 class Unit : public QObject
 {
 	Q_OBJECT
@@ -43,7 +56,7 @@ class Unit : public QObject
 	/// Data type for descriptions in several languages
 	typedef QHash<QString, QString> Descriptions;
 	/// Test cases are pairs of input/output strings
-	typedef QList< QPair<QString, QString> > TestCases;
+	typedef QList<TestCase> TestCases;
 
   protected:
 	/// Unique identifier of this unit on the world, for example "sum_xy"
@@ -230,9 +243,9 @@ class Unit : public QObject
 	bool loadDocumentAttributes(QXmlStreamReader& xmlReader);
 	/// All botnu elements are direct children of the document root element, this method loads
 	/// the next child. Returns true on success, false if the child is unknown
-	bool loadDocumentChild(QXmlStreamReader& xmlReader);
+	bool loadDocumentChild(QXmlStreamReader& xmlReader, bool& stayInCurrentElement);
 	/// Load a test case pair of input/ouput data
-	bool loadTestCase(QXmlStreamReader& xmlReader);
+	bool loadTestCase(QXmlStreamReader& xmlReader, bool& stayInCurrentElement);
 	/// Check that the data loaded from the XML botnu file is valid. This method should be called
 	/// after a successful load process.
 	bool validateUnit();
