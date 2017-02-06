@@ -84,7 +84,7 @@ int main()
 
 
 
-<standard-generator lang="cpp" default-count="5"><![CDATA[#include <cstdlib>
+<standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
 #include <ctime>
 #include <iostream>
 

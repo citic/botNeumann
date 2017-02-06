@@ -26,13 +26,8 @@ Unit::Unit(QObject* parent)
 	, architecture(defaultArchitecture)
 	, cpuCores(defaultCpuCores)
 	, ramSize(defaultRamSize)
-	, heapSegment(false)
 	, minThreads(defaultMinThreads)
 	, maxThreads(defaultMaxThreads)
-	, timeout(0)
-	, ignoreWhitespace(true)
-	, columns(0)
-	, stackSegmentVisibleRows(0)
 {
 }
 

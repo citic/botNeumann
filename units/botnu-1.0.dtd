@@ -61,6 +61,11 @@ ignore-whitespace={yes|no}
 	attribute is "no" and there are whitespace differences between the student's output and the
 	expected output, the student's solution will be considered as erroneous. If a value different
 	than "no" is provided, "yes" will be assumed.
+
+case-sensitive={yes|no}
+	By default test cases will be compared considering lowercase and uppercase characters as
+	different. If this attribute is provided with value "no", standard output and error of player
+	solution will be compared ignoring case differences against expected output.
 -->
 <!ELEMENT botnu (description+, initial-code*, solution*, (standard-generator|file-generator|test-case)+) >
 <!ATTLIST botnu
@@ -74,7 +79,8 @@ ignore-whitespace={yes|no}
 	min-threads         CDATA       "1"
 	max-threads         CDATA       "0"
 	timeout             CDATA       "1"
-	ignore-whitespace   (yes|no)    "yes">
+	ignore-whitespace   (yes|no)    "yes"
+	case-sensitive      (yes|no)    "yes">
 
 
 <!--
