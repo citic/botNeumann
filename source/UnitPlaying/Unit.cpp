@@ -75,24 +75,27 @@ const QString Unit::getDescription(const QString& language) const
 	return QString();
 }
 
-#define RANDOM_SELECT(list) \
-	if ( list.size() > 0 ) \
-		return list[ qrand() % list.size() ]; \
-	return nullptr;
+#define RANDOM_SELECT(list, indexPointer) \
+	if ( list.size() <= 0 ) \
+		return nullptr; \
+	int index = qrand() % list.size(); \
+	if ( indexPointer ) \
+		*indexPointer = index; \
+	return list[ index ]; \
 
-const ProgramText* Unit::getARandomInitialCode() const
+const ProgramText* Unit::getARandomInitialCode(int* initialCodeIndex) const
 {
-	RANDOM_SELECT(initialCodes)
+	RANDOM_SELECT(initialCodes, initialCodeIndex)
 }
 
-const ProgramText* Unit::getARandomSolution() const
+const ProgramText* Unit::getARandomSolution(int* solutionIndex) const
 {
-	RANDOM_SELECT(solutions)
+	RANDOM_SELECT(solutions, solutionIndex)
 }
 
-const ProgramText* Unit::getARandomGenerator() const
+const ProgramText* Unit::getARandomGenerator(int* generatorIndex) const
 {
-	RANDOM_SELECT(generators)
+	RANDOM_SELECT(generators, generatorIndex)
 }
 
 bool Unit::loadDocument(QXmlStreamReader& xmlReader)

@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QObject>
 
+class Compiler;
 class Player;
 struct ProgramText;
 class Unit;
@@ -40,9 +41,17 @@ class PlayerSolution : public QObject
 	/// the data extraction during the visualization process. Player is not allowed to edit them.
 	/// These files are compiled as normal files in the build process.
 	QFileInfoList hiddenSourceFiles;
+
+  protected:
 	/// The number of available test cases for this player solution
 	/// -1 means that test cases have not been generated
 	int testCasesCount = -1;
+	/// Last test case generator being used
+	const ProgramText* testCaseGenerator = nullptr;
+	/// Used to compile a test cases generator
+	Compiler* compiler =  nullptr;
+	/// ToDo: Move to a TestCaseGenerator class
+	QString testCaseGeneratorExecutablePath;
 
   public:
 	/// Constructor
@@ -143,11 +152,22 @@ class PlayerSolution : public QObject
 	/// @return The number of test cases generated
 	int generateUnitTestCases();
 	/// Convenience function to dump a test case to a file
-	bool dumpTestCase(const QString& caseType, const QString& data) const;
+	bool dumpTestCase(const QString& caseType, const QString& data);
+	/// Utility function to generate the name of a input or output file path
+	/// @param type One of "args", "input", "output_ex", "error_ex", "output_ps" or "error_ps".
+	QString buildTestCaseFilepath(int number, const QString& type) const;
 	/// Generate more test cases using the given test case generator
 	/// The testCasesCount class member is updated with each extra test case
-	/// @return The number of extra test cases generated
-	int generateExtraTestCases(const ProgramText* generator);
+	/// @return True on success, false otherwise
+	/// @remarks This function starts a compilation process. When the process finishes it will call
+	/// back @a generatorCompileFinished. At that time, if no errors are produced, the extra test
+	/// cases will be generated
+	bool generateExtraTestCases(const ProgramText* generator, int generatorIndex);
+
+  protected slots:
+	/// Called when a generator has finished to compile and link
+	/// @return True on success, false otherwise
+	bool generatorCompileFinished();
 };
 
 #endif // PLAYERSOLUTION_H

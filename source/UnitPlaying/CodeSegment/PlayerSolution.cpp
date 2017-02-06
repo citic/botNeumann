@@ -9,6 +9,7 @@
 
 #include <QDateTime>
 #include <QDir>
+#include <QProcess>
 #include <QTextStream>
 
 PlayerSolution::PlayerSolution(QObject *parent)
@@ -226,9 +227,10 @@ int PlayerSolution::generateTestCases()
 
 	// If there are at least one test case generator in unit, use it to generate more test cases
 	// The testCasesCount class member is updated with each extra test case
-	const ProgramText* randomGenerator = unit->getARandomGenerator();
+	int generatorIndex = 0;
+	const ProgramText* randomGenerator = unit->getARandomGenerator( &generatorIndex );
 	if ( randomGenerator )
-		generateExtraTestCases(randomGenerator);
+		generateExtraTestCases(randomGenerator, generatorIndex);
 
 	// Done
 	return testCasesCount;
@@ -253,17 +255,103 @@ int PlayerSolution::generateUnitTestCases()
 	return testCasesCount;
 }
 
-bool PlayerSolution::dumpTestCase(const QString& caseType, const QString& data) const
+bool PlayerSolution::dumpTestCase(const QString& caseType, const QString& data)
 {
 	ResourceToFileDumper dumper;
-	const QString& basename = QString("bn_%1_%2.txt").arg(testCasesCount + 1, 2, 10, QLatin1Char('0')).arg(caseType);
-	return dumper.dumpString( data, getPlayerUnitSourcePath(basename) );
+	const QString& filepath = buildTestCaseFilepath(testCasesCount + 1, caseType);
+	return dumper.dumpString( data, filepath );
 }
 
-int PlayerSolution::generateExtraTestCases(const ProgramText* generator)
+QString PlayerSolution::buildTestCaseFilepath(int number, const QString& type) const
 {
-	Q_UNUSED(generator);
+	return getPlayerUnitSourcePath( QString("bn_%1_%2.txt").arg(number, 2, 10, QLatin1Char('0')).arg(type) );
+}
 
-	// ToDo: implement this method
-	return -1;
+bool PlayerSolution::generateExtraTestCases(const ProgramText* generator, int generatorIndex)
+{
+	Q_ASSERT(generator);
+	Q_ASSERT(generatorIndex >= 0);
+
+	// Build the filenames: source(bn_gen_01.cpp) executable(bn_gen_01)
+	const QString& basename = QString("bn_gen_%1").arg(generatorIndex + 1, 2, 10, QLatin1Char('0'));
+	const QString& sourcePath = getPlayerUnitSourcePath(basename + '.' + generator->language);
+	testCaseGeneratorExecutablePath = getPlayerUnitSourcePath(basename);
+
+	// Copy the source code of the generator to a file in player's solution
+	ResourceToFileDumper dumper;
+	if ( dumper.dumpString( generator->code, sourcePath ) == false )
+		return false;
+
+	// Copy the pointer to the generator to continue the process later
+	this->testCaseGenerator = generator;
+
+	// Compile the generator's source code. It requires some time and we do not wait until it
+	// finishes. When the compilation and linking process has finished, our compilerFinished()
+	// is called and we continue processing the results there
+	compiler = new Compiler(this);
+	connect(compiler, SIGNAL(finished()), this, SLOT(generatorCompileFinished()));
+	compiler->compile(sourcePath, testCaseGeneratorExecutablePath);
+
+	return true;
+}
+
+bool PlayerSolution::generatorCompileFinished()
+{
+	Q_ASSERT(compiler);
+
+	// We can only generate test cases if generator's source code compiled without errors
+	if ( compiler->getErrorCount() > 0 )
+	{
+		qCCritical(logApplication) << "Generator failed to compile";
+		const QList<Diagnostic*>& diagnostics = compiler->getAllDiagnostics();
+		for ( int index = 0; index < diagnostics.count(); ++index )
+			qCCritical(logApplication) << diagnostics[index]->buildUserText();
+		return false;
+	}
+
+	// Generator compiled with no errors, run it for each test case
+	Q_ASSERT(testCaseGenerator);
+	int lastIndex = testCasesCount + testCaseGenerator->defaultRuns;
+	for ( ; testCasesCount < lastIndex; ++testCasesCount )
+	{
+		// Prepare arguments
+		QStringList arguments;
+		arguments << QString("%1").arg(testCasesCount, 2, 10, QLatin1Char('0'));
+		arguments << QString("%1").arg(lastIndex, 2, 10, QLatin1Char('0'));
+
+		const QString& args      = buildTestCaseFilepath(testCasesCount + 1, "args");
+		const QString& input     = buildTestCaseFilepath(testCasesCount + 1, "input");
+		const QString& output_ex = buildTestCaseFilepath(testCasesCount + 1, "output_ex");
+		const QString& error_ex  = buildTestCaseFilepath(testCasesCount + 1, "error_ex");
+
+		QProcess* process = new QProcess(this);
+
+		if ( testCaseGenerator->type == ProgramText::standardGenerator )
+		{
+			// Call bash -c bn_gen 02 10 > input.txt 2> args.txt
+			QStringList genArguments;
+			genArguments << "-c" << testCaseGeneratorExecutablePath << arguments;
+			genArguments << ">" + input;
+			genArguments << "2>" + args;
+			qCCritical(logTemporary) << "bash " << genArguments.join(' ');
+			// process->start("bash", genArguments);
+
+			// ToDo: Generate the solutions using the random selected solution program
+			// Call bn_sol 02 10 `< args` < input > output_ex 2> error_ex
+		}
+		else if ( testCaseGenerator->type == ProgramText::fileGenerator )
+		{
+			// Call bn_gen 02 10 input output_ex error_ex args
+			arguments << input << output_ex << error_ex << args;
+			process->start(testCaseGeneratorExecutablePath, arguments);
+		}
+		else
+		{
+			Q_ASSERT(false);
+		}
+	}
+
+	compiler->deleteLater();
+	compiler = nullptr;
+	return true;
 }

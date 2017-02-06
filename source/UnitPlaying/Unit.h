@@ -156,15 +156,16 @@ class Unit : public QObject
 	inline const QList<ProgramText*>& getInitialCodes() const { return initialCodes; }
 	/// Gets a random selected initial code
 	/// @return Pointer to the selected initial code, nullptr if no initial codes were loaded
-	const ProgramText* getARandomInitialCode() const;
+	const ProgramText* getARandomInitialCode(int* initialCodeIndex = nullptr) const;
 	/// A solution to the problem asked
 	inline const QList<ProgramText*>& getSolutions() const { return solutions; }
 	/// Gets a random selected solution
-	const ProgramText* getARandomSolution() const;
+	const ProgramText* getARandomSolution(int* solutionIndex = nullptr) const;
 	/// Code to generate test cases
 	inline const QList<ProgramText*>& getGenerators() const { return generators; }
 	/// Gets a random selected generator
-	const ProgramText* getARandomGenerator() const;
+	/// @param generatorNumber Return the 0-based index of the selected generator
+	const ProgramText* getARandomGenerator(int* generatorIndex = nullptr) const;
 	/// Test cases provided in .botnu file, they are pairs of input/ouput text
 	inline const TestCases& getTestCases() const { return testCases; }
 

@@ -47,6 +47,13 @@ void Compiler::compile(const QFileInfoList& filepaths, const QFileInfo& executab
 	compileNextSourceFile();
 }
 
+void Compiler::compile(const QString& filepath, const QFileInfo& executablePath)
+{
+	QFileInfoList list;
+	list.append( QFileInfo(filepath) );
+	return compile(list, executablePath);
+}
+
 void Compiler::scheduleCompilerCalls(const QFileInfoList& filepaths)
 {
 	// For each file, schedule these that require generate its object file

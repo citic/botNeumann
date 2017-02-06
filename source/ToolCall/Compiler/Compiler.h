@@ -78,6 +78,8 @@ class Compiler : public QObject
 	/// @a finished() signal is emitted. The result and products of the compilation
 	/// (diagnostics, intermediate representation) can be get using accesor methods
 	void compile(const QFileInfoList& filepaths, const QFileInfo& executablePath);
+	/// Convenience function that compiles just one source file
+	void compile(const QString& filepath, const QFileInfo& executablePath);
 	/// Erases all information about a compiling. This method is automatically called by compile()
 	void clear();
 
