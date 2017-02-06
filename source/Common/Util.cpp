@@ -1,6 +1,8 @@
 #include "Util.h"
+#include "LogManager.h"
 
 #include <QDir>
+#include <QTextStream>
 
 QColor Util::mixColors(const QColor& first, const QColor& second, qreal ratio)
 {
@@ -39,4 +41,22 @@ bool Util::createDirectory(const QString& dirPath)
 		return true;
 
 	return dir.mkpath( "." );
+}
+
+bool ResourceToFileDumper::dumpString(const QString& data, const QString& outputFilename)
+{
+	// Open (trunk) or create the target file
+	QFile outputFile(outputFilename);
+	if ( outputFile.open(QIODevice::WriteOnly | QIODevice::Text) == false )
+	{
+		qCritical(logApplication) << "Could not create" << outputFilename;
+		return false;
+	}
+
+	// Write the data to the target file
+	QTextStream outputCode(&outputFile);
+	outputCode << data;
+
+	// Destructors will close the file
+	return true;
 }

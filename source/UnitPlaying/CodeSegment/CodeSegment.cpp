@@ -256,6 +256,15 @@ void CodeSegment::startBuild()
 
 	// Start the compiling process with the files in the solution and the expected executable file
 	compiler->compile(playerSolution->getAllSourceFiles(), playerSolution->getExecutablePath());
+
+	// ToDo: the previous process may be controlled by PlayerSolution instance
+
+	// Extract global variables and function definitions from player solution using ctags
+	// They will be used later to set breakpoints and GDB variable-objects
+	playerSolution->extractSymbols();
+
+	// Generate test cases for testing the player solution
+	playerSolution->generateTestCases();
 }
 
 void CodeSegment::compilerFinished()

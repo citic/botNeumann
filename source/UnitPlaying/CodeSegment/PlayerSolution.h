@@ -40,6 +40,9 @@ class PlayerSolution : public QObject
 	/// the data extraction during the visualization process. Player is not allowed to edit them.
 	/// These files are compiled as normal files in the build process.
 	QFileInfoList hiddenSourceFiles;
+	/// The number of available test cases for this player solution
+	/// -1 means that test cases have not been generated
+	int testCasesCount = -1;
 
   public:
 	/// Constructor
@@ -98,6 +101,27 @@ class PlayerSolution : public QObject
 	/// @remarks Files beginning with "bn_" must be ignored in CodeSegment
 	inline QString getStandardErrorFilename() const { return getPlayerUnitPath() + "/bn_error.txt"; }
 
+  public:
+	/// Extract symbols from all the source files made by the player. Symbols are global variables
+	/// and function definitions. They are extracted with ctags command. These symbols are required
+	/// later to set breakpoints (function definitions) and GDB variable-objects (global variables)
+	/// @return The amount of symbols extracted, or negative number on error
+	int extractSymbols();
+	/// Create a set of test case files to test this player solution. Each test case is a set of
+	/// four files that are generated in player-solution's directory. Each test case is uniquely
+	/// identified by an integer value nn:
+	///
+	///   /path/player/solution/bn_nn_input.txt      // redirecto to player solution stdin
+	///   /path/player/solution/bn_nn_output_ex.txt  // expected player soltuion output
+	///   /path/player/solution/bn_nn_error_ex.txt   // expecter standard error output
+	///   /path/player/solution/bn_nn_args.txt       // command line arguments for player solution
+	///
+	/// Test cases are generated from Unit (botnu XML file). All unit's test cases are copied first
+	/// literally. Then, if there are generators within the .botnu file, they will be used to
+	/// generate extra test cases.
+	/// @return The amount of test cases generated, or a negative code on error
+	int generateTestCases();
+
   protected:
 	/// Loads the list of existing files in the unit solution directory for this player
 	/// @remarks Assume the @a player and @a unit class members have been set
@@ -114,6 +138,14 @@ class PlayerSolution : public QObject
 	/// already exists a botNeumann source code file, it will overwritten
 	/// @return The path to the new created source code file in player's solution directory
 	QString createBotNeumannSourceFile();
+	/// Copy the literal test cases provided in botnu unit to files in player solution
+	/// This method updates the testCasesCount class member
+	/// @return The number of test cases generated
+	int generateUnitTestCases();
+	/// Generate more test cases using the given test case generator
+	/// The testCasesCount class member is updated with each extra test case
+	/// @return The number of extra test cases generated
+	int generateExtraTestCases(const ProgramText* generator);
 };
 
 #endif // PLAYERSOLUTION_H

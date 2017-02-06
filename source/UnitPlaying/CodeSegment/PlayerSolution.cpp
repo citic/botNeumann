@@ -211,3 +211,55 @@ QString PlayerSolution::createBotNeumannSourceFile()
 	// Destructors will close the files
 	return outputFilename;
 }
+
+int PlayerSolution::extractSymbols()
+{
+	// ToDo: implement call to ctags
+	return 0;
+}
+
+int PlayerSolution::generateTestCases()
+{
+	// Copy the literal test cases provided in botnu unit to files in player solution
+	// This method updates the testCasesCount class member
+	generateUnitTestCases();
+
+	// If there are at least one test case generator in unit, use it to generate more test cases
+	// The testCasesCount class member is updated with each extra test case
+	const ProgramText* randomGenerator = unit->getARandomGenerator();
+	if ( randomGenerator )
+		generateExtraTestCases(randomGenerator);
+
+	// Done
+	return testCasesCount;
+}
+
+int PlayerSolution::generateUnitTestCases()
+{
+	// Get all the literal test cases from the unit
+	const Unit::TestCases& testCases = unit->getTestCases();
+
+	// Copy each test case to their respective files
+	for ( testCasesCount = 0; testCasesCount < testCases.count(); ++testCasesCount )
+	{
+		ResourceToFileDumper inputDumper;
+		const QString& inputFilename = QString("bn_%1_input.txt").arg(testCasesCount + 1, 2, 10, QLatin1Char('0'));
+		if ( ! inputDumper.dumpString(testCases[testCasesCount].first, getPlayerUnitSourcePath(inputFilename)) )
+			return testCasesCount;
+
+		ResourceToFileDumper outputDumper;
+		const QString& outputFilename = QString("bn_%1_output_ex.txt").arg(testCasesCount + 1, 2, 10, QLatin1Char('0'));
+		if ( ! outputDumper.dumpString(testCases[testCasesCount].second, getPlayerUnitSourcePath(outputFilename)) )
+			return testCasesCount;
+	}
+
+	return testCasesCount;
+}
+
+int PlayerSolution::generateExtraTestCases(const ProgramText* generator)
+{
+	Q_UNUSED(generator);
+
+	// ToDo: implement this method
+	return -1;
+}

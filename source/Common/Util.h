@@ -24,4 +24,14 @@ class Util
 	static bool createDirectory(const QString& dirPath);
 };
 
+/// Copies Qt resources or Strings to text files
+class ResourceToFileDumper
+{
+
+  public:
+	/// Creates or overwites the outputFilename, and writes data as the file contents
+	/// @return true on success, false otherwise
+	bool dumpString(const QString& data, const QString& outputFilename);
+};
+
 #endif // UTIL_H
