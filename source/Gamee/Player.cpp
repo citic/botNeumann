@@ -62,22 +62,45 @@ QString Player::getLocalDataPath() const
 	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + '/' + id;
 }
 
+QString Player::getShortcutPath() const
+{
+	return "/tmp/bn_" + nickname;
+}
+
 QDir Player::getLocalDataDirectory(bool create)
 {
+	// On Unix-like systems, try the shortcut symlink first
+  #ifndef Q_OS_WIN
+	QDir shortcut( getShortcutPath() );
+	if ( shortcut.exists() )
+		return shortcut;
+  #endif
+
+	// The shortcut does not exist, use the long path
 	QDir dir( getLocalDataPath() );
 	if ( create && ! dir.exists() )
 		createLocalDataDirectory();
+
+	// On Unix-like systems, create a short symbolic link to reduce bloated output
+  #ifndef Q_OS_WIN
+	QFile::link( dir.absolutePath(), getShortcutPath() );
+	if ( shortcut.exists() )
+		return shortcut;
+  #endif
+
 	return dir;
 }
 
 bool Player::createLocalDataDirectory()
 {
 	const QString& path = getLocalDataPath();
-	if ( Util::createDirectory( path ) )
-		return true;
+	if ( Util::createDirectory( path ) == false )
+	{
+		qCCritical(logPlayer) << "Unable to create user data directory:" << path;
+		return false;
+	}
 
-	qCCritical(logPlayer) << "Unable to create user data directory:" << path;
-	return false;
+	return true;
 }
 
 QString Player::generatePlainId() const

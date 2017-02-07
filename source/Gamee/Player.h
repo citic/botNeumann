@@ -60,6 +60,10 @@ class Player : public QObject
 	/// example, his/her products according he or he is going progressing through the game
 	/// This method is protected because it does not create the folder if it does not exist
 	QString getLocalDataPath() const;
+	/// On Unix systems, a /tmp/bn_player symbolic link may be used to reduce bloated output due to
+	/// long paths. This method just returns the suggested shortcut path, using the nickname of
+	/// the player for readibility
+	QString getShortcutPath() const;
 };
 
 #endif // PLAYER_H
