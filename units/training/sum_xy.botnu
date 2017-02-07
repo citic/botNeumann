@@ -95,7 +95,7 @@ long grand(long min, long max)
 
 int main()
 {
-	srand( time(0) );
+	srand( time(0) + clock() );
 	std::cout << grand(-1000000, 1000000) << ' ' << grand(-1000000, 1000000) << std::endl;
 	return 0;
 }
