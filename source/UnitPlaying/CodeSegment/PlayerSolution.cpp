@@ -316,7 +316,7 @@ bool PlayerSolution::generatorCompileFinished()
 	{
 		// Prepare arguments
 		QStringList arguments;
-		arguments << QString("%1").arg(testCasesCount, 2, 10, QLatin1Char('0'));
+		arguments << QString("%1").arg(testCasesCount + 1, 2, 10, QLatin1Char('0'));
 		arguments << QString("%1").arg(lastIndex, 2, 10, QLatin1Char('0'));
 
 		const QString& args      = buildTestCaseFilepath(testCasesCount + 1, "args");
@@ -329,12 +329,14 @@ bool PlayerSolution::generatorCompileFinished()
 		if ( testCaseGenerator->type == ProgramText::standardGenerator )
 		{
 			// Call bash -c bn_gen 02 10 > input.txt 2> args.txt
-			QStringList genArguments;
-			genArguments << "-c" << testCaseGeneratorExecutablePath << arguments;
-			genArguments << ">" + input;
-			genArguments << "2>" + args;
-			qCCritical(logTemporary) << "bash " << genArguments.join(' ');
-			// process->start("bash", genArguments);
+			const QString& genCall = QString("'\"%1\" \"%2\" > \"%3\" 2> \"%4\"'")
+				.arg( testCaseGeneratorExecutablePath )
+				.arg( arguments.join("\" \"") )
+				.arg( input )
+				.arg( args );
+
+			// qCCritical(logTemporary) << "bash " << qPrintable( (QStringList() << "-c" << genCall).join(' ') );
+			process->start( "bash", QStringList() << "-c" << genCall );
 
 			// ToDo: Generate the solutions using the random selected solution program
 			// Call bn_sol 02 10 `< args` < input > output_ex 2> error_ex
