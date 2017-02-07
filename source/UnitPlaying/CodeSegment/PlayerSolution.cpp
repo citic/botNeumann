@@ -147,7 +147,11 @@ int PlayerSolution::loadFileList()
 	foreach ( const QFileInfo& fileInfo, files )
 	{
 		if ( fileInfo.fileName().startsWith("bn_") )
-			hiddenSourceFiles.append(fileInfo);
+		{
+			if ( fileInfo.fileName().startsWith("bn_player") )
+				hiddenSourceFiles.append(fileInfo);
+			// else: ignore test cases generators
+		}
 		else
 			editableSourceFiles.append(fileInfo);
 	}
