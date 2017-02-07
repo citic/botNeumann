@@ -231,10 +231,9 @@ int PlayerSolution::generateTestCases()
 
 	// If there are at least one test case generator in unit, use it to generate more test cases
 	// The testCasesCount class member is updated with each extra test case
-	int generatorIndex = 0;
-	const ProgramText* randomGenerator = unit->getARandomGenerator( &generatorIndex );
+	const ProgramText* randomGenerator = unit->getARandomGenerator();
 	if ( randomGenerator )
-		generateExtraTestCases(randomGenerator, generatorIndex);
+		generateExtraTestCases(randomGenerator);
 
 	// Done
 	return testCasesCount;
@@ -271,15 +270,13 @@ QString PlayerSolution::buildTestCaseFilepath(int number, const QString& type) c
 	return getPlayerUnitSourcePath( QString("bn_%1_%2.txt").arg(number, 2, 10, QLatin1Char('0')).arg(type) );
 }
 
-bool PlayerSolution::generateExtraTestCases(const ProgramText* generator, int generatorIndex)
+bool PlayerSolution::generateExtraTestCases(const ProgramText* generator)
 {
 	Q_ASSERT(generator);
-	Q_ASSERT(generatorIndex >= 0);
 
 	// Build the filenames: source(bn_gen_01.cpp) executable(bn_gen_01)
-	const QString& basename = QString("bn_gen_%1").arg(generatorIndex + 1, 2, 10, QLatin1Char('0'));
-	const QString& sourcePath = getPlayerUnitSourcePath(basename + '.' + generator->language);
-	testCaseGeneratorExecutablePath = getPlayerUnitSourcePath(basename);
+	const QString& sourcePath = getPlayerUnitSourcePath( generator->buildBasename(true) );
+	testCaseGeneratorExecutablePath = getPlayerUnitSourcePath( generator->buildBasename(false) );
 
 	// Copy the source code of the generator to a file in player's solution
 	ResourceToFileDumper dumper;

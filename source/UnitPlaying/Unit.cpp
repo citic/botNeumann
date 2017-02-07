@@ -75,27 +75,19 @@ const QString Unit::getDescription(const QString& language) const
 	return QString();
 }
 
-#define RANDOM_SELECT(list, indexPointer) \
-	if ( list.size() <= 0 ) \
-		return nullptr; \
-	int index = qrand() % list.size(); \
-	if ( indexPointer ) \
-		*indexPointer = index; \
-	return list[ index ]; \
-
-const ProgramText* Unit::getARandomInitialCode(int* initialCodeIndex) const
+const ProgramText* Unit::getARandomInitialCode() const
 {
-	RANDOM_SELECT(initialCodes, initialCodeIndex)
+	return initialCodes.size() <= 0 ? (ProgramText*)nullptr : initialCodes[ qrand() % initialCodes.size() ];
 }
 
-const ProgramText* Unit::getARandomSolution(int* solutionIndex) const
+const ProgramText* Unit::getARandomSolution() const
 {
-	RANDOM_SELECT(solutions, solutionIndex)
+	return solutions.size() <= 0 ? (ProgramText*)nullptr : solutions[ qrand() % solutions.size() ];
 }
 
-const ProgramText* Unit::getARandomGenerator(int* generatorIndex) const
+const ProgramText* Unit::getARandomGenerator() const
 {
-	RANDOM_SELECT(generators, generatorIndex)
+	return generators.size() <= 0 ? (ProgramText*)nullptr : generators[ qrand() % generators.size() ];
 }
 
 bool Unit::loadDocument(QXmlStreamReader& xmlReader)
@@ -174,13 +166,13 @@ bool Unit::loadDocumentChild(QXmlStreamReader& xmlReader, bool& stayInCurrentEle
 	if ( xmlReader.name() == "description" )
 		descriptions.insert( xmlReader.attributes().value("lang").toString(), xmlReader.readElementText() );
 	else if ( xmlReader.name() == "initial-code" )
-		initialCodes.append( new ProgramText(ProgramText::initialCode, xmlReader)  );
+		initialCodes.append( new ProgramText(ProgramText::initialCode, initialCodes.count() + 1, xmlReader)  );
 	else if ( xmlReader.name() == "solution" )
-		solutions.append( new ProgramText(ProgramText::solution, xmlReader)  );
+		solutions.append( new ProgramText(ProgramText::solution, solutions.count() + 1, xmlReader)  );
 	else if ( xmlReader.name() == "standard-generator" )
-		generators.append( new ProgramText(ProgramText::standardGenerator, xmlReader) );
+		generators.append( new ProgramText(ProgramText::standardGenerator, generators.count() + 1, xmlReader) );
 	else if ( xmlReader.name() == "file-generator" )
-		generators.append( new ProgramText(ProgramText::fileGenerator, xmlReader)  );
+		generators.append( new ProgramText(ProgramText::fileGenerator, generators.count() + 1, xmlReader)  );
 	else if ( xmlReader.name() == "test-case" )
 		loadTestCase(xmlReader, stayInCurrentElement);
 	else
@@ -277,4 +269,23 @@ bool ProgramText::load(QXmlStreamReader& xmlReader)
 
 	code = xmlReader.readElementText();
 	return true;
+}
+
+// Used to generate filenames eg: "bn_gen_01.cpp"
+static const char* programTextTypeStr[] =
+{
+	"unk",
+	"ini",
+	"gen",
+	"gen",
+	"sol",
+};
+
+QString ProgramText::buildBasename(bool appendExtension) const
+{
+	Q_ASSERT(id >= 0);
+	const QString& basename = QString("bn_%1_%2").arg(programTextTypeStr[type]).arg(id, 2, 10, QLatin1Char('0'));
+	if ( appendExtension )
+		return basename + '.' + language;
+	return basename;
 }

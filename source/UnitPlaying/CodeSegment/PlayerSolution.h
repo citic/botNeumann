@@ -162,7 +162,7 @@ class PlayerSolution : public QObject
 	/// @remarks This function starts a compilation process. When the process finishes it will call
 	/// back @a generatorCompileFinished. At that time, if no errors are produced, the extra test
 	/// cases will be generated
-	bool generateExtraTestCases(const ProgramText* generator, int generatorIndex);
+	bool generateExtraTestCases(const ProgramText* generator);
 
   protected slots:
 	/// Called when a generator has finished to compile and link
