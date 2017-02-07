@@ -86,6 +86,12 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	Player* player = BotNeumannApp::getInstance()->getCurrentPlayer();
 	const QByteArray& playerId = player ? player->getId() : QByteArray();
 
+	// Reduce bloated output by long user player directory paths
+	QString reducedMessage = message;
+  #ifndef Q_OS_WIN
+	reducedMessage.replace( player->getLocalDataPath(), player->getShortcutPath() );
+  #endif
+
 	// Avoid two or more threads writing on the log file symultaneously
 	static QMutex mutex;
 	QMutexLocker lock(&mutex);
@@ -96,7 +102,7 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	{
 		// A convenience object to format the text that will be sent to the logFile
 		QTextStream logStream(&logFile);
-		logStream << datetime << sep << elapsed << sep << playerId << sep << typeStr << sep << context.category << sep << message << '\n';
+		logStream << datetime << sep << elapsed << sep << playerId << sep << typeStr << sep << context.category << sep << reducedMessage << '\n';
 		logStream.flush();
 	}
 
@@ -104,13 +110,13 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	if ( shouldLogToStdErr(type, category) )
 	{
 		QTextStream stderrStream(stderr);
-		stderrStream << '[' << typeStr[0] << context.category << "] [" << message << "]\n";
+		stderrStream << '[' << typeStr[0] << context.category << "] [" << reducedMessage << "]\n";
 		stderrStream.flush();
 	}
 
 	// Some messsages may be shown in the GUI
 	if ( shouldLogToGui(type, category) )
-		messagesArea->appendDebuggerMessage(type, category, message);
+		messagesArea->appendDebuggerMessage(type, category, reducedMessage);
 
 	// Fatal messages cause application to stop
 	if ( type == QtFatalMsg )
