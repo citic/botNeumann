@@ -75,6 +75,7 @@ HEADERS += \
 	source/ToolCall/ToolCall.h \
 	source/UnitPlaying/CodeSegment/CodeEditor.h \
 	source/UnitPlaying/CodeSegment/CodeSegment.h \
+	source/UnitPlaying/CodeSegment/CompiledProgram.h \
 	source/UnitPlaying/CodeSegment/DebuggerBreakpoint.h \
 	source/UnitPlaying/CodeSegment/GuiBreakpoint.h \
 	source/UnitPlaying/CodeSegment/LineNumberArea.h \
@@ -146,6 +147,7 @@ SOURCES += \
 	source/ToolCall/ToolCall.cpp \
 	source/UnitPlaying/CodeSegment/CodeEditor.cpp \
 	source/UnitPlaying/CodeSegment/CodeSegment.cpp \
+	source/UnitPlaying/CodeSegment/CompiledProgram.cpp \
 	source/UnitPlaying/CodeSegment/DebuggerBreakpoint.cpp \
 	source/UnitPlaying/CodeSegment/GuiBreakpoint.cpp \
 	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \

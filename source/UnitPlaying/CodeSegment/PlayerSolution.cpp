@@ -1,6 +1,6 @@
 #include "BotNeumannApp.h"
 #include "Compiler.h"
-#include "Diagnostic.h"
+#include "CompiledProgram.h"
 #include "LogManager.h"
 #include "Player.h"
 #include "PlayerSolution.h"
@@ -274,45 +274,33 @@ bool PlayerSolution::generateExtraTestCases(const ProgramText* generator)
 {
 	Q_ASSERT(generator);
 
-	// Build the filenames: source(bn_gen_01.cpp) executable(bn_gen_01)
-	const QString& sourcePath = getPlayerUnitSourcePath( generator->buildBasename(true) );
-	testCaseGeneratorExecutablePath = getPlayerUnitSourcePath( generator->buildBasename(false) );
-
-	// Copy the source code of the generator to a file in player's solution
-	ResourceToFileDumper dumper;
-	if ( dumper.dumpString( generator->code, sourcePath ) == false )
-		return false;
-
-	// Copy the pointer to the generator to continue the process later
-	this->testCaseGenerator = generator;
+	// This object will compile the generator's source code randomly selected from Unit
+	Q_ASSERT(testCaseGenerator == nullptr);
+	testCaseGenerator = new CompiledProgram(this);
 
 	// Compile the generator's source code. It requires some time and we do not wait until it
 	// finishes. When the compilation and linking process has finished, our compilerFinished()
 	// is called and we continue processing the results there
-	compiler = new Compiler(this);
-	connect(compiler, SIGNAL(finished()), this, SLOT(generatorCompileFinished()));
-	compiler->compile(sourcePath, testCaseGeneratorExecutablePath);
+	connect(testCaseGenerator, SIGNAL(buildFinished()), this, SLOT(generatorBuildFinished()));
+	testCaseGenerator->build( generator, getPlayerUnitPath() );
+
+	// ToDo: If the generator used is a standard one, it will require a solution later
 
 	return true;
 }
 
-bool PlayerSolution::generatorCompileFinished()
+bool PlayerSolution::generatorBuildFinished()
 {
-	Q_ASSERT(compiler);
+	Q_ASSERT(testCaseGenerator);
 
 	// We can only generate test cases if generator's source code compiled without errors
-	if ( compiler->getErrorCount() > 0 )
-	{
-		qCCritical(logApplication) << "Generator failed to compile";
-		const QList<Diagnostic*>& diagnostics = compiler->getAllDiagnostics();
-		for ( int index = 0; index < diagnostics.count(); ++index )
-			qCCritical(logApplication) << diagnostics[index]->buildUserText();
-		return false;
-	}
+	if ( testCaseGenerator->getErrorCount() > 0 )
+		return testCaseGenerator->logErrors();
 
 	// Generator compiled with no errors, run it for each test case
-	Q_ASSERT(testCaseGenerator);
-	int lastIndex = testCasesCount + testCaseGenerator->defaultRuns;
+	const ProgramText* programText = testCaseGenerator->getProgramText();
+	Q_ASSERT( programText );
+	int lastIndex = testCasesCount + programText->defaultRuns;
 	for ( ; testCasesCount < lastIndex; ++testCasesCount )
 	{
 		// Prepare arguments
@@ -325,11 +313,11 @@ bool PlayerSolution::generatorCompileFinished()
 		const QString& output_ex = buildTestCaseFilepath(testCasesCount + 1, "output_ex");
 		const QString& error_ex  = buildTestCaseFilepath(testCasesCount + 1, "error_ex");
 
-		if ( testCaseGenerator->type == ProgramText::standardGenerator )
+		if ( programText->type == ProgramText::standardGenerator )
 		{
 			// Call bash -c bn_gen 02 10 > input.txt 2> args.txt
 			const QString& genCall = QString("\"%1\" \"%2\" > \"%3\" 2> \"%4\"")
-				.arg( testCaseGeneratorExecutablePath )
+				.arg( testCaseGenerator->getExecutablePath() )
 				.arg( arguments.join("\" \"") )
 				.arg( input )
 				.arg( args );
@@ -341,12 +329,12 @@ bool PlayerSolution::generatorCompileFinished()
 			// ToDo: Generate the solutions using the random selected solution program
 			// Call bn_sol 02 10 `< args` < input > output_ex 2> error_ex
 		}
-		else if ( testCaseGenerator->type == ProgramText::fileGenerator )
+		else if ( programText->type == ProgramText::fileGenerator )
 		{
 			// Call bn_gen 02 10 input output_ex error_ex args
 			arguments << input << output_ex << error_ex << args;
 			QProcess* process = new QProcess(this);
-			process->start(testCaseGeneratorExecutablePath, arguments);
+			process->start( testCaseGenerator->getExecutablePath() , arguments );
 		}
 		else
 		{
@@ -354,7 +342,5 @@ bool PlayerSolution::generatorCompileFinished()
 		}
 	}
 
-	compiler->deleteLater();
-	compiler = nullptr;
 	return true;
 }

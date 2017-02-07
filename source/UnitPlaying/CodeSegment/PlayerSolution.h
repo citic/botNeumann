@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QObject>
 
+class CompiledProgram;
 class Compiler;
 class Player;
 struct ProgramText;
@@ -46,12 +47,10 @@ class PlayerSolution : public QObject
 	/// The number of available test cases for this player solution
 	/// -1 means that test cases have not been generated
 	int testCasesCount = -1;
-	/// Last test case generator being used
-	const ProgramText* testCaseGenerator = nullptr;
-	/// Used to compile a test cases generator
-	Compiler* compiler =  nullptr;
-	/// ToDo: Move to a TestCaseGenerator class
-	QString testCaseGeneratorExecutablePath;
+	/// The executable from a random selected Unit's generator
+	CompiledProgram* testCaseGenerator = nullptr;
+	/// The executable from a random selected Unit's solution
+	CompiledProgram* unitSolution = nullptr;
 
   public:
 	/// Constructor
@@ -167,7 +166,7 @@ class PlayerSolution : public QObject
   protected slots:
 	/// Called when a generator has finished to compile and link
 	/// @return True on success, false otherwise
-	bool generatorCompileFinished();
+	bool generatorBuildFinished();
 };
 
 #endif // PLAYERSOLUTION_H
