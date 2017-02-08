@@ -35,6 +35,20 @@ class TestCaseGenerator : public CompiledProgram
 	/// The number of the test case to start with. Required to name the test cases: bn_04_input.txt
 	int currentTestCaseIndex = -1;
 
+  protected:
+	/// Test case number argument
+	QString number;
+	/// Total number of cases
+	QString total;
+	/// Test case arguments file path
+	QString args;
+	/// Test case input file path
+	QString input;
+	/// Test case expected output file path
+	QString output_ex;
+	/// Test case expected error output file path
+	QString error_ex;
+
   public:
 	/// Constructor
 	explicit TestCaseGenerator(PlayerSolution* playerSolution, Unit* unit, QObject* parent = nullptr);
@@ -54,6 +68,13 @@ class TestCaseGenerator : public CompiledProgram
 	/// Called after the build process has finished. If there were not errors, the generation of
 	/// test cases start
 	bool buildFinished();
+
+  protected:
+	/// Calls the standard generator to fill the current test case and the solution to generate
+	/// the expected outputs. Return true on success
+	bool callStandarGenerator();
+	/// Calls the file generator to fill the current test case
+	bool callFileGenerator();
 };
 
 #endif // TESTCASEGENERATOR_H

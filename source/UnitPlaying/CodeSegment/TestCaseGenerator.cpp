@@ -1,4 +1,5 @@
 #include "TestCaseGenerator.h"
+#include "LogManager.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
 
@@ -37,45 +38,59 @@ bool TestCaseGenerator::buildFinished()
 	int lastIndex = currentTestCaseIndex + programText->defaultRuns;
 	for ( ; currentTestCaseIndex < lastIndex; ++currentTestCaseIndex )
 	{
-		// Prepare arguments
-		QStringList arguments;
-		arguments << QString("%1").arg(currentTestCaseIndex + 1, 2, 10, QLatin1Char('0'));
-		arguments << QString("%1").arg(lastIndex, 2, 10, QLatin1Char('0'));
+		// Prepare the arguments to call the generators
+		number    = QString("%1").arg(currentTestCaseIndex + 1, 2, 10, QLatin1Char('0'));
+		total     = QString("%1").arg(lastIndex, 2, 10, QLatin1Char('0'));
+		args      = playerSolution->buildTestCaseFilepath(currentTestCaseIndex + 1, "args");
+		input     = playerSolution->buildTestCaseFilepath(currentTestCaseIndex + 1, "input");
+		output_ex = playerSolution->buildTestCaseFilepath(currentTestCaseIndex + 1, "output_ex");
+		error_ex  = playerSolution->buildTestCaseFilepath(currentTestCaseIndex + 1, "error_ex");
 
-		const QString& args      = playerSolution->buildTestCaseFilepath(currentTestCaseIndex + 1, "args");
-		const QString& input     = playerSolution->buildTestCaseFilepath(currentTestCaseIndex + 1, "input");
-		const QString& output_ex = playerSolution->buildTestCaseFilepath(currentTestCaseIndex + 1, "output_ex");
-		const QString& error_ex  = playerSolution->buildTestCaseFilepath(currentTestCaseIndex + 1, "error_ex");
-
-		if ( programText->type == ProgramText::standardGenerator )
+		// Call the generator according to its type
+		switch ( programText->type )
 		{
-			// Call bash -c bn_gen 02 10 > input.txt 2> args.txt
-			const QString& genCall = QString("\"%1\" \"%2\" > \"%3\" 2> \"%4\"")
-				.arg( executablePath )
-				.arg( arguments.join("\" \"") )
-				.arg( input )
-				.arg( args );
-
-			// qCCritical(logTemporary) << "bash " << qPrintable( (QStringList() << "-c" << genCall).join(' ') );
-			// process->start( "bash", QStringList() << "-c" << genCall );
-			system( qPrintable(genCall) );
-
-			// ToDo: Generate the solutions using the random selected solution program
-			// Call bn_sol 02 10 `< args` < input > output_ex 2> error_ex
-		}
-		else if ( programText->type == ProgramText::fileGenerator )
-		{
-			// Call bn_gen 02 10 input output_ex error_ex args
-			arguments << input << output_ex << error_ex << args;
-			QProcess* process = new QProcess(this);
-			process->start( executablePath, arguments );
-		}
-		else
-		{
-			Q_ASSERT(false);
+			case ProgramText::standardGenerator: callStandarGenerator(); break;
+			case ProgramText::fileGenerator: callFileGenerator(); break;
+			default: Q_ASSERT(false); break;
 		}
 	}
 
+	// Inform that test cases were generated
 	emit generationFinished();
+	return true;
+}
+
+bool TestCaseGenerator::callStandarGenerator()
+{
+	// Call bash -c bn_gen 02 10 > input.txt 2> args.txt
+	const QString& genCall = QString("\"%1\" \"%2\" \"%3\" > \"%4\" 2> \"%5\"")
+		.arg( executablePath )
+		.arg( number )
+		.arg( total )
+		.arg( input )
+		.arg( args );
+
+	// qCCritical(logTemporary) << "bash " << qPrintable( (QStringList() << "-c" << genCall).join(' ') );
+	// process->start( "bash", QStringList() << "-c" << genCall );
+	if ( system( qPrintable(genCall) ) != 0 )
+	{
+		qCCritical(logApplication) << "Generator call failed: " << qPrintable(genCall);
+		return false;
+	}
+
+	// ToDo: Generate the solutions using the random selected solution program
+	// Call bn_sol 02 10 `< args` < input > output_ex 2> error_ex
+
+	return true;
+}
+
+bool TestCaseGenerator::callFileGenerator()
+{
+	// Call bn_gen 02 10 input output_ex error_ex args
+	QStringList arguments;
+	arguments << number << total << input << output_ex << error_ex << args;
+	QProcess* process = new QProcess(this);
+	process->start( executablePath, arguments );
+
 	return true;
 }
