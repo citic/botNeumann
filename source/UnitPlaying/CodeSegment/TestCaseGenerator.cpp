@@ -14,7 +14,6 @@ TestCaseGenerator::TestCaseGenerator(PlayerSolution* playerSolution, Unit* unit,
 
 bool TestCaseGenerator::generate(const ProgramText* generator, int testCaseStartIndex)
 {
-	qCCritical(logTemporary) << "TestCaseGenerator::generate()";
 	// We need the starting index when the building process finishes
 	this->currentTestCaseIndex = testCaseStartIndex;
 
@@ -33,7 +32,6 @@ bool TestCaseGenerator::generate(const ProgramText* generator, int testCaseStart
 
 bool TestCaseGenerator::generatorBuildFinished()
 {
-	qCCritical(logTemporary) << "TestCaseGenerator::generatorBuildFinished()";
 	generatorBuilt = true;
 
 	// If we built a standard generator, we have to wait until the solution has been compiled
@@ -54,7 +52,6 @@ bool TestCaseGenerator::generatorBuildFinished()
 
 bool TestCaseGenerator::solutionBuildFinished()
 {
-	qCCritical(logTemporary) << "TestCaseGenerator::solutionBuildFinished()";
 	solutionBuilt = true;
 
 	// We were waiting for the solution built to generate the test cases
@@ -67,8 +64,7 @@ bool TestCaseGenerator::solutionBuildFinished()
 bool TestCaseGenerator::buildASolution()
 {
 	// Get a random solution from Unit
-	qCCritical(logTemporary) << "TestCaseGenerator::buildASolution()";
-	const ProgramText* randomSolution = unit->getARandomGenerator();
+	const ProgramText* randomSolution = unit->getARandomSolution();
 	if ( randomSolution == nullptr )
 	{
 		qCCritical(logApplication) << "Test cases generation failed: no solutions in Unit";
@@ -80,6 +76,7 @@ bool TestCaseGenerator::buildASolution()
 	solution = new CompiledProgram(this);
 
 	// Let's continue after the compilation of the random solution is done
+	Q_ASSERT(randomSolution->type == ProgramText::solution);
 	connect( solution, SIGNAL(buildFinished()), this, SLOT(solutionBuildFinished()) );
 	solution->build( randomSolution, playerSolution->getPlayerUnitPath() );
 
@@ -89,7 +86,6 @@ bool TestCaseGenerator::buildASolution()
 bool TestCaseGenerator::generateTestCases()
 {
 	// We can only generate test cases if generator's source code compiled without errors
-	qCCritical(logTemporary) << "TestCaseGenerator::generateTestCases()";
 	if ( getErrorCount() > 0 )
 		return logErrors();
 
