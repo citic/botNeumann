@@ -14,22 +14,82 @@ TestCaseGenerator::TestCaseGenerator(PlayerSolution* playerSolution, Unit* unit,
 
 bool TestCaseGenerator::generate(const ProgramText* generator, int testCaseStartIndex)
 {
+	qCCritical(logTemporary) << "TestCaseGenerator::generate()";
 	// We need the starting index when the building process finishes
 	this->currentTestCaseIndex = testCaseStartIndex;
 
 	// Compile the generator's source code. It requires some time and we do not wait until it
 	// finishes. When the compilation and linking process has finished, our compilerFinished()
 	// is called and we continue processing the results there
-	connect(this, SIGNAL(buildFinished()), this, SLOT(buildFinished()));
+	connect(this, SIGNAL(buildFinished()), this, SLOT(generatorBuildFinished()));
 	build( generator, playerSolution->getPlayerUnitPath() );
 
-	// ToDo: If the generator used is a standard one, it will require a solution later
+	// If the generator used is a standard one, it will require a solution later
+	if ( programText->type == ProgramText::standardGenerator )
+		return buildASolution();
+
 	return true;
 }
 
-bool TestCaseGenerator::buildFinished()
+bool TestCaseGenerator::generatorBuildFinished()
+{
+	qCCritical(logTemporary) << "TestCaseGenerator::generatorBuildFinished()";
+	generatorBuilt = true;
+
+	// If we built a standard generator, we have to wait until the solution has been compiled
+	// before generating the test cases
+	if ( programText->type == ProgramText::standardGenerator )
+	{
+		if ( solutionBuilt )
+			generateTestCases();
+	}
+	else
+	{
+		// This should be a file generator, we can generate test cases now
+		generateTestCases();
+	}
+
+	return true;
+}
+
+bool TestCaseGenerator::solutionBuildFinished()
+{
+	qCCritical(logTemporary) << "TestCaseGenerator::solutionBuildFinished()";
+	solutionBuilt = true;
+
+	// We were waiting for the solution built to generate the test cases
+	if ( generatorBuilt )
+		return generateTestCases();
+
+	return true;
+}
+
+bool TestCaseGenerator::buildASolution()
+{
+	// Get a random solution from Unit
+	qCCritical(logTemporary) << "TestCaseGenerator::buildASolution()";
+	const ProgramText* randomSolution = unit->getARandomGenerator();
+	if ( randomSolution == nullptr )
+	{
+		qCCritical(logApplication) << "Test cases generation failed: no solutions in Unit";
+		return false;
+	}
+
+	// Compile the random selected solution
+	Q_ASSERT(solution == nullptr);
+	solution = new CompiledProgram(this);
+
+	// Let's continue after the compilation of the random solution is done
+	connect( solution, SIGNAL(buildFinished()), this, SLOT(solutionBuildFinished()) );
+	solution->build( randomSolution, playerSolution->getPlayerUnitPath() );
+
+	return true;
+}
+
+bool TestCaseGenerator::generateTestCases()
 {
 	// We can only generate test cases if generator's source code compiled without errors
+	qCCritical(logTemporary) << "TestCaseGenerator::generateTestCases()";
 	if ( getErrorCount() > 0 )
 		return logErrors();
 
@@ -72,14 +132,30 @@ bool TestCaseGenerator::callStandarGenerator()
 
 	// qCCritical(logTemporary) << "bash " << qPrintable( (QStringList() << "-c" << genCall).join(' ') );
 	// process->start( "bash", QStringList() << "-c" << genCall );
+	qCCritical(logTemporary) << qPrintable(genCall);
 	if ( system( qPrintable(genCall) ) != 0 )
 	{
 		qCCritical(logApplication) << "Generator call failed: " << qPrintable(genCall);
 		return false;
 	}
 
-	// ToDo: Generate the solutions using the random selected solution program
-	// Call bn_sol 02 10 `< args` < input > output_ex 2> error_ex
+	// Generate the solutions using the random selected solution program
+	// Call bn_sol `< args` < input > output_ex 2> error_ex
+	Q_ASSERT(solution);
+	const QString& solCall = QString("\"%1\" `< \"%2\"` < \"%3\" > \"%4\" 2> \"%5\"")
+		.arg( solution->getExecutablePath() )
+		.arg( args )
+		.arg( input )
+		.arg( output_ex )
+		.arg( error_ex );
+
+	// Call the solution to generate the expected output
+	qCCritical(logTemporary) << qPrintable(solCall);
+	if ( system( qPrintable(solCall) ) != 0 )
+	{
+		qCCritical(logApplication) << "Solution call failed: " << qPrintable(solCall);
+		return false;
+	}
 
 	return true;
 }

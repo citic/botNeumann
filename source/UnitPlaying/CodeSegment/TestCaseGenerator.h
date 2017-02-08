@@ -34,6 +34,12 @@ class TestCaseGenerator : public CompiledProgram
 	Unit* unit = nullptr;
 	/// The number of the test case to start with. Required to name the test cases: bn_04_input.txt
 	int currentTestCaseIndex = -1;
+	/// True when the generator has been built
+	bool generatorBuilt = false;
+	/// True when this is a standard generator and a solution has been built
+	bool solutionBuilt = false;
+	/// Used to compiler a solution
+	CompiledProgram* solution = nullptr;
 
   protected:
 	/// Test case number argument
@@ -65,16 +71,23 @@ class TestCaseGenerator : public CompiledProgram
 	void generationFinished();
 
   protected slots:
-	/// Called after the build process has finished. If there were not errors, the generation of
-	/// test cases start
-	bool buildFinished();
+	/// Called after the build process of the test case generator has finished.
+	/// If there were not errors, the generation of test cases start
+	bool generatorBuildFinished();
+	/// Called after the build process of the solution has finished. This method is only called
+	/// when @a programText is a standard generator
+	bool solutionBuildFinished();
 
   protected:
+	/// Starts the build process of a random selected solution
+	bool buildASolution();
 	/// Calls the standard generator to fill the current test case and the solution to generate
 	/// the expected outputs. Return true on success
 	bool callStandarGenerator();
 	/// Calls the file generator to fill the current test case
 	bool callFileGenerator();
+	/// Called when the build process of generators and solutions is finished
+	bool generateTestCases();
 };
 
 #endif // TESTCASEGENERATOR_H

@@ -71,11 +71,10 @@ int main()
 
 int main()
 {
-	while ( true )
+	long x = 0, y = 0;
+	while ( std::cin >> x >> y )
 	{
-		long x, y;
-		std::cin >> x >> y;
-		std::cout << x + y;
+		std::cout << x + y << std::endl;
 	}
 
 	return 0;
@@ -96,7 +95,9 @@ long grand(long min, long max)
 int main()
 {
 	srand( time(0) + clock() );
-	std::cout << grand(-1000000, 1000000) << ' ' << grand(-1000000, 1000000) << std::endl;
+	for ( int index = 0, count = rand() % 11; index < count; ++index )
+		std::cout << grand(-1000000, 1000000) << ' ' << grand(-1000000, 1000000) << std::endl;
+
 	return 0;
 }
 ]]></standard-generator>
