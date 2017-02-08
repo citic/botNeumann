@@ -81,6 +81,7 @@ HEADERS += \
 	source/UnitPlaying/CodeSegment/LineNumberArea.h \
 	source/UnitPlaying/CodeSegment/PlayerSolution.h \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
+	source/UnitPlaying/CodeSegment/TestCaseGenerator.h \
 	source/UnitPlaying/Common/GdbResponseListener.h \
 	source/UnitPlaying/Common/MemoryFrame.h \
 	source/UnitPlaying/Common/MemoryRow.h \
@@ -153,6 +154,7 @@ SOURCES += \
 	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
 	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
+	source/UnitPlaying/CodeSegment/TestCaseGenerator.cpp \
 	source/UnitPlaying/Common/GdbResponseListener.cpp \
 	source/UnitPlaying/Common/MemoryFrame.cpp \
 	source/UnitPlaying/Common/MemoryRow.cpp \

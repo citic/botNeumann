@@ -1,15 +1,14 @@
 #include "BotNeumannApp.h"
 #include "Compiler.h"
-#include "CompiledProgram.h"
 #include "LogManager.h"
 #include "Player.h"
 #include "PlayerSolution.h"
+#include "TestCaseGenerator.h"
 #include "Unit.h"
 #include "Util.h"
 
 #include <QDateTime>
 #include <QDir>
-#include <QProcess>
 #include <QTextStream>
 
 PlayerSolution::PlayerSolution(QObject *parent)
@@ -276,71 +275,22 @@ bool PlayerSolution::generateExtraTestCases(const ProgramText* generator)
 
 	// This object will compile the generator's source code randomly selected from Unit
 	Q_ASSERT(testCaseGenerator == nullptr);
-	testCaseGenerator = new CompiledProgram(this);
+	testCaseGenerator = new TestCaseGenerator(this, unit, this);
 
-	// Compile the generator's source code. It requires some time and we do not wait until it
-	// finishes. When the compilation and linking process has finished, our compilerFinished()
-	// is called and we continue processing the results there
-	connect(testCaseGenerator, SIGNAL(buildFinished()), this, SLOT(generatorBuildFinished()));
-	testCaseGenerator->build( generator, getPlayerUnitPath() );
-
-	// ToDo: If the generator used is a standard one, it will require a solution later
+	// The generator will generate test cases files, when it finishes we need to know the number
+	// of test cases that were actually generated
+	connect(testCaseGenerator, SIGNAL(generationFinished()), this, SLOT(generatorFinished()));
+	testCaseGenerator->generate(generator, testCasesCount);
 
 	return true;
 }
 
-bool PlayerSolution::generatorBuildFinished()
+bool PlayerSolution::generatorFinished()
 {
 	Q_ASSERT(testCaseGenerator);
+	testCasesCount = testCaseGenerator->getLastGeneratedTestCaseIndex();
 
-	// We can only generate test cases if generator's source code compiled without errors
-	if ( testCaseGenerator->getErrorCount() > 0 )
-		return testCaseGenerator->logErrors();
-
-	// Generator compiled with no errors, run it for each test case
-	const ProgramText* programText = testCaseGenerator->getProgramText();
-	Q_ASSERT( programText );
-	int lastIndex = testCasesCount + programText->defaultRuns;
-	for ( ; testCasesCount < lastIndex; ++testCasesCount )
-	{
-		// Prepare arguments
-		QStringList arguments;
-		arguments << QString("%1").arg(testCasesCount + 1, 2, 10, QLatin1Char('0'));
-		arguments << QString("%1").arg(lastIndex, 2, 10, QLatin1Char('0'));
-
-		const QString& args      = buildTestCaseFilepath(testCasesCount + 1, "args");
-		const QString& input     = buildTestCaseFilepath(testCasesCount + 1, "input");
-		const QString& output_ex = buildTestCaseFilepath(testCasesCount + 1, "output_ex");
-		const QString& error_ex  = buildTestCaseFilepath(testCasesCount + 1, "error_ex");
-
-		if ( programText->type == ProgramText::standardGenerator )
-		{
-			// Call bash -c bn_gen 02 10 > input.txt 2> args.txt
-			const QString& genCall = QString("\"%1\" \"%2\" > \"%3\" 2> \"%4\"")
-				.arg( testCaseGenerator->getExecutablePath() )
-				.arg( arguments.join("\" \"") )
-				.arg( input )
-				.arg( args );
-
-			// qCCritical(logTemporary) << "bash " << qPrintable( (QStringList() << "-c" << genCall).join(' ') );
-			// process->start( "bash", QStringList() << "-c" << genCall );
-			system( qPrintable(genCall) );
-
-			// ToDo: Generate the solutions using the random selected solution program
-			// Call bn_sol 02 10 `< args` < input > output_ex 2> error_ex
-		}
-		else if ( programText->type == ProgramText::fileGenerator )
-		{
-			// Call bn_gen 02 10 input output_ex error_ex args
-			arguments << input << output_ex << error_ex << args;
-			QProcess* process = new QProcess(this);
-			process->start( testCaseGenerator->getExecutablePath() , arguments );
-		}
-		else
-		{
-			Q_ASSERT(false);
-		}
-	}
-
+	testCaseGenerator->deleteLater();
+	testCaseGenerator = nullptr;
 	return true;
 }

@@ -8,6 +8,7 @@ class CompiledProgram;
 class Compiler;
 class Player;
 struct ProgramText;
+class TestCaseGenerator;
 class Unit;
 
 /**
@@ -48,7 +49,7 @@ class PlayerSolution : public QObject
 	/// -1 means that test cases have not been generated
 	int testCasesCount = -1;
 	/// The executable from a random selected Unit's generator
-	CompiledProgram* testCaseGenerator = nullptr;
+	TestCaseGenerator* testCaseGenerator = nullptr;
 	/// The executable from a random selected Unit's solution
 	CompiledProgram* unitSolution = nullptr;
 
@@ -129,6 +130,9 @@ class PlayerSolution : public QObject
 	/// generate extra test cases.
 	/// @return The amount of test cases generated, or a negative code on error
 	int generateTestCases();
+	/// Utility function to generate the name of a input or output file path
+	/// @param type One of "args", "input", "output_ex", "error_ex", "output_ps" or "error_ps".
+	QString buildTestCaseFilepath(int number, const QString& type) const;
 
   protected:
 	/// Loads the list of existing files in the unit solution directory for this player
@@ -152,9 +156,6 @@ class PlayerSolution : public QObject
 	int generateUnitTestCases();
 	/// Convenience function to dump a test case to a file
 	bool dumpTestCase(const QString& caseType, const QString& data);
-	/// Utility function to generate the name of a input or output file path
-	/// @param type One of "args", "input", "output_ex", "error_ex", "output_ps" or "error_ps".
-	QString buildTestCaseFilepath(int number, const QString& type) const;
 	/// Generate more test cases using the given test case generator
 	/// The testCasesCount class member is updated with each extra test case
 	/// @return True on success, false otherwise
@@ -164,9 +165,9 @@ class PlayerSolution : public QObject
 	bool generateExtraTestCases(const ProgramText* generator);
 
   protected slots:
-	/// Called when a generator has finished to compile and link
+	/// Called when a generator has finished to generate test cases in order to update the index
 	/// @return True on success, false otherwise
-	bool generatorBuildFinished();
+	bool generatorFinished();
 };
 
 #endif // PLAYERSOLUTION_H

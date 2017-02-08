@@ -10,6 +10,7 @@ struct ProgramText;
 class CompiledProgram : public QObject
 {
 	Q_OBJECT
+	Q_DISABLE_COPY(CompiledProgram)
 
   protected:
 	/// The source code to be compiled, if coming from an Unit
@@ -28,7 +29,7 @@ class CompiledProgram : public QObject
 
   public:
 	/// Constructor
-	explicit CompiledProgram(QObject *parent = 0);
+	explicit CompiledProgram(QObject* parent = nullptr);
 	/// Program text getter
 	inline const ProgramText* getProgramText() const { return programText; }
 	/// Executable path getter
