@@ -162,6 +162,7 @@ bool TestCaseGenerator::callFileGenerator()
 	QStringList arguments;
 	arguments << number << total << input << output_ex << error_ex << args;
 	QProcess* process = new QProcess(this);
+	qCInfo(logApplication) << executablePath << arguments;
 	process->start( executablePath, arguments );
 
 	return true;

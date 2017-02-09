@@ -274,7 +274,8 @@ bool PlayerSolution::generateExtraTestCases(const ProgramText* generator)
 	Q_ASSERT(generator);
 
 	// This object will compile the generator's source code randomly selected from Unit
-	Q_ASSERT(testCaseGenerator == nullptr);
+	if ( testCaseGenerator )
+		testCaseGenerator->deleteLater();
 	testCaseGenerator = new TestCaseGenerator(this, unit, this);
 
 	// The generator will generate test cases files, when it finishes we need to know the number
@@ -290,7 +291,7 @@ bool PlayerSolution::generatorFinished()
 	Q_ASSERT(testCaseGenerator);
 	testCasesCount = testCaseGenerator->getLastGeneratedTestCaseIndex();
 
-	testCaseGenerator->deleteLater();
-	testCaseGenerator = nullptr;
+	// ToDo: run player solution against test cases
+
 	return true;
 }
