@@ -15,6 +15,15 @@ enum class ToolCallState
 	finished
 };
 
+/// Supported programming languages
+enum class ProgrammingLanguage
+{
+	unknown,
+	c,
+	cpp,
+};
+
+
 /**
 	@brief Base class to some build and debug tools: compiler, linker, debugger
  */
@@ -47,11 +56,21 @@ class ToolCall : public QObject
 	/// Get the directory where the compiler suite being used is installed
 	/// This directory may be asked to the user using a file dialog
 	static QString getCompilerInstallationDirectory();
+	/// Get the name of the default C compiler for this platform
+	static QString getCCompiler();
 	/// Get the name of the default C++ compiler for this platform
 	static QString getCxxCompiler();
+	/// Detects the programming language to compile the given file looking at its extension
+	static ProgrammingLanguage mapProgrammingLanguage(const QString& filename);
+	/// Detects the programming language to compile the given file looking at its extension
+	static ProgrammingLanguage mapProgrammingLanguage(const QFileInfo& fileInfo);
+	/// Detects the respective compiler for the given extension
+	static QString getCompilerFor(ProgrammingLanguage programmingLanguage);
 	/// Default parameters: all warnings enabled (-Wall), C++11 enabled (-std=c++11),
 	/// debug information enabled (-g), and so on
-	static QStringList getDefaultCompilerArguments();
+	/// @param programmingLanguage If unknown is sent, only common parameters for C and C++ are
+	/// returned (for example, to call the linker)
+	static QStringList getDefaultCompilerArguments(ProgrammingLanguage programmingLanguage);
 	/// Default linker arguments
 	static QStringList getDefaultLinkerArguments();
 	/// Asks to the player the installation directory of a GCC compatible compiler

@@ -22,7 +22,7 @@ void LinkerCall::start()
 {
 	// Ensambles a command, something such as
 	// c++ -Wall -std=c++11 /path/player/unit/main.o /path/player/unit/MyClass.o -o /path/player/unit/unit
-	QStringList arguments( getDefaultCompilerArguments() );
+	QStringList arguments( getDefaultCompilerArguments(ProgrammingLanguage::unknown) );
 	arguments << getDefaultLinkerArguments();
 	arguments << objectFiles;
 	arguments << "-o" << executablePath.absoluteFilePath();

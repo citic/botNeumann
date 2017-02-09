@@ -39,27 +39,80 @@ QString ToolCall::getCompilerInstallationDirectory()
 	return installationDirectory;
 }
 
+QString ToolCall::getCCompiler()
+{
+  #if defined(Q_OS_MACX)
+	return getCompilerInstallationDirectory() + "clang";
+  #else
+	return getCompilerInstallationDirectory() + "gcc";
+  #endif
+}
+
 QString ToolCall::getCxxCompiler()
 {
   #if defined(Q_OS_MACX)
 	return getCompilerInstallationDirectory() + "clang++";
   #else
 	return getCompilerInstallationDirectory() + "g++";
-  #endif
+#endif
 }
 
-QStringList ToolCall::getDefaultCompilerArguments()
+ProgrammingLanguage ToolCall::mapProgrammingLanguage(const QString& filename)
 {
+	return mapProgrammingLanguage( QFileInfo(filename) );
+}
+
+ProgrammingLanguage ToolCall::mapProgrammingLanguage(const QFileInfo& fileInfo)
+{
+	const QString& extension = fileInfo.suffix();
+
+	// C
+	if ( extension == "c" ) return ProgrammingLanguage::c;
+
+	// C++
+	if ( extension.compare("cpp", Qt::CaseInsensitive ) == 0 ) return ProgrammingLanguage::cpp;
+	if ( extension.compare("cxx", Qt::CaseInsensitive ) == 0 ) return ProgrammingLanguage::cpp;
+	if ( extension.compare("cc",  Qt::CaseInsensitive ) == 0 ) return ProgrammingLanguage::cpp;
+	if ( extension.compare("cp",  Qt::CaseInsensitive ) == 0 ) return ProgrammingLanguage::cpp;
+	if ( extension == "C" ) return ProgrammingLanguage::cpp;
+
+	// Oops
+	Q_ASSERT(false);
+	return ProgrammingLanguage::unknown;
+}
+
+QString ToolCall::getCompilerFor(ProgrammingLanguage programmingLanguage)
+{
+	switch ( programmingLanguage )
+	{
+		case ProgrammingLanguage::c: return getCCompiler();
+		case ProgrammingLanguage::cpp: return getCxxCompiler();
+		default: return "";
+	}
+}
+
+QStringList ToolCall::getDefaultCompilerArguments(ProgrammingLanguage programmingLanguage)
+{
+	// Common arguments for C and C++
 	QStringList arguments;
-	arguments << "-ggdb3" << "-O0" << "-Wall" << "-Wextra" << "-std=c++11";
+	arguments << "-ggdb3" << "-O0" << "-Wall" << "-Wextra";
+
+	// Optional
+	// arguments << "-fdiagnostics-parseable-fixits";
 
   #ifndef Q_OS_MACX
 	// CLang produces a warning for this parameter
 	arguments << "-pthread";
   #endif
 
-//	if ( getCxxCompiler() == "clang++" )
-//		arguments << "-fdiagnostics-parseable-fixits";
+	// Specific programming language arguments
+	switch ( programmingLanguage )
+	{
+		case ProgrammingLanguage::c: arguments << "-std=c11"; break;
+		case ProgrammingLanguage::cpp: arguments << "-std=c++11"; break;
+		default: break; // return defaults
+	}
+
 	return arguments;
 }
 

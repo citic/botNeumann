@@ -47,7 +47,11 @@ void CompilerCall::start()
 {
 	// Ensambles a command, something such as
 	// c++ -Wall -std=c++11 -c /path/player/unit/main.cpp -o /path/player/unit/main.o
-	QStringList arguments( getDefaultCompilerArguments() );
+	// The compiler to be called and its arguments depend on the programming language
+	ProgrammingLanguage lang = mapProgrammingLanguage(sourcePath);
+	Q_ASSERT(lang != ProgrammingLanguage::unknown);
+
+	QStringList arguments = getDefaultCompilerArguments(lang);
 	arguments << "-c" << sourcePath.absoluteFilePath();
 
 	// The object file is the same source chaging its extension to .o
@@ -62,7 +66,7 @@ void CompilerCall::start()
 	connect(process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(processFailed()));
 
 	// Start the process
-	process->start(getCxxCompiler(), arguments);
+	process->start(getCompilerFor(lang), arguments);
 	qCInfo(logBuild) << process->program() << process->arguments().join(" ");
 	state = ToolCallState::started;
 }

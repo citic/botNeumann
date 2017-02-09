@@ -36,7 +36,7 @@
 
 
 
-<initial-code lang="c"><![CDATA[#include <iostream>
+<initial-code lang="c"><![CDATA[#include <stdio.h>
 
 int main()
 {
