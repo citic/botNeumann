@@ -115,7 +115,7 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	}
 
 	// Some messsages may be shown in the GUI
-	if ( shouldLogToGui(type, category) )
+	if ( messagesArea && shouldLogToGui(type, category) )
 		messagesArea->appendDebuggerMessage(type, category, reducedMessage);
 
 	// Fatal messages cause application to stop
