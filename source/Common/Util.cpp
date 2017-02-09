@@ -61,6 +61,11 @@ bool ResourceToFileDumper::dumpString(const QString& data, const QString& output
 	return true;
 }
 
+void ResourceToFileDumper::addSearchAndReplace(const QString& search, const QString& replace)
+{
+	searchAndReplaceRules.append( QPair<QString, QString>(search, replace) );
+}
+
 bool ResourceToFileDumper::dumpTextResource(const QString& resource, const QString& outputFilename)
 {
 	// Get the contents of the source file from a resource
@@ -93,7 +98,8 @@ bool ResourceToFileDumper::dumpTextResource(const QString& resource, const QStri
 		QString line = inputCode.readLine();
 
 		// ToDo: Replace paths to the files that will be used to redirect standard input, output and error
-//		line.replace( "./input.txt", getStandardInputFilename() );
+		for ( int index = 0; index < searchAndReplaceRules.count(); ++index )
+			line.replace( searchAndReplaceRules[index].first, searchAndReplaceRules[index].second );
 
 		// The line is done, write it to the target file
 		outputCode << line << '\n';

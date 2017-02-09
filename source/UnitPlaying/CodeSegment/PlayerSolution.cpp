@@ -187,48 +187,19 @@ bool PlayerSolution::generateInitialFiles()
 
 QString PlayerSolution::createBotNeumannSourceFile()
 {
-	// Get the contents of the source file from a resource
-	const QString inputResourceName(":/source_code/bn_player_solution.c");
-	QFile inputFile(inputResourceName);
+	ResourceToFileDumper dumper;
 
-	// Open the source resource for reading
-	if ( inputFile.open(QIODevice::ReadOnly | QIODevice::Text) == false )
-	{
-		// Log an error and return an invalid file path
-		qCritical(logApplication) << "Could not open" << inputResourceName;
+	// Replace paths to the files that will be used to redirect standard input, output and error
+	// ToDo: Test case files have numbers
+	dumper.addSearchAndReplace( "./input.txt", getStandardInputFilename() );
+	dumper.addSearchAndReplace( "./output.txt", getStandardOutputFilename() );
+	dumper.addSearchAndReplace( "./error.txt", getStandardErrorFilename() );
+
+	// Copy the resource to the player solution directory replacing the strings
+	const QString& outputFilename = getPlayerUnitSourcePath("bn_player_solution.c");
+	if ( dumper.dumpTextResource(":/source_code/bn_player_solution.c", outputFilename) == false )
 		return "";
-	}
 
-	// Open the target file for overwriting
-	const QString& outputFilename = getPlayerUnitPath() + "/bn_player_solution.c";
-	QFile outputFile(outputFilename);
-	if ( outputFile.open(QIODevice::WriteOnly | QIODevice::Text) == false )
-	{
-		// Log an error and return an invalid file path
-		qCritical(logApplication) << "Could not create" << outputFilename;
-		return "";
-	}
-
-	// Both, source resource and target file are open successfully. We need deal with text
-	QTextStream inputCode(&inputFile);
-	QTextStream outputCode(&outputFile);
-
-	// Copy each line of the source to the target file, but some search/replacements may be required
-	while ( ! inputCode.atEnd() )
-	{
-		// Get a line from the source resource
-		QString line = inputCode.readLine();
-
-		// Replace paths to the files that will be used to redirect standard input, output and error
-		line.replace( "./input.txt", getStandardInputFilename() );
-		line.replace( "./output.txt", getStandardOutputFilename() );
-		line.replace( "./error.txt", getStandardErrorFilename() );
-
-		// The line is done, write it to the target file
-		outputCode << line << '\n';
-	}
-
-	// Destructors will close the files
 	return outputFilename;
 }
 
