@@ -32,6 +32,11 @@ class ResourceToFileDumper
 	/// Creates or overwites the outputFilename, and writes data as the file contents
 	/// @return true on success, false otherwise
 	bool dumpString(const QString& data, const QString& outputFilename);
+	/// Creates a text file with the contents of the given resource
+	/// @param resource Path to the resource, e.g: ":/path/to/resource.ext"
+	/// @param outputFilename Path to the desired file that will content the resource
+	/// @return true on success, false otherwise
+	bool dumpTextResource(const QString& resource, const QString& outputFilename);
 };
 
 #endif // UTIL_H

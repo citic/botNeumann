@@ -45,7 +45,7 @@ bool Util::createDirectory(const QString& dirPath)
 
 bool ResourceToFileDumper::dumpString(const QString& data, const QString& outputFilename)
 {
-	// Open (trunk) or create the target file
+	// Open (truncate) or create the target file
 	QFile outputFile(outputFilename);
 	if ( outputFile.open(QIODevice::WriteOnly | QIODevice::Text) == false )
 	{
@@ -58,5 +58,47 @@ bool ResourceToFileDumper::dumpString(const QString& data, const QString& output
 	outputCode << data;
 
 	// Destructors will close the file
+	return true;
+}
+
+bool ResourceToFileDumper::dumpTextResource(const QString& resource, const QString& outputFilename)
+{
+	// Get the contents of the source file from a resource
+	QFile inputFile(resource);
+
+	// Open the source resource for reading
+	if ( inputFile.open(QIODevice::ReadOnly | QIODevice::Text) == false )
+	{
+		// Log an error and return an invalid file path
+		qCritical(logApplication) << "Could not open" << resource;
+		return "";
+	}
+
+	// Open (truncate) or create the target file
+	QFile outputFile(outputFilename);
+	if ( outputFile.open(QIODevice::WriteOnly | QIODevice::Text) == false )
+	{
+		qCritical(logApplication) << "Could not create" << outputFilename;
+		return false;
+	}
+
+	// Both, source resource and target file are open successfully. We need deal with text
+	QTextStream inputCode(&inputFile);
+	QTextStream outputCode(&outputFile);
+
+	// Copy each line of the source to the target file, but some search/replacements may be required
+	while ( ! inputCode.atEnd() )
+	{
+		// Get a line from the source resource
+		QString line = inputCode.readLine();
+
+		// ToDo: Replace paths to the files that will be used to redirect standard input, output and error
+//		line.replace( "./input.txt", getStandardInputFilename() );
+
+		// The line is done, write it to the target file
+		outputCode << line << '\n';
+	}
+
+	// Destructors will close the files
 	return true;
 }

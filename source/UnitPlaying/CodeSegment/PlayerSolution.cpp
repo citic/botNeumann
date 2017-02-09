@@ -53,10 +53,8 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 		// Create a directory for the player, if it does not exist
 		createDirectoryForUnit();
 
-		// Create an injection C code file
-		const QString& path = createBotNeumannSourceFile();
-		if ( path.isEmpty() == false )
-			hiddenSourceFiles.append( QFileInfo(path) );
+		// Generate some source code files into player-solution directory
+		generateInitialFiles();
 	}
 
 	// ToDo: load breakpoints from user configuration
@@ -167,6 +165,24 @@ bool PlayerSolution::createDirectoryForUnit()
 
 	qCCritical(logPlayer()) << "Unable to create directory for unit:" << path;
 	return false;
+}
+
+bool PlayerSolution::generateInitialFiles()
+{
+	// Create an injection C code file
+	const QString& path = createBotNeumannSourceFile();
+	if ( path.isEmpty() )
+		return false;
+
+	// Add the injection file to the list of files to be compiled, but not edited by player
+	hiddenSourceFiles.append( QFileInfo(path) );
+
+	// Copy convenience header files used by generators
+	ResourceToFileDumper dumper;
+	if ( dumper.dumpTextResource(":/source_code/bn_c_generator.h", getPlayerUnitSourcePath("bn_c_generator.h")) == false )
+		return false;
+
+	return true;
 }
 
 QString PlayerSolution::createBotNeumannSourceFile()

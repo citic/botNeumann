@@ -142,6 +142,9 @@ class PlayerSolution : public QObject
 	/// Creates a directory for a unit that this player is trying to solve
 	/// If unitName is omitted and there is a ponter to the unit, its name will be used
 	bool createDirectoryForUnit();
+	/// Creates or copies some initial files to the player directory. This process is done just
+	/// when the player solution directory is created (for first time)
+	bool generateInitialFiles();
 	/// Creates a source code file within the player solution's directory. The file contains
 	/// C code that will be evaluated later with help of GDB when the visualization is running.
 	/// The name of the file will begin with "bn_". Files with this prefix must be ignored by
