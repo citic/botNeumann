@@ -1,32 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE botnu SYSTEM "http://inciart.com/botneumann/botnu-1.0.dtd">
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
 
-<botnu id="average_n" version="1.0">
-	<description lang="es">Este chip
-	</description>
-	<initial-code><![CDATA[
-		#include <iostream>
 
-		int main()
-		{
-			
+<botnu id="average_n" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1" ignore-whitespace="yes">
 
-			return 0;
-		}
-	]]></initial-code>
-	<solution><![CDATA[
-		#include <iostream>
 
-		int main()
-		{
-			while ( true )
-			{
-				double x, y;
-				std::cin >> x >> y;
-				std::cout << x + y;
-			}
 
-			return 0;
-		}
-	]]></solution>
+<description lang="es"><![CDATA[
+<h1>Diferencia del valor absoluto</h1>
+
+<p>Este chip era un componente de un procesador geométrico. En geometría son muy frecuentes las diferencias de lados y otras medidas. En muchos casos se necesita la diferencia entre dos medidas como un valor positivo.</p>
+
+<p>El trabajo que debe realizar este chip es muy sencillo: Ler parejas de números reales de la entrada estándar, calcular la diferencia del primero menos el segundo, e imprimir el valor absoluto de la diferencia en la salida estándar. Si alguno de los números leídos es negativo, debe considerarse como positivo antes de realizar la diferencia.</p>
+
+<h2>Ejemplo de entrada</h2>
+
+<pre><code>3 8
+-4.2 -3.2
+0 -3.14
+-100 20
+</code></pre>
+
+<h2>Ejemplo de salida</h2>
+
+<p>Note que cada línea de la entrada tiene una pareja de números reales. El chip debe imprimir el resultado de la diferencia de cada pareja, una por línea.</p>
+
+<pre><code>5
+1.0
+3.14
+80
+</code></pre>
+
+<p>Sugerencia: si gusta puede usar la función <code>fabs()</code>, declarada en el encabezado <code>math.h</code>.</p>
+]]></description>
+
+
+
+<initial-code lang="c"><![CDATA[#include <stdio.h>
+
+int main()
+{
+	double a = 0, b = 0;
+	while ( scanf("%lg %lg", &a, &b) == 2 )
+	{
+
+	}
+
+	return 0;
+}
+]]></initial-code>
+
+
+<initial-code lang="cpp"><![CDATA[#include <iostream>
+
+int main()
+{
+	double a = 0, b = 0;
+	while ( std::cin >> a >> b )
+	{
+
+	}
+
+	return 0;
+}
+]]></initial-code>
+
+
+
+<solution lang="cpp"><![CDATA[#include <iostream>
+
+int main()
+{
+	long x = 0, y = 0;
+	while ( std::cin >> x >> y )
+	{
+		std::cout << x + y << std::endl;
+	}
+
+	return 0;
+}
+]]></solution>
+
+
+
+<file-generator lang="c" default-runs="5"><![CDATA[#include <math.h>
+#include <stdlib.h>
+#include <time.h>
+#include "bn_c_generator.h"
+
+double gen_num() { return (double)(rand() - rand()) / rand(); }
+
+int main(int argc, char* argv[])
+{
+	if ( bn_open_files(argc, argv) != 0 )
+		return bn_last_error;
+
+	srand( clock() );
+	for ( int index = 0, count = rand() % 11; index < count; ++index )
+	{
+		double x1 = gen_num(), x2 = gen_num();
+		fprintf(bn_input, "%lg %lg\n", x1, x2);
+		fprintf(bn_output_ex, "%lg\n", fabs(fabs(x1) - fabs(x2)));
+	}
+
+	bn_close_files();
+	return 0;
+}
+]]></standard-generator>
+
+
+
+<test-case>
+<input>3 8
+-4.2 -3.2
+0 -3.14
+-100 20
+</input>
+
+<output>5
+1.0
+3.14
+80
+</output>
+</test-case>
+
+
+
 </botnu>

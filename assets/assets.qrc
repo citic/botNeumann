@@ -14,6 +14,7 @@
 	</qresource>
 	<qresource prefix="/source_code">
 		<file alias="bn_c_generator.h">source_code/bn_c_generator.h</file>
+		<file alias="bn_cpp_generator.h">source_code/bn_cpp_generator.h</file>
 		<file alias="bn_player_solution.c">source_code/bn_player_solution.c</file>
 	</qresource>
 	<qresource prefix="/unit_playing/buttons">

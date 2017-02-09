@@ -181,6 +181,8 @@ bool PlayerSolution::generateInitialFiles()
 	ResourceToFileDumper dumper;
 	if ( dumper.dumpTextResource(":/source_code/bn_c_generator.h", getPlayerUnitSourcePath("bn_c_generator.h")) == false )
 		return false;
+	if ( dumper.dumpTextResource(":/source_code/bn_cpp_generator.h", getPlayerUnitSourcePath("bn_cpp_generator.h")) == false )
+		return false;
 
 	return true;
 }
