@@ -28,7 +28,7 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 
 <p>Ahora sólo falta recuperar la línea que imprime la suma de los dos números leídos! En la descripción de cada unidad verá las secciones de abajo. La sección <em>Entrada</em> provee ejemplos de datos que recibirá el programa, y la sección <em>Salida</em> su correspondiente resultado.</p>
 
-<h2>Entrada</h2>
+<h2>Ejemplo de entrada</h2>
 
 <p>Debe recibir parejas de dos enteros separadas por un espacio en blanco. Las parejas se separan entre ellas por cambios de línea. Los enteros son mayores a un millón negativo y menores a un millón positivo.</p>
 
@@ -38,7 +38,7 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 -80 -120
 </code></pre>
 
-<h2>Salida</h2>
+<h2>Ejemplo de salida</h2>
 
 <p>Debe imprimir el resultado de la suma de cada pareja. Un resultado por línea.</p>
 
@@ -55,7 +55,7 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 
 int main()
 {
-	long a, b;
+	long a = 0, b = 0;
 	while ( std::cin >> a >> b )
 	{
 

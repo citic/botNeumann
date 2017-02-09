@@ -21,8 +21,7 @@ HeapSegment::~HeapSegment()
 
 double HeapSegment::getHeightInRows() const
 {
-	Q_ASSERT(memoryFrame);
-	return memoryFrame->getHeightInRows() + interfaceRows;
+	return memoryFrame ? memoryFrame->getHeightInRows() + interfaceRows : 3.0;
 }
 
 void HeapSegment::buildSegment()

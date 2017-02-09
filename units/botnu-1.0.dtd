@@ -196,6 +196,8 @@ Generators may be written either C or C++. The language may be specified in the 
 of the @generator XML element. Generators may include some code to ease the management
 of the expected files to be generated. For example, for a C "sum_xy" generator you may write:
 
+	#include <stdlib.h>
+	#include <time.h>
 	#include "bn_c_generator.h"
 
 	int main(int arc, char* argv[])
@@ -203,6 +205,7 @@ of the expected files to be generated. For example, for a C "sum_xy" generator y
 		if ( bn_open_files(argc, argv) != 0 )
 			return bn_last_error;
 
+		srand( clock() );
 		for ( int index = 0; index < 10; ++index )
 		{
 			int x1 = rand(), x2 = rand();
@@ -215,7 +218,7 @@ of the expected files to be generated. For example, for a C "sum_xy" generator y
 
 The header file "bn_c_generator.h" will create the following global variables and functions:
 
-	int           bn_open_files(int argc, char* argv[])
+	int           bn_open_files(int argc, char* argv[]);
 	int           bn_close_files();
 	int           bn_last_error;
 
