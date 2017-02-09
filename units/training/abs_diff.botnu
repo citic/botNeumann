@@ -41,7 +41,7 @@
 int main()
 {
 	double a = 0, b = 0;
-	while ( scanf("%g %g", &a, &b) == 2 )
+	while ( scanf("%lg %lg", &a, &b) == 2 )
 	{
 
 	}
@@ -90,7 +90,7 @@ int main()
 
 double gen_num() { return (double)(rand() - rand()) / rand(); }
 
-int main(int arc, char* argv[])
+int main(int argc, char* argv[])
 {
 	if ( bn_open_files(argc, argv) != 0 )
 		return bn_last_error;
@@ -98,12 +98,13 @@ int main(int arc, char* argv[])
 	srand( clock() );
 	for ( int index = 0, count = rand() % 11; index < count; ++index )
 	{
-		int x1 = gen_num(), x2 = gen_num();
-		fprintf(bn_input, "%g %g\n", x1, x2);
-		fprintf(bn_output_ex, "%g\n", fabs(fabs(x1) - fabs(x2)));
+		double x1 = gen_num(), x2 = gen_num();
+		fprintf(bn_input, "%lg %lg\n", x1, x2);
+		fprintf(bn_output_ex, "%lg\n", fabs(fabs(x1) - fabs(x2)));
 	}
 
 	bn_close_files();
+	return 0;
 }
 ]]></standard-generator>
 

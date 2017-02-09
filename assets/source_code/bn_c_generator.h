@@ -20,7 +20,7 @@ int           bn_last_error = 0;
 
 #define bn_fail(code, ...) return bn_last_error = 1 + 0 * fprintf(stderr, __VA_ARGS__)
 
-inline int bn_open_files(int argc, char* argv[])
+int bn_open_files(int argc, char* argv[])
 {
 	if ( argc < 7 )
 		bn_fail(1, "%s: received %d arguments, expected 7\n", argv[0], argc);
@@ -56,7 +56,7 @@ inline int bn_open_files(int argc, char* argv[])
 	return 0;
 }
 
-inline int bn_close_files()
+int bn_close_files()
 {
 	return fclose(bn_input) + fclose(bn_output_ex) + fclose(bn_error_ex) + fclose(bn_args);
 }
