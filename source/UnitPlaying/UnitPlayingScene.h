@@ -11,6 +11,7 @@ class DataSegment;
 class GuiBreakpoint;
 class HeapSegment;
 class MessagesArea;
+class PlayerSolution;
 class TestCaseManager;
 class Visualizator;
 
@@ -43,6 +44,8 @@ class UnitPlayingScene : public GameScene
 	QString filename;
 	/// Loads the unit from the .botnu xml file
 	Unit unit;
+	/// Manages the list of source files that compound the player's solution to an unit
+	PlayerSolution* playerSolution = nullptr;
 	/// The state of the unit playing scene, e.g: editing, building, animating, paused
 	UnitPlayingState state = UnitPlayingState::editing;
 	/// Manages the list of test cases to know if player solution actually solves the Unit

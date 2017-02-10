@@ -6,6 +6,7 @@
 #include "LogManager.h"
 #include "MainWindow.h"
 #include "MessagesArea.h"
+#include "PlayerSolution.h"
 #include "Stage.h"
 #include "TestCaseManager.h"
 #include "UnitPlayingScene.h"
@@ -85,8 +86,15 @@ void UnitPlayingScene::finishedEnteringStage()
 	codeSegment->setVisible( settings.value(sk("CodeSegment/Visible"), true).toBool() );
 	messagesArea->setVisible( settings.value(sk("MessagesArea/Visible"), true).toBool() );
 
+	// If there is an old player solution, replace it
+	delete playerSolution;
+	playerSolution = new PlayerSolution(this);
+
+	// Load the source file list that compounds the player's solution
+	playerSolution->loadSolutionForUnit( &unit );
+
 	// Loads or restore the code for this unit
-	codeSegment->loadCodeForUnit( &unit );
+	codeSegment->loadPlayerCodeForUnit( playerSolution, &unit );
 }
 
 QList<GuiBreakpoint*> UnitPlayingScene::retrieveBreakpoints()

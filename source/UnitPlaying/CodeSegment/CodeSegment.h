@@ -82,7 +82,7 @@ class CodeSegment : public QDockWidget
 	inline CodeEditor* getCodeEditor() const { return codeEditor; }
 	/// Restores the last code made by player for the given unit, or the default unit's code if
 	/// player nas not played this unit
-	void loadCodeForUnit(Unit* unit);
+	void loadPlayerCodeForUnit(PlayerSolution* playerSolution, Unit* unit);
 	/// Starts the compilation process. It is done in background. When the compilation is finished
 	/// the @a compilationFinished() signal is emitted.
 	void startBuild();

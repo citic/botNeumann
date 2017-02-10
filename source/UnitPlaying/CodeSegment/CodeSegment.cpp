@@ -208,14 +208,11 @@ void CodeSegment::setupPauseAction(bool enabled)
 	runOrPauseAction->setEnabled(enabled);
 }
 
-void CodeSegment::loadCodeForUnit(Unit* unit)
+void CodeSegment::loadPlayerCodeForUnit(PlayerSolution* playerSolution, Unit* unit)
 {
-	// If there is an old player solution, replace it
-	delete playerSolution;
-	playerSolution = new PlayerSolution(this);
-
-	// Load the source file list that compounds the player's solution
-	playerSolution->loadSolutionForUnit(unit);
+	// We need the player solution later also
+	Q_ASSERT(playerSolution);
+	this->playerSolution = playerSolution;
 
 	// Fill the file selector with the list of files that comprise this player solution
 	fileSelector->clear();
