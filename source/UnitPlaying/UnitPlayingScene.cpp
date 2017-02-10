@@ -21,8 +21,15 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 {
 	setBackground("up_background");
 
+	// We extract some vertical space of the game menu to place the test cases control
+	const double testCasesProportion = 0.4;
+	const double standardMenuProportion = defaultStandardMenuProportion * (1.0 - testCasesProportion);
+
 	// Create the standar menu with back button, title, code editor toggle, config, and so on
-	createStandardMenu(context + ' ' + levelUnit, true);
+	createStandardMenu(context + ' ' + levelUnit, true, standardMenuProportion );
+
+	// Create the tube representing the test cases
+	this->layout->addStretch(testCasesProportion * defaultStandardMenuProportion);
 
 	// Load the botNeumann unit from the .botnu file
 	if ( ! unit.load(filename) )
@@ -129,7 +136,7 @@ void UnitPlayingScene::addVerticalSegments()
 	double cpuCoresRows = cpuCores->getHeightInRows();
 	double dataSegmentRows = dataSegment->getHeightInRows();
 	double totalRows = heapSegmentRows + cpuCoresRows + dataSegmentRows;
-	double availableProportion = 1.0 - standardMenuProportion;
+	double availableProportion = 1.0 - defaultStandardMenuProportion;
 
 	double heapSegmentProportion = heapSegmentRows / totalRows * availableProportion;
 	double cpuCoresProportion = cpuCoresRows / totalRows * availableProportion;

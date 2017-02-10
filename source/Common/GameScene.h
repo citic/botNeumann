@@ -10,7 +10,7 @@ class Prop;
 class SvgButton;
 
 /// The standard menu will require this percent of vertical space on the scene
-const double standardMenuProportion = 0.08333333333333;
+const double defaultStandardMenuProportion = 0.08333333333333;
 
 class GameScene : public Scene
 {
@@ -45,7 +45,7 @@ class GameScene : public Scene
 	/// Creates a standard menu with common buttons: configure, back/exit, player...
 	/// Adds it to the scene's layout. If a scene's layout does not exist, it creates
 	/// a global vertical linear layout
-	void createStandardMenu(const QString& title, bool enableCodeEditorToggle);
+	void createStandardMenu(const QString& title, bool enableCodeEditorToggle, double verticalProportion = defaultStandardMenuProportion);
 
   protected slots:
 	/// Called when the Back button is pressed

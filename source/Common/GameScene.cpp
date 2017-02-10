@@ -17,7 +17,7 @@ GameScene::~GameScene()
 {
 }
 
-void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorToggle)
+void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorToggle, double verticalProportion)
 {
 	// A global layout is required
 	if ( this->layout == nullptr )
@@ -25,7 +25,7 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 
 	// Create an exclusive layout for the standard menu
 	LinearLayout* menuLayout = new LinearLayout(Qt::Horizontal);
-	this->layout->addLayout(menuLayout, standardMenuProportion);
+	this->layout->addLayout(menuLayout, verticalProportion);
 	const qreal buttonWidthPercent = 0.06;
 
 	// Back button
