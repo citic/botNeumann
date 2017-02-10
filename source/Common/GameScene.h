@@ -10,7 +10,7 @@ class Prop;
 class SvgButton;
 
 /// The standard menu will require this percent of vertical space on the scene
-const double defaultStandardMenuProportion = 0.08333333333333;
+const double defaultStandardMenuProportion = 64.754 / 768;
 
 class GameScene : public Scene
 {

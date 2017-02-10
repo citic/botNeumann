@@ -22,16 +22,17 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 {
 	setBackground("up_background");
 
-	// We extract some vertical space of the game menu to place the test cases control
-	const double testCasesProportion = 0.4;
-	const double standardMenuProportion = defaultStandardMenuProportion * (1.0 - testCasesProportion);
+	// We extract some vertical space of the game menu to place the test cases control keeping an
+	// golden ratio (aurea) where the standard menu has the longer height and the test cases the shorter
+	const double standardMenuReduction = 0.61803398874988; // 1 / aurea
+	const double standardMenuProportion = defaultStandardMenuProportion * standardMenuReduction;
 
 	// Create the standar menu with back button, title, code editor toggle, config, and so on
 	createStandardMenu(context + ' ' + levelUnit, true, standardMenuProportion );
 
 	// Create the tube representing the test cases
 	testCaseManager = new TestCaseManager(this);
-	this->layout->addItem(testCaseManager, (testCasesProportion) * defaultStandardMenuProportion);
+	this->layout->addItem(testCaseManager, (1.0 - standardMenuReduction) * defaultStandardMenuProportion);
 
 	// Load the botNeumann unit from the .botnu file
 	if ( ! unit.load(filename) )

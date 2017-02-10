@@ -13,6 +13,8 @@ TestCaseManager::TestCaseManager(Scene* scene, QObject* parent)
 
 void TestCaseManager::buildTestCaseManager()
 {
-	Prop* backgroundTube = new Prop("up_standard_output_middle", scene);
+	// We use the "up_standard_output_middle1" graphic that does not contain a bottom empty space
+	// required by standard input/output
+	Prop* backgroundTube = new Prop("up_standard_output_middle1", scene);
 	addItem(backgroundTube, 1.0, zUnitPlaying::testCases + 0.0);
 }
