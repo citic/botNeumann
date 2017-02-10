@@ -37,6 +37,8 @@ class ToolCall : public QObject
 	ToolCallState state;
 	/// The compiler executable is called in a separate process
 	QProcess* process;
+	/// If true, debugging information will be included in object file
+	bool optimizedForDebug = false;
 
   public:
 	/// Constructor
@@ -45,6 +47,8 @@ class ToolCall : public QObject
 	~ToolCall();
 	/// Returns the state of the compilation process of this unit
 	inline ToolCallState getState() const { return state; }
+	/// Make the compiler to generate debug information in object files and executable
+	inline void optimizeForDebug(bool debug = true) { this->optimizedForDebug = debug; }
 	/// Returns true if @a file1 is newer (last modified) than file2
 	/// This function must create new QFileInfo objects, in order to force QFileInfo re-read the
 	/// times from secondary memory. It is necessary because user modifies files in edit process
@@ -70,7 +74,9 @@ class ToolCall : public QObject
 	/// debug information enabled (-g), and so on
 	/// @param programmingLanguage If unknown is sent, only common parameters for C and C++ are
 	/// returned (for example, to call the linker)
-	static QStringList getDefaultCompilerArguments(ProgrammingLanguage programmingLanguage);
+	/// @param optimizedForDebug If true, debugging information will be generated and optimized
+	/// for GCC, otherwise it will use the default compiler setting (-O2)
+	static QStringList getDefaultCompilerArguments(ProgrammingLanguage programmingLanguage, bool optimizeForDebug);
 	/// Default linker arguments
 	static QStringList getDefaultLinkerArguments();
 	/// Asks to the player the installation directory of a GCC compatible compiler

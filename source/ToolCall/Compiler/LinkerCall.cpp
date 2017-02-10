@@ -9,8 +9,6 @@ LinkerCall::LinkerCall(const QStringList& objectFiles, const QFileInfo& executab
 	: ToolCall(parent)
 	, objectFiles(objectFiles)
 	, executablePath(executablePath)
-	, errorCount(0)
-	, warningCount(0)
 {
 }
 
@@ -22,7 +20,7 @@ void LinkerCall::start()
 {
 	// Ensambles a command, something such as
 	// c++ -Wall -std=c++11 /path/player/unit/main.o /path/player/unit/MyClass.o -o /path/player/unit/unit
-	QStringList arguments( getDefaultCompilerArguments(ProgrammingLanguage::unknown) );
+	QStringList arguments = getDefaultCompilerArguments(ProgrammingLanguage::unknown, optimizedForDebug);
 	arguments << getDefaultLinkerArguments();
 	arguments << objectFiles;
 	arguments << "-o" << executablePath.absoluteFilePath();

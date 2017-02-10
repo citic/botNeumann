@@ -248,6 +248,7 @@ void CodeSegment::startBuild()
 
 	// Create an object in charge of compiling the solution files
 	compiler = new Compiler(this);
+	compiler->optimizeForDebug(true);
 
 	// Compile and run the player solution. It requires some time and we do not wait until it
 	// finishes. When the compilation and linking process has finished, our compilerFinished()

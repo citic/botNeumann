@@ -91,11 +91,15 @@ QString ToolCall::getCompilerFor(ProgrammingLanguage programmingLanguage)
 	}
 }
 
-QStringList ToolCall::getDefaultCompilerArguments(ProgrammingLanguage programmingLanguage)
+QStringList ToolCall::getDefaultCompilerArguments(ProgrammingLanguage programmingLanguage, bool optimizeForDebug)
 {
 	// Common arguments for C and C++
 	QStringList arguments;
-	arguments << "-ggdb3" << "-O0" << "-Wall" << "-Wextra";
+	arguments << "-Wall" << "-Wextra";
+
+	// If debug information is asked, generate it and optimize for GDB
+	if ( optimizeForDebug )
+		arguments << "-O0" << "-ggdb3";
 
 	// Optional
 	// arguments << "-fdiagnostics-parseable-fixits";

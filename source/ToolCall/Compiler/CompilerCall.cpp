@@ -51,7 +51,8 @@ void CompilerCall::start()
 	ProgrammingLanguage lang = mapProgrammingLanguage(sourcePath);
 	Q_ASSERT(lang != ProgrammingLanguage::unknown);
 
-	QStringList arguments = getDefaultCompilerArguments(lang);
+	// Get the default arguments for the language and debugging preference
+	QStringList arguments = getDefaultCompilerArguments(lang, optimizedForDebug);
 	arguments << "-c" << sourcePath.absoluteFilePath();
 
 	// The object file is the same source chaging its extension to .o

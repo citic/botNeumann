@@ -22,9 +22,9 @@ class LinkerCall : public ToolCall
 	/// List of warnings and errors generated when linking the executable
 	QList<Diagnostic*> diagnostics;
 	/// Number of errors found in this source file. If > 0, code cannot be run
-	int errorCount;
+	int errorCount = 0;
 	/// Number of warnings found in this source file. Solution may still run
-	int warningCount;
+	int warningCount = 0;
 
   public:
 	/// Constructor

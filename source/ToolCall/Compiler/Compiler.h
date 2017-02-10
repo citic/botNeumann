@@ -30,6 +30,8 @@ class Compiler : public QObject
   protected:
 	/// For each .c/.cpp source file a compiler call is scheduled in this list
 	QList<CompilerCall*> compilerCalls;
+	/// If true, debugging information will be included in object files and executable
+	bool optimizedForDebug = false;
 	/// True if the executable is scheduled to be linked
 	bool shouldLinkExecutable = true;
 	/// Indicates the number of error collected during the compilation process. If value is 0
@@ -55,6 +57,8 @@ class Compiler : public QObject
 	explicit Compiler(QObject *parent = nullptr);
 	/// Destructor
 	~Compiler();
+	/// Make the compiler to generate debug information in object files and executable
+	inline void optimizeForDebug(bool debug = true) { this->optimizedForDebug = debug; }
 	/// Indicates the number of error collected during the compilation process. If value is 0
 	/// the solution can be run, even it would have warnings. This value is valid only
 	/// after a compilation process has finished. If called before, it will return -1

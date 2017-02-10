@@ -61,6 +61,7 @@ void Compiler::scheduleCompilerCalls(const QFileInfoList& filepaths)
 	{
 		// Analyze if this source file must be compiled
 		CompilerCall* compilerCall = new CompilerCall(fileInfo);
+		compilerCall->optimizeForDebug( this->optimizedForDebug );
 
 		// Regardless if this source file should be compiled or not, its object file must be
 		// included in the linking phase
@@ -121,6 +122,7 @@ void Compiler::linkExecutable()
 {
 	// This object is in charge of calling the linker in background
 	linkerCall = new LinkerCall(objectFiles, executablePath, this);
+	linkerCall->optimizeForDebug( this->optimizedForDebug );
 
 	// When the linker has finished its execution, get our linkerCallFinished() method called
 	connect(linkerCall, SIGNAL(finished()), this, SLOT(linkerCallFinished()) );
