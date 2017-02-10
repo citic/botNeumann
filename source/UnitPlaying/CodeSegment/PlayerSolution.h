@@ -48,6 +48,9 @@ class PlayerSolution : public QObject
 	/// The number of available test cases for this player solution
 	/// -1 means that test cases have not been generated
 	int testCasesCount = -1;
+	/// Counts the number of steps to have the entire player solution built and emit the
+	/// @a allBuilt() signal
+	int builtSteps = -1;
 	/// The executable from a random selected Unit's generator
 	TestCaseGenerator* testCaseGeneratorProgram = nullptr;
 	/// Manages the process of building the executable from player solution's source code
@@ -115,14 +118,15 @@ class PlayerSolution : public QObject
 	inline QString getStandardErrorFilename() const { return getPlayerUnitPath() + "/bn_error.txt"; }
 
   public:
-	/// Extract symbols from all the source files made by the player. Symbols are global variables
-	/// and function definitions. They are extracted with ctags command. These symbols are required
-	/// later to set breakpoints (function definitions) and GDB variable-objects (global variables)
-	/// @return The amount of symbols extracted, or negative number on error
-	int extractSymbols();
 	/// Starts to build the executable from the player solution's source files
 	/// Emits @a playerSolutionBuilt when building process is finished
 	bool buildPlayerSolution();
+	/// Extract symbols from all the source files made by the player. Symbols are global variables
+	/// and function definitions. They are extracted with ctags command. These symbols are required
+	/// later to set breakpoints (function definitions) and GDB variable-objects (global variables)
+	/// Emits @a symbolsExtracted() when done
+	/// @return true on success, false otherwise
+	bool extractSymbols();
 	/// Create a set of test case files to test this player solution. Each test case is a set of
 	/// four files that are generated in player-solution's directory. Each test case is uniquely
 	/// identified by an integer value nn:
@@ -135,8 +139,13 @@ class PlayerSolution : public QObject
 	/// Test cases are generated from Unit (botnu XML file). All unit's test cases are copied first
 	/// literally. Then, if there are generators within the .botnu file, they will be used to
 	/// generate extra test cases.
+	/// Emits testCasesGenerated() when done
 	/// @return The amount of test cases generated, or a negative code on error
 	int generateTestCases();
+	/// Builds the player solution executable, generate tests cases and extract symbols from
+	/// the player's source code. It emits the signal for each respective step. When all the steps
+	/// are complete, it emits @a allBuilt.
+	bool buildAll();
 	/// Utility function to generate the name of a input or output file path
 	/// @param type One of "args", "input", "output_ex", "error_ex", "output_ps" or "error_ps".
 	QString buildTestCaseFilepath(int number, const QString& type) const;
@@ -144,6 +153,13 @@ class PlayerSolution : public QObject
   signals:
 	/// Emitted when building of player solution executable is finished
 	void playerSolutionBuilt(CompiledProgram* compiledProgram);
+	/// Emitted when the symbols (global variables and function definitions) have been extracted
+	void symbolsExtracted();
+	/// Emitted when all test cases were generated to test the player's solution
+	void testCasesGenerated(int testCasesCount);
+	/// Emitted when all built steps were accomplished: player solution's executable is built,
+	/// symbols were extracted and test cases were generated
+	void allBuilt();
 
   protected:
 	/// Loads the list of existing files in the unit solution directory for this player

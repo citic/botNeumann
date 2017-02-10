@@ -125,7 +125,7 @@ void UnitPlayingScene::backButtonPressed()
 	// We use a timer to wait until the docks (code segment and messages area) have been completely
 	// hidden to allow the QGraphicsView widget to resize before starting the transition to the unit
 	// selection scene
-	QTimer::singleShot(0, this, SLOT(callUnitSelectionScene()) );
+	QTimer::singleShot( 0, this, SLOT(callUnitSelectionScene()) );
 }
 
 void UnitPlayingScene::callUnitSelectionScene()

@@ -11,6 +11,9 @@
 #include <QDir>
 #include <QTextStream>
 
+const int totalBuildSteps = 2;
+
+
 PlayerSolution::PlayerSolution(QObject *parent)
 	: QObject(parent)
 {
@@ -205,10 +208,10 @@ QString PlayerSolution::createBotNeumannSourceFile()
 	return outputFilename;
 }
 
-int PlayerSolution::extractSymbols()
+bool PlayerSolution::extractSymbols()
 {
 	// ToDo: implement call to ctags
-	return 0;
+	return false;
 }
 
 bool PlayerSolution::buildPlayerSolution()
@@ -249,6 +252,12 @@ int PlayerSolution::generateTestCases()
 
 	// Done
 	return testCasesCount;
+}
+
+bool PlayerSolution::buildAll()
+{
+	this->builtSteps = 0;
+	return buildPlayerSolution() /* && extractSymbols() */ && generateTestCases();
 }
 
 int PlayerSolution::generateUnitTestCases()
@@ -302,6 +311,10 @@ bool PlayerSolution::generateExtraTestCases(const ProgramText* generator)
 bool PlayerSolution::playerSolutionBuiltFinished()
 {
 	emit playerSolutionBuilt(playerSolutionProgram);
+
+	if ( builtSteps >= 0 && ++builtSteps == totalBuildSteps )
+		emit allBuilt();
+
 	return true;
 }
 
@@ -310,7 +323,12 @@ bool PlayerSolution::testCaseGeneratorFinished()
 	Q_ASSERT(testCaseGeneratorProgram);
 	testCasesCount = testCaseGeneratorProgram->getLastGeneratedTestCaseIndex();
 
+	emit testCasesGenerated(testCasesCount);
+
 	// ToDo: run player solution against test cases
+
+	if ( builtSteps >= 0 && ++builtSteps == totalBuildSteps )
+		emit allBuilt();
 
 	return true;
 }
