@@ -11,6 +11,7 @@ class DataSegment;
 class GuiBreakpoint;
 class HeapSegment;
 class MessagesArea;
+class TestCaseManager;
 class Visualizator;
 
 /**
@@ -44,6 +45,8 @@ class UnitPlayingScene : public GameScene
 	Unit unit;
 	/// The state of the unit playing scene, e.g: editing, building, animating, paused
 	UnitPlayingState state = UnitPlayingState::editing;
+	/// Manages the list of test cases to know if player solution actually solves the Unit
+	TestCaseManager* testCaseManager = nullptr;
 	/// The code editor, allows player to input program code in editing time. At runtime it
 	/// represents the text segment (aka code segment)
 	CodeSegment* codeSegment = nullptr;

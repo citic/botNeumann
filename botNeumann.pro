@@ -92,6 +92,7 @@ HEADERS += \
 	source/UnitPlaying/DataSegment/StandardInputOutput.h \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
 	source/UnitPlaying/Messages/MessagesArea.h \
+	source/UnitPlaying/TestCaseManager.h \
 	source/UnitPlaying/Threads/CallStack.h \
 	source/UnitPlaying/Threads/CpuCore.h \
 	source/UnitPlaying/Threads/CpuCores.h \
@@ -165,6 +166,7 @@ SOURCES += \
 	source/UnitPlaying/DataSegment/StandardInputOutput.cpp \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
 	source/UnitPlaying/Messages/MessagesArea.cpp \
+	source/UnitPlaying/TestCaseManager.cpp \
 	source/UnitPlaying/Threads/CallStack.cpp \
 	source/UnitPlaying/Threads/CpuCore.cpp \
 	source/UnitPlaying/Threads/CpuCores.cpp \

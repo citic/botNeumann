@@ -47,6 +47,7 @@ enum class UnitPlayingState
 enum zUnitPlaying
 {
 	background,
+	testCases,
 	heapSegment,
 	cpuCores,
 	cpuCore,

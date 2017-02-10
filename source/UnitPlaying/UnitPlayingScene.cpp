@@ -7,6 +7,7 @@
 #include "MainWindow.h"
 #include "MessagesArea.h"
 #include "Stage.h"
+#include "TestCaseManager.h"
 #include "UnitPlayingScene.h"
 #include "Visualizator.h"
 
@@ -29,7 +30,8 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	createStandardMenu(context + ' ' + levelUnit, true, standardMenuProportion );
 
 	// Create the tube representing the test cases
-	this->layout->addStretch(testCasesProportion * defaultStandardMenuProportion);
+	testCaseManager = new TestCaseManager(this);
+	this->layout->addItem(testCaseManager, (testCasesProportion) * defaultStandardMenuProportion);
 
 	// Load the botNeumann unit from the .botnu file
 	if ( ! unit.load(filename) )
