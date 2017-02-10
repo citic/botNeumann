@@ -32,17 +32,44 @@ bool CompiledProgram::build(const ProgramText* programText, const QString& desti
 	if ( dumper.dumpString( programText->code, sourcePath ) == false )
 		return false;
 
+	// Create a new compiler for the new process
+	if ( ! createCompiler() ) return false;
+	compiler->compile(sourcePath, executablePath);
+
+	return true;
+}
+
+bool CompiledProgram::build(const QFileInfoList& sourceFiles, const QString& executablePath)
+{
+	// Store the file references
+	this->sourceFiles = sourceFiles;
+	this->executablePath = executablePath;
+
+	// Create a new compiler for the new process
+	if ( ! createCompiler() ) return false;
+
+	// The compiler knows to compile this process
+	compiler->compile(sourceFiles, executablePath);
+	return true;
+}
+
+bool CompiledProgram::createCompiler()
+{
 	// If there is a previous compile result, remove it
 	if ( compiler )
 		compiler->deleteLater();
 
+	// Create a new compiler for the new compilation task
+	compiler = new Compiler(this);
+	if ( compiler == nullptr )
+		return false;
+
+	compiler->optimizeForDebug( this->optimizedForDebug );
+
 	// Compile the generator's source code. It requires some time and we do not wait until it
 	// finishes. When the compilation and linking process has finished, our compilerFinished()
 	// is called and we continue processing the results there
-	compiler = new Compiler(this);
 	connect( compiler, SIGNAL(finished()), this, SIGNAL(buildFinished()) );
-	compiler->compile(sourcePath, executablePath);
-
 	return true;
 }
 

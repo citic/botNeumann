@@ -1,5 +1,6 @@
 #include "CodeEditor.h"
 #include "CodeSegment.h"
+#include "CompiledProgram.h"
 #include "Compiler.h"
 #include "Diagnostic.h"
 #include "ExecutionThread.h"
@@ -20,9 +21,6 @@ const int toolBarIconSize = 18;
 CodeSegment::CodeSegment(QWidget *parent, Qt::WindowFlags flags)
 	: QDockWidget(tr("Program"), parent, flags)
 	, innerMainWindow( new QMainWindow(this) )
-	, codeEditor(nullptr)
-	, playerSolution(nullptr)
-	, compiler(nullptr)
 {
 	setObjectName("codeSegment");
 
@@ -235,30 +233,13 @@ void CodeSegment::loadCodeForUnit(Unit* unit)
 
 void CodeSegment::startBuild()
 {
-	// This method must be only called if there is a player solution with files
-	Q_ASSERT(playerSolution);
-	Q_ASSERT(playerSolution->hasFiles());
-
 	// If there is unsaved changes, save them
 	codeEditor->saveChanges();
 
-	// ToDo: If there is an active compiling process, stop it
-	//if ( compiler && compiler->isRunning() ) compiler->stop();
-	if ( compiler ) compiler->deleteLater();
-
-	// Create an object in charge of compiling the solution files
-	compiler = new Compiler(this);
-	compiler->optimizeForDebug(true);
-
-	// Compile and run the player solution. It requires some time and we do not wait until it
-	// finishes. When the compilation and linking process has finished, our compilerFinished()
-	// is called and we continue processing the results there
-	connect(compiler, SIGNAL(finished()), this, SLOT(compilerFinished()));
-
-	// Start the compiling process with the files in the solution and the expected executable file
-	compiler->compile(playerSolution->getAllSourceFiles(), playerSolution->getExecutablePath());
-
-	// ToDo: the previous process may be controlled by PlayerSolution instance
+	// Compile the player's source code and generate an executable
+	Q_ASSERT(playerSolution);
+	connect( playerSolution, SIGNAL(playerSolutionBuilt(CompiledProgram*)), this, SLOT(compilerFinished(CompiledProgram*)) );
+	playerSolution->buildPlayerSolution();
 
 	// Extract global variables and function definitions from player solution using ctags
 	// They will be used later to set breakpoints and GDB variable-objects
@@ -268,14 +249,11 @@ void CodeSegment::startBuild()
 	playerSolution->generateTestCases();
 }
 
-void CodeSegment::compilerFinished()
+void CodeSegment::compilerFinished(CompiledProgram* playerSolutionProgram)
 {
-	// Get the compiler and its results
-	Q_ASSERT(compiler);
-
 	// Alert other object the compilation process finished, for example, show the generated
 	// diagnostics in the tools' output on messages area
-	emit buildFinished(compiler);
+	emit buildFinished( playerSolutionProgram->getCompiler() );
 }
 
 void CodeSegment::newFileTriggered()
@@ -297,6 +275,10 @@ void CodeSegment::visualizationSpeedChanged(int speed)
 
 void CodeSegment::diagnosticSelected(int index)
 {
+	Q_ASSERT(playerSolution);
+	Q_ASSERT(playerSolution->getPlayerSolutionProgram());
+	Compiler* compiler = playerSolution->getPlayerSolutionProgram()->getCompiler();
+
 	Q_ASSERT(compiler);
 	Q_ASSERT(index >= 0);
 	Q_ASSERT(index < compiler->getAllDiagnostics().size());

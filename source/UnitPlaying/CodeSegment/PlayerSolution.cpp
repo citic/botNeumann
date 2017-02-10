@@ -211,6 +211,30 @@ int PlayerSolution::extractSymbols()
 	return 0;
 }
 
+bool PlayerSolution::buildPlayerSolution()
+{
+	// This method must be only called if there is a player solution with files
+	Q_ASSERT( this->hasFiles() );
+
+	// ToDo: If there is an active compiling process, stop it
+	//if ( compiler && compiler->isRunning() ) compiler->stop();
+	if ( playerSolutionProgram )
+		playerSolutionProgram->deleteLater();
+
+	// Create an object in charge of compiling the solution files
+	playerSolutionProgram = new CompiledProgram(this);
+	playerSolutionProgram->optimizeForDebug(true);
+
+	// Compile and run the player solution. It requires some time and we do not wait until it
+	// finishes. When the compilation and linking process has finished, our compilerFinished()
+	// slot is called and we continue processing the results there
+	connect( playerSolutionProgram, SIGNAL(buildFinished()), this, SLOT(playerSolutionBuiltFinished()) );
+
+	// Start the compiling process with the files in the solution and the expected executable file
+	playerSolutionProgram->build( getAllSourceFiles(), getExecutablePath() );
+	return true;
+}
+
 int PlayerSolution::generateTestCases()
 {
 	// Copy the literal test cases provided in botnu unit to files in player solution
@@ -263,22 +287,28 @@ bool PlayerSolution::generateExtraTestCases(const ProgramText* generator)
 	Q_ASSERT(generator);
 
 	// This object will compile the generator's source code randomly selected from Unit
-	if ( testCaseGenerator )
-		testCaseGenerator->deleteLater();
-	testCaseGenerator = new TestCaseGenerator(this, unit, this);
+	if ( testCaseGeneratorProgram )
+		testCaseGeneratorProgram->deleteLater();
+	testCaseGeneratorProgram = new TestCaseGenerator(this, unit, this);
 
 	// The generator will generate test cases files, when it finishes we need to know the number
 	// of test cases that were actually generated
-	connect(testCaseGenerator, SIGNAL(generationFinished()), this, SLOT(generatorFinished()));
-	testCaseGenerator->generate(generator, testCasesCount);
+	connect(testCaseGeneratorProgram, SIGNAL(generationFinished()), this, SLOT(testCaseGeneratorFinished()));
+	testCaseGeneratorProgram->generate(generator, testCasesCount);
 
 	return true;
 }
 
-bool PlayerSolution::generatorFinished()
+bool PlayerSolution::playerSolutionBuiltFinished()
 {
-	Q_ASSERT(testCaseGenerator);
-	testCasesCount = testCaseGenerator->getLastGeneratedTestCaseIndex();
+	emit playerSolutionBuilt(playerSolutionProgram);
+	return true;
+}
+
+bool PlayerSolution::testCaseGeneratorFinished()
+{
+	Q_ASSERT(testCaseGeneratorProgram);
+	testCasesCount = testCaseGeneratorProgram->getLastGeneratedTestCaseIndex();
 
 	// ToDo: run player solution against test cases
 

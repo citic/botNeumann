@@ -7,6 +7,7 @@
 
 class CodeEditor;
 class Compiler;
+class CompiledProgram;
 class ExecutionThread;
 class GuiBreakpoint;
 class QAction;
@@ -37,11 +38,9 @@ class CodeSegment : public QDockWidget
 	/// In order to have a toolbar, the widget of this code editor must be a main window
 	QMainWindow* innerMainWindow;
 	/// Object where the actual source code is shown and edited
-	CodeEditor* codeEditor;
+	CodeEditor* codeEditor = nullptr;
 	/// Manages the list of source files that compound the player's solution to an unit
-	PlayerSolution* playerSolution;
-	/// Object in charge of compiling and linking the player solution
-	Compiler* compiler;
+	PlayerSolution* playerSolution = nullptr;
 
   protected: // Edit toolbar
 	/// Create new files in the solution: header file, source file and C++ classes
@@ -81,8 +80,6 @@ class CodeSegment : public QDockWidget
 	virtual ~CodeSegment();
 	/// Get access to the code editor
 	inline CodeEditor* getCodeEditor() const { return codeEditor; }
-	/// Get access to the compiler and its output
-	inline Compiler* getCompiler() const { return compiler; }
 	/// Restores the last code made by player for the given unit, or the default unit's code if
 	/// player nas not played this unit
 	void loadCodeForUnit(Unit* unit);
@@ -147,7 +144,7 @@ class CodeSegment : public QDockWidget
 	/// Called when player selects another source file in the file selector combo box
 	void fileSelectorIndexChanged(const QString& text);
 	/// Called when the player solution has finished to compile and link
-	void compilerFinished();
+	void compilerFinished(CompiledProgram* playerSolutionProgram);
 	/// Called when the visualization speed is changed by user
 	void visualizationSpeedChanged(int speed);
 };

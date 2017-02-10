@@ -49,9 +49,11 @@ class PlayerSolution : public QObject
 	/// -1 means that test cases have not been generated
 	int testCasesCount = -1;
 	/// The executable from a random selected Unit's generator
-	TestCaseGenerator* testCaseGenerator = nullptr;
+	TestCaseGenerator* testCaseGeneratorProgram = nullptr;
+	/// Manages the process of building the executable from player solution's source code
+	CompiledProgram* playerSolutionProgram = nullptr;
 	/// The executable from a random selected Unit's solution
-	CompiledProgram* unitSolution = nullptr;
+	CompiledProgram* unitSolutionProgram = nullptr;
 
   public:
 	/// Constructor
@@ -66,6 +68,8 @@ class PlayerSolution : public QObject
 	int loadPlayerSolutionForUnit(Player* player, Unit* unit);
 	/// Get the initial code if it is the first time user tries a problem, otherwise nullptr
 	inline const ProgramText* getInitialCode() const { return initialCode; }
+	/// Get access to the compiled executable from player solution source code
+	inline CompiledProgram* getPlayerSolutionProgram() const { return playerSolutionProgram; }
 	/// Returns the full file path of the last edited file for the player in this solution
 	/// If the player has never tried to solve this unit before (i.e. there are not solution
 	/// files), it will assume an inexistent "main.cpp" in the solution folder.
@@ -116,6 +120,9 @@ class PlayerSolution : public QObject
 	/// later to set breakpoints (function definitions) and GDB variable-objects (global variables)
 	/// @return The amount of symbols extracted, or negative number on error
 	int extractSymbols();
+	/// Starts to build the executable from the player solution's source files
+	/// Emits @a playerSolutionBuilt when building process is finished
+	bool buildPlayerSolution();
 	/// Create a set of test case files to test this player solution. Each test case is a set of
 	/// four files that are generated in player-solution's directory. Each test case is uniquely
 	/// identified by an integer value nn:
@@ -133,6 +140,10 @@ class PlayerSolution : public QObject
 	/// Utility function to generate the name of a input or output file path
 	/// @param type One of "args", "input", "output_ex", "error_ex", "output_ps" or "error_ps".
 	QString buildTestCaseFilepath(int number, const QString& type) const;
+
+  signals:
+	/// Emitted when building of player solution executable is finished
+	void playerSolutionBuilt(CompiledProgram* compiledProgram);
 
   protected:
 	/// Loads the list of existing files in the unit solution directory for this player
@@ -168,9 +179,11 @@ class PlayerSolution : public QObject
 	bool generateExtraTestCases(const ProgramText* generator);
 
   protected slots:
+	/// Called when the @a playerSolutionProgram has finished building the player solution executable
+	bool playerSolutionBuiltFinished();
 	/// Called when a generator has finished to generate test cases in order to update the index
 	/// @return True on success, false otherwise
-	bool generatorFinished();
+	bool testCaseGeneratorFinished();
 };
 
 #endif // PLAYERSOLUTION_H
