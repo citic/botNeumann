@@ -83,9 +83,6 @@ class CodeSegment : public QDockWidget
 	/// Restores the last code made by player for the given unit, or the default unit's code if
 	/// player nas not played this unit
 	void loadPlayerCodeForUnit(PlayerSolution* playerSolution, Unit* unit);
-	/// Starts the compilation process. It is done in background. When the compilation is finished
-	/// the @a compilationFinished() signal is emitted.
-	void startBuild();
 
   public slots:
 	/// Called when user selects one of the diagnostics in the tools output
@@ -96,6 +93,8 @@ class CodeSegment : public QDockWidget
 	/// Called when the visualization changes it state (stopped, starting, running, finished) to
 	/// enable or disable visualization control buttons
 	void onStateChanged(UnitPlayingState currentState);
+	/// Called when the player solution has finished to compile and link
+	void playerSolutionBuilt(CompiledProgram* playerSolutionProgram);
 	/// Called when visualization has finished in order to clear highlited lines
 	void clearAnimation();
 	/// Called when an execution thread was updated from GDB in order to update the highlighted line
@@ -104,10 +103,6 @@ class CodeSegment : public QDockWidget
   signals:
 	/// Emitted when user presses the Run/Pause button
 	void userRunOrPaused();
-	/// Emitted when the compilation and linking process have finished
-	/// @param compiler Provides a pointer to the compiler that made the compilation and linking
-	/// process. Therefore, the interested objects can get the list of diagnostics generated.
-	void buildFinished(Compiler* compiler);
 	/// Called when the step into button is pressed
 	void userSteppedInto();
 	/// Called when the step over button is pressed
@@ -143,8 +138,6 @@ class CodeSegment : public QDockWidget
 	void newFileTriggered();
 	/// Called when player selects another source file in the file selector combo box
 	void fileSelectorIndexChanged(const QString& text);
-	/// Called when the player solution has finished to compile and link
-	void compilerFinished(CompiledProgram* playerSolutionProgram);
 	/// Called when the visualization speed is changed by user
 	void visualizationSpeedChanged(int speed);
 };

@@ -4,6 +4,7 @@
 #include "LinearLayout.h"
 #include <QObject>
 
+class PlayerSolution;
 class Scene;
 
 /**
@@ -20,10 +21,19 @@ class TestCaseManager : public QObject, public LinearLayout
   protected:
 	/// To reparent children to this scene
 	Scene* scene;
+	/// To get the test cases and the player solution executable
+	PlayerSolution* playerSolution = nullptr;
 
   public:
 	/// Constructor
 	explicit TestCaseManager(Scene* scene, QObject* parent = nullptr);
+	/// Set the player solution for later use
+	inline void setPlayerSolution(PlayerSolution* playerSolution) { this->playerSolution = playerSolution; }
+
+  public slots:
+	/// Called when all test cases and player solution has been built
+	/// This method starts the process of running the player solution against the generated cases
+	bool testPlayerSolution();
 
   protected:
 	/// Build a region to place future test cases (an empty tube)

@@ -228,29 +228,10 @@ void CodeSegment::loadPlayerCodeForUnit(PlayerSolution* playerSolution, Unit* un
 	runOrPauseAction->setEnabled(true);
 }
 
-void CodeSegment::startBuild()
+void CodeSegment::playerSolutionBuilt(CompiledProgram* playerSolutionProgram)
 {
-	// If there is unsaved changes, save them
-	codeEditor->saveChanges();
-
-	// Compile the player's source code and generate an executable
-	Q_ASSERT(playerSolution);
-	connect( playerSolution, SIGNAL(playerSolutionBuilt(CompiledProgram*)), this, SLOT(compilerFinished(CompiledProgram*)) );
-	playerSolution->buildPlayerSolution();
-
-	// Extract global variables and function definitions from player solution using ctags
-	// They will be used later to set breakpoints and GDB variable-objects
-	playerSolution->extractSymbols();
-
-	// Generate test cases for testing the player solution
-	playerSolution->generateTestCases();
-}
-
-void CodeSegment::compilerFinished(CompiledProgram* playerSolutionProgram)
-{
-	// Alert other object the compilation process finished, for example, show the generated
-	// diagnostics in the tools' output on messages area
-	emit buildFinished( playerSolutionProgram->getCompiler() );
+	// ToDo: if there were compiling or linking errors, mark the lines
+	Q_UNUSED(playerSolutionProgram);
 }
 
 void CodeSegment::newFileTriggered()
@@ -304,14 +285,18 @@ QList<GuiBreakpoint*> CodeSegment::retrieveBreakpoints()
 
 void CodeSegment::onStateChanged(UnitPlayingState currentState)
 {
-	// Visualizatio control buttons enable or disable depending on the current state
-	bool run = currentState == UnitPlayingState::editing;
-	bool resume = currentState == UnitPlayingState::paused;
-	bool pause = currentState == UnitPlayingState::animating;
+	// If user asked to build, save changes in all editors (if any)
+	if ( currentState == UnitPlayingState::building )
+		codeEditor->saveChanges();
+
+	// Visualization control buttons enable or disable depending on the current state
+	bool run      = currentState == UnitPlayingState::editing;
+	bool resume   = currentState == UnitPlayingState::paused;
+	bool pause    = currentState == UnitPlayingState::animating;
 	bool stepOver = currentState == UnitPlayingState::paused;
 	bool stepInto = currentState == UnitPlayingState::paused;
-	bool stepOut = currentState == UnitPlayingState::paused;
-	bool stop = currentState == UnitPlayingState::animating || currentState == UnitPlayingState::paused;
+	bool stepOut  = currentState == UnitPlayingState::paused;
+	bool stop     = currentState == UnitPlayingState::animating || currentState == UnitPlayingState::paused;
 
 	// Enable actions according to the current state
 	stepOverAction->setEnabled(stepOver);

@@ -1,5 +1,6 @@
 #include "TestCaseManager.h"
 #include "Common.h"
+#include "PlayerSolution.h"
 #include "Prop.h"
 #include "Scene.h"
 
@@ -18,3 +19,13 @@ void TestCaseManager::buildTestCaseManager()
 	Prop* backgroundTube = new Prop("up_standard_output_middle1", scene);
 	addItem(backgroundTube, 1.0, zUnitPlaying::testCases + 0.0);
 }
+
+#include "LogManager.h"
+bool TestCaseManager::testPlayerSolution()
+{
+	Q_ASSERT(playerSolution);
+
+	qCCritical(logApplication) << "TestCaseManager: ready to draw" << playerSolution->getTestCasesCount() << "test cases";
+	return true;
+}
+

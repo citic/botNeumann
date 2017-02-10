@@ -1,4 +1,5 @@
 #include "CodeSegment.h"
+#include "CompiledProgram.h"
 #include "Compiler.h"
 #include "CpuCores.h"
 #include "DataSegment.h"
@@ -90,6 +91,18 @@ void UnitPlayingScene::finishedEnteringStage()
 	delete playerSolution;
 	playerSolution = new PlayerSolution(this);
 
+	// When the player's source code has eventually been compiled:
+	// The messages area lists the warnings and errors (diagnostics)
+	connect( playerSolution, SIGNAL(playerSolutionBuilt(CompiledProgram*)), messagesArea, SLOT(playerSolutionBuilt(CompiledProgram*)) );
+	// The code segment may require to highlight erroneous lines
+	connect( playerSolution, SIGNAL(playerSolutionBuilt(CompiledProgram*)), codeSegment, SLOT(playerSolutionBuilt(CompiledProgram*)) );
+	// We do not wait until the test cases are generated to start the visualization
+	connect( playerSolution, SIGNAL(playerSolutionBuilt(CompiledProgram*)), this, SLOT(playerSolutionBuilt(CompiledProgram*)) );
+
+	// When ALSO all test cases were generated, run player solution against them
+	testCaseManager->setPlayerSolution(playerSolution);
+	connect( playerSolution, SIGNAL(allBuilt()), testCaseManager, SLOT(testPlayerSolution()) );
+
 	// Load the source file list that compounds the player's solution
 	playerSolution->loadSolutionForUnit( &unit );
 
@@ -177,7 +190,6 @@ void UnitPlayingScene::createCodeSegment()
 	// no errors, the simulation should start
 	connect( this, SIGNAL(stateChanged(UnitPlayingState)), codeSegment, SLOT(onStateChanged(UnitPlayingState)) );
 	connect( codeSegment, SIGNAL(userRunOrPaused()), this, SLOT(userRunOrPaused()) );
-	connect( codeSegment, SIGNAL(buildFinished(Compiler*)), this, SLOT(buildFinished(Compiler*)) );
 	connect( codeSegment, SIGNAL(userStopped()), this, SLOT(userStopped()) );
 
 	// When GDB reports a change on some execution thread, update its highlighted line
@@ -195,10 +207,6 @@ void UnitPlayingScene::createMessagesArea()
 	messagesArea->setVisible(false);
 	messagesArea->setUnitDescription( unit.getDescription("es"), false );
 	mainWindow->addDockWidget(Qt::BottomDockWidgetArea, messagesArea);
-
-	// When the code segment has built a solution and has diagnostics show them in the messages area
-	Q_ASSERT(codeSegment);
-	connect(codeSegment, SIGNAL(buildFinished(Compiler*)), messagesArea, SLOT(buildFinished(Compiler*)));
 
 	// When user selects a diagnostic in the tools output, point its place in the code
 	connect(messagesArea, SIGNAL(diagnosticSelected(int)), codeSegment, SLOT(diagnosticSelected(int)));
@@ -220,7 +228,7 @@ void UnitPlayingScene::userRunOrPaused()
 	{
 		// App is in state editing code, we have to build the player solution and start animation
 		changeState(UnitPlayingState::building);
-		codeSegment->startBuild();
+		buildAll();
 	}
 	else if ( state == UnitPlayingState::animating )
 	{
@@ -240,17 +248,29 @@ void UnitPlayingScene::userRunOrPaused()
 	}
 }
 
-void UnitPlayingScene::buildFinished(Compiler *compiler)
+bool UnitPlayingScene::buildAll()
+{
+	// Remove potential old diagnostics in messages area
+	messagesArea->clear();
+
+	// We start an asychronous process of building the player solution in several steps
+	// In each completed step, playerSolution will emit a signal and some other objects
+	// awaits for these signals
+	Q_ASSERT(playerSolution);
+	return playerSolution->buildAll();
+}
+
+void UnitPlayingScene::playerSolutionBuilt(CompiledProgram* compiledProgram)
 {
 	// If there are errors, do not start the visualization
-	if ( compiler->getErrorCount() > 0 )
+	if ( compiledProgram->getCompiler()->getErrorCount() > 0 )
 		return changeState(UnitPlayingState::editing);
 
 	changeState(UnitPlayingState::starting);
 
 	// The player solution generated an executable and we are ready to visualize it
 	delete visualizator;
-	visualizator = new Visualizator(compiler->getExecutablePath(), this);
+	visualizator = new Visualizator(compiledProgram->getExecutablePath(), this);
 
 	// When user creates or removes breakpoints and visualization is running, update them
 	connect( codeSegment, SIGNAL(breakpointAction(GuiBreakpoint*)), visualizator, SLOT(breakpointAction(GuiBreakpoint*)) );

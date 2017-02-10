@@ -149,9 +149,14 @@ class PlayerSolution : public QObject
 	/// Utility function to generate the name of a input or output file path
 	/// @param type One of "args", "input", "output_ex", "error_ex", "output_ps" or "error_ps".
 	QString buildTestCaseFilepath(int number, const QString& type) const;
+	/// Get the number of generated test cases for this player solution. Only valid after the
+	/// @a testCasesGenerated() signal has been emitted
+	inline int getTestCasesCount() const { return testCasesCount; }
 
   signals:
 	/// Emitted when building of player solution executable is finished
+	/// @param compiledProgram Provides a pointer to the object that controlled the compilation and
+	/// linking process. Interested objects can ask to it the list of diagnostics generated.
 	void playerSolutionBuilt(CompiledProgram* compiledProgram);
 	/// Emitted when the symbols (global variables and function definitions) have been extracted
 	void symbolsExtracted();

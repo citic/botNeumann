@@ -5,7 +5,7 @@
 #include "Unit.h"
 
 class CodeSegment;
-class Compiler;
+class CompiledProgram;
 class CpuCores;
 class DataSegment;
 class GuiBreakpoint;
@@ -107,7 +107,7 @@ class UnitPlayingScene : public GameScene
 	void userRunOrPaused();
 	/// Called when the compilation and linking process has finished
 	/// If there were no errorors, the visualization starts
-	void buildFinished(Compiler* compiler);
+	void playerSolutionBuilt(CompiledProgram* compiledProgram);
 	/// Called when the stop button is pressed in order to stop the visualization
 	void userStopped();
 	/// Called to show the unit selection scene, some milliseconds later when the dock widgets
@@ -115,6 +115,9 @@ class UnitPlayingScene : public GameScene
 	void callUnitSelectionScene();
 
   protected:
+	/// Starts the process of build the player solution code, test cases and symbol extraction
+	/// @return true if the process started with no errors, false otherwise
+	bool buildAll();
 	/// Distribute the screen space between each segment according to the number of rows they
 	/// require. The result is the proportion each segment requires
 	void addVerticalSegments();

@@ -5,6 +5,7 @@
 #include <QDockWidget>
 
 class Compiler;
+class CompiledProgram;
 class Diagnostic;
 class QListWidget;
 class QTabWidget;
@@ -48,12 +49,12 @@ class MessagesArea : public QDockWidget
 
   public slots:
 	/// Called when a new compiling process has started, in order to clear old results
-	void buildStarted(Compiler* compiler);
+	void clear();
 	/// Called when a build process (compiling and linking) has finished, and ther are results
 	/// The compiler pointer is required in order to get the diagnostics. If there are errors
 	/// and the messages dock widget is hidden, it is made visible and the tools output tab is
 	/// made active. If there are not errors, the tools output tab is just cleared.
-	void buildFinished(Compiler* compiler);
+	void playerSolutionBuilt(CompiledProgram* compiledProgram);
 	/// Appends a message sent by the debugger (e.g. GDB)
 	void appendDebuggerMessage(QtMsgType type, const QString& category, const QString& message);
 
