@@ -104,18 +104,6 @@ class PlayerSolution : public QObject
 	static QString getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename);
 	/// @see getPlayerUnitSourcePath(Player*, Unit*, const QString&)
 	inline QString getPlayerUnitSourcePath(const QString& basename) const { return getPlayerUnitSourcePath(player, unit, basename); }
-	/// Get the file path of the standard input file that will be used each time the player's
-	/// solution is executed. This file may be overwritten each time the visualization starts
-	/// @remarks Files beginning with "bn_" must be ignored in CodeSegment
-	inline QString getStandardInputFilename() const { return getPlayerUnitPath() + "/bn_input.txt"; }
-	/// Get the file path of the standard output file that will be used to capture the player's
-	/// solution output. This file will be overwritten each time the visualization starts
-	/// @remarks Files beginning with "bn_" must be ignored in CodeSegment
-	inline QString getStandardOutputFilename() const { return getPlayerUnitPath() + "/bn_output.txt"; }
-	/// Get the file path of the standard error file that will be used to capture the player's
-	/// solution standard error. This file will be overwritten each time the visualization starts
-	/// @remarks Files beginning with "bn_" must be ignored in CodeSegment
-	inline QString getStandardErrorFilename() const { return getPlayerUnitPath() + "/bn_error.txt"; }
 
   public:
 	/// Starts to build the executable from the player solution's source files

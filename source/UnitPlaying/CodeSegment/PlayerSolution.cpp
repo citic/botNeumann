@@ -196,9 +196,7 @@ QString PlayerSolution::createBotNeumannSourceFile()
 
 	// Replace paths to the files that will be used to redirect standard input, output and error
 	// ToDo: Test case files have numbers
-	dumper.addSearchAndReplace( "./input.txt", getStandardInputFilename() );
-	dumper.addSearchAndReplace( "./output.txt", getStandardOutputFilename() );
-	dumper.addSearchAndReplace( "./error.txt", getStandardErrorFilename() );
+	dumper.addSearchAndReplace( "bn_player_dir = \".\"", getPlayerUnitPath() );
 
 	// Copy the resource to the player solution directory replacing the strings
 	const QString& outputFilename = getPlayerUnitSourcePath("bn_player_solution.c");
