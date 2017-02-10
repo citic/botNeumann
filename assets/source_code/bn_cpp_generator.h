@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <fstream>
 
-#define bn_fail(code, ...) return bn_last_error = 1 + 0 * fprintf(stderr, __VA_ARGS__)
+#define bn_fail(code, msg) { std::cerr << argv[0] << ": " << msg << std::endl; return bn_last_error = code; }
 
 class botnu
 {
@@ -32,42 +32,51 @@ class botnu
 	int open_files(int argc, char* argv[])
 	{
 		if ( argc < 7 )
-			bn_fail(1, "%s: received %d arguments, expected 7\n", argv[0], argc);
+			bn_fail(1, "received " << argc << " arguments, expected 7");
 
 		testcase_number = atoi( argv[1] );
 		if ( testcase_number <= 0 )
-			bn_fail(2, "%s: test case number (%d) must be positive\n", argv[0], testcase_number);
+			bn_fail(2, "test case number must be positive: " << testcase_number);
 
 		testcase_count = atoi( argv[2] );
-		if ( testcase_count < testcase_number )
-			bn_fail(3, "%s: test case number (%d) out of count (%d)\n", argv[0], testcase_number, testcase_count);
+		if ( testcase_number > testcase_count )
+			bn_fail(3, "test case number (" << testcase_number << ") greater than count (" << testcase_count << ")");
 
 		input_filename = argv[3];
-		input = fopen(input_filename, "w");
+		input.open(input_filename);
 		if ( ! input )
-			bn_fail(4, "%s: could not create input file: %s\n", argv[0], input_filename);
+			bn_fail(4, "could not create input file: " << input_filename);
 
 		output_ex_filename = argv[4];
-		output_ex = fopen(output_ex_filename, "w");
+		output_ex.open(output_ex_filename);
 		if ( ! output_ex )
-			bn_fail(5, "%s: could not create expected output file: %s\n", argv[0], output_ex_filename);
+			bn_fail(5, "could not create expected output file: " << output_ex_filename);
 
 		error_ex_filename = argv[5];
-		error_ex = fopen(error_ex_filename, "w");
+		error_ex.open(error_ex_filename);
 		if ( ! error_ex )
-			bn_fail(6, "%s: could not create expected error file: %s\n", argv[0], error_ex_filename);
+			bn_fail(6, "could not create expected error file: " << error_ex_filename);
 
 		args_filename = argv[6];
-		args = fopen(args_filename, "w");
+		args.open(args_filename);
 		if ( ! args )
-			bn_fail(7, "%s: could not create arguments file: %s\n", argv[0], args_filename);
+			bn_fail(7, "could not create arguments file: " << args_filename);
 
 		return 0;
 	}
 
 	int close_files()
 	{
-		return fclose(input) + fclose(output_ex) + fclose(error_ex) + fclose(args);
+		input.close();
+		output_ex.close();
+		error_ex.close();
+		args.close();
+		return 0;
+	}
+
+	inline bool operator!() const
+	{
+		return last_error != 0;
 	}
 };
 

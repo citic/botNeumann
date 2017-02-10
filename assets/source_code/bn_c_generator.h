@@ -18,7 +18,7 @@ FILE*         bn_error_ex = NULL;
 FILE*         bn_args = NULL;
 int           bn_last_error = 0;
 
-#define bn_fail(code, ...) return bn_last_error = 1 + 0 * fprintf(stderr, __VA_ARGS__)
+#define bn_fail(code, ...) return bn_last_error = code + 0 * fprintf(stderr, __VA_ARGS__)
 
 static int bn_open_files(int argc, char* argv[])
 {
@@ -30,8 +30,8 @@ static int bn_open_files(int argc, char* argv[])
 		bn_fail(2, "%s: test case number (%d) must be positive\n", argv[0], bn_testcase_number);
 
 	bn_testcase_count = atoi( argv[2] );
-	if ( bn_testcase_count < bn_testcase_number )
-		bn_fail(3, "%s: test case number (%d) out of count (%d)\n", argv[0], bn_testcase_number, bn_testcase_count);
+	if ( bn_testcase_number > bn_testcase_count )
+		bn_fail(3, "%s: test case number (%d) greater than count (%d)\n", argv[0], bn_testcase_number, bn_testcase_count);
 
 	bn_input_filename = argv[3];
 	bn_input = fopen(bn_input_filename, "w");
