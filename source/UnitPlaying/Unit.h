@@ -89,7 +89,7 @@ class Unit : public QObject
 	/// Maximum number of execution threads that students must launch in order to solve the unit.
 	/// Value "0" means infinity number of threads. Default value is 0.
 	int maxThreads;
-	/// Maximum number of seconds to consider an solution valid
+	/// Maximum number of milliseconds to consider an solution valid
 	/// a value <= 0 stands for infinite
 	int timeout = 0;
 	/// In order to evaluate if sudent's solution is valid, its output is compared against the

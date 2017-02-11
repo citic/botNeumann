@@ -49,10 +49,10 @@ max-threads
 	Value "0" means infinity number of threads. Default value is 0.
 
 timeout
-	Maximun number of seconds to answer a test case. Students run their solutions in order to pass
-	to the next level. botNeumann send to their solutions a set of test cases. A student solution
+	Maximun number of milliseconds to run a test case. Students run their solutions in order to pass
+	to the next level. botNeumann run their solutions against a set of test cases. A student solution
 	must produce the answer in standard output in less time than the value indicated by this
-	attribute. Value "0" means infinity time. Default value is 1 second.
+	attribute. Value "0" means infinity time. Default value is 1000 milliseconds (1 second).
 
 ignore-whitespace={yes|no}
 	In order to evaluate if sudent's solution is valid, its output is compared against the output

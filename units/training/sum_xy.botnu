@@ -2,7 +2,7 @@
 <!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
 
 
-<botnu id="sum_xy" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="yes" min-threads="1" timeout="1" ignore-whitespace="yes">
+<botnu id="sum_xy" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="yes" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
 
 

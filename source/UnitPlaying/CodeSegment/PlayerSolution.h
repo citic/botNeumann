@@ -69,6 +69,9 @@ class PlayerSolution : public QObject
 	/// Load solution created for the given player for the given unit
 	/// @return The number of files found as player solution for this unit, -1 on error
 	int loadPlayerSolutionForUnit(Player* player, Unit* unit);
+	/// Get access to the unit this player solution is trying to solve
+	/// @remarks Valid only after load methos have been called
+	inline Unit* getUnit() const { return unit; }
 	/// Get the initial code if it is the first time user tries a problem, otherwise nullptr
 	inline const ProgramText* getInitialCode() const { return initialCode; }
 	/// Get access to the compiled executable from player solution source code

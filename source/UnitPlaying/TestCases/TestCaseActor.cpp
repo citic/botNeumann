@@ -1,6 +1,9 @@
 #include "TestCaseActor.h"
 #include "PlayerSolution.h"
 #include "LogManager.h"
+#include "Unit.h"
+
+#include <QTimer>
 
 TestCaseActor::TestCaseActor(int index, QGraphicsItem* parentItem)
 	: Actor("up_standard_output_test_inactive1", parentItem)
@@ -40,8 +43,15 @@ bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
 	process->setStandardErrorFile( error_ps );
 	process->start( playerSolution->getExecutablePath(), arguments );
 
-	// ToDo: Set a timeout using Unit::getTimeout()
+	// Get the maximum time for player solution allowed to run
+	Q_ASSERT(playerSolution->getUnit());
+	int timeout = playerSolution->getUnit()->getTimeout();
 
+	// Start a timer to know if player solution has exceed the allowed running time (timeout)
+	if ( timeout > 0 )
+		QTimer::singleShot( timeout, this, SLOT(playerSolutionTimeout()) );
+
+	// Done
 	return true;
 }
 
@@ -57,4 +67,32 @@ void TestCaseActor::playerSolutionFinished(int exitCode, QProcess::ExitStatus ex
 	// else turn this actor red
 
 	qCInfo(logTemporary) << "Finished: " << qPrintable(playerSolution->getExecutablePath()) /*<< arguments*/ << "< " << qPrintable(input) << " > " << qPrintable(output_ps) << " 2> " << qPrintable(error_ps);
+}
+
+void TestCaseActor::playerSolutionTimeout()
+{
+	// If player solution already finished is ok, but it is still running we have to kill it
+	Q_ASSERT(process);
+	if ( process->state() == QProcess::Running )
+	{
+		// Kill the process, the test case failed by timeout
+		process->kill();
+		setTestCaseResult(failed, "Timeout");
+	}
+}
+
+void TestCaseActor::setTestCaseResult(TestCaseActor::TestCaseResult result, const QString& reason)
+{
+	this->result = result;
+	this->failReason = reason;
+
+	switch (result)
+	{
+		case unknown: setElementId("up_standard_output_test_inactive1"); break;
+		case passed: setElementId("up_standard_output_test_valid1"); break;
+		case failed: setElementId("up_standard_output_test_invalid1"); break;
+	}
+
+	if ( ! failReason.isEmpty() )
+		qCInfo( logPlayer, "Test case %d failed: %s", index, qUtf8Printable(failReason) );
 }
