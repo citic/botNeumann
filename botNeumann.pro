@@ -82,7 +82,6 @@ HEADERS += \
 	source/UnitPlaying/CodeSegment/LineNumberArea.h \
 	source/UnitPlaying/CodeSegment/PlayerSolution.h \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
-	source/UnitPlaying/CodeSegment/TestCaseGenerator.h \
 	source/UnitPlaying/Common/GdbResponseListener.h \
 	source/UnitPlaying/Common/MemoryFrame.h \
 	source/UnitPlaying/Common/MemoryRow.h \
@@ -93,8 +92,9 @@ HEADERS += \
 	source/UnitPlaying/DataSegment/StandardInputOutput.h \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
 	source/UnitPlaying/Messages/MessagesArea.h \
-	source/UnitPlaying/TestCaseManager.h \
 	source/UnitPlaying/TestCases/TestCaseActor.h \
+	source/UnitPlaying/TestCases/TestCaseGenerator.h \
+	source/UnitPlaying/TestCases/TestCaseManager.h \
 	source/UnitPlaying/Threads/CallStack.h \
 	source/UnitPlaying/Threads/CpuCore.h \
 	source/UnitPlaying/Threads/CpuCores.h \
@@ -157,7 +157,6 @@ SOURCES += \
 	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
 	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
-	source/UnitPlaying/CodeSegment/TestCaseGenerator.cpp \
 	source/UnitPlaying/Common/GdbResponseListener.cpp \
 	source/UnitPlaying/Common/MemoryFrame.cpp \
 	source/UnitPlaying/Common/MemoryRow.cpp \
@@ -168,8 +167,9 @@ SOURCES += \
 	source/UnitPlaying/DataSegment/StandardInputOutput.cpp \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
 	source/UnitPlaying/Messages/MessagesArea.cpp \
-	source/UnitPlaying/TestCaseManager.cpp \
 	source/UnitPlaying/TestCases/TestCaseActor.cpp \
+	source/UnitPlaying/TestCases/TestCaseManager.cpp \
+	source/UnitPlaying/TestCases/TestCaseGenerator.cpp \
 	source/UnitPlaying/Threads/CallStack.cpp \
 	source/UnitPlaying/Threads/CpuCore.cpp \
 	source/UnitPlaying/Threads/CpuCores.cpp \
