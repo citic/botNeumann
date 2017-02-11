@@ -65,6 +65,6 @@ bool TestCaseManager::createAndRunTestCase(int index, const qreal testerWidthPro
 	this->testCases.append( testCases );
 	this->addItem( testCaseActor, testerWidthProportion, zTesters );
 
-	// ToDo: run the test
-	return true;
+	// Run the player solution against the test
+	return testCaseActor->testPlayerSolution(playerSolution);
 }
