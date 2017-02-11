@@ -3,9 +3,11 @@
 
 #include "LinearLayout.h"
 #include <QObject>
+#include <QVector>
 
 class PlayerSolution;
 class Scene;
+class TestCaseActor;
 
 /**
 	Runs test cases using the player solution, and reports passed or failed test cases
@@ -23,6 +25,8 @@ class TestCaseManager : public QObject, public LinearLayout
 	Scene* scene;
 	/// To get the test cases and the player solution executable
 	PlayerSolution* playerSolution = nullptr;
+	/// The list of test cases being run
+	QVector<TestCaseActor*> testCases;
 
   public:
 	/// Constructor
@@ -38,6 +42,14 @@ class TestCaseManager : public QObject, public LinearLayout
   protected:
 	/// Build a region to place future test cases (an empty tube)
 	void buildTestCaseManager();
+	/// Creates a tester control for the test case which index is given. The tester control is
+	/// inactive by default (gray). The test case @a index is gathered from the playerSolution.
+	/// The player solution is run against that test case. If player solution produces the
+	/// expected standard output and the standard error output, the tester will become green.
+	/// Otherwise it becomes red.
+	/// @param index The number of the test case in the player solution
+	/// @param testerWidthPercent The proportion of just one test case control
+	bool createAndRunTestCase( int index, const qreal testerWidthProportion );
 };
 
 #endif // TESTCASEMANAGER_H

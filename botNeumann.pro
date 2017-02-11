@@ -27,6 +27,7 @@ INCLUDEPATH += \
 	source/UnitPlaying/DataSegment \
 	source/UnitPlaying/HeapSegment \
 	source/UnitPlaying/Messages \
+	source/UnitPlaying/TestCases \
 	source/UnitPlaying/Threads \
 	source/UnitSelection \
 
@@ -93,6 +94,7 @@ HEADERS += \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
 	source/UnitPlaying/Messages/MessagesArea.h \
 	source/UnitPlaying/TestCaseManager.h \
+	source/UnitPlaying/TestCases/TestCaseActor.h \
 	source/UnitPlaying/Threads/CallStack.h \
 	source/UnitPlaying/Threads/CpuCore.h \
 	source/UnitPlaying/Threads/CpuCores.h \
@@ -167,6 +169,7 @@ SOURCES += \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
 	source/UnitPlaying/Messages/MessagesArea.cpp \
 	source/UnitPlaying/TestCaseManager.cpp \
+	source/UnitPlaying/TestCases/TestCaseActor.cpp \
 	source/UnitPlaying/Threads/CallStack.cpp \
 	source/UnitPlaying/Threads/CpuCore.cpp \
 	source/UnitPlaying/Threads/CpuCores.cpp \
