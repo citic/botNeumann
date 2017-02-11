@@ -61,6 +61,25 @@ bool ResourceToFileDumper::dumpString(const QString& data, const QString& output
 	return true;
 }
 
+bool ResourceToFileDumper::dumpStringList(const QStringList& data, const QString& outputFilename)
+{
+	// Open (truncate) or create the target file
+	QFile outputFile(outputFilename);
+	if ( outputFile.open(QIODevice::WriteOnly | QIODevice::Text) == false )
+	{
+		qCritical(logApplication) << "Could not create" << outputFilename;
+		return false;
+	}
+
+	// Write the data to the target file
+	QTextStream outputText(&outputFile);
+	for ( int index = 0; index < data.count(); ++index )
+		outputText << data[index] << '\n';
+
+	// Destructors will close the file
+	return true;
+}
+
 void ResourceToFileDumper::addSearchAndReplace(const QString& search, const QString& replace)
 {
 	searchAndReplaceRules.append( QPair<QString, QString>(search, replace) );
@@ -107,4 +126,24 @@ bool ResourceToFileDumper::dumpTextResource(const QString& resource, const QStri
 
 	// Destructors will close the files
 	return true;
+}
+
+QStringList Util::readAllLines(const QString& filepath)
+{
+	// Get the contents of the source file keeping the lines
+	QStringList result;
+
+	// Open the file for reading
+	QFile inputFile(filepath);
+	if ( inputFile.open(QIODevice::ReadOnly | QIODevice::Text) == true )
+	{
+		// Copy each line of the source to the string list
+		QTextStream inputText(&inputFile);
+		while ( ! inputText.atEnd() )
+			result.append( inputText.readLine() );
+	}
+	else
+		qCritical(logApplication) << "Could not open" << filepath;
+
+	return result;
 }

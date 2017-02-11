@@ -22,6 +22,9 @@ class Util
 	/// middle of the path, they will be created as well.
 	/// @return true on success, false on error
 	static bool createDirectory(const QString& dirPath);
+	/// Read all lines from the give filename
+	/// @return A list of the read lines, empty list on error
+	static QStringList readAllLines(const QString& filepath);
 };
 
 /// Copies Qt resources or Strings to text files
@@ -39,6 +42,9 @@ class ResourceToFileDumper
 	/// Creates or overwites the outputFilename, and writes data as the file contents
 	/// @return true on success, false otherwise
 	bool dumpString(const QString& data, const QString& outputFilename);
+	/// Creates or overwites the outputFilename, and writes the string list one string per line
+	/// @return true on success, false otherwise
+	bool dumpStringList(const QStringList& data, const QString& outputFilename);
 	/// Adds a search-and-replace rule to be done while dumping a text resource
 	void addSearchAndReplace(const QString& search, const QString& replace);
 	/// Creates a text file with the contents of the given resource

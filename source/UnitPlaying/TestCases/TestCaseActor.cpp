@@ -2,6 +2,7 @@
 #include "PlayerSolution.h"
 #include "LogManager.h"
 #include "Unit.h"
+#include "Util.h"
 
 #include <QTimer>
 
@@ -25,8 +26,8 @@ bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
 	error_ex  = playerSolution->buildTestCaseFilepath(index, "error_ex");
 	error_ps  = playerSolution->buildTestCaseFilepath(index, "error_ps");
 
-	// ToDo: read arguments from file
-	QStringList arguments;
+	// Read arguments from file, one argument per line
+	QStringList arguments = Util::readAllLines(args);
 
 	// Create an object to call the player solution executable
 	if ( process ) process->deleteLater();
@@ -34,7 +35,7 @@ bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
 
 	// When the player solution has finished, call a method to check results
 	connect( process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(playerSolutionFinished(int,QProcess::ExitStatus)) );
-	qCInfo(logTemporary) << qPrintable(playerSolution->getExecutablePath()) << arguments << "< " << qPrintable(input) << " > " << qPrintable(output_ps) << " 2> " << qPrintable(error_ps);
+	qCInfo(logTemporary) << qPrintable(playerSolution->getExecutablePath()) << arguments << "<" << qPrintable(input) << ">" << qPrintable(output_ps) << "2>" << qPrintable(error_ps);
 
 	// Call the player solution
 	process->setReadChannelMode(QProcess::SeparateChannels);
@@ -65,8 +66,6 @@ void TestCaseActor::playerSolutionFinished(int exitCode, QProcess::ExitStatus ex
 
 	// If player solution's output matches expected output, turn this actor green
 	// else turn this actor red
-
-	qCInfo(logTemporary) << "Finished: " << qPrintable(playerSolution->getExecutablePath()) /*<< arguments*/ << "< " << qPrintable(input) << " > " << qPrintable(output_ps) << " 2> " << qPrintable(error_ps);
 }
 
 void TestCaseActor::playerSolutionTimeout()

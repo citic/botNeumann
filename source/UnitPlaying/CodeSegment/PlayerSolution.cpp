@@ -268,10 +268,10 @@ int PlayerSolution::generateUnitTestCases()
 	{
 		const TestCase& testCase = testCases[testCasesCount];
 
-		if ( ! dumpTestCase("args", testCase.args) ) return testCasesCount;
 		if ( ! dumpTestCase("input", testCase.input) ) return testCasesCount;
 		if ( ! dumpTestCase("output_ex", testCase.output) ) return testCasesCount;
 		if ( ! dumpTestCase("error_ex", testCase.error) ) return testCasesCount;
+		if ( ! dumpTestCaseArgs(testCase.args) ) return testCasesCount;
 	}
 
 	return testCasesCount;
@@ -282,6 +282,13 @@ bool PlayerSolution::dumpTestCase(const QString& caseType, const QString& data)
 	ResourceToFileDumper dumper;
 	const QString& filepath = buildTestCaseFilepath(testCasesCount + 1, caseType);
 	return dumper.dumpString( data, filepath );
+}
+
+bool PlayerSolution::dumpTestCaseArgs(const QString& args)
+{
+	ResourceToFileDumper dumper;
+	const QString& filepath = buildTestCaseFilepath(testCasesCount + 1, "args");
+	return dumper.dumpStringList( args.split(QRegExp("\\s+"), QString::SkipEmptyParts), filepath );
 }
 
 QString PlayerSolution::buildTestCaseFilepath(int number, const QString& type) const

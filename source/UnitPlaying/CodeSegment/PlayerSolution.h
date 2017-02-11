@@ -182,6 +182,8 @@ class PlayerSolution : public QObject
 	int generateUnitTestCases();
 	/// Convenience function to dump a test case to a file
 	bool dumpTestCase(const QString& caseType, const QString& data);
+	/// Convenience function to dump a test case's arguments to a file
+	bool dumpTestCaseArgs(const QString& args);
 	/// Generate more test cases using the given test case generator
 	/// The testCasesCount class member is updated with each extra test case
 	/// @return True on success, false otherwise
