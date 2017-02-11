@@ -104,7 +104,7 @@ int main()
 
 
 
-<test-case args="this is	a    test 	  ">
+<test-case>
 <input>0 -0
 2 5
 -4 7

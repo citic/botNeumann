@@ -66,7 +66,7 @@ bool TestCaseManager::createAndRunTestCase(int index, const qreal testerWidthPro
 	qreal zTesters = zUnitPlaying::testCases + 0.1;
 	currentTestCases->addStretch(testerWidthProportion / 2.0, zTesters);
 
-	// Create the test case and add
+	// Create the test case and add it to the scene
 	TestCaseActor* testCaseActor = new TestCaseActor(index, scene);
 	currentTestCases->addItem( testCaseActor, testerWidthProportion, zTesters );
 

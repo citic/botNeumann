@@ -330,8 +330,6 @@ bool PlayerSolution::testCaseGeneratorFinished()
 
 	emit testCasesGenerated(testCasesCount);
 
-	// ToDo: run player solution against test cases
-
 	if ( builtSteps >= 0 && ++builtSteps == totalBuildSteps )
 		emit allBuilt();
 
