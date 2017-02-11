@@ -46,7 +46,8 @@ bool TestCaseManager::testPlayerSolution()
 
 	// Distribute the width percent among all the test cases
 	// We reserve space at the left and right of the tube, estimated as 1 more tester
-	const qreal testerRelativeProportion = 1.0 / (testCasesCount + 1);
+	// The x percent of each tester is x = 2/(3n+1)
+	const qreal testerRelativeProportion = 2.0 / ( 3 * testCasesCount + 1);
 
 	// When there are a few number of test cases, the percents become huge, we use the smaller
 	const qreal testerWidthProportion = qMin( testerReferenceProportion, testerRelativeProportion );
