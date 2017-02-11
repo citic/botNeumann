@@ -21,10 +21,16 @@ void TestCaseManager::buildTestCaseManager()
 	addItem(backgroundTube, 1.0, zUnitPlaying::testCases + 0.0);
 }
 
-#include "LogManager.h"
 bool TestCaseManager::testPlayerSolution()
 {
 	Q_ASSERT(playerSolution);
+
+	// If there are old test cases, remove them
+	clearAnimation();
+
+	// Create a new layer for the new test cases
+	currentTestCases = new LinearLayout(Qt::Horizontal);
+	addLayout(currentTestCases, 1.0);
 
 	// If there are not test cases, do nothing
 	int testCasesCount = playerSolution->getTestCasesCount();
@@ -58,13 +64,23 @@ bool TestCaseManager::createAndRunTestCase(int index, const qreal testerWidthPro
 {
 	// Separate this tester from previous or left edge
 	qreal zTesters = zUnitPlaying::testCases + 0.1;
-	this->addStretch(testerWidthProportion / 2.0, zTesters);
+	currentTestCases->addStretch(testerWidthProportion / 2.0, zTesters);
 
 	// Create the test case and add
 	TestCaseActor* testCaseActor = new TestCaseActor(index, scene);
-	this->testCases.append( testCases );
-	this->addItem( testCaseActor, testerWidthProportion, zTesters );
+	currentTestCases->addItem( testCaseActor, testerWidthProportion, zTesters );
 
 	// Run the player solution against the test
 	return testCaseActor->testPlayerSolution(playerSolution);
+}
+
+void TestCaseManager::clearAnimation()
+{
+	// If there are not test cases, done
+	if ( currentTestCases == nullptr )
+		return;
+
+	currentTestCases->removeAllItems(true);
+	removeItem(currentTestCases, true);
+	currentTestCases = nullptr;
 }

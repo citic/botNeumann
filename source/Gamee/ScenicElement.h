@@ -43,6 +43,8 @@ class ScenicElement : public QGraphicsSvgItem, public LayoutItem, public Aligned
 	virtual ~ScenicElement();
 	/// Used to differentiate between pure-layout items and scenic elements
 	virtual bool isScenicElement() const override { return true; }
+	/// Called on QGraphicItem in order to remove them from the scene
+	virtual void removeFromScene() override;
 	/// Sets the Z-index provided by layouts to the QGraphicsItem system
 	virtual void setZ(qreal zValue) override { setZValue(zValue); }
 	/// Set the shared renderer for the given scene

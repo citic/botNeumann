@@ -138,7 +138,7 @@ void CpuCores::clearAnimation()
 			executionThreads[index]->animateDisappear();
 
 	// Destroy all threads
-	idleThreadsLayout->removeAllItems();
+	idleThreadsLayout->removeAllItems(true);
 	executionThreads.clear();
 }
 

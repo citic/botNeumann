@@ -302,6 +302,7 @@ void UnitPlayingScene::userStopped()
 		changeState(UnitPlayingState::editing);
 
 		// Tell the segments to remove animation artifacts
+		testCaseManager->clearAnimation();
 		codeSegment->clearAnimation();
 		heapSegment->clearAnimation();
 		cpuCores->clearAnimation();

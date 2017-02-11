@@ -3,6 +3,7 @@
 
 #include <QBrush>
 #include <QFont>
+#include <QGraphicsScene>
 
 LabelButton::LabelButton(const QString& label, QGraphicsItem* parentItem)
 	: QGraphicsSimpleTextItem(label, parentItem)
@@ -14,6 +15,12 @@ LabelButton::LabelButton(const QString& label, QGraphicsItem* parentItem)
 
 LabelButton::~LabelButton()
 {
+}
+
+void LabelButton::removeFromScene()
+{
+	scene()->removeItem(this);
+	this->deleteLater();
 }
 
 void LabelButton::setText(const QString& text, bool updateLayout)

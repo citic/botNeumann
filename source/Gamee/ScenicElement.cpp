@@ -2,6 +2,8 @@
 #include "Layout.h"
 #include "SvgRendererManager.h"
 
+#include <QGraphicsScene>
+
 ScenicElement::ScenicElement(const QString& prefixedSvgElementId, QGraphicsItem* parentItem)
 	: QGraphicsSvgItem(parentItem)
 {
@@ -15,6 +17,12 @@ ScenicElement::ScenicElement(const QString& prefixedSvgElementId, QGraphicsItem*
 ScenicElement::~ScenicElement()
 {
 	delete layout;
+}
+
+void ScenicElement::removeFromScene()
+{
+	scene()->removeItem(this);
+	this->deleteLater();
 }
 
 void ScenicElement::setRenderer(SceneId sceneId)

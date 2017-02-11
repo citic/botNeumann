@@ -33,7 +33,7 @@ class Layout : public LayoutItem
 	virtual bool removeItem(LayoutItem* item, bool deleteObject);
 	/// Deletes all items
 	/// @param removeFromScene if true, QGraphicsItems will be removed from the scene and deleted
-	void removeAllItems();
+	void removeAllItems(bool removeItemsFromScene);
 	/// A layout is a layout item also
 	virtual void addLayout(Layout* layout, qreal proportion, qreal zValue = 0.0);
 	/// Add expansible space

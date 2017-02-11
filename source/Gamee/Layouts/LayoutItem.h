@@ -35,6 +35,8 @@ class LayoutItem
 	virtual ~LayoutItem();
 	/// Used to differentiate between pure-layout items and scenic elements
 	virtual bool isScenicElement() const { return false; }
+	/// Called on QGraphicItem in order to remove them from the scene
+	virtual void removeFromScene() { }
 	/// Resize this item and all its child items
 	/// This method is called each time the Stage and Scene has been resized
 	virtual void resize(qreal left, qreal top, qreal width, qreal height);

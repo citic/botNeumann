@@ -25,8 +25,8 @@ class TestCaseManager : public QObject, public LinearLayout
 	Scene* scene;
 	/// To get the test cases and the player solution executable
 	PlayerSolution* playerSolution = nullptr;
-	/// The list of test cases being run
-	QVector<TestCaseActor*> testCases;
+	/// Manages the list of test cases of the current run
+	LinearLayout* currentTestCases = nullptr;
 
   public:
 	/// Constructor
@@ -38,6 +38,8 @@ class TestCaseManager : public QObject, public LinearLayout
 	/// Called when all test cases and player solution has been built
 	/// This method starts the process of running the player solution against the generated cases
 	bool testPlayerSolution();
+	/// Called when visualization has finished in order to remove old testers
+	void clearAnimation();
 
   protected:
 	/// Build a region to place future test cases (an empty tube)

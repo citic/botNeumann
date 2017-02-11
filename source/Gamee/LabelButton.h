@@ -20,6 +20,8 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	/// Used to differentiate between pure-layout items and scenic elements
 	/// ToDo: rename to isPureLayoutObject()
 	virtual bool isScenicElement() const override { return true; }
+	/// Called on QGraphicItem in order to remove them from the scene
+	virtual void removeFromScene() override;
 	/// Overrides the setText in order to adjust the dimensions of the new text to the dimensions
 	/// of the button
 	/// @param updateLayout true if the LayoutItem::updateLayoutItem() should be called
