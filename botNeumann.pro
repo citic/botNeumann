@@ -92,6 +92,7 @@ HEADERS += \
 	source/UnitPlaying/DataSegment/StandardInputOutput.h \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
 	source/UnitPlaying/Messages/MessagesArea.h \
+	source/UnitPlaying/Messages/StandardInputOutputInspector.h \
 	source/UnitPlaying/TestCases/TestCaseActor.h \
 	source/UnitPlaying/TestCases/TestCaseGenerator.h \
 	source/UnitPlaying/TestCases/TestCaseManager.h \
@@ -167,6 +168,7 @@ SOURCES += \
 	source/UnitPlaying/DataSegment/StandardInputOutput.cpp \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
 	source/UnitPlaying/Messages/MessagesArea.cpp \
+	source/UnitPlaying/Messages/StandardInputOutputInspector.cpp \
 	source/UnitPlaying/TestCases/TestCaseActor.cpp \
 	source/UnitPlaying/TestCases/TestCaseManager.cpp \
 	source/UnitPlaying/TestCases/TestCaseGenerator.cpp \

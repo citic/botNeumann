@@ -7,6 +7,8 @@
 class Compiler;
 class CompiledProgram;
 class Diagnostic;
+class StandardInputOutputInspector;
+
 class QListWidget;
 class QTabWidget;
 class QTextEdit;
@@ -32,6 +34,8 @@ class MessagesArea : public QDockWidget
 	QListWidget* toolsOutput;
 	/// Compiler object that generated the diagnostics shown in the tools output list
 	Compiler* compiler;
+	/// Let user compare differences between test case's input/output/error and his/her solution
+	StandardInputOutputInspector* standardInputOutputInspector = nullptr;
 
   public:
 	/// Constructor

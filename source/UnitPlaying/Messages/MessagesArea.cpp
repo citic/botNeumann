@@ -4,6 +4,7 @@
 #include "Diagnostic.h"
 #include "LogManager.h"
 #include "MessagesArea.h"
+#include "StandardInputOutputInspector.h"
 
 #include <QListWidget>
 #include <QTabWidget>
@@ -41,7 +42,9 @@ MessagesArea::MessagesArea(QWidget* parent, Qt::WindowFlags flags)
 	// Some messages received by the LogManager may be shown in the GUI
 	LogManager::setMessagesArea(this);
 
-	// ToDo: Add a third tab: for player's solution input/output
+	// Add a third tab: for player's solution input/output
+	standardInputOutputInspector = new StandardInputOutputInspector();
+	messagesTabWidget->addTab(standardInputOutputInspector, toolsOutputIcon, tr("Input/output"));
 }
 
 MessagesArea::~MessagesArea()
