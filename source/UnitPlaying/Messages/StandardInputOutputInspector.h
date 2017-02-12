@@ -3,6 +3,7 @@
 
 #include <QSplitter>
 
+class QAction;
 class QTextEdit;
 class QToolBar;
 
@@ -21,6 +22,8 @@ class StandardInputOutputInspector : public QSplitter
 	QTextEdit* standardOutputInspector = nullptr;
 	/// Compares the player solution error output against test case's expected standard error
 	QTextEdit* standardErrorInspector = nullptr;
+	/// Toggles between standard output and standard error
+	QAction* toggleOutputErrorAction = nullptr;
 
   public:
 	/// Constructor
@@ -31,6 +34,10 @@ class StandardInputOutputInspector : public QSplitter
   protected:
 	/// Builds the inspector with three areas
 	void buildInspector();
+
+  protected slots:
+	/// Toggles between the standard output and standard error
+	void toggleOutputError();
 };
 
 #endif // STANDARDINPUTOUTPUTINSPECTOR_H

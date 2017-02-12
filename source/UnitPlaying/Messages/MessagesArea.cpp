@@ -44,7 +44,8 @@ MessagesArea::MessagesArea(QWidget* parent, Qt::WindowFlags flags)
 
 	// Add a third tab: for player's solution input/output
 	standardInputOutputInspector = new StandardInputOutputInspector();
-	messagesTabWidget->addTab(standardInputOutputInspector, toolsOutputIcon, tr("Input/output"));
+	QIcon inputOutputIcon(":/unit_playing/buttons/input_output.svg");
+	messagesTabWidget->addTab(standardInputOutputInspector, inputOutputIcon, tr("Input/output"));
 }
 
 MessagesArea::~MessagesArea()

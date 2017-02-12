@@ -24,6 +24,8 @@
 		<file alias="error.svg">unit_playing/buttons/error.svg</file>
 		<file alias="find_and_replace.svg">unit_playing/buttons/find_and_replace.svg</file>
 		<file alias="info.svg">unit_playing/buttons/info.svg</file>
+		<!-- input_output.svg adapted from https://openclipart.org/detail/105637/danger-electric-leakage -->
+		<file alias="input_output.svg">unit_playing/buttons/input_output.svg</file>
 		<file alias="link_broken.svg">unit_playing/buttons/link_broken.svg</file>
 		<!-- Icon monitor.svg made by http://www.flaticon.com/authors/iconnice, adapted by jhc -->
 		<file alias="monitor.svg">unit_playing/buttons/monitor.svg</file>
