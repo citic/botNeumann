@@ -147,3 +147,91 @@ QStringList Util::readAllLines(const QString& filepath)
 
 	return result;
 }
+
+long Util::findFirstDiff(const QString& filepath1, const QString& filepath2, bool ignoreWhitespace, bool caseSensitive)
+{
+	// Open the files
+	QFile inputFile1(filepath1);
+	QFile inputFile2(filepath2);
+
+	if ( inputFile1.open(QIODevice::ReadOnly | QIODevice::Text) == false )
+		{ qCritical(logApplication) << "Could not open" << filepath1; return -2; }
+	if ( inputFile2.open(QIODevice::ReadOnly | QIODevice::Text) == false )
+		{ qCritical(logApplication) << "Could not open" << filepath2; return -2; }
+
+	// If both files are empty, they match
+	if ( inputFile1.atEnd() && inputFile2.atEnd() )
+		return -1;
+
+	// At least one file has data, we have to read them to compare
+	QTextStream inputText1(&inputFile1);
+	QTextStream inputText2(&inputFile2);
+
+	// Used to know the current position in files
+	long position1 = 0;
+	QChar ch1 = 0;
+	QChar ch2 = 0;
+
+	// Read until reaching the first EOF
+	while ( ! inputText1.atEnd() )
+	{
+		if ( inputText2.atEnd() )
+			return position1;
+
+		// Get the next char of each file
+		ch1 = readNextChar(inputText1, ignoreWhitespace, caseSensitive, ch1 == ' ', &position1);
+		ch2 = readNextChar(inputText2, ignoreWhitespace, caseSensitive, ch2 == ' ');
+
+		// Compare the next character of each file
+		if ( ch1 != ch2 )
+			return position1;
+
+		// Both files are identical until this char, continue
+	}
+
+	// If there is remaining expected information that player did not produced, fail
+	if ( ! inputFile2.atEnd() )
+		return position1;
+
+	// We did not find any difference
+	qCCritical(logApplication, "End of comparison");
+	return -1;
+}
+
+QChar Util::readNextChar(QTextStream& input, bool ignoreWhitespace, bool caseSensitive, bool eatWhitespace, long* position)
+{
+	// Read the next character
+	QChar ch = -1;
+
+	// We may need to repeat when ignoring whitespace
+	while ( ! input.atEnd() )
+	{
+		// Read the character
+		input >> ch;
+
+		// We have read a character, advance the position counter
+		if ( position )
+			++(*position);
+
+		// If we have to ignore case, we convert all characters to lowercase
+		if ( caseSensitive == false )
+			ch = ch.toLower();
+
+		// If we got a non space character, we have found the next character
+		if ( ! ch.isSpace() )
+			return ch;
+
+		// We found a whitespace character, if they must be match exact, return it
+		if ( ! ignoreWhitespace )
+			return ch;
+
+		// We found a whitespace character and are ignoring them, uniform them to spaces
+		ch = ' ';
+
+		// If asked to eat whitespaces, we continue the while, otherwise we stop here
+		if ( ! eatWhitespace )
+			return ch;
+	}
+
+	return ch;
+}

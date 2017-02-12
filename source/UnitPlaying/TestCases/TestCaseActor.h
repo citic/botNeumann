@@ -45,6 +45,12 @@ class TestCaseActor : public Actor
 	QString error_ex;
 	/// Player solution generated error output file path
 	QString error_ps;
+	/// The first character where player solution's output differs from unit's expected output
+	/// -1 means there are not differences
+	long firstDiffOutput = -2;
+	/// The first character where player solution's error differs from unit's expected error
+	/// -1 means there are not differences
+	long firstDiffError = -2;
 
   public:
 	/// Constructor

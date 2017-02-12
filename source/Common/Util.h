@@ -4,6 +4,8 @@
 #include <QColor>
 #include <QList>
 
+class QTextStream;
+
 class Util
 {
 	Q_DISABLE_COPY(Util)
@@ -25,6 +27,16 @@ class Util
 	/// Read all lines from the give filename
 	/// @return A list of the read lines, empty list on error
 	static QStringList readAllLines(const QString& filepath);
+	/// Find the first character of the first file where the second file differs, and returns the
+	/// index of that character. If both files are identical, -1 is returned
+	/// If an error happens, it returns another negative number
+	static long findFirstDiff(const QString& filepath1, const QString& filepath2, bool ignoreWhitespace, bool caseSensitive);
+	/// Get the next character of the given @a input
+	/// @param eatWhitespace Send true if the current character is whitespace. If @a ignoreWhitespace
+	/// is also true, the function will ignore the next whitespace under the input's cursor
+	/// @param position If the address of a long variable is given, it will be increased by the
+	/// number of read (or skipped if @a ignoreWhitespace is true) characters from input
+	static QChar readNextChar(QTextStream& input, bool ignoreWhitespace, bool caseSensitive, bool eatWhitespace, long* position = nullptr);
 };
 
 /// Copies Qt resources or Strings to text files

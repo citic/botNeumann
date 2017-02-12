@@ -150,6 +150,8 @@ class Unit : public QObject
 	inline int getTimeout() const { return timeout; }
 	/// True if player solution output must be compared ignoring whitespace against the answer
 	inline bool shouldIgnoreWhitespace() const { return ignoreWhitespace; }
+	/// True if player solution must be compared in case-sensitive mode
+	inline bool shouldCompareCaseSenstive() const { return caseSensitive; }
 
   public:
 	/// Task description in one or several languages
