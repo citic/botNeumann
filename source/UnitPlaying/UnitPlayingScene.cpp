@@ -268,9 +268,13 @@ void UnitPlayingScene::playerSolutionBuilt(CompiledProgram* compiledProgram)
 
 	changeState(UnitPlayingState::starting);
 
+	// By default, the first test case (the example) is always animated. If user wants another,
+	// s/he can press it later
+	int testCaseNumber = 1;
+
 	// The player solution generated an executable and we are ready to visualize it
 	delete visualizator;
-	visualizator = new Visualizator(playerSolution, 1, this);
+	visualizator = new Visualizator(playerSolution, testCaseNumber, this);
 
 	// When user creates or removes breakpoints and visualization is running, update them
 	connect( codeSegment, SIGNAL(breakpointAction(GuiBreakpoint*)), visualizator, SLOT(breakpointAction(GuiBreakpoint*)) );
@@ -290,6 +294,9 @@ void UnitPlayingScene::playerSolutionBuilt(CompiledProgram* compiledProgram)
 		changeState(UnitPlayingState::animating);
 	else
 		changeState(UnitPlayingState::editing);
+
+	// Load the test case expected input/output/error in the StandardInputOutputInspector
+	messagesArea->loadTestCase(testCaseNumber, playerSolution);
 }
 
 void UnitPlayingScene::userStopped()

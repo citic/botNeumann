@@ -1,7 +1,10 @@
 #include "StandardInputOutputInspector.h"
+#include "LogManager.h"
+#include "PlayerSolution.h"
 
 #include <QACtion>
 #include <QTextEdit>
+#include <QTextStream>
 #include <QToolBar>
 
 StandardInputOutputInspector::StandardInputOutputInspector(QWidget *parent)
@@ -45,4 +48,33 @@ void StandardInputOutputInspector::toggleOutputError()
 	bool checked = toggleOutputErrorAction->isChecked();
 	standardOutputInspector->setVisible( ! checked );
 	standardErrorInspector->setVisible( checked );
+}
+
+bool StandardInputOutputInspector::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution)
+{
+	this->testCaseNumber = testCaseNumber;
+
+//	const QString& args      = playerSolution->buildTestCaseFilepath(testCaseNumber, "args");
+	const QString& input     = playerSolution->buildTestCaseFilepath(testCaseNumber, "input");
+	const QString& output_ex = playerSolution->buildTestCaseFilepath(testCaseNumber, "output_ex");
+//	const QString& output_ps = playerSolution->buildTestCaseFilepath(testCaseNumber, "output_ps");
+	const QString& error_ex  = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ex");
+//	const QString& error_ps  = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ps");
+
+	return loadFileInto(input, standardInputInspector)
+		&& loadFileInto(output_ex, standardOutputInspector)
+		&& loadFileInto(error_ex, standardErrorInspector);
+}
+
+bool StandardInputOutputInspector::loadFileInto(const QString& filepath, QTextEdit* inspector)
+{
+	// Open the files
+	QFile inputFile(filepath);
+	if ( inputFile.open(QIODevice::ReadOnly | QIODevice::Text) == false )
+		{ qCritical(logApplication) << "Could not open" << filepath; return false; }
+
+	// At least one file has data, we have to read them to compare
+	Q_ASSERT(inspector);
+	inspector->setText( QTextStream(&inputFile).readAll() );
+	return true;
 }

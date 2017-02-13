@@ -60,6 +60,12 @@ void MessagesArea::setUnitDescription(const QString &description, bool makeActiv
 		messagesTabWidget->setCurrentWidget(unitDescription);
 }
 
+bool MessagesArea::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution)
+{
+	Q_ASSERT(standardInputOutputInspector);
+	return standardInputOutputInspector->loadTestCase(testCaseNumber, playerSolution);
+}
+
 void MessagesArea::clear()
 {
 	// A new build process has started. Output from previous compiler calls are outdated, clear them

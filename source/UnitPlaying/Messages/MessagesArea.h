@@ -7,6 +7,7 @@
 class Compiler;
 class CompiledProgram;
 class Diagnostic;
+class PlayerSolution;
 class StandardInputOutputInspector;
 
 class QListWidget;
@@ -45,6 +46,9 @@ class MessagesArea : public QDockWidget
 	/// Display the given text in the unit description area, and makes it active if the second
 	/// parameter is true
 	void setUnitDescription(const QString& description, bool makeActiveTab);
+	/// Loads the expected input/output/error in the StandardInputOutputInspector from the test
+	/// case files, and set the cursors to the first character of them
+	bool loadTestCase(int testCaseNumber, PlayerSolution* playerSolution);
 
   signals:
 	/// Emitted when user selects one of the diagnostics in the tools output

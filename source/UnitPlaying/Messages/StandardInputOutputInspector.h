@@ -3,6 +3,8 @@
 
 #include <QSplitter>
 
+class PlayerSolution;
+
 class QAction;
 class QTextEdit;
 class QToolBar;
@@ -24,10 +26,15 @@ class StandardInputOutputInspector : public QSplitter
 	QTextEdit* standardErrorInspector = nullptr;
 	/// Toggles between standard output and standard error
 	QAction* toggleOutputErrorAction = nullptr;
+	/// We are visualizing input/output for this test case number
+	int testCaseNumber = -1;
 
   public:
 	/// Constructor
 	explicit StandardInputOutputInspector(QWidget* parent = nullptr);
+	/// Loads the expected input/output/error in the StandardInputOutputInspector from the test
+	/// case files, and set the cursors to the first character of them
+	bool loadTestCase(int testCaseNumber, PlayerSolution* playerSolution);
 
   public slots:
 
@@ -38,6 +45,9 @@ class StandardInputOutputInspector : public QSplitter
   protected slots:
 	/// Toggles between the standard output and standard error
 	void toggleOutputError();
+	/// Loads the content of a file into a text editor.
+	/// @return true on success, false otherwise
+	bool loadFileInto(const QString& filepath, QTextEdit* inspector);
 };
 
 #endif // STANDARDINPUTOUTPUTINSPECTOR_H

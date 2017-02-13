@@ -88,12 +88,7 @@ bool Visualizator::start()
 		if ( debuggerCall->sendGdbCommand("-exec-run") == GDB_ERROR )
 			gdbState = oldState;
 	}
-/*
-	Q_ASSERT(userProgram == nullptr);
-	userProgram = new UserProgram(this);
-	userProgram->start( this->userProgramPath );
-	connect( userProgram, SIGNAL(toolFinished()), this, SLOT(quit()) );
-*/
+
 	return result;
 }
 
@@ -105,7 +100,9 @@ QString Visualizator::buildInferiorArguments()
 	const QStringList& testCaseArgs = Util::readAllLines(args);
 
 	// We need to join all arguments separating them by spaces
-	QString result = testCaseArgs.join("\" \"");
+	QString result;
+	if ( testCaseArgs.count() > 0 )
+		result = '"' + testCaseArgs.join("\" \"") + '"';
 
   #ifndef Q_OS_WIN
 	// In Unix-like operating systems, GDB passes arguments to inferior using a shell.
