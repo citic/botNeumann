@@ -270,7 +270,7 @@ void UnitPlayingScene::playerSolutionBuilt(CompiledProgram* compiledProgram)
 
 	// The player solution generated an executable and we are ready to visualize it
 	delete visualizator;
-	visualizator = new Visualizator(compiledProgram->getExecutablePath(), this);
+	visualizator = new Visualizator(playerSolution, 1, this);
 
 	// When user creates or removes breakpoints and visualization is running, update them
 	connect( codeSegment, SIGNAL(breakpointAction(GuiBreakpoint*)), visualizator, SLOT(breakpointAction(GuiBreakpoint*)) );

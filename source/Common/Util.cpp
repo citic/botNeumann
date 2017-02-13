@@ -194,7 +194,6 @@ long Util::findFirstDiff(const QString& filepath1, const QString& filepath2, boo
 		return position1;
 
 	// We did not find any difference
-	qCCritical(logApplication, "End of comparison");
 	return -1;
 }
 

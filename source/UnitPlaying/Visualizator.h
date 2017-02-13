@@ -10,6 +10,7 @@
 class DebuggerBreakpoint;
 class GdbCall;
 class GuiBreakpoint;
+class PlayerSolution;
 class UnitPlayingScene;
 
 /**
@@ -17,6 +18,13 @@ class UnitPlayingScene;
 
 	The visualizator mediates between the model (DebuggerCall) and the views (UnitPlayingScene and
 	its helping classes).
+
+	A visualizator object animates the execution of the player solution running against just one
+	test case at time. If other test case should be animated, a new Visualization object must be
+	created. Because an Unit can have several test cases, a different visualization may be
+	produced from each single test case. UnitPlayingScene shows test cases and user may choose
+	to visualize another. By default, the first test case of the unit is visualized each time
+	the visualization starts.
 */
 class Visualizator : public GdbResponseListener
 {
@@ -24,17 +32,17 @@ class Visualizator : public GdbResponseListener
 	Q_DISABLE_COPY(Visualizator)
 
   protected:
-	/// Full path to the player's executable to be debugged
-	QFileInfo executablePath;
-	/// @todo Allow user to write executable parameters
-	QString userProgramArguments;
+	/// A visualizator animates the execution of the player solution against a test case
+	PlayerSolution* playerSolution = nullptr;
+	/// The test case to run the player solution against to
+	int testCaseNumber = 1;
+	/// The animation of player solution running the test case is done into a view
+	UnitPlayingScene* unitPlayingScene = nullptr;
 	/// The model is a debugger session with the executable of the player
 	/// @todo Using GdbCall interface directly, replace it by DebuggerCall interface
-	GdbCall* debuggerCall;
+	GdbCall* debuggerCall = nullptr;
 	/// The state of GDB being controlled by this object
 	GdbState gdbState = STATE_STOPPED;
-	/// The view is the unit playing scene and its components
-	UnitPlayingScene* unitPlayingScene;
 	/// The list of breakpoints reported by debugger. They are identified by integers. The indexes
 	/// in the array match the integers used by the debugger
 	QVector<DebuggerBreakpoint*> debuggerBreakpoints;
@@ -50,7 +58,7 @@ class Visualizator : public GdbResponseListener
 	/// Constructor
 	/// @param executablePath The absolute path to the player solution's executable file to be run
 	/// @param unitPlayingScene is the view, and it is set as the parent QObject for this object
-	explicit Visualizator(const QFileInfo& executablePath, UnitPlayingScene* unitPlayingScene);
+	explicit Visualizator(PlayerSolution* playerSolution, int testCaseNumber, UnitPlayingScene* unitPlayingScene);
 	/// Destructor
 	~Visualizator();
 	/// Start the visualization process
@@ -100,6 +108,10 @@ class Visualizator : public GdbResponseListener
 	inline bool stepOver() { return step("-exec-next", "Step over"); }
 
   protected:
+	/// Build a string with the arguments to call inferior (player solution) under GDB. It contains
+	/// the arguments for the test case. In Unix also redirection of standard input/output may be
+	/// done in order to capture the output from player solution while it is being animated
+	QString buildInferiorArguments();
 	/// A Gdb result indicates that a new breakpoint was added
 	void updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode);
 	/// Returns the index of the debugger breakpoint that matches the given GUI breakpoint. The

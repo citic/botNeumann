@@ -4,13 +4,15 @@
 #include "GuiBreakpoint.h"
 #include "LogManager.h"
 #include "MessagesArea.h"
+#include "PlayerSolution.h"
 #include "UnitPlayingScene.h"
+#include "Util.h"
 #include "VisualizationSpeed.h"
 
-Visualizator::Visualizator(const QFileInfo& executablePath, UnitPlayingScene* unitPlayingScene)
+Visualizator::Visualizator(PlayerSolution* playerSolution, int testCase, UnitPlayingScene* unitPlayingScene)
 	: GdbResponseListener(unitPlayingScene)
-	, executablePath(executablePath)
-	, debuggerCall( nullptr )
+	, playerSolution(playerSolution)
+	, testCaseNumber(testCase)
 	, unitPlayingScene(unitPlayingScene)
 	, inferiorProcessId(0)
 {
@@ -48,12 +50,12 @@ bool Visualizator::start()
 	qCDebug(logVisualizator(), "gdb started");
 
 	// Ask GDB run user program
-	if ( debuggerCall->sendGdbCommand(QString("-file-exec-and-symbols \"%1\"").arg(executablePath.filePath())) == GDB_ERROR )
-		qCritical(logVisualizator(), "Failed to run user program: '%s'", qPrintable(executablePath.filePath()));
+	const QString executablePath = playerSolution->getExecutablePath();
+	if ( debuggerCall->sendGdbCommand(QString("-file-exec-and-symbols \"%1\"").arg(executablePath)) == GDB_ERROR )
+		qCritical(logVisualizator(), "Failed to run user program: '%s'", qPrintable(executablePath));
 
 	// Give inferior parameters to GDB
-	if ( userProgramArguments.length() > 0 )
-		debuggerCall->sendGdbCommand(QString("-exec-arguments %1").arg(userProgramArguments));
+	debuggerCall->sendGdbCommand(QString("-exec-arguments %1").arg( buildInferiorArguments() ));
 
 	// Get current user-defined breakpoints on GUI, if any as strings "filename:lineNumber"
 	const QList<GuiBreakpoint*>& editorBreakpoints = unitPlayingScene->retrieveBreakpoints();
@@ -92,6 +94,35 @@ bool Visualizator::start()
 	userProgram->start( this->userProgramPath );
 	connect( userProgram, SIGNAL(toolFinished()), this, SLOT(quit()) );
 */
+	return result;
+}
+
+QString Visualizator::buildInferiorArguments()
+{
+	// Send test case arguments
+	Q_ASSERT(playerSolution);
+	const QString& args = playerSolution->buildTestCaseFilepath(testCaseNumber, "args");
+	const QStringList& testCaseArgs = Util::readAllLines(args);
+
+	// We need to join all arguments separating them by spaces
+	QString result = testCaseArgs.join("\" \"");
+
+  #ifndef Q_OS_WIN
+	// In Unix-like operating systems, GDB passes arguments to inferior using a shell.
+	// The shell is able to redirect standard input, output and error in arguments
+
+	// Get the full path to these files
+	const QString& input = playerSolution->buildTestCaseFilepath(testCaseNumber, "input");
+	const QString& output_ps = playerSolution->buildTestCaseFilepath(testCaseNumber, "output_ps");
+	const QString& error_ps = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ps");
+
+	// Redirect standard input, output and error for player solution
+	if ( ! result.isEmpty() ) result += ' ';
+	result += "< \"" + input + '"';
+	result += " > \"" + output_ps + '"';
+	result += " 2> \"" + error_ps + '"';
+  #endif
+
 	return result;
 }
 
