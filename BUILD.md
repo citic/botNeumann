@@ -44,6 +44,17 @@ Finally run `build.bat`.
 
 A GCC or Clang compiler/debugger is required, to be installed and accesible in $PATH
 
+Dependencies:
+
+* GNU C/C++ compiler (GCC) for both 32 and 64bits
+* GNU Debugger (GDB)
+* Universal ctags
+* Qt 5
+
+On Debian you may write:
+
+	sudo apt install build-essential gdb libgl1-mesa-dev libc6-dev-i386 gcc-multilib g++-multilib ctags
+
 
 ## Mac OS X
 
