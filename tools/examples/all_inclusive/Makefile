@@ -1,15 +1,17 @@
 FLAGS=-ggdb3 -O0 -Wall -Wextra -Wno-uninitialized -I. -pthread -lpthread
 CFLAGS=$(FLAGS) -std=c11
 CXXFLAGS=$(FLAGS) -std=c++11
-TAGS=--c-kinds=v --fields=fsnt --if0=yes --sort=no
+TAGS=--c++-kinds=vf --fields=fKsnt --if0=yes --sort=no
 
-alli: *.c *.cpp tags
+alli: *.cpp tags
 	g++ $(CXXFLAGS) -o alli.o -c alli.cpp
-	gcc $(CFLAGS) -o bn_player_solution.o -c bn_player_solution.c
+	gcc $(CFLAGS) -o bn_player_solution.o -c ../bn_player_solution.c
 	g++ $(CXXFLAGS) -o alli alli.o bn_player_solution.o
 
-tags: *.c *.cpp
-	ctags $(TAGS) -f tags.txt alli.cpp
+tags: bn_tags.txt
+
+bn_tags.txt: *.cpp
+	ctags $(TAGS) -f bn_tags.txt alli.cpp
 
 clean:
 	rm -rf *.o alli tags.txt

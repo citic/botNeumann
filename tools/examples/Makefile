@@ -17,8 +17,8 @@ all: $(PROJECTS)
 
 # ToDo: include header files in tags
 tags: *.c *.cpp
-	ctags $(TAGS) -f tags.txt *.c *.cpp
-	ctags $(TAGS) -f all_inclusive/tags.txt all_inclusive/alli.cpp
+	ctags $(TAGS) -f bn_tags.txt *.c *.cpp
+	ctags $(TAGS) -f all_inclusive/bn_tags.txt all_inclusive/alli.cpp
 
 clean:
 	rm -rf $(PROJECTS) *.exe *.dSYM tags*
