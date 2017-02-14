@@ -168,20 +168,20 @@ GDB recursive breakpoints may fail for unclear reasons, e.g: "mismatched quote"
 
 Start the execution of inferior and stop in the program entry point
 
-. Set Visualization in `elaboration` mode.
-. `=breakpoint-created`: Breapoint at program's entry point. Create object and it to breakpoints[]. If another breakpoint already exists at the same file:line, add the role `functionBody` to it. Notice: the breakpoint is added to the `breakpoints[]` array unconditionally.
+. `=breakpoint-created`: Breapoint at program's entry point. Create object and it to breakpoints[]. If another breakpoint already exists at the same file:line, add the role `programEntryPoint` to it. Notice: the breakpoint is added to the `breakpoints[]` array unconditionally.
 . `=thread-group-started`: Collect the process id from `pid` param.
-. `=thread-created`: Animate creation of main thread when. Do <<create-execution-thread>>
+. `=thread-created`: Animate creation of an execution thread. Do <<create-execution-thread>>
 . `=library-loaded`: Ignore all library load responses. Optional: trace `libc` load and store a flag it is being used.
 . `*running`: Change inferior state to *running
 . `=breakpoint-modified`. Update breakpoint
-. `*stopped,reason="breakpoint-hit"`. Execution stopped at program entry point. If visualization in `elaboration` mode (true), do NOT do <<breakpoint-hit>> yet. Store the result tree for later user. Continue as usual (through next section).
+. `*stopped,reason="breakpoint-hit"`. Execution stopped at program entry point. Do <<breakpoint-hit>>. It will store the result tree for later user and continue as usual.
 . If there are removed breakpoints: Remove deleted breakpoint from breakpoints[] array
   Breakpoint was likely removed because there is other breakpoint at the same line.
 
 
 
-=== 2.1 Dynamic memory breakpoints
+[[set-dynamic-memory-breakpoints]]
+=== 2.1 Set dynamic memory breakpoints
 
 
 ==== -break-insert -f __libc_malloc
@@ -233,7 +233,7 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 	^done,name="bn_io_stdin",numchild="1",value="0x0",type="char *",has_more="0"
 	(gdb)
 
-. In Unix: Create object variables watching changes in IO, using notation `bn_io_iofile`
+. On Unix: Create object variables watching changes in IO, using notation `bn_io_iofile`
 . Future work: check if it works with GCC/MinGW for MsWin
 
 
@@ -256,7 +256,7 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 	^done,value="{_flags = -72540024, _IO_read_ptr = 0x0, _IO_read_end = 0x0, _IO_read_base = 0x0, _IO_write_base = 0x0, _IO_write_ptr = 0x0, _IO_write_end = 0x0, _IO_buf_base = 0x0, _IO_buf_end = 0x0, _IO_save_base = 0x0, _IO_backup_base = 0x0, _IO_save_end = 0x0, _markers = 0x0, _chain = 0x0, _fileno = 0, _flags2 = 0, _old_offset = -1, _cur_column = 0, _vtable_offset = 0 '\\000', _shortbuf = \"\", _lock = 0x7ffff7bb6790 <_IO_stdfile_0_lock>, _offset = -1, _codecvt = 0x0, _wide_data = 0x7ffff7bb49c0 <_IO_wide_data_0>, _freeres_list = 0x0, _freeres_buf = 0x0, __pad5 = 0, _mode = 0, _unused2 = '\\000' <repeats 19 times>}"
 	(gdb)
 
-Only in MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluate-expression bn_reopen_stdout()`, `-data-evaluate-expression bn_reopen_stderr()`
+Only on MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluate-expression bn_reopen_stdout()`, `-data-evaluate-expression bn_reopen_stderr()`
 
 
 
@@ -301,7 +301,9 @@ The list of all variables for "all inclusive" example:
 ....
 
 
-Do <<variable-info>> to get data types and sizes. Example with vector `all_arguments`:
+Do <<variable-info>> to get data types and sizes:
+
+. For vector `all_arguments`:
 
 	-data-evaluate-expression sizeof(all_arguments)
 	^done,value="24"
@@ -314,8 +316,26 @@ Do <<variable-info>> to get data types and sizes. Example with vector `all_argum
 	^done
 	(gdb)
 
+	-data-evaluate-expression &all_arguments
+	^done,value="0x60b5c0 <all_arguments>"
+	(gdb)
 
-Example with typdef `input_count`:
+. For char** `buffer`:
+
+	-data-evaluate-expression sizeof(buffer)
+	^done,value="8"
+	(gdb)
+
+	-interpreter-exec console "ptype /mt buffer"
+	~"type = char **\n"
+	^done
+	(gdb)
+
+	-data-evaluate-expression &buffer
+	^done,value="0x60b560 <buffer>"
+	(gdb)
+
+. For typdef `input_count`:
 
 	-data-evaluate-expression sizeof(input_count)
 	^done,value="8"
@@ -326,7 +346,29 @@ Example with typdef `input_count`:
 	^done
 	(gdb)
 
-Example with size_t `sorted_count`:
+	-data-evaluate-expression &input_count
+	^done,value="0x60b568 <input_count>"
+	(gdb)
+
+. For InputArgument ** `sorted_arguments`:
+
+	-data-evaluate-expression &sorted_arguments
+	^done,value="0x60b570 <sorted_arguments>"
+	(gdb)
+
+	-data-evaluate-expression sizeof(sorted_arguments)
+	^done,value="8"
+	(gdb)
+
+	-interpreter-exec console "ptype /mt sorted_arguments"
+	~"type = class InputArgument : public AbstractArgument<char const*> {\n"
+	~"  protected:\n"
+	~"    std::__cxx11::string value2;\n"
+	~"} **\n"
+	^done
+	(gdb)
+
+. For size_t `sorted_count`:
 
 	-data-evaluate-expression sizeof(sorted_count)
 	^done,value="8"
@@ -337,7 +379,11 @@ Example with size_t `sorted_count`:
 	^done
 	(gdb)
 
-Example with object:
+	-data-evaluate-expression &sorted_count
+	^done,value="0x60b5d8 <sorted_count>"
+	(gdb)
+
+. For object `global_program_name`:
 
 	-data-evaluate-expression sizeof(global_program_name)
 	^done,value="56"
@@ -351,18 +397,24 @@ Example with object:
 	^done
 	(gdb)
 
+	-data-evaluate-expression &global_program_name
+	^done,value="0x60b580 <global_program_name>"
+	(gdb)
+
 
 
 === 2.4 Load standard input
 
+. Read `bn_nn_input.txt` to a string
 . Create characters for the test case's standard input
-. Animate characters arriving by the tube until reaching the left edge
+. Animate characters arriving through the tube until reaching the left edge
+. Set cursor to position 0
 
 
 
-=== 2.5 Finish elaboration phase
+=== 2.5 Finish starting phase
 
-. Set visualization's elaboration mode to false (or use another state: loading).
+. Set visualization's state to `animating` (emit `animationStarted`)
 . Do <<breakpoint-hit>> using the stored tree of *stopped response.
 
 
@@ -419,7 +471,8 @@ Each time `=thread-exited,id=#` is issued:
 
 Player solution (inferior) stopped for hitting a breakpoint. Get the `/bkptno` integer value, and find the `DebuggerBreakpoint` object. If breakpoint object has one or more roles:
 
-* `functionBody`: Do <<function-call>> (also for `programEntryPoint`).
+* If visualization is in starting state and entryPointTree is null Do <<program-entry-point>>
+* `functionBody` or `programEntryPoint`: Do <<function-call>>.
 * `userDefined`: Do <<user-defined-breakpoint>>.
 * `mallocCalled`: Process memory allocation (uninitialized)
 * `callocCalled`: Process memory allocation (initialized)
@@ -431,9 +484,25 @@ Player solution (inferior) stopped for hitting a breakpoint. Get the `/bkptno` i
 * `deleteArray`: ToDo:
 
 
+[[program-entry-point]]
+==== 4.1 Program entry point:
+	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
+	(gdb)
+
+Visualization is in starting stage, not animating.
+Inferior is stopped by a breakpoint hit.
+This is the first breakpoint hit, threfore, it is the actual program entry point.
+GDB always set the program entry point breakpoint to the main() function, but it may fail in C++ when there are global objects that call constructors before main().
+
+. Because there are pending initialization steps, do not animate a function call.
+. Store the GDB response tree for later use: `entryPointTree = response.tree`.
+. Add the `pogramEntryPoint` role to `breakpoints[/bkptno]`.
+. Continue as normal in <<set-dynamic-memory-breakpoints>>.
+
+
 
 [[function-call]]
-=== 4.1 Function call
+=== 4.2 Function call
 
 Example at program's entry point:
 
@@ -447,7 +516,7 @@ Player solution hit a breakpoint that has the role of `functionCall`. The breakp
 . [ToDo: check call stack depth? If there is not an increase in the level, stop animation.] [Edit: unnecessary for entry point, at least]
 . If `ExecutionThread` is active (has an assigned CPU core), animate the door opening in its CPU core.
 . Build a memory frame for the new stack frame with the function name (`/frame/func`) in the roof. By default, memory frames are filled of garbage.
-. Raise the memory roof to the CPU core door, to make the roof visible only. Arguments and variables will be made visible next.
+. Raise the memory roof to the CPU core opened door, to make the roof visible only. Arguments and variables will be made visible next.
 . ToDo: If execution thread is idle in visualization (does not have an assigned CPU core), it should be stopped at inferior through GDB, to avoid it generating more responses.
 
 
@@ -476,8 +545,14 @@ Player solution hit a breakpoint that has the role of `functionCall`. The breakp
 	^done,locals=[{name="n",type="size_t",value="4196304"},{name="grid",type="char **",value="0x7fffffffdf50"},{name="error",type="int",value="0"}]
 	(gdb)
 
-. Do the same than arguments, but some values may be unitialized (keep their garbage)
-. Add the "memory frame legs" to the last memory row
+Example for entry point:
+
+	^done,locals=[]
+	(gdb)
+
+. Do the same than arguments, but some values may be unitialized (keep their garbage).
+. Add the "memory frame legs" to the last memory row.
+. Raise the memory frame until it is enterely visible (legs included).
 
 
 ==== -stack-info-depth
@@ -491,9 +566,9 @@ Player solution hit a breakpoint that has the role of `functionCall`. The breakp
 
 
 [[variable-info]]
-=== 4.2 Get variable info
+=== 4.3 Get variable info
 
-Does GDB/MI offer a method to get data-type size or unroll data types? We use C/C++ expressions and normal user interface:
+Does GDB/MI offer a method to get data-type size or unroll data types? As a workaround we use C/C++ expressions and normal user interface:
 
 ==== -data-evaluate-expression sizeof(this)
 
@@ -511,6 +586,25 @@ Get the size in bytes of a variable. It may not match the Botnu architecture (32
 	~"} * const\n"
 	^done
 	(gdb)
+
+Get the unrolled data type of the variable. botNeumann must represent typedefs and compound structures with primitive C/C++ data types. This process is know as unroll the data type. GDB's user command `ptype` does this work, but it is not available in GDB/MI.
+
+. Map the data type to primitive data types
+. Use structs to represent classes and structures
+. Future: Use structs to represent the maximum-sized element of unions
+. ToDo: Use variable objects to unroll structures
+
+
+==== -data-evaluate-expression &this
+
+	-data-evaluate-expression &this
+	^done,value="0x7fffffffde38"
+	(gdb)
+
+. Get the inferior address for the variable.
+. Assign an address in the visualization in some MemoryFrame/MemoryRow
+. Add the to the MemoryMapper the GDB address, the visualization address, and a pointer to the Variable object.
+
 
 
 Example with primitive type:
@@ -537,8 +631,9 @@ Example with pointer to primitive:
 	(gdb)
 
 
+
 [[user-defined-breakpoint]]
-=== 4.3 User defined breakpoint
+=== 4.4 User defined breakpoint
 
 . Change visualization state to `paused`.
 . Set VisualizationSpeed::seeking to false
@@ -547,7 +642,7 @@ Example with pointer to primitive:
 
 
 
-=== 4.4 Dynamic memory management breakpoint
+=== 4.5 Dynamic memory management breakpoint
 
 
 The execution stopped at a breakpoint set to a dynamic memory management function. The call may be done for the player solution directly or indirectly for any library function called by player. Eg:
