@@ -353,7 +353,14 @@ Example with object:
 
 
 
-=== 2.4 Finish elaboration phase
+=== 2.4 Load standard input
+
+. Create characters for the test case's standard input
+. Animate characters arriving by the tube until reaching the left edge
+
+
+
+=== 2.5 Finish elaboration phase
 
 . Set visualization's elaboration mode to false (or use another state: loading).
 . Do <<breakpoint-hit>> using the stored tree of *stopped response.
