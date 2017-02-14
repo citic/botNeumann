@@ -569,6 +569,7 @@ Example for entry point:
 	^done,depth="2"
 	(gdb)
 
+. [Note: Unnecessary for program entry point]
 . Check if it matches the number of stack frames. It may different for first function call.
 . Update the ExecutionThread::callStackDepth integer value.
 
@@ -757,11 +758,28 @@ If block was reallocated (i.e. using realloc)
 
 
 
+
 [[execution-loop]]
 == 5. Execution loop
 
 
 Each step of this loop is considered a step of the visualization. When visualization is paused and player presses the `Step` button, one *visualization step* is done (animated). When visualization is in seeking state, a visualization step is issued each time there is no pending commands to be sent to GDB.
+
+A visualization step moves around the `-exec-next` instruction. Each time this command is sent, some events may happen: a variable is changed, a function is called, a function is returned... The breakpoint system will catch the function calls and dynamic memory changes. In each visualization step we have to update the remaining elements: execution threads (line number), stack, data segment, and standard input/output.
+
+
+==== -exec-next
+
+	^running
+	*running,thread-id="all"
+	(gdb)
+	*stopped,reason="end-stepping-range",frame={addr="0x00000000004027d2",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="66"},thread-id="1",stopped-threads="all",core="6"
+	(gdb)
+
+The _visualization step_ finished executing the next instruction.
+If a breakpoint was hit, a function was called or dynamic memory was modified. The <<breakpoint-hit>> section will react accordingly.
+Now we have to update the rest:
+
 
 
 ==== -stack-info-depth
@@ -769,20 +787,21 @@ Each step of this loop is considered a step of the visualization. When visualiza
 	^done,depth="6"
 	(gdb)
 
+. Check if we are running on the same function
 . Update the `ExecutionThread::callStackDepth` integer value (init value -1). If decreased animate a <<function-return>>.
 
 
 ==== -stack-list-variables 2
 
-	^done,variables=[{name="n",type="size_t",value="4196304"},{name="grid",type="char **",value="0x7fffffffdf50"},{name="error",type="int",value="0"}]
+	^done,variables=[{name="this",arg="1",type="InputArgument * const",value="0x60b580 <global_program_name>"},{name="number",arg="1",type="ull",value="0"},{name="value",arg="1",type="const char *",value="0x406dc6 \"all_inclusive\""}]
 	(gdb)
 
 Update local variables
 
 . Get the value of all the local variables, and pass them to the CallStack or VariableManager
-. If some variable has changed its value, animate it
+. If some variables have changed their values, animate them
 . ToDo: If we create variable-objects for each local variable in all threads, this comparison
-  step may be not necessary
+  step may be not necessary, but GDB may reject to update many of them.
 . ToDo: GDB consider local static variables as normal local variables. We have to separe them
 
 
@@ -815,24 +834,11 @@ Update global variables and standard input/output streams
 . ToDo: provide more tubes for user own files (FILE*, std::istream, std::fstream...)
 
 
-
-==== -exec-next
-
-	^running
-	*running,thread-id="all"
-	(gdb)
-	*stopped,reason="end-stepping-range",frame={addr="0x00000000004008dd",func="main",args=[],file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="14"},thread-id="1",stopped-threads="all",core="7"
-	(gdb)
-
-The _visualization step_ finished executing the next instruction.
-Just act according to the response as stated in previous sections.
-
-
-
 [[function-return]]
 === Function return
 
 . Animate stack frame being dropped through the cpu core's memory interface
+. Remove local variables from VariableMapper
 
 
 
