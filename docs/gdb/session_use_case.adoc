@@ -270,6 +270,7 @@ Only on MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluat
 . Create a DebuggerVariable object and load it from GDB response
 . Add the DebuggerVariable to the VariableManager
 . Animate variable creation in DataSegment and init it with the value obtained from GDB response
+. If there is an overflow, simulate an DataSegment overflow. Do <<program-termination>>
 . Future work: detect static local variables
 
 The list of all variables for "all inclusive" example:
@@ -416,6 +417,7 @@ Do <<variable-info>> to get data types and sizes:
 
 . Set visualization's state to `animating` (emit `animationStarted`)
 . Do <<breakpoint-hit>> using the stored tree of *stopped response.
+. Enter in execution loop. Do <<execution-loop>>
 
 
 
@@ -530,14 +532,21 @@ Player solution hit a breakpoint that has the role of `functionCall`. The breakp
 . Calculate the size required for all parameters, and the number required memory rows with garbage. Do <<variable-info>>
 
 . Raise the min(required memory rows, max allowed stack frame size/rowsize) rows and stop
-. Create all variables in the memory rows
-. If there is overflow, animate a stack overflow (see Program termination)
+. Create all variables in the memory rows. Do <<variable-info>>
+. If there is overflow, animate a stack overflow. Do <<program-termination>>
 . Initialize each parameter with the argument, they will replace the garbage
 
 . Create variables for arguments, not initialized yet.
 . Initialize arguments (set arguments' values)
 . Create unitialized and initialized variables
+. Hack: if a `char*` pointer has an address that is not in the `MemoryMapper`, and that address is lower than the first global variable, assume it is a literal string. Place the pointed string into variable's value limited to some extent. Indicate the value is in CodeSegment. Do the following to get the entire string:
+
+	-data-evaluate-expression value
+	^done,value="0x406dc6 \"all_inclusive\""
+	(gdb)
+
 . Raise the stack frame to make visible last variable
+. Future: when user clicks over a variable, zoom it in (grey out everything else), and show all its details.
 
 
 ==== -stack-list-locals 2
@@ -560,7 +569,7 @@ Example for entry point:
 	^done,depth="2"
 	(gdb)
 
-. Check if it matches the number of stack frames
+. Check if it matches the number of stack frames. It may different for first function call.
 . Update the ExecutionThread::callStackDepth integer value.
 
 
@@ -748,6 +757,7 @@ If block was reallocated (i.e. using realloc)
 
 
 
+[[execution-loop]]
 == 5. Execution loop
 
 
@@ -826,6 +836,8 @@ Just act according to the response as stated in previous sections.
 
 
 
+
+[[program-termination]]
 == 6. Program termination (visualization stop)
 
 Program may terminate for these reasons:
@@ -834,6 +846,7 @@ Program may terminate for these reasons:
 . Program finished normally
 . Program received a signal from OS (eg: segmentation fault)
 . Program failed to run in the virtualized environment (unit) (eg: stack overflow)
+
 
 
 If player stopped visualization or program failed to run in the constrained environmentof the unit, stop inferior execution:
@@ -862,6 +875,17 @@ If inferior was finished normally or by a signal, GDB will stop it and emit a *s
 Provide some feedback to user. Stop the visualization and move to state inferior-exited, where only Stop button is enable. When user presses it, visualization returns to editing state.
 
 
+
+[[segmentation-fault]]
+=== 6.1 Segmentation fault
+
+A segmentation fault is simulated when the player solution requires more memory than the available in the Unit. The inferior is likely to have enough memory to continue running normally.
+
+. Animate robots vibrating and then falling (turning)
+. Provide user feedback (a dialog) pointing the overflowed segmentation
+. Give advice to reduce the amount of memory required by his/her solution
+. Enter visualization in `finished` state, only the Stop button is available
+. When user presses the Stop button, return to the `editing` state
 
 
 == A. Miscellaneous commands (reference)
