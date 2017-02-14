@@ -290,10 +290,8 @@ void UnitPlayingScene::playerSolutionBuilt(CompiledProgram* compiledProgram)
 	connect( codeSegment, SIGNAL(userSteppedOut()), visualizator, SLOT(stepOut()) );
 
 	// Start the animation, if it started change the state to animating, otherwise return to editing
-	if ( visualizator->start() )
-		changeState(UnitPlayingState::animating);
-	else
-		changeState(UnitPlayingState::editing);
+	if ( ! visualizator->start() )
+		return changeState(UnitPlayingState::editing);
 
 	// Load the test case expected input/output/error in the StandardInputOutputInspector
 	messagesArea->loadTestCase(testCaseNumber, playerSolution);

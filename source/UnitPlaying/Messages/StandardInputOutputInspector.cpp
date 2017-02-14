@@ -2,7 +2,7 @@
 #include "LogManager.h"
 #include "PlayerSolution.h"
 
-#include <QACtion>
+#include <QAction>
 #include <QTextEdit>
 #include <QTextStream>
 #include <QToolBar>

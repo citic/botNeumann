@@ -83,6 +83,8 @@ class Visualizator : public GdbResponseListener
 	/// will wait these amount of milliseconds (the animation is done) until fetching the next
 	/// pending GdbResponse
 	void dispatchGdbResponse(const GdbResponse* response, int& maxDuration);
+	/// Emitted when the visualization has finished the starting phase and it is now animating
+	void animationStarted();
 
   public slots:
 	/// Called when there are pending GdbResponses to process.

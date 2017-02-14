@@ -270,6 +270,9 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 			gdbState = STATE_STOPPED;
 			// Gede gets pid asking the list of threads, we got pid from AC_THREAD_GROUP_STARTED
 			// if (inferiorProcessId == 0) debuggerCall->sendGdbCommand("-list-thread-groups");
+
+			// ToDo: for first breakpoint-hit, save tree
+
 			debuggerCall->sendGdbCommand("-thread-info");
 			debuggerCall->sendGdbCommand("-var-update --all-values *");
 			debuggerCall->sendGdbCommand("-stack-list-locals 1");
