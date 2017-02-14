@@ -168,18 +168,16 @@ GDB recursive breakpoints may fail for unclear reasons, e.g: "mismatched quote"
 
 Start the execution of inferior and stop in the program entry point
 
+. Set Visualization in `elaboration` mode.
 . `=breakpoint-created`: Breapoint at program's entry point. Create object and it to breakpoints[]. If another breakpoint already exists at the same file:line, add the role `functionBody` to it. Notice: the breakpoint is added to the `breakpoints[]` array unconditionally.
 . `=thread-group-started`: Collect the process id from `pid` param.
 . `=thread-created`: Animate creation of main thread when. Do <<create-execution-thread>>
 . `=library-loaded`: Ignore all library load responses. Optional: trace `libc` load and store a flag it is being used.
 . `*running`: Change inferior state to *running
 . `=breakpoint-modified`. Update breakpoint
-. `*stopped,reason="breakpoint-hit"`. Execution stopped at program entry point. Do <<breakpoint-hit>>. It will animate a function call by thread-id=1.
-. Remove deleted breakpoint from breakpoints[] array
-  Breakpoint was likely removed because there is a user-defined breakpoint in the same line
-  Each time a breakpoint is added to the breakpoints[] array, look if there is a previous
-  breakpoint in the same file and line that is not in deleted state (referenceBreakpoint).
-  Add the roles of the just inserted breakpoint in the referenceBreakpoint.roles flags
+. `*stopped,reason="breakpoint-hit"`. Execution stopped at program entry point. If visualization in `elaboration` mode (true), do NOT do <<breakpoint-hit>> yet. Store the result tree for later user. Continue as usual (through next section).
+. If there are removed breakpoints: Remove deleted breakpoint from breakpoints[] array
+  Breakpoint was likely removed because there is other breakpoint at the same line.
 
 
 
@@ -188,42 +186,42 @@ Start the execution of inferior and stop in the program entry point
 
 ==== -break-insert -f __libc_malloc
 
-	^done,bkpt={number="13",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7874580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900",thread-groups=["i1"],times="0",original-location="__libc_malloc"}
+	^done,bkpt={number="20",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff72dc580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900",thread-groups=["i1"],times="0",original-location="__libc_malloc"}
 	(gdb)
 
 Set breakpoint for the dynamic memory management functions. These breakpoints are set after the libc library has been loaded.
 
 . Set break to stop inferior each time dynamic memory is allocated
-. Create a GdbBreakpoint with role MallocCall and add to breakpoints[] array
+. Create a DebuggerBreakpoint with role `mallocCall` and add to `breakpoints[]` array
 . Future work: check if it works with GCC/MinGW for MsWin
 
 
 ==== -break-insert -f __libc_calloc
 
-	^done,bkpt={number="14",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7875160",func="__libc_calloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="3170",thread-groups=["i1"],times="0",original-location="__libc_calloc"}
+	^done,bkpt={number="21",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff72dd160",func="__libc_calloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="3170",thread-groups=["i1"],times="0",original-location="__libc_calloc"}
 	(gdb)
 
 . Set break to stop inferior each time initialized dynamic memory is allocated
-. Create a GdbBreakpoint with role CallocCall and add to breakpoints[] array
+. Create a `DebuggerBreakpoint` with role `callocCall` and add to `breakpoints[]` array
 
 
 
 ==== -break-insert -f __libc_realloc
 
-	^done,bkpt={number="15",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7874b10",func="__GI___libc_realloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2972",thread-groups=["i1"],times="0",original-location="__libc_realloc"}
+	^done,bkpt={number="22",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff72dcb10",func="__GI___libc_realloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2972",thread-groups=["i1"],times="0",original-location="__libc_realloc"}
 	(gdb)
 
 . Set break to stop inferior each time dynamic memory is re-allocated
-. Create a GdbBreakpoint with role ReallocCall and add to breakpoints[] array
+. Create a `DebuggerBreakpoint` with role `reallocCall` and add to `breakpoints[]` array
 
 
 ==== -break-insert -f __libc_free
 
-	^done,bkpt={number="16",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff7874940",func="__GI___libc_free",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2932",thread-groups=["i1"],times="0",original-location="__libc_free"}
+	^done,bkpt={number="23",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff72dc940",func="__GI___libc_free",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2932",thread-groups=["i1"],times="0",original-location="__libc_free"}
 	(gdb)
 
 . Set break to stop inferior each time dynamic memory is de-allocated
-. Create a GdbBreakpoint with role FreeCall and add to breakpoints[] array
+. Create a `DebuggerBreakpoint` with role `freeCall` and add to `breakpoints[]` array
 
 
 
@@ -232,23 +230,23 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 
 ==== -var-create bn_io_stdin @ stdin->_IO_read_ptr
 
-	^done,name="bn_stdin",numchild="1",value="0x0",type="char *",has_more="0"
+	^done,name="bn_io_stdin",numchild="1",value="0x0",type="char *",has_more="0"
 	(gdb)
 
-. In Unix: Create object variables watching changes in io, using notation `bn_io_iofile`
+. In Unix: Create object variables watching changes in IO, using notation `bn_io_iofile`
 . Future work: check if it works with GCC/MinGW for MsWin
 
 
 ==== -var-create bn_io_stdout @ stdout->_IO_write_ptr
 
-	^done,name="bn_stdout",numchild="1",value="0x0",type="char *",has_more="0"
+	^done,name="bn_io_stdout",numchild="1",value="0x0",type="char *",has_more="0"
 	(gdb)
 
 
 
 ==== -var-create bn_io_stderr @ stderr->_IO_write_ptr
 
-	^done,name="bn_stderr",numchild="1",value="0x0",type="char *",has_more="0"
+	^done,name="bn_io_stderr",numchild="1",value="0x0",type="char *",has_more="0"
 	(gdb)
 
 
@@ -267,11 +265,98 @@ Only in MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluat
 
 ==== -var-create bn_gv_1 @ global_variable_name_1
 
-
-. Get global variables from PlayerSolution (collected with ctags in building process)
-. For each global variable, create a GDB-variable object with2 name `bn_gv_num`
+. Get global variables from `PlayerSolution` (collected with ctags in building process in file `bn_tags.txt`).
+. For each global variable, create a GDB-variable object with name `bn_gv_num`
+. Create a DebuggerVariable object and load it from GDB response
+. Add the DebuggerVariable to the VariableManager
+. Animate variable creation in DataSegment and init it with the value obtained from GDB response
 . Future work: detect static local variables
 
+The list of all variables for "all inclusive" example:
+
+....
+	-var-create bn_gv_1 @ all_arguments
+
+	^done,name="bn_gv_1",numchild="1",value="{...}",type="std::vector<InputArgument*, std::allocator<InputArgument*> >",has_more="0"
+
+	-var-create bn_gv_2 @ buffer
+	^done,name="bn_gv_2",numchild="1",value="0x0",type="char **",has_more="0"
+	(gdb)
+
+	-var-create bn_gv_3 @ input_count
+	^done,name="bn_gv_3",numchild="0",value="0",type="ull",has_more="0"
+	(gdb)
+
+	-var-create bn_gv_4 @ sorted_arguments
+	^done,name="bn_gv_4",numchild="1",value="0x0",type="InputArgument **",has_more="0"
+	(gdb)
+
+	-var-create bn_gv_5 @ sorted_count
+	^done,name="bn_gv_5",numchild="0",value="0",type="size_t",has_more="0"
+	(gdb)
+
+	-var-create bn_gv_6 @ global_program_name
+	^done,name="bn_gv_6",numchild="2",value="{...}",type="InputArgument",has_more="0"
+	(gdb)
+....
+
+
+Do <<variable-info>> to get data types and sizes. Example with vector `all_arguments`:
+
+	-data-evaluate-expression sizeof(all_arguments)
+	^done,value="24"
+	(gdb)
+
+	-interpreter-exec console "ptype /mt all_arguments"
+	&"Python Exception <class 'gdb.error'> No type named InputArgument*.: \n"
+	~"type = class std::vector<InputArgument*, std::allocator<InputArgument*> > [with _Tp = InputArgument *, _Alloc = std::allocator<InputArgument*>] : protected std::_Vector_base<InputArgument*, _Alloc> {\n"
+	~"}\n"
+	^done
+	(gdb)
+
+
+Example with typdef `input_count`:
+
+	-data-evaluate-expression sizeof(input_count)
+	^done,value="8"
+	(gdb)
+
+	-interpreter-exec console "ptype /mt input_count"
+	~"type = unsigned long long\n"
+	^done
+	(gdb)
+
+Example with size_t `sorted_count`:
+
+	-data-evaluate-expression sizeof(sorted_count)
+	^done,value="8"
+	(gdb)
+
+	-interpreter-exec console "ptype /mt sorted_count"
+	~"type = unsigned long\n"
+	^done
+	(gdb)
+
+Example with object:
+
+	-data-evaluate-expression sizeof(global_program_name)
+	^done,value="56"
+	(gdb)
+
+	-interpreter-exec console "ptype /mt global_program_name"
+	~"type = class InputArgument : public AbstractArgument<char const*> {\n"
+	~"  protected:\n"
+	~"    std::__cxx11::string value2;\n"
+	~"}\n"
+	^done
+	(gdb)
+
+
+
+=== 2.4 Finish elaboration phase
+
+. Set visualization's elaboration mode to false (or use another state: loading).
+. Do <<breakpoint-hit>> using the stored tree of *stopped response.
 
 
 
@@ -327,8 +412,8 @@ Each time `=thread-exited,id=#` is issued:
 
 Player solution (inferior) stopped for hitting a breakpoint. Get the `/bkptno` integer value, and find the `DebuggerBreakpoint` object. If breakpoint object has one or more roles:
 
-* `functionBody`: Do <<function-call>> (also for `programEntryPoint`)
-* `userDefined`: Change visualization state to `paused`. When debugger enters in idle state, no more `exec-next` commands will be automatically sent. Execution will continue when user presses the resume button or the step button.
+* `functionBody`: Do <<function-call>> (also for `programEntryPoint`).
+* `userDefined`: Do <<user-defined-breakpoint>>.
 * `mallocCalled`: Process memory allocation (uninitialized)
 * `callocCalled`: Process memory allocation (initialized)
 * `reallocCalled`: Process memory reallocation
@@ -420,7 +505,8 @@ Get the size in bytes of a variable. It may not match the Botnu architecture (32
 	^done
 	(gdb)
 
-Example with
+
+Example with primitive type:
 
 	-data-evaluate-expression sizeof(number)
 	^done,value="8"
@@ -430,6 +516,9 @@ Example with
 	~"type = unsigned long long\n"
 	^done
 	(gdb)
+
+
+Example with pointer to primitive:
 
 	-data-evaluate-expression sizeof(value)
 	^done,value="8"
@@ -441,15 +530,17 @@ Example with
 	(gdb)
 
 
-=== 4.2 User defined breakpoint
+[[user-defined-breakpoint]]
+=== 4.3 User defined breakpoint
 
-
-. Set Visualization state to paused
+. Change visualization state to `paused`.
 . Set VisualizationSpeed::seeking to false
+. When debugger enters in idle state, no more `exec-next` commands will be automatically sent.
+. Execution will continue when user presses the resume button or the step button.
 
 
 
-=== 4.3 Dynamic memory management breakpoint
+=== 4.4 Dynamic memory management breakpoint
 
 
 The execution stopped at a breakpoint set to a dynamic memory management function. The call may be done for the player solution directly or indirectly for any library function called by player. Eg:

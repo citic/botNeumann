@@ -39,13 +39,13 @@ class ExecutionThread : public LinearLayout
 	bool idle = false;
 	/// The line number in that file being executed
 	int lineNumber = -1;
+	/// The previous line number that this thread was executing before the last update
+	/// It is used by code editors to clear highlighted lines
+	int previousLineNumber = -1;
 	/// The function being currently executed by this thread
 	QString functionName;
 	/// The previous source file that this thread was executing before the last update
 	QString previousFilename;
-	/// The previous line number that this thread was executing before the last update
-	/// It is used by code editors to clear highlighted lines
-	int previousLineNumber = -1;
 	/// A layer to place the actor
 	LinearLayout* actorLayout = nullptr;
 	/// Spacer on top of the actor to reserve space for the call stack when the execution thread
