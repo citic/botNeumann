@@ -473,7 +473,7 @@ Each time `=thread-exited,id=#` is issued:
 
 Player solution (inferior) stopped for hitting a breakpoint. Get the `/bkptno` integer value, and find the `DebuggerBreakpoint` object. If breakpoint object has one or more roles:
 
-* If visualization is in starting state and entryPointTree is null Do <<program-entry-point>>
+* If visualization is in `starting` state and `entryPointTree` is null Do <<program-entry-point>>
 * `functionBody` or `programEntryPoint`: Do <<function-call>>.
 * `userDefined`: Do <<user-defined-breakpoint>>.
 * `mallocCalled`: Process memory allocation (uninitialized)
@@ -778,8 +778,11 @@ A visualization step moves around the `-exec-next` instruction. Each time this c
 	(gdb)
 
 The _visualization step_ finished executing the next instruction.
-If a breakpoint was hit, a function was called or dynamic memory was modified. The <<breakpoint-hit>> section will react accordingly.
-Now we have to update the rest:
+
+. Update ExecutionThread `/thread-id` with line number `/frame/line`.
+. If response is `*stopped,reason="breakpoint-hit"` a breakpoint was hit. A function was called or dynamic memory was modified. The <<breakpoint-hit>> section will react accordingly.
+. If a function was called, after animating the new stack frame appearing, continue in <<update-global-variables>>. Otherwise continue as normal.
+
 
 
 [[stay-in-function]]
@@ -793,9 +796,11 @@ If response was `*stopped,reason="end-stepping-range"`, one line of current func
 	^done,depth="6"
 	(gdb)
 
-. This command is unnecesary if a player solution function was called
-. Check if we are running on the same function
-. Update the `ExecutionThread::callStackDepth` integer value (init value -1). If decreased animate a <<function-return>>.
+Check if we are running on the same function
+
+. If `/depth` is one less than `ExecutionThread::callStackDepth` integer value (init value -1), animate a function return. Do: <<function-return>>.
+. After animation, update `ExecutionThread::callStackDepth = /depth`
+. Future: study callback functions: eg: `qsort()`
 
 
 ==== -stack-list-variables 2
@@ -827,10 +832,29 @@ Method 1: Desreference pointers:
 Method 2: Create GDB variable objects
 
 	-var-create bn_pd_1_1 @ *this
+	^done,name="bn_pd_1_1",numchild="2",value="{...}",type="InputArgument",thread-id="1",has_more="0"
+	(gdb)
 
-I both cases we need to keep track of the pointed data. If the pointed address matches a existing Variable object, point to it. If there is not a Variable object, make a child class object AnonymousVariable that trace value changes.
+Or?:
+
+	-var-create bn_pd_1_1b @ this
+	^done,name="bn_pd_1_1b",numchild="2",value="0x60b580 <global_program_name>",type="InputArgument * const",thread-id="1",has_more="0"
+	(gdb)
+
+Creates a variable object using notation `bn_pd_th_fc` where `pd` stands for 'pointed data', `th` the thread number, and `fc` the function call index in that thread. We create a variable object for each pointer we have in the stack:
+
+	-var-create bn_pd_1_2 @ *value
+	^done,name="bn_pd_1_2",numchild="0",value="97 'a'",type="const char",thread-id="1",has_more="0"
+	(gdb)
+
+	-var-create bn_pd_1_2b @ value
+	^done,name="bn_pd_1_2b",numchild="1",value="0x406dc6 \"all_inclusive\"",type="const char *",thread-id="1",has_more="0"
+	(gdb)
+
+In both cases we need to keep track of the pointed data. If the pointed address matches a existing Variable object, point to it. If there is not a Variable object, make a child class object AnonymousVariable that trace value changes.
 
 . ToDo: review Gede method to update (*this)
+. Future: represent vtable in CodeSegment
 . Future: test temporary values (e.g: anonymous objects returned by functions).
 . Future: animate evaluation of expressions (reflecting operator precedence).
 
@@ -891,8 +915,45 @@ Update global variables and standard input/output streams
 [[function-return]]
 === 5.5 Function return
 
-. Animate stack frame being dropped through the cpu core's memory interface
+. Animate stack frame being dropped through the CPU core's memory interface
 . Remove local variables from VariableMapper
+. If there are remaining function calls, make them to move a step towards the robot. Return to the <<execution-loop>>
+. If there are no remaining function calls, execute `-exec-continue`:
+
+
+==== -exec-continue
+
+An execution thread may end with no stack frames (function calls). This is possible because we are not animating all function calls. Library functions may be executing. For example GNU libc++ runs `__static_initialization_and_destruction_0` to call global objects' constructors before main().
+
+Future: We could represent these library functions as empty stack frames, or just one stack frame (using 1 memory row) having by title _library functions_.
+
+[source,js]
+----
+	^running
+	*running,thread-id="all"
+	(gdb)
+
+	=breakpoint-modified,bkpt={number="18",type="breakpoint",disp="keep",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="162",thread-groups=["i1"],times="1",original-location="alli.cpp:162"}
+
+	=breakpoint-modified,bkpt={number="19",type="breakpoint",disp="del",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="163",thread-groups=["i1"],times="1",original-location="main"}
+
+	~"\n"
+	~"Breakpoint 18, main (argc=2, argv=0x7fffffffdfb8) at alli.cpp:163\n"
+	~"163\t{\n"
+
+	*stopped,reason="breakpoint-hit",disp="keep",bkptno="18",frame={addr="0x000000000040219e",func="main",args=[{name="argc",value="2"},{name="argv",value="0x7fffffffdfb8"}],file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="163"},thread-id="1",stopped-threads="all",core="2"
+
+	=breakpoint-deleted,id="19"
+	(gdb)
+----
+
+We process the responses as usual, in the same way it happens in `starting` state.
+
+. `*running`: Set GDB state to running again.
+. `=breakpoint-modified`: Update the modifief breakpoint.
+. `*stopped,reason="breakpoint-hit"`: Do <<breakpoint-hit>>. In this example this breakpoint was set by GDB as program entry point and it has the `programEntryPoint` role.
+. `=breakpoint-deleted,id="19"`: Remove the breakpoint from `breakpoints[]` array, and make its pointer null.
+. Finally, return to the <<execution-loop>>.
 
 
 
