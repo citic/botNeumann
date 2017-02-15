@@ -528,17 +528,16 @@ Player solution hit a breakpoint that has the role of `functionCall`. The breakp
 	(gdb)
 
 
-. The `0 0` argument is for selecting top frame only: `/frame/level == 0`
+The `0 0` argument is for selecting top frame only: `/frame/level == 0`
+
 . Calculate the size required for all parameters, and the number required memory rows with garbage. Do <<variable-info>>
 
 . Raise the min(required memory rows, max allowed stack frame size/rowsize) rows and stop
-. Create all variables in the memory rows. Do <<variable-info>>
+. Create all variables in the memory rows, they may overflow.
 . If there is overflow, animate a stack overflow. Do <<program-termination>>
-. Initialize each parameter with the argument, they will replace the garbage
-
-. Create variables for arguments, not initialized yet.
-. Initialize arguments (set arguments' values)
-. Create unitialized and initialized variables
+. Create variables for arguments, not initialized yet. See below.
+. Initialize each parameter with its argument, they will replace the garbage
+. Create all remaining local variables. See below
 . Hack: if a `char*` pointer has an address that is not in the `MemoryMapper`, and that address is lower than the first global variable, assume it is a literal string. Place the pointed string into variable's value limited to some extent. Indicate the value is in CodeSegment. Do the following to get the entire string:
 
 	-data-evaluate-expression value
@@ -570,7 +569,7 @@ Example for entry point:
 	(gdb)
 
 . [Note: Unnecessary for program entry point]
-. Check if it matches the number of stack frames. It may different for first function call.
+. [Necessary? Check if it matches the number of stack frames. It may different for first function call]
 . Update the ExecutionThread::callStackDepth integer value.
 
 
@@ -768,6 +767,8 @@ Each step of this loop is considered a step of the visualization. When visualiza
 A visualization step moves around the `-exec-next` instruction. Each time this command is sent, some events may happen: a variable is changed, a function is called, a function is returned... The breakpoint system will catch the function calls and dynamic memory changes. In each visualization step we have to update the remaining elements: execution threads (line number), stack, data segment, and standard input/output.
 
 
+=== 5.1 Execute next line
+
 ==== -exec-next
 
 	^running
@@ -781,12 +782,18 @@ If a breakpoint was hit, a function was called or dynamic memory was modified. T
 Now we have to update the rest:
 
 
+[[stay-in-function]]
+=== 5.2 Stay in function
+
+If response was `*stopped,reason="end-stepping-range"`, one line of current function was executed, and no a new function was called. Update potential changes in local variables of the current function:
+
 
 ==== -stack-info-depth
 
 	^done,depth="6"
 	(gdb)
 
+. This command is unnecesary if a player solution function was called
 . Check if we are running on the same function
 . Update the `ExecutionThread::callStackDepth` integer value (init value -1). If decreased animate a <<function-return>>.
 
@@ -798,12 +805,17 @@ Now we have to update the rest:
 
 Update local variables
 
+. ToDo: This command is unnecesary if a player solution function was called, because the stack frame has changed. If we try to update the local variables, it will be done in the new function call instead of the caller. This is a problem, because complex calls such as `int x = 3, y = func(++x), z = x + y` will miss the update of variables in the caller before `func()` is called.
 . Get the value of all the local variables, and pass them to the CallStack or VariableManager
 . If some variables have changed their values, animate them
 . ToDo: If we create variable-objects for each local variable in all threads, this comparison
   step may be not necessary, but GDB may reject to update many of them.
 . ToDo: GDB consider local static variables as normal local variables. We have to separe them
 
+
+
+[[update-global-variables]]
+=== 5.3 Update global variables
 
 
 ==== -var-update --all-values *
@@ -818,24 +830,45 @@ Update global variables and standard input/output streams
 . If a standard input/output stream changed its value, replace FILE for the stream and issue:
 
 
-==== -data-evaluate-expression bn_tell_FILE()
 
-	[ToDo]
-	$1 = 2
+[[update-input-output]]
+=== 5.4 Update input/output
 
-. Capture the number of bytes moved
-. If FILE is stdin, animate Robot consuming n chars from stdin (robot turns)
-  Locate what variable received the read input (it should be included in -var-update result)
-  Animate robot converting to the data type of the changed variable
-  If no target variable is found, animate robot discarding the read bytes
-. If FILE is stdout, it is so difficult to determine which variables were involved to produce the
-  output. Animate the robot building the output message and sending it by the stdout. Check if output matches expected output and turn on/off the output tester accordingly.
-. If file is stderr, ToDo: ignore the event, for now
+
+==== -data-evaluate-expression bn_tell_stdin()
+
+	^done,value="0"
+	(gdb)
+
+. Capture the number of bytes moved. If value is 0, do nothing.
+. Animate Robot consuming `value` chars from stdin (robot turns)
+. ToDo: Locate what variable received the read input (it should be included in -var-update result)
+. Animate robot converting to the data type of the changed variable
+. If no target variable is found, animate robot discarding the read bytes
+
+
+==== -data-evaluate-expression bn_tell_stdout()
+	^done,value="0"
+	(gdb)
+
+. Capture the number of bytes moved. If value is 0, do nothing.
+. For stdout it is so difficult to determine which variables were involved to produce the
+  output. Animate the robot building the output message and sending it by the stdout.
+. Check if output matches expected output and turn on/off the output tester accordingly.
+
+
+==== -data-evaluate-expression bn_tell_stderr()
+	^done,value="0"
+	(gdb)
+
+. Capture the number of bytes moved. If value is 0, do nothing.
+. ToDo: For stderr ignore the event, for now
 . ToDo: provide more tubes for user own files (FILE*, std::istream, std::fstream...)
 
 
+
 [[function-return]]
-=== Function return
+=== 5.5 Function return
 
 . Animate stack frame being dropped through the cpu core's memory interface
 . Remove local variables from VariableMapper
