@@ -224,6 +224,27 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 . Create a `DebuggerBreakpoint` with role `freeCall` and add to `breakpoints[]` array
 
 
+==== C++ new/delete/new[]/delete[]
+
+Unsure if they are needed, because all of them call libc dynamic memory functions. When a libc function is called, we can ask GDB to list all function calls. We can know if the function immediatelly before is a new/delete operator, a user-defined function or any other library function. Anyway, here are the breakpoints to C++ dynamic memory operators:
+
+	-break-insert -f "operator new"
+	^done,bkpt={number="24",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",times="0",original-location="operator new"},{number="24.1",enabled="y",addr="0x00000000004019c0",at="<operator new(unsigned long)@plt>",thread-groups=["i1"]},{number="24.2",enabled="y",addr="0x0000000000402597",func="operator new(unsigned long, void*)",file="/usr/include/c++/5/new",fullname="/usr/include/c++/5/new",line="130",thread-groups=["i1"]},{number="24.3",enabled="y",addr="0x00007ffff7adbc50",at="<operator new(unsigned long, std::nothrow_t const&)@plt>",thread-groups=["i1"]},{number="24.4",enabled="y",addr="0x00007ffff7adc0e0",at="<operator new(unsigned long)@plt>",thread-groups=["i1"]},{number="24.5",enabled="y",addr="0x00007ffff7ae2e60",at="<operator new(unsigned long)>",thread-groups=["i1"]},{number="24.6",enabled="y",addr="0x00007ffff7ae2ec0",at="<operator new(unsigned long, std::nothrow_t const&)>",thread-groups=["i1"]}
+	(gdb)
+
+	-break-insert -f "operator new[]"
+	^done,bkpt={number="25",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",times="0",original-location="operator new[]"},{number="25.1",enabled="y",addr="0x0000000000401840",at="<operator new[](unsigned long)@plt>",thread-groups=["i1"]},{number="25.2",enabled="y",addr="0x00007ffff7ae2f10",at="<operator new[](unsigned long)>",thread-groups=["i1"]},{number="25.3",enabled="y",addr="0x00007ffff7ae2f40",at="<operator new[](unsigned long, std::nothrow_t const&)>",thread-groups=["i1"]}
+	(gdb)
+
+	-break-insert -f "operator delete"
+	^done,bkpt={number="26",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",times="0",original-location="operator delete"},{number="26.1",enabled="y",addr="0x00000000004019a0",at="<operator delete(void*)@plt>",thread-groups=["i1"]},{number="26.2",enabled="y",addr="0x00000000004025a9",func="operator delete(void*, void*)",file="/usr/include/c++/5/new",fullname="/usr/include/c++/5/new",line="135",thread-groups=["i1"]},{number="26.3",enabled="y",addr="0x00007ffff7adc6e0",at="<operator delete(void*)@plt>",thread-groups=["i1"]},{number="26.4",enabled="y",addr="0x00007ffff7ae0f10",at="<operator delete(void*)>",thread-groups=["i1"]},{number="26.5",enabled="y",addr="0x00007ffff7ae0f20",at="<operator delete(void*, unsigned long)>",thread-groups=["i1"]},{number="26.6",enabled="y",addr="0x00007ffff7ae0f30",at="<operator delete(void*, std::nothrow_t const&)>",thread-groups=["i1"]}
+	(gdb)
+
+	-break-insert -f "operator delete[]"
+	^done,bkpt={number="27",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",times="0",original-location="operator delete[]"},{number="27.1",enabled="y",addr="0x0000000000401a30",at="<operator delete[](void*)@plt>",thread-groups=["i1"]},{number="27.2",enabled="y",addr="0x00007ffff7ae0f40",at="<operator delete[](void*)>",thread-groups=["i1"]},{number="27.3",enabled="y",addr="0x00007ffff7ae0f50",at="<operator delete[](void*, unsigned long)>",thread-groups=["i1"]},{number="27.4",enabled="y",addr="0x00007ffff7ae0f60",at="<operator delete[](void*, std::nothrow_t const&)>",thread-groups=["i1"]}
+	(gdb)
+
+
 
 === 2.2 Watch standard input/output
 
