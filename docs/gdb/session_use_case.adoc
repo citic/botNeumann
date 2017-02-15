@@ -803,7 +803,7 @@ If response was `*stopped,reason="end-stepping-range"`, one line of current func
 	^done,variables=[{name="this",arg="1",type="InputArgument * const",value="0x60b580 <global_program_name>"},{name="number",arg="1",type="ull",value="0"},{name="value",arg="1",type="const char *",value="0x406dc6 \"all_inclusive\""}]
 	(gdb)
 
-Update local variables
+Update local variables:
 
 . ToDo: This command is unnecesary if a player solution function was called, because the stack frame has changed. If we try to update the local variables, it will be done in the new function call instead of the caller. This is a problem, because complex calls such as `int x = 3, y = func(++x), z = x + y` will miss the update of variables in the caller before `func()` is called.
 . Get the value of all the local variables, and pass them to the CallStack or VariableManager
@@ -812,6 +812,27 @@ Update local variables
   step may be not necessary, but GDB may reject to update many of them.
 . ToDo: GDB consider local static variables as normal local variables. We have to separe them
 
+
+==== Update pointed variables
+
+For each `Variable` that has the role of `pointer` [it seems references are updated as normal variables] we need to update the pointed data, because the pointer may have been used to modify it. Brainstorm: we have two methods to detect pointed data changes:
+
+Method 1: Desreference pointers:
+
+	-data-evaluate-expression *this
+	^done,value="{_vptr.AbstractArgument = 0x406f08 <vtable for AbstractArgument<char const*>+16>, number = 0, value1 = 0x406dc6 \"all_inclusive\"}"
+	(gdb)
+
+
+Method 2: Create GDB variable objects
+
+	-var-create bn_pd_1_1 @ *this
+
+I both cases we need to keep track of the pointed data. If the pointed address matches a existing Variable object, point to it. If there is not a Variable object, make a child class object AnonymousVariable that trace value changes.
+
+. ToDo: review Gede method to update (*this)
+. Future: test temporary values (e.g: anonymous objects returned by functions).
+. Future: animate evaluation of expressions (reflecting operator precedence).
 
 
 [[update-global-variables]]
