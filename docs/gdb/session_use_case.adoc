@@ -598,9 +598,48 @@ Example for `main()`:
 This is an alternative to the previous two steps. It shows all the variables (parameters and local variables) at once. It may reduce a little of programming, if the animation of "parameter-passing" can be delayed.
 
 
+[[variable-objects-to-pointed-data]]
 ==== Create variable-objects to pointed data
 
-Do: <<variable-objects-to-pointed-data>>
+	-var-create bn_pd_1_1 @ *this
+	^done,name="bn_pd_1_1",numchild="2",value="{...}",type="InputArgument",thread-id="1",has_more="0"
+	(gdb)
+
+Or?:
+
+	-var-create bn_pd_1_1b @ this
+	^done,name="bn_pd_1_1b",numchild="2",value="0x60b580 <global_program_name>",type="InputArgument * const",thread-id="1",has_more="0"
+	(gdb)
+
+Creates a variable object using notation `bn_pd_th_fc` where `pd` stands for 'pointed data', `th` the thread number, and `fc` the function call index in that thread. We create a variable object for each pointer we have in the stack:
+
+	-var-create bn_pd_1_2 @ *value
+	^done,name="bn_pd_1_2",numchild="0",value="97 'a'",type="const char",thread-id="1",has_more="0"
+	(gdb)
+
+	-var-create bn_pd_1_2b @ value
+	^done,name="bn_pd_1_2b",numchild="1",value="0x406dc6 \"all_inclusive\"",type="const char *",thread-id="1",has_more="0"
+	(gdb)
+
+In both cases we need to keep track of the pointed data. If the pointed address matches a existing Variable object, point to it. If there is not a Variable object, make a child class object AnonymousVariable that trace value changes.
+
+. ToDo: review Gede method to update (*this)
+. Future: represent vtable in CodeSegment
+. Future: test temporary values (e.g: anonymous objects returned by functions).
+. Future: animate evaluation of expressions (reflecting operator precedence).
+
+
+===== Alternative method for update pointed data
+
+If GDB may reject to create many variables, an alternative is the following. Do not create variable-objects. When <<update-variables>> in execution loop, just traverse the list of local variables, and for those that are pointers, update the pointed data.
+
+For each `Variable` that has the role of `pointer` [references are updated as normal variables] we need to update the pointed data, because the pointer may have been used to modify it:
+
+	-data-evaluate-expression *this
+	^done,value="{_vptr.AbstractArgument = 0x406f08 <vtable for AbstractArgument<char const*>+16>, number = 0, value1 = 0x406dc6 \"all_inclusive\"}"
+	(gdb)
+
+
 
 
 [[variable-info]]
@@ -784,46 +823,31 @@ Study the stack. The `level=0` contains the function that called the memory mana
 
 . A library function: Do nothing.
 
+If `dynamicMemoryBlock.directCall` is true, the player directly called the memory management function, and an animation must be done, even though no variables have been modified. For example, user asked to allocate dynamic memory, but he/she did not stored the returned address (i.e. a memory leak should be visualized).
 
-We need to go back to the player's code where the execution thread was running.
-I have not had luck with `step` (even in not debugging code) or `until` commands.
-As a workaround, we ask for the number of functions running on the call stack of the execution thread (in previous example, currentLevel=4).
-We know the level of the returning point in ExecutionThread::callStack.level (returnToLevel) (for this example, 1).
-Simply ask `-exec-finish` to GDB `currentLevel - returnToLevel` times, until the returnToLevel has been reached, and ignore their intermediate results.
-
-	-exec-finish
-	-stack-info-depth
-
-When finally arrived to the player's function before the dynamic memory function was stopped by breakpoint, we can decide if an animation must be produced or not:
-
-
-==== -var-update --all-values *
-
-	^done,changelist=[]
-	(gdb)
-
-Updates all global variables and pointed data variables. [In case of using the Method 1: we have to update all local variables also.]
-
-. If some variable-object changed its value to `dynamicMemoryBlock.address` an animation must be done.
-. If `dynamicMemoryBlock.directCall` is true, the player directly called the memory management function, and an animation must be done, even no variables have been modified. For example, user asked to allocate dynamic memory, but he/she did not stored the returned address (i.e. a memory leak should be visualized).
 . Otherwise, animation is skipped and the DynamicMemoryBlock object is stored until it gets freed by a breakpoint hit at `free*()`.
 
+
+
+[[dynamic-memory-animation]]
+==== Dynamic memory animation
+
 If an animation must be done:
+
 . Pass the DynamicMemoryBlock to the HeapSegment object
 . If block was allocated:
 
 	- Look for the first empty space larger or equal than block.size
-	- Fet the pointed data type (from gdb info?)
+	- Get the pointed data type (from gdb info?)
 	- Animate allocation of size/sizeof(data_type) values
 	- If values were allocated with malloc, keep garbage, otherwise, try to init using gdb values
 	- If there is not enough space, animate segmentation fault (see Program termination)
-	- (Else) Update the pointer that changed in changelist[] from -var-update command
 
 If block was deallocated:
 
 	- Look for the corresponding memory allocation block, if not found, animate segmentation fault
 	- If the operator for deallocating matches the operator used for allocation (xalloc-free,
-	  new-delete, new[]-delete[]), remove block.size bytes from heap and remove blocks
+	  new-delete, new[]-delete[]), remove `dynamicMemoryBlock.size` bytes from heap and remove the block from the `MemoryMapper`.
 	- (Else) Animate removal of one object (ToDo: study removing delete[] to single object)
 
 If block was reallocated (i.e. using realloc)
@@ -834,6 +858,21 @@ If block was reallocated (i.e. using realloc)
 	- If the address is not null and size is larger than the previous, look for enough free space
 	  in HeapSegment. Act as a normal allocation (malloc, not calloc). If not segmentation fault,
 	  finally act as deallocation (free) of the previous address.
+
+
+===== Returning to execution loop
+
+We need to go back to the player's code where the execution thread was running.
+Notice: I had no luck with `step` (even in not debugging code) or `until` commands.
+As a workaround, we ask for the number of functions running on the call stack of the execution thread (in previous example, currentLevel=4).
+We know the level of the returning point in ExecutionThread::callStack.level (returnToLevel) (for this example, 1).
+Simply ask `-exec-finish` to GDB `currentLevel - returnToLevel` times, until the returnToLevel has been reached, and ignore their intermediate results.
+
+	-exec-finish
+	-stack-info-depth
+
+When finally arrived to the player's function before the dynamic memory function was stopped by breakpoint. We return to the execution loop at <<update-variables>> where pointers will be updated.
+
 
 
 ==== C++ dynamic memory operators
@@ -870,7 +909,7 @@ The _visualization step_ finished executing the next instruction.
 
 . Update ExecutionThread `/thread-id` with line number `/frame/line`.
 . If response is `*stopped,reason="breakpoint-hit"` a breakpoint was hit. A function was called or dynamic memory was modified. The <<breakpoint-hit>> section will react accordingly.
-. If a function was called, after animating the new stack frame appearing, continue in <<update-global-variables>>. Otherwise continue as normal.
+. If a function was called, after animating the new stack frame appearing, continue in <<update-variables>>. Otherwise continue as normal.
 
 
 
@@ -907,54 +946,9 @@ Update local variables:
 . ToDo: GDB consider local static variables as normal local variables. We have to separe them
 
 
-==== Update pointed variables
 
-For each `Variable` that has the role of `pointer` [it seems references are updated as normal variables] we need to update the pointed data, because the pointer may have been used to modify it. Brainstorm: we have two methods to detect pointed data changes:
-
-===== Method 1: Desreference pointers:
-
-	-data-evaluate-expression *this
-	^done,value="{_vptr.AbstractArgument = 0x406f08 <vtable for AbstractArgument<char const*>+16>, number = 0, value1 = 0x406dc6 \"all_inclusive\"}"
-	(gdb)
-
-
-Method 2: Variable objects to pointed data were created when function was called. Now just update them.
-
-
-
-[[variable-objects-to-pointed-data]]
-==== Method 2: Create GDB variable objects
-
-	-var-create bn_pd_1_1 @ *this
-	^done,name="bn_pd_1_1",numchild="2",value="{...}",type="InputArgument",thread-id="1",has_more="0"
-	(gdb)
-
-Or?:
-
-	-var-create bn_pd_1_1b @ this
-	^done,name="bn_pd_1_1b",numchild="2",value="0x60b580 <global_program_name>",type="InputArgument * const",thread-id="1",has_more="0"
-	(gdb)
-
-Creates a variable object using notation `bn_pd_th_fc` where `pd` stands for 'pointed data', `th` the thread number, and `fc` the function call index in that thread. We create a variable object for each pointer we have in the stack:
-
-	-var-create bn_pd_1_2 @ *value
-	^done,name="bn_pd_1_2",numchild="0",value="97 'a'",type="const char",thread-id="1",has_more="0"
-	(gdb)
-
-	-var-create bn_pd_1_2b @ value
-	^done,name="bn_pd_1_2b",numchild="1",value="0x406dc6 \"all_inclusive\"",type="const char *",thread-id="1",has_more="0"
-	(gdb)
-
-In both cases we need to keep track of the pointed data. If the pointed address matches a existing Variable object, point to it. If there is not a Variable object, make a child class object AnonymousVariable that trace value changes.
-
-. ToDo: review Gede method to update (*this)
-. Future: represent vtable in CodeSegment
-. Future: test temporary values (e.g: anonymous objects returned by functions).
-. Future: animate evaluation of expressions (reflecting operator precedence).
-
-
-[[update-global-variables]]
-=== 5.3 Update global variables
+[[update-variables]]
+=== 5.3 Update variables
 
 
 ==== -var-update --all-values *
@@ -962,17 +956,27 @@ In both cases we need to keep track of the pointed data. If the pointed address 
 	^done,changelist=[]
 	(gdb)
 
-Update global variables and standard input/output streams
+Update all defined GDB variable-objects. We can infer from the variable-object name, the type of modified variable:
 
-. If no variables have changed their values, done
-. If a global variable changed its value, pass the message to the DataSegment, and animate change
-. If a standard input/output stream changed its value, replace FILE for the stream and issue:
+	bn_io_file  :  standard input/output/error streams
+	bn_gv_n     :  global variable with number n
+	bn_pd_th_fc :  pointed data in function call fc of thread th
+
+. If the list of changed variables is empty, we are done
+. If standard input/output stream changed, Do <<update-input-output>>
+. A global variable or pointer changed its value, do as follows
+
+. If variable is not a pointer or reference, animate the variable changing to the new value. For example, the pod containing the value may increase a decrease its size while the value fades.
+. If variable is a reference, only the pointed data can change. We have to find the referred data using the `MemoryMapper`. If there is a variable with the referred address, animate a value change.
+. If variable is a pointer, both the pointer and the pointed data may change. Check for a pointed data change in the same way references do. Check for a change in the address. Look for the new address in the `MemoryMapper`.
+. If the referred variable is in dynamic memory and it does not have a Variable assigned, create it in dynamic memory, and animate the change. Do <<dynamic-memory-animation>>
 
 
 
 [[update-input-output]]
 === 5.4 Update input/output
 
+A variable object indicated there was a change in input/output streams.
 
 ==== -data-evaluate-expression bn_tell_stdin()
 
