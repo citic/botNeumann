@@ -823,7 +823,7 @@ Study the stack. The `level=0` contains the function that called the memory mana
 
 . A library function: Do nothing.
 
-If `dynamicMemoryBlock.directCall` is true, the player directly called the memory management function, and an animation must be done, even though no variables have been modified. For example, user asked to allocate dynamic memory, but he/she did not stored the returned address (i.e. a memory leak should be visualized).
+If `dynamicMemoryBlock.directCall` is true, the player directly called the memory management function, do a <<dynamic-memory-animation>>, even though no variables have been modified. For example, user may ask to allocate dynamic memory, but he/she did not stored the returned address (i.e. a memory leak should be visualized).
 
 . Otherwise, animation is skipped and the DynamicMemoryBlock object is stored until it gets freed by a breakpoint hit at `free*()`.
 
@@ -860,7 +860,7 @@ If block was reallocated (i.e. using realloc)
 	  finally act as deallocation (free) of the previous address.
 
 
-===== Returning to execution loop
+==== Returning to execution loop
 
 We need to go back to the player's code where the execution thread was running.
 Notice: I had no luck with `step` (even in not debugging code) or `until` commands.
@@ -967,10 +967,11 @@ Update all defined GDB variable-objects. We can infer from the variable-object n
 . A global variable or pointer changed its value, do as follows
 
 . If variable is not a pointer or reference, animate the variable changing to the new value. For example, the pod containing the value may increase a decrease its size while the value fades.
-. If variable is a reference, only the pointed data can change. We have to find the referred data using the `MemoryMapper`. If there is a variable with the referred address, animate a value change.
+. If variable is a reference, only the pointed data can change. We have to find the referred data using the `MemoryMapper`. If there is a variable with the referred address, animate a value change. References may be represented as pointers using a 75% opacity or a different border.
 . If variable is a pointer, both the pointer and the pointed data may change. Check for a pointed data change in the same way references do. Check for a change in the address. Look for the new address in the `MemoryMapper`.
 . If the referred variable is in dynamic memory and it does not have a Variable assigned, create it in dynamic memory, and animate the change. Do <<dynamic-memory-animation>>
 
+. ToDo: How to detect rvalues in GDB? Currently botNeumann is unable to draw references or pointers to temporary objects in stack. These temporaries may be also represented as values hold by the robot.
 
 
 [[update-input-output]]
