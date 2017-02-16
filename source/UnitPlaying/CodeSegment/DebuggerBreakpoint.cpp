@@ -2,10 +2,8 @@
 #include "GdbItemTree.h"
 #include "LogManager.h"
 
-DebuggerBreakpoint::DebuggerBreakpoint(const GdbTreeNode& breakpointNode)
-	: number(-1)
-	, address(0x0)
-	, lineNumber(-1)
+DebuggerBreakpoint::DebuggerBreakpoint(const GdbTreeNode& breakpointNode, Roles roles)
+	: roles(roles)
 {
 	updateFromNode(breakpointNode);
 }

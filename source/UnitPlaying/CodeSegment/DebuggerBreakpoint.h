@@ -1,6 +1,7 @@
-#ifndef BREAKPOINT_H
-#define BREAKPOINT_H
+#ifndef DEBUGGERBREAKPOINT_H
+#define DEBUGGERBREAKPOINT_H
 
+#include <QFlags>
 #include <QString>
 
 class GdbTreeNode;
@@ -56,11 +57,33 @@ class DebuggerBreakpoint
 {
 	Q_DISABLE_COPY(DebuggerBreakpoint)
 
+  public:
+	/// A single breakpoint may have one or several roles
+	enum Role
+	{
+		unknown           = 0x0,   // Default value in constructor
+		userDefined       = 0x1,   // User created breakpoint in CodeEditor
+		functionBody      = 0x2,   // Function definition detected with ctags
+		programEntryPoint = 0x4,   // First function called, usually main()
+
+		mallocCalled      = 0x8,   // Memory allocation (uninitialized)
+		callocCalled      = 0x10,  // Memory allocation (initialized)
+		reallocCalled     = 0x20,  // Memory reallocation
+		freeCalled        = 0x40,  // Memory deallocation
+
+		newObject         = 0x80,  // C++ new operator
+		newArray          = 0x100, // C++ new[] operator
+		deleteObject      = 0x200, // C++ delete operator
+		deleteArray       = 0x400, // C++ delete[] operator
+	};
+	/// Several roles can be joined with bitwise or operator, e.g:
+	Q_DECLARE_FLAGS(Roles, Role)
+
   protected:
 	/// Breakpoint number. Debuggers identify breakpoints with numbers when program is running
-	int number;
+	int number = -1;
 	/// Debuggers report the memory address of the instruction to be halted
-	size_t address;
+	size_t address = 0x0;
 	/// Debuggers report the function where breakpoints are set
 	QString functionName;
 	/// The file where the player wants to stop the execution
@@ -68,12 +91,14 @@ class DebuggerBreakpoint
 	/// The full path of the source file where the breakpoint is
 	QString filepath;
 	/// The number of line where the breakpoint was set by user
-	int lineNumber;
+	int lineNumber = -1;
 	/// @todo: thread-groups?
+	/// The roles this breakpoint has in program visualization
+	Roles roles = unknown;
 
   public:
 	/// Builds a user defined breakpoint
-	explicit DebuggerBreakpoint(const GdbTreeNode& breakpointNode);
+	explicit DebuggerBreakpoint(const GdbTreeNode& breakpointNode, Roles roles = unknown);
 	/// Destructor
 	~DebuggerBreakpoint();
 	/// Updates the fields of this object from the parsed node from debugger
@@ -84,6 +109,12 @@ class DebuggerBreakpoint
 	inline const QString& getFilename() const { return filename; }
 	/// Return the line number where this breakpoint is set
 	inline int getLineNumber() const { return lineNumber; }
+	/// True if this breakpoint has the aked role
+	inline bool hasRole(Role role) const { return roles.testFlag(role); }
+	/// Adds a role to this breakpoint
+	inline void addRole(Role role) { this->roles |= role; }
 };
 
-#endif // BREAKPOINT_H
+Q_DECLARE_OPERATORS_FOR_FLAGS(DebuggerBreakpoint::Roles)
+
+#endif // DEBUGGERBREAKPOINT_H
