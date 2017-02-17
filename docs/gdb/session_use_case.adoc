@@ -55,6 +55,8 @@ Provide the path and name for executable. It may be included in the previous GDB
 
 #### -break-insert "alli.cpp:111"
 
+[source,js,indent=0]
+----
 	^done,
 	bkpt=
 	{
@@ -72,9 +74,12 @@ Provide the path and name for executable. It may be included in the previous GDB
 		original-location="alli.cpp:111"
 	}
 	(gdb)
+----
 
 #### -break-insert "alli.cpp:64"
 
+[source,js,indent=0]
+----
 	^done,
 	bkpt=
 	{
@@ -92,6 +97,7 @@ Provide the path and name for executable. It may be included in the previous GDB
 		original-location="alli.cpp:64"
 	}
 	(gdb)
+----
 
 Set all user-defined breakpoints
 
@@ -105,6 +111,8 @@ Set all user-defined breakpoints
 
 ==== -break-insert "alli.cpp:38"
 
+[source,js,indent=0]
+----
 	^done,
 	bkpt=
 	{
@@ -122,10 +130,13 @@ Set all user-defined breakpoints
 		original-location="alli.cpp:38"
 	}
 	(gdb)
+----
 
 
 Similar output with remaining breakpoints:
 
+[source,js,indent=0]
+----
 	-break-insert "alli.cpp:44"
 	-break-insert "alli.cpp:45"
 	-break-insert "alli.cpp:51"
@@ -142,6 +153,7 @@ Similar output with remaining breakpoints:
 	-break-insert "alli.cpp:140"
 	-break-insert "alli.cpp:149"
 	-break-insert "alli.cpp:162"
+----
 
 
 Set breakpoints for all functions in player's solution. When these breakpoints are triggered, a function call will be animated.
@@ -167,7 +179,7 @@ GDB recursive breakpoints may fail for unclear reasons, e.g: "mismatched quote"
 ==== -exec-run --start
 
 
-[source,js]
+[source,js,indent=0]
 ----
 	=breakpoint-created,
 	bkpt=
@@ -320,6 +332,8 @@ Start the execution of inferior and stop in the program entry point
 
 ==== -break-insert -f __libc_malloc
 
+[source,js,indent=0]
+----
 	^done,
 	bkpt=
 	{
@@ -337,6 +351,7 @@ Start the execution of inferior and stop in the program entry point
 		original-location="__libc_malloc"
 	}
 	(gdb)
+----
 
 Set breakpoint for the dynamic memory management functions. These breakpoints are set after the libc library has been loaded.
 
@@ -347,6 +362,8 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 
 ==== -break-insert -f __libc_calloc
 
+[source,js,indent=0]
+----
 	^done,
 	bkpt=
 	{
@@ -364,6 +381,7 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 		original-location="__libc_calloc"
 	}
 	(gdb)
+----
 
 . Set break to stop inferior each time initialized dynamic memory is allocated
 . Create a `DebuggerBreakpoint` with role `callocCall` and add to `breakpoints[]` array
@@ -372,6 +390,8 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 
 ==== -break-insert -f __libc_realloc
 
+[source,js,indent=0]
+----
 	^done,
 	bkpt=
 	{
@@ -389,6 +409,7 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 		original-location="__libc_realloc"
 	}
 	(gdb)
+----
 
 . Set break to stop inferior each time dynamic memory is re-allocated
 . Create a `DebuggerBreakpoint` with role `reallocCall` and add to `breakpoints[]` array
@@ -396,6 +417,8 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 
 ==== -break-insert -f __libc_free
 
+[source,js,indent=0]
+----
 	^done,
 	bkpt=
 	{
@@ -413,6 +436,7 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 		original-location="__libc_free"
 	}
 	(gdb)
+----
 
 . Set break to stop inferior each time dynamic memory is de-allocated
 . Create a `DebuggerBreakpoint` with role `freeCall` and add to `breakpoints[]` array
@@ -422,7 +446,7 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 
 Unsure if they are needed, because all of them call libc dynamic memory functions. When a libc function is called, we can ask GDB to list all function calls. We can know if the function immediatelly before is a new/delete operator, a user-defined function or any other library function. Anyway, here are the breakpoints to C++ dynamic memory operators:
 
-[source,js]
+[source,js,indent=0]
 ----
 	-break-insert -f "operator new"
 	^done,
@@ -623,8 +647,16 @@ Unsure if they are needed, because all of them call libc dynamic memory function
 
 ==== -var-create bn_io_stdin @ stdin->_IO_read_ptr
 
-	^done,name="bn_io_stdin",numchild="1",value="0x0",type="char *",has_more="0"
+[source,js,indent=0]
+----
+	^done,
+	name="bn_io_stdin",
+	numchild="1",
+	value="0x0",
+	type="char *",
+	has_more="0"
 	(gdb)
+----
 
 . On Unix: Create object variables watching changes in IO, using notation `bn_io_iofile`
 . Future work: check if it works with GCC/MinGW for MsWin
@@ -632,20 +664,36 @@ Unsure if they are needed, because all of them call libc dynamic memory function
 
 ==== -var-create bn_io_stdout @ stdout->_IO_write_ptr
 
-	^done,name="bn_io_stdout",numchild="1",value="0x0",type="char *",has_more="0"
+[source,js,indent=0]
+----
+	^done,
+	name="bn_io_stdout",
+	numchild="1",
+	value="0x0",
+	type="char *",
+	has_more="0"
 	(gdb)
-
+----
 
 
 ==== -var-create bn_io_stderr @ stderr->_IO_write_ptr
 
-	^done,name="bn_io_stderr",numchild="1",value="0x0",type="char *",has_more="0"
+[source,js,indent=0]
+----
+	^done,
+	name="bn_io_stderr",
+	numchild="1",
+	value="0x0",
+	type="char *",
+	has_more="0"
 	(gdb)
-
+----
 
 
 ==== -data-evaluate-expression bn_reopen_stdin()
 
+[source,js,indent=0]
+----
 	^done,
 	value=
 	"{
@@ -680,6 +728,7 @@ Unsure if they are needed, because all of them call libc dynamic memory function
 		 _unused2 = '\\000' <repeats 19 times>
 	}"
 	(gdb)
+----
 
 Only on MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluate-expression bn_reopen_stdout()`, `-data-evaluate-expression bn_reopen_stderr()`
 
@@ -700,7 +749,8 @@ Only on MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluat
 
 The list of all variables for "all inclusive" example:
 
-....
+[source,js,indent=0]
+----
 	-var-create bn_gv_1 @ all_arguments
 
 	^done,name="bn_gv_1",numchild="1",value="{...}",type="std::vector<InputArgument*, std::allocator<InputArgument*> >",has_more="0"
@@ -724,13 +774,15 @@ The list of all variables for "all inclusive" example:
 	-var-create bn_gv_6 @ global_program_name
 	^done,name="bn_gv_6",numchild="2",value="{...}",type="InputArgument",has_more="0"
 	(gdb)
-....
+----
 
 
 Do <<variable-info>> to get data types and sizes:
 
-. For vector `all_arguments`:
+For vector `all_arguments`:
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression sizeof(all_arguments)
 	^done,value="24"
 	(gdb)
@@ -745,9 +797,12 @@ Do <<variable-info>> to get data types and sizes:
 	-data-evaluate-expression &all_arguments
 	^done,value="0x60b5c0 <all_arguments>"
 	(gdb)
+----
 
-. For char** `buffer`:
+For char** `buffer`:
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression sizeof(buffer)
 	^done,value="8"
 	(gdb)
@@ -760,9 +815,12 @@ Do <<variable-info>> to get data types and sizes:
 	-data-evaluate-expression &buffer
 	^done,value="0x60b560 <buffer>"
 	(gdb)
+----
 
-. For typdef `input_count`:
+For typdef `input_count`:
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression sizeof(input_count)
 	^done,value="8"
 	(gdb)
@@ -775,9 +833,12 @@ Do <<variable-info>> to get data types and sizes:
 	-data-evaluate-expression &input_count
 	^done,value="0x60b568 <input_count>"
 	(gdb)
+----
 
-. For InputArgument ** `sorted_arguments`:
+For InputArgument ** `sorted_arguments`:
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression &sorted_arguments
 	^done,value="0x60b570 <sorted_arguments>"
 	(gdb)
@@ -793,9 +854,12 @@ Do <<variable-info>> to get data types and sizes:
 	~"} **\n"
 	^done
 	(gdb)
+----
 
-. For size_t `sorted_count`:
+For size_t `sorted_count`:
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression sizeof(sorted_count)
 	^done,value="8"
 	(gdb)
@@ -808,9 +872,12 @@ Do <<variable-info>> to get data types and sizes:
 	-data-evaluate-expression &sorted_count
 	^done,value="0x60b5d8 <sorted_count>"
 	(gdb)
+----
 
-. For object `global_program_name`:
+For object `global_program_name`:
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression sizeof(global_program_name)
 	^done,value="56"
 	(gdb)
@@ -826,6 +893,7 @@ Do <<variable-info>> to get data types and sizes:
 	-data-evaluate-expression &global_program_name
 	^done,value="0x60b580 <global_program_name>"
 	(gdb)
+----
 
 
 
@@ -855,14 +923,16 @@ Do <<variable-info>> to get data types and sizes:
 
 Each time `=thread-created,id="#"` is issued, create an `ExecutionThread` object. If there is an idle processor core, animate a robot appearing in the core with no line number. Ask gdb:
 
-* `-thread-info`
-* `-stack-info-depth`
+	-thread-info
+	-stack-info-depth
 
 
 ==== -thread-info
 
 For main thread:
 
+[source,js,indent=0]
+----
 	^done,
 	threads=
 	[
@@ -897,8 +967,10 @@ For main thread:
 			state="stopped",
 			core="6"
 		}
-	],current-thread-id="1"
+	],
+	current-thread-id="1"
 	(gdb)
+----
 
 . Locate the `ExecutionThread` with the given id, and make it to update its fields. (Be sure to store the `level` field).
 . If there is a line number change, animate it on the robot, and highlight line in code segment (may require to load another file in code editor).
@@ -942,6 +1014,8 @@ Player solution (inferior) stopped for hitting a breakpoint. Get the `/bkptno` i
 [[program-entry-point]]
 ==== 4.1 Program entry point:
 
+[source,js,indent=0]
+----
 	*stopped,
 	reason="breakpoint-hit",
 	disp="keep",
@@ -973,6 +1047,7 @@ Player solution (inferior) stopped for hitting a breakpoint. Get the `/bkptno` i
 	stopped-threads="all",
 	core="6"
 	(gdb)
+----
 
 Visualization is in starting stage, not animating.
 Inferior is stopped by a breakpoint hit.
@@ -991,6 +1066,8 @@ GDB always set the program entry point breakpoint to the main() function, but it
 
 Example at program's entry point:
 
+[source,js,indent=0]
+----
 	*stopped,
 	reason="breakpoint-hit",
 	disp="keep",
@@ -1022,6 +1099,7 @@ Example at program's entry point:
 	stopped-threads="all",
 	core="6"
 	(gdb)
+----
 
 
 Player solution hit a breakpoint that has the role of `functionCall`. The breakpoint must be at the beginning of the body of a function in a file that is part of player solution.
@@ -1043,6 +1121,8 @@ Player solution hit a breakpoint that has the role of `functionCall`. The breakp
 
 ==== -stack-list-arguments 2 0 0
 
+[source,js,indent=0]
+----
 	^done,
 	stack-args=
 	[
@@ -1070,6 +1150,7 @@ Player solution hit a breakpoint that has the role of `functionCall`. The breakp
 		}
 	]
 	(gdb)
+----
 
 
 The `0 0` argument is for selecting top frame only: `/frame/level == 0`
@@ -1094,6 +1175,8 @@ The `0 0` argument is for selecting top frame only: `/frame/level == 0`
 
 ==== -stack-list-locals 2
 
+[source,js,indent=0]
+----
 	^done,
 	locals=
 	[
@@ -1114,6 +1197,7 @@ The `0 0` argument is for selecting top frame only: `/frame/level == 0`
 		}
 	]
 	(gdb)
+----
 
 Example for entry point (`InputArgument constructor`):
 
@@ -1132,6 +1216,8 @@ Example for `main()`:
 
 ==== -stack-list-variables 2
 
+[source,js,indent=0]
+----
 	^done,
 	variables=
 	[
@@ -1153,6 +1239,7 @@ Example for `main()`:
 		}
 	]
 	(gdb)
+----
 
 This is an alternative to the previous two steps. It shows all the variables (parameters and local variables) at once. It may reduce a little of programming, if the animation of "parameter-passing" can be delayed.
 
@@ -1160,6 +1247,8 @@ This is an alternative to the previous two steps. It shows all the variables (pa
 [[variable-objects-to-pointed-data]]
 ==== Create variable-objects to pointed data
 
+[source,js,indent=0]
+----
 	-var-create bn_pd_1_1 @ *this
 	^done,
 	name="bn_pd_1_1",
@@ -1169,9 +1258,12 @@ This is an alternative to the previous two steps. It shows all the variables (pa
 	thread-id="1",
 	has_more="0"
 	(gdb)
+----
 
 Or?:
 
+[source,js,indent=0]
+----
 	-var-create bn_pd_1_1b @ this
 	^done,
 	name="bn_pd_1_1b",
@@ -1181,9 +1273,12 @@ Or?:
 	thread-id="1",
 	has_more="0"
 	(gdb)
+----
 
 Creates a variable object using notation `bn_pd_th_fc` where `pd` stands for 'pointed data', `th` the thread number, and `fc` the function call index in that thread. We create a variable object for each pointer we have in the stack:
 
+[source,js,indent=0]
+----
 	-var-create bn_pd_1_2 @ *value
 	^done,
 	name="bn_pd_1_2",
@@ -1203,6 +1298,7 @@ Creates a variable object using notation `bn_pd_th_fc` where `pd` stands for 'po
 	thread-id="1",
 	has_more="0"
 	(gdb)
+----
 
 In both cases we need to keep track of the pointed data. If the pointed address matches a existing Variable object, point to it. If there is not a Variable object, make a child class object AnonymousVariable that trace value changes.
 
@@ -1218,6 +1314,8 @@ If GDB may reject to create many variables, an alternative is the following. Do 
 
 For each `Variable` that has the role of `pointer` [references are updated as normal variables] we need to update the pointed data, because the pointer may have been used to modify it:
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression *this
 	^done,
 	value=
@@ -1227,6 +1325,7 @@ For each `Variable` that has the role of `pointer` [references are updated as no
 		 value1 = 0x406dc6 \"all_inclusive\"
 	}"
 	(gdb)
+----
 
 
 
@@ -1246,12 +1345,15 @@ Get the size in bytes of a variable. It may not match the Botnu architecture (32
 
 ==== -interpreter-exec console "ptype /mt this"
 
+[source,js,indent=0]
+----
 	~"type = class InputArgument : public AbstractArgument<char const*> {\n"
 	~"  protected:\n"
 	~"    std::__cxx11::string value2;\n"
 	~"} * const\n"
 	^done
 	(gdb)
+----
 
 Get the unrolled data type of the variable. botNeumann must represent typedefs and compound structures with primitive C/C++ data types. This process is know as unroll the data type. GDB's user command `ptype` does this work, but it is not available in GDB/MI.
 
@@ -1264,9 +1366,12 @@ Get the unrolled data type of the variable. botNeumann must represent typedefs a
 
 ==== -data-evaluate-expression &this
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression &this
 	^done,value="0x7fffffffde38"
 	(gdb)
+----
 
 . Get the inferior address for the variable.
 . Assign an address in the visualization in some MemoryFrame/MemoryRow
@@ -1276,6 +1381,8 @@ Get the unrolled data type of the variable. botNeumann must represent typedefs a
 
 Example with primitive type:
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression sizeof(number)
 	^done,value="8"
 	(gdb)
@@ -1284,10 +1391,13 @@ Example with primitive type:
 	~"type = unsigned long long\n"
 	^done
 	(gdb)
+----
 
 
 Example with pointer to primitive:
 
+[source,js,indent=0]
+----
 	-data-evaluate-expression sizeof(value)
 	^done,value="8"
 	(gdb)
@@ -1296,6 +1406,7 @@ Example with pointer to primitive:
 	~"type = const char *\n"
 	^done
 	(gdb)
+----
 
 
 
@@ -1314,15 +1425,18 @@ Example with pointer to primitive:
 
 The execution stopped at a breakpoint set to a dynamic memory management function. The call may be done for the player solution directly or indirectly for any library function called by player. Eg:
 
+[source,C++,indent=0]
+----
 	char* buffer = (char*) malloc(1024); // explicit call to malloc
 	Fraction* fractions = new Fraction[10]; // explicit call to new[]
 	printf("Average = %lf", average); // implicit call to malloc
+----
 
 Explicit calls are always reflected in the animation. Implicit calls sometimes may be reflected in the visualization. The way we determine the function call should or not be animated, is storing information about the call, and use this information later to know if some user variables or pointed data were modified (e.g: a GDB variable-object changed).
 
 These breakpoints are fired after issuing a `next-step` command in execution loop. For example:
 
-[source,js]
+[source,js,indent=0]
 ----
 	-exec-next
 	^running
@@ -1378,7 +1492,7 @@ These breakpoints are fired after issuing a `next-step` command in execution loo
 
 . Create an object with the following information
 
-[source,c++]
+[source,C++,indent=0]
 ----
 	class DynamicMemoryBlock
 	{
@@ -1412,7 +1526,7 @@ These breakpoints are fired after issuing a `next-step` command in execution loo
 
 ==== -exec-finish
 
-[source,js]
+[source,js,indent=0]
 ----
 	^running
 	*running,
@@ -1449,7 +1563,7 @@ We are not interested in debugging the body of the library's memory function. We
 
 ==== -stack-list-frames
 
-[source,js]
+[source,js,indent=0]
 ----
 	^done,
 	stack=
@@ -1572,7 +1686,7 @@ A visualization step moves around the `-exec-next` instruction. Each time this c
 
 ==== -exec-next
 
-[source,js]
+[source,js,indent=0]
 ----
 	^running
 	*running,
@@ -1638,6 +1752,8 @@ Check if we are running on the same function
 
 ==== -stack-list-variables 2
 
+[source,js,indent=0]
+----
 	^done,
 	variables=
 	[
@@ -1661,6 +1777,7 @@ Check if we are running on the same function
 		}
 	]
 	(gdb)
+----
 
 Update local variables:
 
@@ -1757,7 +1874,7 @@ A variable object indicated there was a change in input/output streams.
 An execution thread may end with no stack frames (function calls). This is possible because we are not animating all function calls. Library functions may be executing. For example GNU libc++ runs `__static_initialization_and_destruction_0` to call global objects' constructors before main().
 
 
-[source,js]
+[source,js,indent=0]
 ----
 	^running
 	*running,
@@ -1848,6 +1965,8 @@ Future: We could represent these library functions as empty stack frames, or jus
 
 ==== -stack-list-frames
 
+[source,js,indent=0]
+----
 	^done,
 	stack=
 	[
@@ -1925,6 +2044,7 @@ Future: We could represent these library functions as empty stack frames, or jus
 		}
 	]
 	(gdb)
+----
 
 
 
@@ -1953,9 +2073,12 @@ If player stopped visualization or program failed to run in the constrained envi
 
 ==== -gdb-exit
 
+[source,js,indent=0]
+----
 	^exit
 	=thread-exited,id="1",group-id="i1"
 	=thread-group-exited,id="i1"
+----
 
 
 If inferior was finished normally or by a signal, GDB will stop it and emit a *stopped async record. The reasons may be:
@@ -1985,7 +2108,7 @@ A segmentation fault is simulated when the player solution requires more memory 
 
 ==== -exec-until solution.c:15
 
-[source,js]
+[source,js,indent=0]
 ----
 	^running
 	*running,
