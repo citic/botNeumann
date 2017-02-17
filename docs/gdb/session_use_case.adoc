@@ -55,12 +55,12 @@ Provide the path and name for executable. It may be included in the previous GDB
 
 #### -break-insert "alli.cpp:111"
 
-	^done,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000401de7",func="read_arguments(unsigned long long)",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="111",thread-groups=["i1"],times="0",original-location="alli.cpp:111"}
+	^done,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000401de7",func="read_arguments(unsigned long long)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="111",thread-groups=["i1"],times="0",original-location="alli.cpp:111"}
 	(gdb)
 
 #### -break-insert "alli.cpp:64"
 
-	^done,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x00000000004027c3",func="InputArgument::InputArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="64",thread-groups=["i1"],times="0",original-location="alli.cpp:64"}
+	^done,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x00000000004027c3",func="InputArgument::InputArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64",thread-groups=["i1"],times="0",original-location="alli.cpp:64"}
 	(gdb)
 
 Set all user-defined breakpoints
@@ -75,7 +75,7 @@ Set all user-defined breakpoints
 
 ==== -break-insert "alli.cpp:38"
 
-	^done,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000402b0e",func="AbstractArgument<char const*>::AbstractArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="38",thread-groups=["i1"],times="0",original-location="alli.cpp:38"}
+	^done,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000402b0e",func="AbstractArgument<char const*>::AbstractArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="38",thread-groups=["i1"],times="0",original-location="alli.cpp:38"}
 	(gdb)
 
 
@@ -124,7 +124,7 @@ GDB recursive breakpoints may fail for unclear reasons, e.g: "mismatched quote"
 
 [source,js]
 ----
-	=breakpoint-created,bkpt={number="19",type="breakpoint",disp="del",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="163",thread-groups=["i1"],times="0",original-location="main"}
+	=breakpoint-created,bkpt={number="19",type="breakpoint",disp="del",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="163",thread-groups=["i1"],times="0",original-location="main"}
 
 	=thread-group-started,id="i1",pid="4995"
 
@@ -152,7 +152,7 @@ GDB recursive breakpoints may fail for unclear reasons, e.g: "mismatched quote"
 
 	~"Using host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n"
 
-	=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x00000000004027c3",func="InputArgument::InputArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="64",thread-groups=["i1"],times="1",original-location="alli.cpp:64"}
+	=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x00000000004027c3",func="InputArgument::InputArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64",thread-groups=["i1"],times="1",original-location="alli.cpp:64"}
 
 	~"\n"
 
@@ -160,7 +160,7 @@ GDB recursive breakpoints may fail for unclear reasons, e.g: "mismatched quote"
 
 	~"64\t\tInputArgument(ull number, const char* value)\n"
 
-	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
+	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
 
 	(gdb)
 ----
@@ -459,7 +459,7 @@ Each time `=thread-created,id="#"` is issued, create an `ExecutionThread` object
 
 For main thread:
 
-	^done,threads=[{id="1",target-id="Thread 0x7ffff7fc9740 (LWP 4995)",name="alli",frame={level="0",addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="64"},state="stopped",core="6"}],current-thread-id="1"
+	^done,threads=[{id="1",target-id="Thread 0x7ffff7fc9740 (LWP 4995)",name="alli",frame={level="0",addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64"},state="stopped",core="6"}],current-thread-id="1"
 	(gdb)
 
 . Locate the `ExecutionThread` with the given id, and make it to update its fields. (Be sure to store the `level` field).
@@ -503,7 +503,7 @@ Player solution (inferior) stopped for hitting a breakpoint. Get the `/bkptno` i
 
 [[program-entry-point]]
 ==== 4.1 Program entry point:
-	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
+	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
 	(gdb)
 
 Visualization is in starting stage, not animating.
@@ -523,7 +523,7 @@ GDB always set the program entry point breakpoint to the main() function, but it
 
 Example at program's entry point:
 
-	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
+	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
 	(gdb)
 
 
@@ -811,7 +811,7 @@ We are not interested in debugging the body of the library's memory function. We
 
 [source,js]
 ----
-	^done,stack=[frame={level="0",addr="0x00007ffff7ae2e78",func="operator new(unsigned long)",from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},frame={level="1",addr="0x00007ffff7b76aed",func="void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)",from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},frame={level="2",addr="0x00007ffff7b76c4c",func="std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)",from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},frame={level="3",addr="0x00000000004021d6",func="main",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="164"}]
+	^done,stack=[frame={level="0",addr="0x00007ffff7ae2e78",func="operator new(unsigned long)",from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},frame={level="1",addr="0x00007ffff7b76aed",func="void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)",from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},frame={level="2",addr="0x00007ffff7b76c4c",func="std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)",from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},frame={level="3",addr="0x00000000004021d6",func="main",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="164"}]
 	(gdb)
 ----
 
@@ -902,7 +902,7 @@ A visualization step moves around the `-exec-next` instruction. Each time this c
 	^running
 	*running,thread-id="all"
 	(gdb)
-	*stopped,reason="end-stepping-range",frame={addr="0x00000000004027d2",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="66"},thread-id="1",stopped-threads="all",core="6"
+	*stopped,reason="end-stepping-range",frame={addr="0x00000000004027d2",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="66"},thread-id="1",stopped-threads="all",core="6"
 	(gdb)
 
 The _visualization step_ finished executing the next instruction.
@@ -1037,15 +1037,15 @@ An execution thread may end with no stack frames (function calls). This is possi
 	*running,thread-id="all"
 	(gdb)
 
-	=breakpoint-modified,bkpt={number="18",type="breakpoint",disp="keep",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="162",thread-groups=["i1"],times="1",original-location="alli.cpp:162"}
+	=breakpoint-modified,bkpt={number="18",type="breakpoint",disp="keep",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="162",thread-groups=["i1"],times="1",original-location="alli.cpp:162"}
 
-	=breakpoint-modified,bkpt={number="19",type="breakpoint",disp="del",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="163",thread-groups=["i1"],times="1",original-location="main"}
+	=breakpoint-modified,bkpt={number="19",type="breakpoint",disp="del",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="163",thread-groups=["i1"],times="1",original-location="main"}
 
 	~"\n"
 	~"Breakpoint 18, main (argc=2, argv=0x7fffffffdfb8) at alli.cpp:163\n"
 	~"163\t{\n"
 
-	*stopped,reason="breakpoint-hit",disp="keep",bkptno="18",frame={addr="0x000000000040219e",func="main",args=[{name="argc",value="2"},{name="argv",value="0x7fffffffdfb8"}],file="alli.cpp",fullname="/home/jhc/dev/botNeumann/tools/examples/all_inclusive/alli.cpp",line="163"},thread-id="1",stopped-threads="all",core="2"
+	*stopped,reason="breakpoint-hit",disp="keep",bkptno="18",frame={addr="0x000000000040219e",func="main",args=[{name="argc",value="2"},{name="argv",value="0x7fffffffdfb8"}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="163"},thread-id="1",stopped-threads="all",core="2"
 
 	=breakpoint-deleted,id="19"
 	(gdb)
@@ -1064,7 +1064,7 @@ Future: We could represent these library functions as empty stack frames, or jus
 
 ==== -stack-list-frames
 
-	^done,stack=[frame={level="0",addr="0x00007ffff7874580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900"},frame={level="1",addr="0x00007ffff785e1d5",func="__GI__IO_file_doallocate",file="filedoalloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/filedoalloc.c",line="127"},frame={level="2",addr="0x00007ffff786c594",func="__GI__IO_doallocbuf",file="genops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",line="398"},frame={level="3",addr="0x00007ffff786b69c",func="_IO_new_file_underflow",file="fileops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/fileops.c",line="556"},frame={level="4",addr="0x00007ffff786c60e",func="__GI__IO_default_uflow",file="genops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",line="413"},frame={level="5",addr="0x00007ffff784d260",func="_IO_vfscanf_internal",file="vfscanf.c",fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/vfscanf.c",line="634"},frame={level="6",addr="0x00007ffff785c5df",func="__isoc99_scanf",file="isoc99_scanf.c",fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/isoc99_scanf.c",line="37"},frame={level="7",addr="0x00000000004008fb",func="main",file="solution.c",fullname="/home/jhc/dev/programmingexercises/1.5_pointer_arrays/tictactoe_nxn/solution.c",line="15"}]
+	^done,stack=[frame={level="0",addr="0x00007ffff7874580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900"},frame={level="1",addr="0x00007ffff785e1d5",func="__GI__IO_file_doallocate",file="filedoalloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/filedoalloc.c",line="127"},frame={level="2",addr="0x00007ffff786c594",func="__GI__IO_doallocbuf",file="genops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",line="398"},frame={level="3",addr="0x00007ffff786b69c",func="_IO_new_file_underflow",file="fileops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/fileops.c",line="556"},frame={level="4",addr="0x00007ffff786c60e",func="__GI__IO_default_uflow",file="genops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",line="413"},frame={level="5",addr="0x00007ffff784d260",func="_IO_vfscanf_internal",file="vfscanf.c",fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/vfscanf.c",line="634"},frame={level="6",addr="0x00007ffff785c5df",func="__isoc99_scanf",file="isoc99_scanf.c",fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/isoc99_scanf.c",line="37"},frame={level="7",addr="0x00000000004008fb",func="main",file="solution.c",fullname="/tmp/tictactoe_nxn/solution.c",line="15"}]
 	(gdb)
 
 
