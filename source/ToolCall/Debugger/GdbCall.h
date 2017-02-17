@@ -23,8 +23,8 @@ class GdbCommand
   public:
 	explicit GdbCommand(const QString& text) : number(++instances), text(/*number + */text) { }
 	inline size_t getNumber() const { return number; }
-	inline const QString& getText() const { return text; }
-	inline QString getCommand() const { return text + '\n'; }
+	inline QString getText() const { return QString("%1%2").arg(number).arg(text); }
+	inline QString getCommand() const { return QString("%1%2\n").arg(number).arg(text); }
 };
 
 class GdbCall : public DebuggerCall

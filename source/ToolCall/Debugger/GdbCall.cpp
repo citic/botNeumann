@@ -145,7 +145,7 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultDat
 	GdbCommand gdbCommand(command);
 	pendingCommands.append(gdbCommand);
 
-	qCInfo(logDebuggerRequest).noquote() << command;
+	qCInfo(logDebuggerRequest).noquote() << gdbCommand.getText();
 	process->write( qPrintable( gdbCommand.getCommand() ) );
 
 	GdbResult lastResult = GDB_UNKNOWN;
@@ -258,8 +258,12 @@ GdbResponse* GdbCall::parseGdbOutput()
 		return resp;
 	// [3] termination
 	resp = new GdbResponse(GdbResponse::UNKNOWN);
-	if ( checkAndPopToken(GdbToken::END_CODE) )
+	GdbToken* token = checkAndPopToken(GdbToken::END_CODE);
+	if ( token )
+	{
 		resp->setType(GdbResponse::TERMINATION);
+		resp->setCommandNumber( token->getCommandNumber() );
+	}
 
 	return resp;
 }
@@ -360,17 +364,39 @@ void GdbCall::readTokens()
 
 void GdbCall::parseGdbOutputLine(const QString& line)
 {
+	// We received from GDB a row output line
 	if ( line.isEmpty() )
 		return;
 
 	qCInfo(logDebuggerResponse).noquote() << line;
 
-	char firstChar = line[0].toLatin1();
+	// The first characters may be the command number, count digits
+	int lastNumberIndex = 0;
+	while ( line[lastNumberIndex].isDigit() )
+		++lastNumberIndex;
+
+	// Extract the command number from first chars
+	size_t commandNumber = 0;
+	if ( lastNumberIndex > 0 )
+		commandNumber = line.mid(0, lastNumberIndex).toULongLong();
+
+	// The remaining of the line contains the response to be parsed
+	const QString& line2 = lastNumberIndex > 0 ? line.mid(lastNumberIndex) : line;
+
+	// Lines must start only with some allowed characters according to GDB
+	char firstChar = line2[0].toLatin1();
 	if ( strchr("(^*+~@&=", firstChar) )
 	{
+		// Parse the line and slice it in several tokens, we receive these tokens in a list
 		//pendingTokens.append( GdbToken::tokenize(line) );
-		const QList<GdbToken*> newTokens = GdbToken::tokenize(line);
+		const QList<GdbToken*>& newTokens = GdbToken::tokenize(line2);
 		pendingTokens.append( newTokens );
+
+		// If this line has a command number, add it to each token
+		if ( commandNumber > 0 )
+			for ( int index = 0; index < newTokens.count(); ++index )
+				newTokens[index]->setCommandNumber(commandNumber);
+
 	  #ifdef LOG_GDB_PARSER
 		foreach ( GdbToken* token, newTokens )
 			qCDebug(logDebugger).noquote() << "  " << token->buildDescription();
@@ -383,13 +409,13 @@ void GdbCall::parseGdbOutputLine(const QString& line)
 GdbResponse* GdbCall::parseAsyncRecord(GdbToken::Type tokenType, GdbResponse::Type outputType)
 {
 	// If there is a variable token, discard it. Why?
-	checkAndPopToken(GdbToken::VAR);
+	GdbToken* token = checkAndPopToken(GdbToken::VAR);
 
 	// If there is a token of the given type, pop it
-	if ( checkAndPopToken(tokenType) )
+	if ( ( token = checkAndPopToken(tokenType) ) )
 	{
 		// A response is a collection of tokens that answers a command
-		GdbResponse* resp = new GdbResponse(outputType);
+		GdbResponse* resp = new GdbResponse(outputType, token->getCommandNumber());
 
 		// The type of async-message must come immediately after, within a VAR token, e.g when gdb
 		// starts, it issues the assnc notification '=thread-group-added,id="i1"'
@@ -424,6 +450,7 @@ GdbResponse* GdbCall::parseStreamRecord()
 	GdbToken* token = eatToken(GdbToken::C_STRING);
 	Q_ASSERT(token);
 	resp->setText( token->getText() );
+	resp->setCommandNumber( token->getCommandNumber() );
 	return resp;
 }
 
@@ -451,7 +478,7 @@ GdbResponse* GdbCall::parseResultRecord()
 	}
 
 	// Create a response representing this GDB response
-	GdbResponse* response = new GdbResponse(GdbResponse::RESULT);
+	GdbResponse* response = new GdbResponse(GdbResponse::RESULT, token->getCommandNumber());
 	response->setResult(resultType);
 
 	// If there are pairs item=values, fill the item tree

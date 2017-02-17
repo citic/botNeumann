@@ -41,7 +41,7 @@ class GdbToken
 		KEY_STAR,
 		KEY_AND,
 		END_CODE,
-		VAR
+		VAR,
 	};
 
   protected:
@@ -49,6 +49,8 @@ class GdbToken
 	Type type;
 	/// The piece of text that generated this token
 	QString text;
+	/// Tokens may carry the number of the command they belong (valid only for first token)
+	size_t commandNumber = 0;
 
   public:
 	/// Constructor
@@ -65,6 +67,10 @@ class GdbToken
 	inline const QString& getText() const { return this->text; }
 	/// Builds a description of this output response
 	QString buildDescription() const;
+	/// Get access to the command number where this token appears
+	inline size_t getCommandNumber() const { return commandNumber; }
+	/// Set the command number where this token appeared
+	inline void setCommandNumber(size_t number) { this->commandNumber = number; }
 
   protected:
 	/// Called from @a tokenize() when one more character of this token is found

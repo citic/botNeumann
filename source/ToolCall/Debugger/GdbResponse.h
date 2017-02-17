@@ -68,10 +68,12 @@ class GdbResponse
 	QString text;
 	/// A tree of items that are part of the generated line by GDB, when a text is not enough?
 	GdbItemTree itemTree;
+	/// This is a response for the command with this number
+	size_t commandNumber = 0;
 
   public:
 	/// Constructor
-	explicit GdbResponse(Type type) : type(type) { }
+	explicit GdbResponse(Type type, size_t commandNumber = 0) : type(type), commandNumber(commandNumber) { }
 
 	/// Get the enumeration type of this GDB response
 	inline Type getType() const { return type; }
@@ -113,6 +115,11 @@ class GdbResponse
 	inline const GdbItemTree& getItemTree() const { return this->itemTree; }
 	/// Shortcut to access the root item
 	inline GdbTreeNode* getRootItem() { return itemTree.getRoot(); }
+
+	/// Get access to the command number that generated this response, 0 if unknown
+	inline size_t getCommandNumber() const { return commandNumber; }
+	/// Set the command number that generated this response
+	inline void setCommandNumber(size_t number) { this->commandNumber = number; }
 
 	/// @brief Parses 'ASYNC-OUTPUT' type
 	/// @return 0 on success, -1 on error
