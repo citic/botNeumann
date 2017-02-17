@@ -55,12 +55,42 @@ Provide the path and name for executable. It may be included in the previous GDB
 
 #### -break-insert "alli.cpp:111"
 
-	^done,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000401de7",func="read_arguments(unsigned long long)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="111",thread-groups=["i1"],times="0",original-location="alli.cpp:111"}
+	^done,
+	bkpt=
+	{
+		number="1",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x0000000000401de7",
+		func="read_arguments(unsigned long long)",
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="111",
+		thread-groups=["i1"],
+		times="0",
+		original-location="alli.cpp:111"
+	}
 	(gdb)
 
 #### -break-insert "alli.cpp:64"
 
-	^done,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x00000000004027c3",func="InputArgument::InputArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64",thread-groups=["i1"],times="0",original-location="alli.cpp:64"}
+	^done,
+	bkpt=
+	{
+		number="2",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x00000000004027c3",
+		func="InputArgument::InputArgument(unsigned long long, char const*)",
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="64",
+		thread-groups=["i1"],
+		times="0",
+		original-location="alli.cpp:64"
+	}
 	(gdb)
 
 Set all user-defined breakpoints
@@ -75,7 +105,22 @@ Set all user-defined breakpoints
 
 ==== -break-insert "alli.cpp:38"
 
-	^done,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000000000402b0e",func="AbstractArgument<char const*>::AbstractArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="38",thread-groups=["i1"],times="0",original-location="alli.cpp:38"}
+	^done,
+	bkpt=
+	{
+		number="3",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x0000000000402b0e",
+		func="AbstractArgument<char const*>::AbstractArgument(unsigned long long, char const*)",
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="38",
+		thread-groups=["i1"],
+		times="0",
+		original-location="alli.cpp:38"
+	}
 	(gdb)
 
 
@@ -124,13 +169,33 @@ GDB recursive breakpoints may fail for unclear reasons, e.g: "mismatched quote"
 
 [source,js]
 ----
-	=breakpoint-created,bkpt={number="19",type="breakpoint",disp="del",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="163",thread-groups=["i1"],times="0",original-location="main"}
+	=breakpoint-created,
+	bkpt=
+	{
+		number="19",
+		type="breakpoint",
+		disp="del",
+		enabled="y",
+		addr="0x000000000040219e",
+		func="main(int, char**)",
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="163",
+		thread-groups=["i1"],
+		times="0",
+		original-location="main"
+	}
 
 	=thread-group-started,id="i1",pid="4995"
 
 	=thread-created,id="1",group-id="i1"
 
-	=library-loaded,id="/lib64/ld-linux-x86-64.so.2",target-name="/lib64/ld-linux-x86-64.so.2",host-name="/lib64/ld-linux-x86-64.so.2",symbols-loaded="0",thread-group="i1"
+	=library-loaded,
+	id="/lib64/ld-linux-x86-64.so.2",
+	target-name="/lib64/ld-linux-x86-64.so.2",
+	host-name="/lib64/ld-linux-x86-64.so.2",
+	symbols-loaded="0",
+	thread-group="i1"
 
 	^running
 
@@ -138,21 +203,61 @@ GDB recursive breakpoints may fail for unclear reasons, e.g: "mismatched quote"
 
 	(gdb)
 
-	=library-loaded,id="/usr/lib/x86_64-linux-gnu/libstdc++.so.6",target-name="/usr/lib/x86_64-linux-gnu/libstdc++.so.6",host-name="/usr/lib/x86_64-linux-gnu/libstdc++.so.6",symbols-loaded="0",thread-group="i1"
+	=library-loaded,
+	id="/usr/lib/x86_64-linux-gnu/libstdc++.so.6",
+	target-name="/usr/lib/x86_64-linux-gnu/libstdc++.so.6",
+	host-name="/usr/lib/x86_64-linux-gnu/libstdc++.so.6",
+	symbols-loaded="0",
+	thread-group="i1"
 
-	=library-loaded,id="/lib/x86_64-linux-gnu/libgcc_s.so.1",target-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",host-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",symbols-loaded="0",thread-group="i1"
+	=library-loaded,
+	id="/lib/x86_64-linux-gnu/libgcc_s.so.1",
+	target-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",
+	host-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",
+	symbols-loaded="0",
+	thread-group="i1"
 
-	=library-loaded,id="/lib/x86_64-linux-gnu/libpthread.so.0",target-name="/lib/x86_64-linux-gnu/libpthread.so.0",host-name="/lib/x86_64-linux-gnu/libpthread.so.0",symbols-loaded="0",thread-group="i1"
+	=library-loaded,
+	id="/lib/x86_64-linux-gnu/libpthread.so.0",
+	target-name="/lib/x86_64-linux-gnu/libpthread.so.0",
+	host-name="/lib/x86_64-linux-gnu/libpthread.so.0",
+	symbols-loaded="0",
+	thread-group="i1"
 
-	=library-loaded,id="/lib/x86_64-linux-gnu/libc.so.6",target-name="/lib/x86_64-linux-gnu/libc.so.6",host-name="/lib/x86_64-linux-gnu/libc.so.6",symbols-loaded="0",thread-group="i1"
+	=library-loaded,
+	id="/lib/x86_64-linux-gnu/libc.so.6",
+	target-name="/lib/x86_64-linux-gnu/libc.so.6",
+	host-name="/lib/x86_64-linux-gnu/libc.so.6",
+	symbols-loaded="0",
+	thread-group="i1"
 
-	=library-loaded,id="/lib/x86_64-linux-gnu/libm.so.6",target-name="/lib/x86_64-linux-gnu/libm.so.6",host-name="/lib/x86_64-linux-gnu/libm.so.6",symbols-loaded="0",thread-group="i1"
+	=library-loaded,
+	id="/lib/x86_64-linux-gnu/libm.so.6",
+	target-name="/lib/x86_64-linux-gnu/libm.so.6",
+	host-name="/lib/x86_64-linux-gnu/libm.so.6",
+	symbols-loaded="0",
+	thread-group="i1"
 
 	~"[Thread debugging using libthread_db enabled]\n"
 
 	~"Using host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n"
 
-	=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x00000000004027c3",func="InputArgument::InputArgument(unsigned long long, char const*)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64",thread-groups=["i1"],times="1",original-location="alli.cpp:64"}
+	=breakpoint-modified,
+	bkpt=
+	{
+		number="2",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x00000000004027c3",
+		func="InputArgument::InputArgument(unsigned long long, char const*)",
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="64",
+		thread-groups=["i1"],
+		times="1",
+		original-location="alli.cpp:64"
+	}
 
 	~"\n"
 
@@ -160,7 +265,36 @@ GDB recursive breakpoints may fail for unclear reasons, e.g: "mismatched quote"
 
 	~"64\t\tInputArgument(ull number, const char* value)\n"
 
-	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
+	*stopped,
+	reason="breakpoint-hit",
+	disp="keep",
+	bkptno="2",
+	frame=
+	{
+		addr="0x00000000004027c3",
+		func="InputArgument::InputArgument",
+		args=
+		[
+			{
+				name="this",
+				value="0x60b580 <global_program_name>"
+			},
+			{
+				name="number",
+				value="0"
+			},
+			{
+				name="value",
+				value="0x406dc6 \"all_inclusive\""
+			}
+		],
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="64"
+	},
+	thread-id="1",
+	stopped-threads="all",
+	core="6"
 
 	(gdb)
 ----
@@ -186,7 +320,22 @@ Start the execution of inferior and stop in the program entry point
 
 ==== -break-insert -f __libc_malloc
 
-	^done,bkpt={number="20",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff72dc580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900",thread-groups=["i1"],times="0",original-location="__libc_malloc"}
+	^done,
+	bkpt=
+	{
+		number="20",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x00007ffff72dc580",
+		func="__GI___libc_malloc",
+		file="malloc.c",
+		fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",
+		line="2900",
+		thread-groups=["i1"],
+		times="0",
+		original-location="__libc_malloc"
+	}
 	(gdb)
 
 Set breakpoint for the dynamic memory management functions. These breakpoints are set after the libc library has been loaded.
@@ -198,7 +347,22 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 
 ==== -break-insert -f __libc_calloc
 
-	^done,bkpt={number="21",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff72dd160",func="__libc_calloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="3170",thread-groups=["i1"],times="0",original-location="__libc_calloc"}
+	^done,
+	bkpt=
+	{
+		number="21",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x00007ffff72dd160",
+		func="__libc_calloc",
+		file="malloc.c",
+		fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",
+		line="3170",
+		thread-groups=["i1"],
+		times="0",
+		original-location="__libc_calloc"
+	}
 	(gdb)
 
 . Set break to stop inferior each time initialized dynamic memory is allocated
@@ -208,7 +372,22 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 
 ==== -break-insert -f __libc_realloc
 
-	^done,bkpt={number="22",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff72dcb10",func="__GI___libc_realloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2972",thread-groups=["i1"],times="0",original-location="__libc_realloc"}
+	^done,
+	bkpt=
+	{
+		number="22",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x00007ffff72dcb10",
+		func="__GI___libc_realloc",
+		file="malloc.c",
+		fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",
+		line="2972",
+		thread-groups=["i1"],
+		times="0",
+		original-location="__libc_realloc"
+	}
 	(gdb)
 
 . Set break to stop inferior each time dynamic memory is re-allocated
@@ -217,7 +396,22 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 
 ==== -break-insert -f __libc_free
 
-	^done,bkpt={number="23",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff72dc940",func="__GI___libc_free",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2932",thread-groups=["i1"],times="0",original-location="__libc_free"}
+	^done,
+	bkpt=
+	{
+		number="23",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x00007ffff72dc940",
+		func="__GI___libc_free",
+		file="malloc.c",
+		fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",
+		line="2932",
+		thread-groups=["i1"],
+		times="0",
+		original-location="__libc_free"
+	}
 	(gdb)
 
 . Set break to stop inferior each time dynamic memory is de-allocated
@@ -228,22 +422,200 @@ Set breakpoint for the dynamic memory management functions. These breakpoints ar
 
 Unsure if they are needed, because all of them call libc dynamic memory functions. When a libc function is called, we can ask GDB to list all function calls. We can know if the function immediatelly before is a new/delete operator, a user-defined function or any other library function. Anyway, here are the breakpoints to C++ dynamic memory operators:
 
+[source,js]
+----
 	-break-insert -f "operator new"
-	^done,bkpt={number="24",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",times="0",original-location="operator new"},{number="24.1",enabled="y",addr="0x00000000004019c0",at="<operator new(unsigned long)@plt>",thread-groups=["i1"]},{number="24.2",enabled="y",addr="0x0000000000402597",func="operator new(unsigned long, void*)",file="/usr/include/c++/5/new",fullname="/usr/include/c++/5/new",line="130",thread-groups=["i1"]},{number="24.3",enabled="y",addr="0x00007ffff7adbc50",at="<operator new(unsigned long, std::nothrow_t const&)@plt>",thread-groups=["i1"]},{number="24.4",enabled="y",addr="0x00007ffff7adc0e0",at="<operator new(unsigned long)@plt>",thread-groups=["i1"]},{number="24.5",enabled="y",addr="0x00007ffff7ae2e60",at="<operator new(unsigned long)>",thread-groups=["i1"]},{number="24.6",enabled="y",addr="0x00007ffff7ae2ec0",at="<operator new(unsigned long, std::nothrow_t const&)>",thread-groups=["i1"]}
+	^done,
+	bkpt=
+	{
+		number="24",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="<MULTIPLE>",
+		times="0",
+		original-location="operator new"
+	},
+	{
+		number="24.1",
+		enabled="y",
+		addr="0x00000000004019c0",
+		at="<operator new(unsigned long)@plt>",
+		thread-groups=["i1"]
+	},
+	{
+		number="24.2",
+		enabled="y",
+		addr="0x0000000000402597",
+		func="operator new(unsigned long, void*)",
+		file="/usr/include/c++/5/new",
+		fullname="/usr/include/c++/5/new",
+		line="130",
+		thread-groups=["i1"]
+	},
+	{
+		number="24.3",
+		enabled="y",
+		addr="0x00007ffff7adbc50",
+		at="<operator new(unsigned long, std::nothrow_t const&)@plt>",
+		thread-groups=["i1"]
+	},
+	{
+		number="24.4",
+		enabled="y",
+		addr="0x00007ffff7adc0e0",
+		at="<operator new(unsigned long)@plt>",
+		thread-groups=["i1"]
+	},
+	{
+		number="24.5",
+		enabled="y",
+		addr="0x00007ffff7ae2e60",
+		at="<operator new(unsigned long)>",
+		thread-groups=["i1"]
+	},
+	{
+		number="24.6",
+		enabled="y",
+		addr="0x00007ffff7ae2ec0",
+		at="<operator new(unsigned long, std::nothrow_t const&)>",
+		thread-groups=["i1"]
+	}
 	(gdb)
 
 	-break-insert -f "operator new[]"
-	^done,bkpt={number="25",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",times="0",original-location="operator new[]"},{number="25.1",enabled="y",addr="0x0000000000401840",at="<operator new[](unsigned long)@plt>",thread-groups=["i1"]},{number="25.2",enabled="y",addr="0x00007ffff7ae2f10",at="<operator new[](unsigned long)>",thread-groups=["i1"]},{number="25.3",enabled="y",addr="0x00007ffff7ae2f40",at="<operator new[](unsigned long, std::nothrow_t const&)>",thread-groups=["i1"]}
+	^done,bkpt=
+	{
+		number="25",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="<MULTIPLE>",
+		times="0",
+		original-location="operator new[]"
+	},
+	{
+		number="25.1",
+		enabled="y",
+		addr="0x0000000000401840",
+		at="<operator new[](unsigned long)@plt>",
+		thread-groups=["i1"]
+	},
+	{
+		number="25.2",
+		enabled="y",
+		addr="0x00007ffff7ae2f10",
+		at="<operator new[](unsigned long)>",
+		thread-groups=["i1"]
+	},
+	{
+		number="25.3",
+		enabled="y",
+		addr="0x00007ffff7ae2f40",
+		at="<operator new[](unsigned long, std::nothrow_t const&)>",
+		thread-groups=["i1"]
+	}
 	(gdb)
 
 	-break-insert -f "operator delete"
-	^done,bkpt={number="26",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",times="0",original-location="operator delete"},{number="26.1",enabled="y",addr="0x00000000004019a0",at="<operator delete(void*)@plt>",thread-groups=["i1"]},{number="26.2",enabled="y",addr="0x00000000004025a9",func="operator delete(void*, void*)",file="/usr/include/c++/5/new",fullname="/usr/include/c++/5/new",line="135",thread-groups=["i1"]},{number="26.3",enabled="y",addr="0x00007ffff7adc6e0",at="<operator delete(void*)@plt>",thread-groups=["i1"]},{number="26.4",enabled="y",addr="0x00007ffff7ae0f10",at="<operator delete(void*)>",thread-groups=["i1"]},{number="26.5",enabled="y",addr="0x00007ffff7ae0f20",at="<operator delete(void*, unsigned long)>",thread-groups=["i1"]},{number="26.6",enabled="y",addr="0x00007ffff7ae0f30",at="<operator delete(void*, std::nothrow_t const&)>",thread-groups=["i1"]}
+	^done,bkpt=
+	{
+		number="26",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="<MULTIPLE>",
+		times="0",
+		original-location="operator delete"
+	},
+	{
+		number="26.1",
+		enabled="y",
+		addr="0x00000000004019a0",
+		at="<operator delete(void*)@plt>",
+		thread-groups=["i1"]
+	},
+	{
+		number="26.2",
+		enabled="y",
+		addr="0x00000000004025a9",
+		func="operator delete(void*, void*)",
+		file="/usr/include/c++/5/new",
+		fullname="/usr/include/c++/5/new",
+		line="135",
+		thread-groups=["i1"]
+	},
+	{
+		number="26.3",
+		enabled="y",
+		addr="0x00007ffff7adc6e0",
+		at="<operator delete(void*)@plt>",
+		thread-groups=["i1"]
+	},
+	{
+		number="26.4",
+		enabled="y",
+		addr="0x00007ffff7ae0f10",
+		at="<operator delete(void*)>",
+		thread-groups=["i1"]
+	},
+	{
+		number="26.5",
+		enabled="y",
+		addr="0x00007ffff7ae0f20",
+		at="<operator delete(void*, unsigned long)>",
+		thread-groups=["i1"]
+	},
+	{
+		number="26.6",
+		enabled="y",
+		addr="0x00007ffff7ae0f30",
+		at="<operator delete(void*, std::nothrow_t const&)>",
+		thread-groups=["i1"]
+	}
 	(gdb)
 
 	-break-insert -f "operator delete[]"
-	^done,bkpt={number="27",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",times="0",original-location="operator delete[]"},{number="27.1",enabled="y",addr="0x0000000000401a30",at="<operator delete[](void*)@plt>",thread-groups=["i1"]},{number="27.2",enabled="y",addr="0x00007ffff7ae0f40",at="<operator delete[](void*)>",thread-groups=["i1"]},{number="27.3",enabled="y",addr="0x00007ffff7ae0f50",at="<operator delete[](void*, unsigned long)>",thread-groups=["i1"]},{number="27.4",enabled="y",addr="0x00007ffff7ae0f60",at="<operator delete[](void*, std::nothrow_t const&)>",thread-groups=["i1"]}
+	^done,bkpt=
+	{
+		number="27",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="<MULTIPLE>",
+		times="0",
+		original-location="operator delete[]"
+	},
+	{
+		number="27.1",
+		enabled="y",
+		addr="0x0000000000401a30",
+		at="<operator delete[](void*)@plt>",
+		thread-groups=["i1"]
+	},
+	{
+		number="27.2",
+		enabled="y",
+		addr="0x00007ffff7ae0f40",
+		at="<operator delete[](void*)>",
+		thread-groups=["i1"]
+	},
+	{
+		number="27.3",
+		enabled="y",
+		addr="0x00007ffff7ae0f50",
+		at="<operator delete[](void*, unsigned long)>",
+		thread-groups=["i1"]
+	},
+	{
+		number="27.4",
+		enabled="y",
+		addr="0x00007ffff7ae0f60",
+		at="<operator delete[](void*, std::nothrow_t const&)>",
+		thread-groups=["i1"]
+	}
 	(gdb)
-
+----
 
 
 === 2.2 Watch standard input/output
@@ -274,7 +646,39 @@ Unsure if they are needed, because all of them call libc dynamic memory function
 
 ==== -data-evaluate-expression bn_reopen_stdin()
 
-	^done,value="{_flags = -72540024, _IO_read_ptr = 0x0, _IO_read_end = 0x0, _IO_read_base = 0x0, _IO_write_base = 0x0, _IO_write_ptr = 0x0, _IO_write_end = 0x0, _IO_buf_base = 0x0, _IO_buf_end = 0x0, _IO_save_base = 0x0, _IO_backup_base = 0x0, _IO_save_end = 0x0, _markers = 0x0, _chain = 0x0, _fileno = 0, _flags2 = 0, _old_offset = -1, _cur_column = 0, _vtable_offset = 0 '\\000', _shortbuf = \"\", _lock = 0x7ffff7bb6790 <_IO_stdfile_0_lock>, _offset = -1, _codecvt = 0x0, _wide_data = 0x7ffff7bb49c0 <_IO_wide_data_0>, _freeres_list = 0x0, _freeres_buf = 0x0, __pad5 = 0, _mode = 0, _unused2 = '\\000' <repeats 19 times>}"
+	^done,
+	value=
+	"{
+		_flags = -72540024,
+		 _IO_read_ptr = 0x0,
+		 _IO_read_end = 0x0,
+		 _IO_read_base = 0x0,
+		 _IO_write_base = 0x0,
+		 _IO_write_ptr = 0x0,
+		 _IO_write_end = 0x0,
+		 _IO_buf_base = 0x0,
+		 _IO_buf_end = 0x0,
+		 _IO_save_base = 0x0,
+		 _IO_backup_base = 0x0,
+		 _IO_save_end = 0x0,
+		 _markers = 0x0,
+		 _chain = 0x0,
+		 _fileno = 0,
+		 _flags2 = 0,
+		 _old_offset = -1,
+		 _cur_column = 0,
+		 _vtable_offset = 0 '\\000',
+		 _shortbuf = \"\",
+		 _lock = 0x7ffff7bb6790 <_IO_stdfile_0_lock>,
+		 _offset = -1,
+		 _codecvt = 0x0,
+		 _wide_data = 0x7ffff7bb49c0 <_IO_wide_data_0>,
+		 _freeres_list = 0x0,
+		 _freeres_buf = 0x0,
+		 __pad5 = 0,
+		 _mode = 0,
+		 _unused2 = '\\000' <repeats 19 times>
+	}"
 	(gdb)
 
 Only on MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluate-expression bn_reopen_stdout()`, `-data-evaluate-expression bn_reopen_stderr()`
@@ -459,7 +863,41 @@ Each time `=thread-created,id="#"` is issued, create an `ExecutionThread` object
 
 For main thread:
 
-	^done,threads=[{id="1",target-id="Thread 0x7ffff7fc9740 (LWP 4995)",name="alli",frame={level="0",addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64"},state="stopped",core="6"}],current-thread-id="1"
+	^done,
+	threads=
+	[
+		{
+			id="1",
+			target-id="Thread 0x7ffff7fc9740 (LWP 4995)",
+			name="alli",
+			frame=
+			{
+				level="0",
+				addr="0x00000000004027c3",
+				func="InputArgument::InputArgument",
+				args=
+				[
+					{
+						name="this",
+						value="0x60b580 <global_program_name>"
+					},
+					{
+						name="number",
+						value="0"
+					},
+					{
+						name="value",
+						value="0x406dc6 \"all_inclusive\""
+					}
+				],
+				file="alli.cpp",
+				fullname="/tmp/alli/alli.cpp",
+				line="64"
+			},
+			state="stopped",
+			core="6"
+		}
+	],current-thread-id="1"
 	(gdb)
 
 . Locate the `ExecutionThread` with the given id, and make it to update its fields. (Be sure to store the `level` field).
@@ -503,7 +941,37 @@ Player solution (inferior) stopped for hitting a breakpoint. Get the `/bkptno` i
 
 [[program-entry-point]]
 ==== 4.1 Program entry point:
-	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
+
+	*stopped,
+	reason="breakpoint-hit",
+	disp="keep",
+	bkptno="2",
+	frame=
+	{
+		addr="0x00000000004027c3",
+		func="InputArgument::InputArgument",
+		args=
+		[
+			{
+				name="this",
+				value="0x60b580 <global_program_name>"
+			},
+			{
+				name="number",
+				value="0"
+			},
+			{
+				name="value",
+				value="0x406dc6 \"all_inclusive\""
+			}
+		],
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="64"
+	},
+	thread-id="1",
+	stopped-threads="all",
+	core="6"
 	(gdb)
 
 Visualization is in starting stage, not animating.
@@ -523,7 +991,36 @@ GDB always set the program entry point breakpoint to the main() function, but it
 
 Example at program's entry point:
 
-	*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00000000004027c3",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="64"},thread-id="1",stopped-threads="all",core="6"
+	*stopped,
+	reason="breakpoint-hit",
+	disp="keep",
+	bkptno="2",
+	frame=
+	{
+		addr="0x00000000004027c3",
+		func="InputArgument::InputArgument",
+		args=
+		[
+			{
+				name="this",
+				value="0x60b580 <global_program_name>"
+			},
+			{
+				name="number",
+				value="0"
+			},
+			{
+				name="value",
+				value="0x406dc6 \"all_inclusive\""
+			}
+		],
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="64"
+	},
+	thread-id="1",
+	stopped-threads="all",
+	core="6"
 	(gdb)
 
 
@@ -546,7 +1043,32 @@ Player solution hit a breakpoint that has the role of `functionCall`. The breakp
 
 ==== -stack-list-arguments 2 0 0
 
-	^done,stack-args=[frame={level="0",args=[{name="this",type="InputArgument * const",value="0x60b580 <global_program_name>"},{name="number",type="ull",value="0"},{name="value",type="const char *",value="0x406dc6 \"all_inclusive\""}]}]
+	^done,
+	stack-args=
+	[
+		frame=
+		{
+			level="0",
+			args=
+			[
+				{
+					name="this",
+					type="InputArgument * const",
+					value="0x60b580 <global_program_name>"
+				},
+				{
+					name="number",
+					type="ull",
+					value="0"
+				},
+				{
+					name="value",
+					type="const char *",
+					value="0x406dc6 \"all_inclusive\""
+				}
+			]
+		}
+	]
 	(gdb)
 
 
@@ -572,7 +1094,25 @@ The `0 0` argument is for selecting top frame only: `/frame/level == 0`
 
 ==== -stack-list-locals 2
 
-	^done,locals=[{name="n",type="size_t",value="4196304"},{name="grid",type="char **",value="0x7fffffffdf50"},{name="error",type="int",value="0"}]
+	^done,
+	locals=
+	[
+		{
+			name="n",
+			type="size_t",
+			value="4196304"
+		},
+		{
+			name="grid",
+			type="char **",
+			value="0x7fffffffdf50"
+		},
+		{
+			name="error",
+			type="int",
+			value="0"
+		}
+	]
 	(gdb)
 
 Example for entry point (`InputArgument constructor`):
@@ -592,7 +1132,26 @@ Example for `main()`:
 
 ==== -stack-list-variables 2
 
-	^done,variables=[{name="argc",arg="1",type="int",value="2"},{name="argv",arg="1",type="char **",value="0x7fffffffdfb8"},{name="__PRETTY_FUNCTION__",type="const char [22]"}]
+	^done,
+	variables=
+	[
+		{
+			name="argc",
+			arg="1",
+			type="int",
+			value="2"
+		},
+		{
+			name="argv",
+			arg="1",
+			type="char **",
+			value="0x7fffffffdfb8"
+		},
+		{
+			name="__PRETTY_FUNCTION__",
+			type="const char [22]"
+		}
+	]
 	(gdb)
 
 This is an alternative to the previous two steps. It shows all the variables (parameters and local variables) at once. It may reduce a little of programming, if the animation of "parameter-passing" can be delayed.
@@ -602,23 +1161,47 @@ This is an alternative to the previous two steps. It shows all the variables (pa
 ==== Create variable-objects to pointed data
 
 	-var-create bn_pd_1_1 @ *this
-	^done,name="bn_pd_1_1",numchild="2",value="{...}",type="InputArgument",thread-id="1",has_more="0"
+	^done,
+	name="bn_pd_1_1",
+	numchild="2",
+	value="{...}",
+	type="InputArgument",
+	thread-id="1",
+	has_more="0"
 	(gdb)
 
 Or?:
 
 	-var-create bn_pd_1_1b @ this
-	^done,name="bn_pd_1_1b",numchild="2",value="0x60b580 <global_program_name>",type="InputArgument * const",thread-id="1",has_more="0"
+	^done,
+	name="bn_pd_1_1b",
+	numchild="2",
+	value="0x60b580 <global_program_name>",
+	type="InputArgument * const",
+	thread-id="1",
+	has_more="0"
 	(gdb)
 
 Creates a variable object using notation `bn_pd_th_fc` where `pd` stands for 'pointed data', `th` the thread number, and `fc` the function call index in that thread. We create a variable object for each pointer we have in the stack:
 
 	-var-create bn_pd_1_2 @ *value
-	^done,name="bn_pd_1_2",numchild="0",value="97 'a'",type="const char",thread-id="1",has_more="0"
+	^done,
+	name="bn_pd_1_2",
+	numchild="0",
+	value="97 'a'",
+	type="const char",
+	thread-id="1",
+	has_more="0"
 	(gdb)
 
 	-var-create bn_pd_1_2b @ value
-	^done,name="bn_pd_1_2b",numchild="1",value="0x406dc6 \"all_inclusive\"",type="const char *",thread-id="1",has_more="0"
+	^done,
+	name="bn_pd_1_2b",
+	numchild="1",
+	value="0x406dc6 \"all_inclusive\"",
+	type="const char *",
+	thread-id="1",
+	has_more="0"
 	(gdb)
 
 In both cases we need to keep track of the pointed data. If the pointed address matches a existing Variable object, point to it. If there is not a Variable object, make a child class object AnonymousVariable that trace value changes.
@@ -636,7 +1219,13 @@ If GDB may reject to create many variables, an alternative is the following. Do 
 For each `Variable` that has the role of `pointer` [references are updated as normal variables] we need to update the pointed data, because the pointer may have been used to modify it:
 
 	-data-evaluate-expression *this
-	^done,value="{_vptr.AbstractArgument = 0x406f08 <vtable for AbstractArgument<char const*>+16>, number = 0, value1 = 0x406dc6 \"all_inclusive\"}"
+	^done,
+	value=
+	"{
+		_vptr.AbstractArgument = 0x406f08 <vtable for AbstractArgument<char const*>+16>,
+		 number = 0,
+		 value1 = 0x406dc6 \"all_inclusive\"
+	}"
 	(gdb)
 
 
@@ -737,16 +1326,53 @@ These breakpoints are fired after issuing a `next-step` command in execution loo
 ----
 	-exec-next
 	^running
-	*running,thread-id="all"
+	*running,
+	thread-id="all"
 	(gdb)
 
-	=breakpoint-modified,bkpt={number="20",type="breakpoint",disp="keep",enabled="y",addr="0x00007ffff72dc580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900",thread-groups=["i1"],times="1",original-location="__libc_malloc"}
+	=breakpoint-modified,
+	bkpt=
+	{
+		number="20",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x00007ffff72dc580",
+		func="__GI___libc_malloc",
+		file="malloc.c",
+		fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",
+		line="2900",
+		thread-groups=["i1"],
+		times="1",
+		original-location="__libc_malloc"
+	}
 
 	~"\n"
 	~"Breakpoint 20, __GI___libc_malloc (bytes=59) at malloc.c:2900\n"
 	&"2900\tmalloc.c: No such file or directory.\n"
 
-	*stopped,reason="breakpoint-hit",disp="keep",bkptno="20",frame={addr="0x00007ffff72dc580",func="__GI___libc_malloc",args=[{name="bytes",value="59"}],file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900"},thread-id="1",stopped-threads="all",core="0"
+	*stopped,
+	reason="breakpoint-hit",
+	disp="keep",
+	bkptno="20",
+	frame=
+	{
+		addr="0x00007ffff72dc580",
+		func="__GI___libc_malloc",
+		args=
+		[
+			{
+				name="bytes",
+				value="59"
+			}
+		],
+		file="malloc.c",
+		fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",
+		line="2900"
+	},
+	thread-id="1",
+	stopped-threads="all",
+	core="0"
 	(gdb)
 ----
 
@@ -789,10 +1415,24 @@ These breakpoints are fired after issuing a `next-step` command in execution loo
 [source,js]
 ----
 	^running
-	*running,thread-id="all"
+	*running,
+	thread-id="all"
 	(gdb)
 
-	*stopped,reason="function-finished",frame={addr="0x00007ffff7ae2e78",func="operator new(unsigned long)",args=[],from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},gdb-result-var="$1",return-value="(void *) 0x61dc20",thread-id="1",stopped-threads="all",core="1"
+	*stopped,
+	reason="function-finished",
+	frame=
+	{
+		addr="0x00007ffff7ae2e78",
+		func="operator new(unsigned long)",
+		args=[],
+		from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
+	},
+	gdb-result-var="$1",
+	return-value="(void *) 0x61dc20",
+	thread-id="1",
+	stopped-threads="all",
+	core="1"
 	(gdb)
 ----
 
@@ -811,7 +1451,40 @@ We are not interested in debugging the body of the library's memory function. We
 
 [source,js]
 ----
-	^done,stack=[frame={level="0",addr="0x00007ffff7ae2e78",func="operator new(unsigned long)",from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},frame={level="1",addr="0x00007ffff7b76aed",func="void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)",from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},frame={level="2",addr="0x00007ffff7b76c4c",func="std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)",from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"},frame={level="3",addr="0x00000000004021d6",func="main",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="164"}]
+	^done,
+	stack=
+	[
+		frame=
+		{
+			level="0",
+			addr="0x00007ffff7ae2e78",
+			func="operator new(unsigned long)",
+			from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
+		},
+		frame=
+		{
+			level="1",
+			addr="0x00007ffff7b76aed",
+			func="void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)",
+			from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
+		},
+		frame=
+		{
+			level="2",
+			addr="0x00007ffff7b76c4c",
+			func="std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)",
+			from="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
+		},
+		frame=
+		{
+			level="3",
+			addr="0x00000000004021d6",
+			func="main",
+			file="alli.cpp",
+			fullname="/tmp/alli/alli.cpp",
+			line="164"
+		}
+	]
 	(gdb)
 ----
 
@@ -899,11 +1572,43 @@ A visualization step moves around the `-exec-next` instruction. Each time this c
 
 ==== -exec-next
 
+[source,js]
+----
 	^running
-	*running,thread-id="all"
+	*running,
+	thread-id="all"
 	(gdb)
-	*stopped,reason="end-stepping-range",frame={addr="0x00000000004027d2",func="InputArgument::InputArgument",args=[{name="this",value="0x60b580 <global_program_name>"},{name="number",value="0"},{name="value",value="0x406dc6 \"all_inclusive\""}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="66"},thread-id="1",stopped-threads="all",core="6"
+
+	*stopped,
+	reason="end-stepping-range",
+	frame=
+	{
+		addr="0x00000000004027d2",
+		func="InputArgument::InputArgument",
+		args=
+		[
+			{
+				name="this",
+				value="0x60b580 <global_program_name>"
+			},
+			{
+				name="number",
+				value="0"
+			},
+			{
+				name="value",
+				value="0x406dc6 \"all_inclusive\""
+			}
+		],
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="66"
+	},
+	thread-id="1",
+	stopped-threads="all",
+	core="6"
 	(gdb)
+----
 
 The _visualization step_ finished executing the next instruction.
 
@@ -933,7 +1638,28 @@ Check if we are running on the same function
 
 ==== -stack-list-variables 2
 
-	^done,variables=[{name="this",arg="1",type="InputArgument * const",value="0x60b580 <global_program_name>"},{name="number",arg="1",type="ull",value="0"},{name="value",arg="1",type="const char *",value="0x406dc6 \"all_inclusive\""}]
+	^done,
+	variables=
+	[
+		{
+			name="this",
+			arg="1",
+			type="InputArgument * const",
+			value="0x60b580 <global_program_name>"
+		},
+		{
+			name="number",
+			arg="1",
+			type="ull",
+			value="0"
+		},
+		{
+			name="value",
+			arg="1",
+			type="const char *",
+			value="0x406dc6 \"all_inclusive\""
+		}
+	]
 	(gdb)
 
 Update local variables:
@@ -1034,20 +1760,78 @@ An execution thread may end with no stack frames (function calls). This is possi
 [source,js]
 ----
 	^running
-	*running,thread-id="all"
+	*running,
+	thread-id="all"
 	(gdb)
 
-	=breakpoint-modified,bkpt={number="18",type="breakpoint",disp="keep",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="162",thread-groups=["i1"],times="1",original-location="alli.cpp:162"}
+	=breakpoint-modified,
+	bkpt=
+	{
+		number="18",
+		type="breakpoint",
+		disp="keep",
+		enabled="y",
+		addr="0x000000000040219e",
+		func="main(int, char**)",
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="162",
+		thread-groups=["i1"],
+		times="1",
+		original-location="alli.cpp:162"
+	}
 
-	=breakpoint-modified,bkpt={number="19",type="breakpoint",disp="del",enabled="y",addr="0x000000000040219e",func="main(int, char**)",file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="163",thread-groups=["i1"],times="1",original-location="main"}
+	=breakpoint-modified,
+	bkpt=
+	{
+		number="19",
+		type="breakpoint",
+		disp="del",
+		enabled="y",
+		addr="0x000000000040219e",
+		func="main(int, char**)",
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="163",
+		thread-groups=["i1"],
+		times="1",
+		original-location="main"
+	}
+
 
 	~"\n"
 	~"Breakpoint 18, main (argc=2, argv=0x7fffffffdfb8) at alli.cpp:163\n"
 	~"163\t{\n"
 
-	*stopped,reason="breakpoint-hit",disp="keep",bkptno="18",frame={addr="0x000000000040219e",func="main",args=[{name="argc",value="2"},{name="argv",value="0x7fffffffdfb8"}],file="alli.cpp",fullname="/tmp/alli/alli.cpp",line="163"},thread-id="1",stopped-threads="all",core="2"
+	*stopped,
+	reason="breakpoint-hit",
+	disp="keep",
+	bkptno="18",
+	frame=
+	{
+		addr="0x000000000040219e",
+		func="main",
+		args=
+		[
+			{
+				name="argc",
+				value="2"
+			},
+			{
+				name="argv",
+				value="0x7fffffffdfb8"
+			}
+		],
+		file="alli.cpp",
+		fullname="/tmp/alli/alli.cpp",
+		line="163"
+	},
+	thread-id="1",
+	stopped-threads="all",
+	core="2"
 
-	=breakpoint-deleted,id="19"
+	=breakpoint-deleted,
+	id="19"
 	(gdb)
 ----
 
@@ -1064,7 +1848,82 @@ Future: We could represent these library functions as empty stack frames, or jus
 
 ==== -stack-list-frames
 
-	^done,stack=[frame={level="0",addr="0x00007ffff7874580",func="__GI___libc_malloc",file="malloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",line="2900"},frame={level="1",addr="0x00007ffff785e1d5",func="__GI__IO_file_doallocate",file="filedoalloc.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/filedoalloc.c",line="127"},frame={level="2",addr="0x00007ffff786c594",func="__GI__IO_doallocbuf",file="genops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",line="398"},frame={level="3",addr="0x00007ffff786b69c",func="_IO_new_file_underflow",file="fileops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/fileops.c",line="556"},frame={level="4",addr="0x00007ffff786c60e",func="__GI__IO_default_uflow",file="genops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",line="413"},frame={level="5",addr="0x00007ffff784d260",func="_IO_vfscanf_internal",file="vfscanf.c",fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/vfscanf.c",line="634"},frame={level="6",addr="0x00007ffff785c5df",func="__isoc99_scanf",file="isoc99_scanf.c",fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/isoc99_scanf.c",line="37"},frame={level="7",addr="0x00000000004008fb",func="main",file="solution.c",fullname="/tmp/tictactoe_nxn/solution.c",line="15"}]
+	^done,
+	stack=
+	[
+		frame=
+		{
+			level="0",
+			addr="0x00007ffff7874580",
+			func="__GI___libc_malloc",
+			file="malloc.c",
+			fullname="/build/glibc-Qz8a69/glibc-2.23/malloc/malloc.c",
+			line="2900"
+		},
+		frame=
+		{
+			level="1",
+			addr="0x00007ffff785e1d5",
+			func="__GI__IO_file_doallocate",
+			file="filedoalloc.c",
+			fullname="/build/glibc-Qz8a69/glibc-2.23/libio/filedoalloc.c",
+			line="127"
+		},
+		frame=
+		{
+			level="2",
+			addr="0x00007ffff786c594",
+			func="__GI__IO_doallocbuf",
+			file="genops.c",
+			fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",
+			line="398"
+		},
+		frame=
+		{
+			level="3",
+			addr="0x00007ffff786b69c",
+			func="_IO_new_file_underflow",
+			file="fileops.c",
+			fullname="/build/glibc-Qz8a69/glibc-2.23/libio/fileops.c",
+			line="556"
+		},
+		frame=
+		{
+			level="4",
+			addr="0x00007ffff786c60e",
+			func="__GI__IO_default_uflow",
+			file="genops.c",
+			fullname="/build/glibc-Qz8a69/glibc-2.23/libio/genops.c",
+			line="413"
+		},
+		frame=
+		{
+			level="5",
+			addr="0x00007ffff784d260",
+			func="_IO_vfscanf_internal",
+			file="vfscanf.c",
+			fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/vfscanf.c",
+			line="634"
+		},
+		frame=
+		{
+			level="6",
+			addr="0x00007ffff785c5df",
+			func="__isoc99_scanf",
+			file="isoc99_scanf.c",
+			fullname="/build/glibc-Qz8a69/glibc-2.23/stdio-common/isoc99_scanf.c",
+			line="37"
+		},
+		frame=
+		{
+			level="7",
+			addr="0x00000000004008fb",
+			func="main",
+			file="solution.c",
+			fullname="/tmp/tictactoe_nxn/solution.c",
+			line="15"
+		}
+	]
 	(gdb)
 
 
@@ -1126,8 +1985,31 @@ A segmentation fault is simulated when the player solution requires more memory 
 
 ==== -exec-until solution.c:15
 
+[source,js]
+----
 	^running
-	*running,thread-id="all"
+	*running,
+	thread-id="all"
 	(gdb)
-	*stopped,reason="location-reached",frame={addr="0x00007ffff786b69c",func="_IO_new_file_underflow",args=[{name="fp",value="0x7ffff7bb48e0 <_IO_2_1_stdin_>"}],file="fileops.c",fullname="/build/glibc-Qz8a69/glibc-2.23/libio/fileops.c",line="556"},thread-id="1",stopped-threads="all",core="2"
+	*stopped,
+	reason="location-reached",
+	frame=
+	{
+		addr="0x00007ffff786b69c",
+		func="_IO_new_file_underflow",
+		args=
+		[
+			{
+				name="fp",
+				value="0x7ffff7bb48e0 <_IO_2_1_stdin_>"
+			}
+		],
+		file="fileops.c",
+		fullname="/build/glibc-Qz8a69/glibc-2.23/libio/fileops.c",
+		line="556"
+	},
+	thread-id="1",
+	stopped-threads="all",
+	core="2"
 	(gdb)
+----
