@@ -61,20 +61,20 @@ class DebuggerBreakpoint
 	/// A single breakpoint may have one or several roles
 	enum Role
 	{
-		unknown           = 0x0,   // Default value in constructor
-		userDefined       = 0x1,   // User created breakpoint in CodeEditor
-		functionBody      = 0x2,   // Function definition detected with ctags
-		programEntryPoint = 0x4,   // First function called, usually main()
+		unknown            = 0x0,   // Default value in constructor
+		userDefined        = 0x1,   // User created breakpoint in CodeEditor
+		functionDefinition = 0x2,   // Function definition detected with ctags
+		programEntryPoint  = 0x4,   // First function called, usually main()
 
-		mallocCalled      = 0x8,   // Memory allocation (uninitialized)
-		callocCalled      = 0x10,  // Memory allocation (initialized)
-		reallocCalled     = 0x20,  // Memory reallocation
-		freeCalled        = 0x40,  // Memory deallocation
+		mallocCalled       = 0x8,   // Memory allocation (uninitialized)
+		callocCalled       = 0x10,  // Memory allocation (initialized)
+		reallocCalled      = 0x20,  // Memory reallocation
+		freeCalled         = 0x40,  // Memory deallocation
 
-		newObject         = 0x80,  // C++ new operator
-		newArray          = 0x100, // C++ new[] operator
-		deleteObject      = 0x200, // C++ delete operator
-		deleteArray       = 0x400, // C++ delete[] operator
+		newObject          = 0x80,  // C++ new operator
+		newArray           = 0x100, // C++ new[] operator
+		deleteObject       = 0x200, // C++ delete operator
+		deleteArray        = 0x400, // C++ delete[] operator
 	};
 	/// Several roles can be joined with bitwise or operator, e.g:
 	Q_DECLARE_FLAGS(Roles, Role)
@@ -113,6 +113,8 @@ class DebuggerBreakpoint
 	inline bool hasRole(Role role) const { return roles.testFlag(role); }
 	/// Adds a role to this breakpoint
 	inline void addRole(Role role) { this->roles |= role; }
+	/// For debugging
+	void print() const;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(DebuggerBreakpoint::Roles)

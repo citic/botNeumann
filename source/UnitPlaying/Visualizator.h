@@ -115,7 +115,7 @@ class Visualizator : public GdbResponseListener
 	/// done in order to capture the output from player solution while it is being animated
 	QString buildInferiorArguments();
 	/// A Gdb result indicates that a new breakpoint was added
-	void updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode);
+	void updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, VisualizatorContext context);
 	/// Returns the index of the debugger breakpoint that matches the given GUI breakpoint. The
 	/// comparison is made by filename and line number. Returns -1 if no matches are found.
 	/// @remark Search is made sequential, therefore O(n) where n is the number of debugger

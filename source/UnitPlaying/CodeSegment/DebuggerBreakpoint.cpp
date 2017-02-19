@@ -28,7 +28,10 @@ void DebuggerBreakpoint::updateFromNode(const GdbTreeNode& breakpointNode)
 	//	thread-groups=["i1"]
 	//	times="1"
 	//	original-location="main"
+}
 
-	qCDebug(logTemporary(), "Breakpoint[number=%d][line=%d][file=%s][function=%s][address=%zx]"
-		   , number, lineNumber, qPrintable(filename), qPrintable(functionName), address);
+void DebuggerBreakpoint::print() const
+{
+	qCDebug(logTemporary, "Breakpoint[number=%d][line=%d][file=%s][function=%s][address=%zx][roles=%zx]"
+			, number, lineNumber, qPrintable(filename), qPrintable(functionName), address, (size_t)roles);
 }

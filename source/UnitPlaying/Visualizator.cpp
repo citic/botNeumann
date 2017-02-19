@@ -316,7 +316,7 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 
 		case AsyncClass::AC_BREAKPOINT_MODIFIED:
 			if ( ( node = tree.findNode("/bkpt") ) )
-				return updateDebuggerBreakpoint( node );
+				return updateDebuggerBreakpoint( node, context );
 			break;
 
 		default:
@@ -331,7 +331,7 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizatorContext context
 	const GdbTreeNode* node = nullptr;
 
 	if ( ( node = tree.findNode("/bkpt") ) )
-		return updateDebuggerBreakpoint( node );
+		return updateDebuggerBreakpoint( node, context );
 }
 
 void Visualizator::onConsoleStreamOutput(const QString& text, VisualizatorContext context, int& maxDuration)
@@ -360,7 +360,7 @@ void Visualizator::onLogStreamOutput(const QString& str, VisualizatorContext con
 }
 
 
-void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode)
+void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, VisualizatorContext context)
 {
 	// Create a debugger breakpoint that parsers the output sent by debugger
 	Q_ASSERT(breakpointNode);
@@ -381,6 +381,16 @@ void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode)
 		debuggerBreakpoints[breakpointNumber] = debuggerBreakpoint;
 	}
 
+	// Update the role of the breakpoint according to the context it was created
+	switch ( context )
+	{
+		case visUserDefinedBreakpoint: debuggerBreakpoint->addRole( DebuggerBreakpoint::userDefined ); break;
+		case visFunctionDefinition: debuggerBreakpoint->addRole( DebuggerBreakpoint::functionDefinition ); break;
+		case visProgramEntryPoint: debuggerBreakpoint->addRole( DebuggerBreakpoint::programEntryPoint ); break;
+		default: break;
+	}
+
+	debuggerBreakpoint->print();
 	// Update the interface?
 //	emit breakpointUpdated( debuggerBreakpoints[breakpointNumber] );
 }
