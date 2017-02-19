@@ -242,8 +242,6 @@ void Visualizator::processGdbResponse()
 		return;
 	}
 
-	qCInfo(logTemporary) << "RESP: " << gdbResponse->buildDescription(true);
-
 	// Notify all actors to animate this response, they will inform how many milliseconds they
 	// will take to complete the animation
 	int maxDuration = 0;

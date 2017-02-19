@@ -147,7 +147,6 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, int userData, GdbItemT
 	pendingCommands.append(gdbCommand);
 
 	qCInfo(logDebuggerRequest).noquote().nospace() << gdbCommand.getText() << " | usr=" << userData;
-	qCInfo(logDebuggerRequest) << "++pendingCommands.size =" << pendingCommands.count();
 	process->write( qPrintable( gdbCommand.getCommand() ) );
 
 	GdbResult lastResult = GDB_UNKNOWN;
@@ -198,26 +197,22 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 			if ( response->getCommandNumber() > this->lastCommandNumberReceived )
 			{
 				lastCommandNumberReceived = response->getCommandNumber();
-				qCCritical(logTemporary()) << "lastCommandNumberReceived =" << lastCommandNumberReceived;
 
 				// Try to find the pending command that generated the new train of responses
 				GdbCommand* command = findPendingCommandWithNumber(lastCommandNumberReceived);
 				if ( command == nullptr )
-					qCCritical(logTemporary()) << "COMMAND NOT FOUND" << lastCommandNumberReceived;
+					qCDebug(logApplication) << "Response for command not found" << lastCommandNumberReceived;
 				lastUserData = command ? command->getUserData() : 0;
-				qCCritical(logTemporary()) << "lastUserData =" << lastUserData;
 			}
 			else if ( response->getCommandNumber() == 0 )
 			{
 				response->setCommandNumber( lastCommandNumberReceived );
 			}
 			response->setUserData( lastUserData );
-			qCDebug(logTemporary) << "readFromGdb2:" << response->buildDescription(true);
 
 			// Each command sent to gdb will generate at least one response. We store them
 			// for inform the call later about the result
 			responseQueue.append(response);
-			qCInfo(logDebuggerRequest) << "++responseQueue.size =" << responseQueue.count();
 
 			// If this response is the final result of a command
 			if( response->getType() == GdbResponse::RESULT )
@@ -519,11 +514,10 @@ GdbResponse* GdbCall::parseResultRecord()
 			break;
 
 	// This result token finishes a command that we issued previously to GDB
-	if ( ! pendingCommands.isEmpty() /*&& response->getCommandNumber() == pendingCommands.first().getNumber()*/ )
+	if ( ! pendingCommands.isEmpty() )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
 		qCDebug(logDebugger).noquote() << cmd.getText() << "command done!";
-		qCInfo(logDebuggerRequest) << "--pendingCommands.size =" << pendingCommands.count();
 	}
 
 	return response;
@@ -645,10 +639,7 @@ GdbResponse* GdbCall::takeNextResponse()
 	if ( responseQueue.isEmpty() )
 		lastServedResponse = nullptr;
 	else
-	{
 		lastServedResponse = responseQueue.takeFirst();
-		qCInfo(logDebuggerRequest) << "--responseQueue.size =" << responseQueue.count();
-	}
 
 	// Return a pointer to it
 	return lastServedResponse;
