@@ -7,6 +7,7 @@
 #include "PlayerSolution.h"
 #include "UnitPlayingScene.h"
 #include "Util.h"
+#include "VisualizationContext.h"
 #include "VisualizationSpeed.h"
 
 Visualizator::Visualizator(PlayerSolution* playerSolution, int testCase, UnitPlayingScene* unitPlayingScene)
@@ -14,7 +15,6 @@ Visualizator::Visualizator(PlayerSolution* playerSolution, int testCase, UnitPla
 	, playerSolution(playerSolution)
 	, testCaseNumber(testCase)
 	, unitPlayingScene(unitPlayingScene)
-	, inferiorProcessId(0)
 {
 }
 
@@ -51,18 +51,18 @@ bool Visualizator::start()
 
 	// Ask GDB run user program
 	const QString executablePath = playerSolution->getExecutablePath();
-	if ( debuggerCall->sendGdbCommand(QString("-file-exec-and-symbols \"%1\"").arg(executablePath)) == GDB_ERROR )
+	if ( debuggerCall->sendGdbCommand( QString("-file-exec-and-symbols \"%1\"").arg(executablePath), visStarting ) == GDB_ERROR )
 		qCritical(logVisualizator(), "Failed to run user program: '%s'", qPrintable(executablePath));
 
 	// Give inferior parameters to GDB
-	debuggerCall->sendGdbCommand(QString("-exec-arguments %1").arg( buildInferiorArguments() ));
+	debuggerCall->sendGdbCommand( QString("-exec-arguments %1").arg( buildInferiorArguments() ), visStarting );
 
 	// Get current user-defined breakpoints on GUI, if any as strings "filename:lineNumber"
 	const QList<GuiBreakpoint*>& editorBreakpoints = unitPlayingScene->retrieveBreakpoints();
 	foreach(const GuiBreakpoint* guiBreakpoint, editorBreakpoints)
 	{
 		const QString& originalLocation = guiBreakpoint->buildOriginalLocation();
-		if ( debuggerCall->sendGdbCommand( "-break-insert " + originalLocation ) == GDB_ERROR )
+		if ( debuggerCall->sendGdbCommand( "-break-insert " + originalLocation, visUserDefinedBreakpoint ) == GDB_ERROR )
 			qCWarning( logVisualizator, "Error: -break-insert %s", qUtf8Printable(originalLocation) );
 	}
 
@@ -70,7 +70,7 @@ bool Visualizator::start()
 	VisualizationSpeed::getInstance().setSeeking( editorBreakpoints.count() > 0 );
 
 	// Always stop execution at main function
-	if ( debuggerCall->sendGdbCommand("-break-insert -f main") == GDB_ERROR )
+	if ( debuggerCall->sendGdbCommand("-break-insert -f main", visProgramEntryPoint) == GDB_ERROR )
 		qCritical(logVisualizator(), "Failed to set breakpoint at main() function");
 
 	// ToDo: Extract source filenames. Not required by botNeumann++ for the moment
@@ -85,7 +85,7 @@ bool Visualizator::start()
 		inferiorProcessId = 0;
 		GdbState oldState = gdbState;
 		gdbState = STATE_STARTING;
-		if ( debuggerCall->sendGdbCommand("-exec-run") == GDB_ERROR )
+		if ( debuggerCall->sendGdbCommand("-exec-run", visStarting) == GDB_ERROR )
 			gdbState = oldState;
 	}
 
@@ -132,7 +132,7 @@ bool Visualizator::stop()
 	VisualizationSpeed::getInstance().setSeeking(true);
 
 	// Stop gdb
-	return debuggerCall->sendGdbCommand("-exec-interrupt") != GDB_ERROR;
+	return debuggerCall->sendGdbCommand("-exec-interrupt", visStopping) != GDB_ERROR;
 }
 
 bool Visualizator::pause()
@@ -171,12 +171,12 @@ void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
 			break;
 
 		case GuiBreakpoint::Action::created:
-			debuggerCall->sendGdbCommand( QString("-break-insert %1").arg(guiBreakpoint->buildOriginalLocation()) );
+			debuggerCall->sendGdbCommand( QString("-break-insert %1").arg(guiBreakpoint->buildOriginalLocation()), visUserDefinedBreakpoint );
 			break;
 
 		case GuiBreakpoint::Action::removed:
 			int breakpointNumber = findDebuggerBreakpointIndex( *guiBreakpoint );
-			if ( breakpointNumber > 0 && debuggerCall->sendGdbCommand( QString("-break-delete %1").arg(breakpointNumber) ) != GDB_ERROR )
+			if ( breakpointNumber > 0 && debuggerCall->sendGdbCommand( QString("-break-delete %1").arg(breakpointNumber), visUserDefinedBreakpoint ) != GDB_ERROR )
 			{
 				delete debuggerBreakpoints[breakpointNumber];
 				debuggerBreakpoints[breakpointNumber] = nullptr;
@@ -189,7 +189,7 @@ bool Visualizator::step(const QString& gdbCommand, const QString& description)
 {
 	Q_ASSERT(debuggerCall);
 	qCInfo(logPlayer) << description;
-	if ( debuggerCall->sendGdbCommand(gdbCommand) == GDB_ERROR )
+	if ( debuggerCall->sendGdbCommand(gdbCommand, visExecutionLoop) == GDB_ERROR )
 	{
 		qCCritical(logVisualizator) << "Error sending" << description << "command";
 		return false;
@@ -242,7 +242,7 @@ void Visualizator::processGdbResponse()
 		return;
 	}
 
-	qCDebug(logTemporary) << "processGdbResponse: " << gdbResponse->buildDescription(true);
+	qCInfo(logTemporary) << "RESP: " << gdbResponse->buildDescription(true);
 
 	// Notify all actors to animate this response, they will inform how many milliseconds they
 	// will take to complete the animation
@@ -272,10 +272,10 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 			// if (inferiorProcessId == 0) debuggerCall->sendGdbCommand("-list-thread-groups");
 
 			// ToDo: for first breakpoint-hit, save tree
-
-			debuggerCall->sendGdbCommand("-thread-info");
-			debuggerCall->sendGdbCommand("-var-update --all-values *");
-			debuggerCall->sendGdbCommand("-stack-list-locals 1");
+			// ToDo: These are Gede commands. Check against session example. Contexts may be wrong
+			debuggerCall->sendGdbCommand("-thread-info", visExecutionLoop);
+			debuggerCall->sendGdbCommand("-var-update --all-values *", visExecutionLoop);
+			debuggerCall->sendGdbCommand("-stack-list-locals 1", visExecutionLoop);
 			break;
 
 		default:
@@ -314,7 +314,7 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 			break;
 
 		case AsyncClass::AC_THREAD_CREATED:
-			debuggerCall->sendGdbCommand("-thread-info");
+			debuggerCall->sendGdbCommand("-thread-info", visExecutionLoop);
 			break;
 
 		case AsyncClass::AC_BREAKPOINT_MODIFIED:

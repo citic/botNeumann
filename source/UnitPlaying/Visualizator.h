@@ -47,7 +47,7 @@ class Visualizator : public GdbResponseListener
 	/// in the array match the integers used by the debugger
 	QVector<DebuggerBreakpoint*> debuggerBreakpoints;
 	/// Process id of the inferior retrieved from gdb. Needed?
-	int inferiorProcessId;
+	int inferiorProcessId = 0;
 	/// Controls when the last animation is done before processing the next GdbCommand
 	QTimer animationDone;
 	/// When the unit playing scene is paused, not animations are done, but if a step in/out/over

@@ -87,6 +87,7 @@ HEADERS += \
 	source/UnitPlaying/Common/MemoryRow.h \
 	source/UnitPlaying/Common/MemorySegment.h \
 	source/UnitPlaying/Common/MemoryTop.h \
+	source/UnitPlaying/Common/VisualizationContext.h \
 	source/UnitPlaying/Common/VisualizationSpeed.h \
 	source/UnitPlaying/DataSegment/DataSegment.h \
 	source/UnitPlaying/DataSegment/StandardInputOutput.h \

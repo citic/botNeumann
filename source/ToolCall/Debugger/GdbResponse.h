@@ -70,10 +70,12 @@ class GdbResponse
 	GdbItemTree itemTree;
 	/// This is a response for the command with this number
 	size_t commandNumber = 0;
+	/// The user data of the command is copyied to this response
+	int userData = 0;
 
   public:
 	/// Constructor
-	explicit GdbResponse(Type type, size_t commandNumber = 0) : type(type), commandNumber(commandNumber) { }
+	explicit GdbResponse(Type type, int userData = 0, size_t commandNumber = 0) : type(type), commandNumber(commandNumber), userData(userData) { }
 
 	/// Get the enumeration type of this GDB response
 	inline Type getType() const { return type; }
@@ -120,6 +122,11 @@ class GdbResponse
 	inline size_t getCommandNumber() const { return commandNumber; }
 	/// Set the command number that generated this response
 	inline void setCommandNumber(size_t number) { this->commandNumber = number; }
+
+	/// Get access to the user data (context) of the command that generated this answer
+	inline int getUserData() const { return userData; }
+	/// Set the user data (context) for this command
+	inline void setUserData(int userData) { this->userData = userData; }
 
 	/// @brief Parses 'ASYNC-OUTPUT' type
 	/// @return 0 on success, -1 on error

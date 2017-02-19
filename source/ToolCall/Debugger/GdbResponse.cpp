@@ -110,8 +110,8 @@ int GdbResponse::parseAsyncOutput(const QString& reasonText)
 
 QString GdbResponse::buildDescription(bool includeItemTree) const
 {
-	QString description = QString("GdbOutput(%1, %2, '%3')")
-		.arg( getTypeString() ).arg( getReasonString() ).arg( getText() );
+	QString description = QString("GdbOutput(%1, %2, '%3'; cmd=%4, usr=%5)")
+		.arg( getTypeString() ).arg( getReasonString() ).arg( getText() ).arg( commandNumber ).arg(userData);
 	if ( result != GDB_UNKNOWN )
 		description += " RESULT=" + getResultString();
 	if ( includeItemTree )

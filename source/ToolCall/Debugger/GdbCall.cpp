@@ -47,7 +47,8 @@ bool GdbCall::start()
 	// When GDB has generated output, parse it
 	connect( process, SIGNAL(readyReadStandardOutput()), this, SLOT(onReadyReadStandardOutput()) );
 
-	const QString& command = QStringLiteral("%1 -q --interpreter=mi2").arg(gdbPath);
+	const QString& command = QStringLiteral("%1 -q -i mi").arg(gdbPath);
+	pendingCommands.append( GdbCommand(command, 0) );
 	qCInfo(logDebuggerRequest).noquote() << command;
 	process->start(command);
 	process->waitForStarted();
@@ -137,15 +138,16 @@ const char* GdbCall::getInferiorPseudoterminalName() const
   #endif
 }
 
-GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultData)
+GdbResult GdbCall::sendGdbCommand(const QString& command, int userData, GdbItemTree* resultData)
 {
 	Q_ASSERT(busy == 0);
 	++busy;
 
-	GdbCommand gdbCommand(command);
+	GdbCommand gdbCommand(command, userData);
 	pendingCommands.append(gdbCommand);
 
-	qCInfo(logDebuggerRequest).noquote() << gdbCommand.getText();
+	qCInfo(logDebuggerRequest).noquote().nospace() << gdbCommand.getText() << " | usr=" << userData;
+	qCInfo(logDebuggerRequest) << "++pendingCommands.size =" << pendingCommands.count();
 	process->write( qPrintable( gdbCommand.getCommand() ) );
 
 	GdbResult lastResult = GDB_UNKNOWN;
@@ -157,7 +159,7 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, GdbItemTree* resultDat
 		// readFromGdb matches the GDB output to each command, and
 		// removes the answered commands from the pending list
 		lastResult = readFromGdb(resultData);
-	} while ( pendingCommands.isEmpty() == false );
+	} while ( pendingCommands.count() > 1 );
 
 	// If GDB is generating more output, but we have not received it entirely
 	while( ! pendingTokens.isEmpty() )
@@ -188,13 +190,34 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 
 		if ( response )
 		{
-			qCDebug(logTemporary) << "GdbCall::readFromGdb:" << response->buildDescription(true);
+			qCDebug(logTemporary) << "readFromGdb1:" << response->buildDescription(true);
 
 			deleteProcessedTokens();
+
+			// If we start to receive answer for a new command
+			if ( response->getCommandNumber() > this->lastCommandNumberReceived )
+			{
+				lastCommandNumberReceived = response->getCommandNumber();
+				qCCritical(logTemporary()) << "lastCommandNumberReceived =" << lastCommandNumberReceived;
+
+				// Try to find the pending command that generated the new train of responses
+				GdbCommand* command = findPendingCommandWithNumber(lastCommandNumberReceived);
+				if ( command == nullptr )
+					qCCritical(logTemporary()) << "COMMAND NOT FOUND" << lastCommandNumberReceived;
+				lastUserData = command ? command->getUserData() : 0;
+				qCCritical(logTemporary()) << "lastUserData =" << lastUserData;
+			}
+			else if ( response->getCommandNumber() == 0 )
+			{
+				response->setCommandNumber( lastCommandNumberReceived );
+			}
+			response->setUserData( lastUserData );
+			qCDebug(logTemporary) << "readFromGdb2:" << response->buildDescription(true);
 
 			// Each command sent to gdb will generate at least one response. We store them
 			// for inform the call later about the result
 			responseQueue.append(response);
+			qCInfo(logDebuggerRequest) << "++responseQueue.size =" << responseQueue.count();
 
 			// If this response is the final result of a command
 			if( response->getType() == GdbResponse::RESULT )
@@ -214,6 +237,15 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 	dumpGdbStandardError();
 
 	return result;
+}
+
+GdbCommand* GdbCall::findPendingCommandWithNumber(size_t number)
+{
+	for ( int index = 0; index < pendingCommands.count(); ++index )
+		if ( pendingCommands[index].getNumber() == number )
+			return & pendingCommands[index];
+
+	return nullptr;
 }
 
 void GdbCall::dumpGdbStandardError()
@@ -257,7 +289,7 @@ GdbResponse* GdbCall::parseGdbOutput()
 	if ( ( resp = parseResultRecord() ) )
 		return resp;
 	// [3] termination
-	resp = new GdbResponse(GdbResponse::UNKNOWN);
+	resp = new GdbResponse(GdbResponse::UNKNOWN, lastUserData);
 	GdbToken* token = checkAndPopToken(GdbToken::END_CODE);
 	if ( token )
 	{
@@ -415,7 +447,7 @@ GdbResponse* GdbCall::parseAsyncRecord(GdbToken::Type tokenType, GdbResponse::Ty
 	if ( ( token = checkAndPopToken(tokenType) ) )
 	{
 		// A response is a collection of tokens that answers a command
-		GdbResponse* resp = new GdbResponse(outputType, token->getCommandNumber());
+		GdbResponse* resp = new GdbResponse(outputType, lastUserData, token->getCommandNumber());
 
 		// The type of async-message must come immediately after, within a VAR token, e.g when gdb
 		// starts, it issues the assnc notification '=thread-group-added,id="i1"'
@@ -446,7 +478,7 @@ GdbResponse* GdbCall::parseStreamRecord()
 	if ( type == GdbResponse::UNKNOWN )
 		return nullptr;
 
-	GdbResponse* resp = new GdbResponse(type);
+	GdbResponse* resp = new GdbResponse(type, lastUserData);
 	GdbToken* token = eatToken(GdbToken::C_STRING);
 	Q_ASSERT(token);
 	resp->setText( token->getText() );
@@ -478,7 +510,7 @@ GdbResponse* GdbCall::parseResultRecord()
 	}
 
 	// Create a response representing this GDB response
-	GdbResponse* response = new GdbResponse(GdbResponse::RESULT, token->getCommandNumber());
+	GdbResponse* response = new GdbResponse(GdbResponse::RESULT, lastUserData, token->getCommandNumber());
 	response->setResult(resultType);
 
 	// If there are pairs item=values, fill the item tree
@@ -487,10 +519,11 @@ GdbResponse* GdbCall::parseResultRecord()
 			break;
 
 	// This result token finishes a command that we issued previously to GDB
-	if ( ! pendingCommands.isEmpty() )
+	if ( ! pendingCommands.isEmpty() /*&& response->getCommandNumber() == pendingCommands.first().getNumber()*/ )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
 		qCDebug(logDebugger).noquote() << cmd.getText() << "command done!";
+		qCInfo(logDebuggerRequest) << "--pendingCommands.size =" << pendingCommands.count();
 	}
 
 	return response;
@@ -612,7 +645,10 @@ GdbResponse* GdbCall::takeNextResponse()
 	if ( responseQueue.isEmpty() )
 		lastServedResponse = nullptr;
 	else
+	{
 		lastServedResponse = responseQueue.takeFirst();
+		qCInfo(logDebuggerRequest) << "--responseQueue.size =" << responseQueue.count();
+	}
 
 	// Return a pointer to it
 	return lastServedResponse;
@@ -626,7 +662,7 @@ void GdbCall::onReadyReadStandardOutput()
 	while ( process->bytesAvailable() || pendingTokens.isEmpty() == false )
 	{
 		readFromGdb(nullptr, false);
-		Q_ASSERT( pendingCommands.isEmpty() == true );
+//		Q_ASSERT( pendingCommands.isEmpty() == true );
 	}
 
 	emit pendingGdbResponses();
