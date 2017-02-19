@@ -7,7 +7,6 @@
 #include "PlayerSolution.h"
 #include "UnitPlayingScene.h"
 #include "Util.h"
-#include "VisualizationContext.h"
 #include "VisualizationSpeed.h"
 
 Visualizator::Visualizator(PlayerSolution* playerSolution, int testCase, UnitPlayingScene* unitPlayingScene)
@@ -253,10 +252,10 @@ void Visualizator::processGdbResponse()
 //	qCDebug(logVisualizator, "----processGdbResponse(%lld) next in %dms", callCount, maxDuration);
 }
 
-void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
+void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logTemporary, "onExecAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	qCDebug(logTemporary, "onExecAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
 
 	switch ( asyncClass )
 	{
@@ -291,17 +290,17 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 */
 }
 
-void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
+void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logTemporary, "onStatusAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	qCDebug(logTemporary, "onStatusAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
 }
 
-void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
+void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
 	Q_ASSERT(debuggerCall);
-	qCDebug(logTemporary, "onNotifyAsyncOut(%s) %s", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass));
+	qCDebug(logTemporary, "onNotifyAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
 	const GdbTreeNode* node = nullptr;
 
 	switch ( asyncClass )
@@ -325,18 +324,19 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 	}
 }
 
-void Visualizator::onResult(const GdbItemTree& tree, int& maxDuration)
+void Visualizator::onResult(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logTemporary, "onResult(%s)", qPrintable(tree.buildDescription()));
+	qCDebug(logTemporary, "onResult(%s) | ctx=%d", qPrintable(tree.buildDescription()), context);
 	const GdbTreeNode* node = nullptr;
 
 	if ( ( node = tree.findNode("/bkpt") ) )
 		return updateDebuggerBreakpoint( node );
 }
 
-void Visualizator::onConsoleStreamOutput(const QString& text, int& maxDuration)
+void Visualizator::onConsoleStreamOutput(const QString& text, VisualizatorContext context, int& maxDuration)
 {
+	Q_UNUSED(context);
 	Q_UNUSED(maxDuration);
 	QStringList lines = text.split('\n');
 	for ( int lineIndex = 0; lineIndex < lines.size(); ++lineIndex )
@@ -347,16 +347,16 @@ void Visualizator::onConsoleStreamOutput(const QString& text, int& maxDuration)
 	}
 }
 
-void Visualizator::onTargetStreamOutput(const QString& str, int& maxDuration)
+void Visualizator::onTargetStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logTemporary, "onTargetStreamOutput(%s)", qPrintable(str));
+	qCDebug(logTemporary, "onTargetStreamOutput(%s) | ctx=%d", qPrintable(str), context);
 }
 
-void Visualizator::onLogStreamOutput(const QString& str, int& maxDuration)
+void Visualizator::onLogStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
-	qCDebug(logTemporary, "onLogStreamOutput(%s)", qPrintable(str));
+	qCDebug(logTemporary, "onLogStreamOutput(%s) | ctx=%d", qPrintable(str), context);
 }
 
 

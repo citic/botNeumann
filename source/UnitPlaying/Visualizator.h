@@ -130,25 +130,25 @@ class Visualizator : public GdbResponseListener
   protected:
 	///	Notifications that begin with '*', example: *running,thread-id="thread"
 	///	@see GdbResponseListener::onExecAsyncOut()
-	virtual void onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration) override;
+	virtual void onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration) override;
 	/// Notifications that begin with '+'
 	///	@see GdbResponseListener::onStatusAsyncOut()
-	virtual void onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration) override;
+	virtual void onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration) override;
 	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
 	///	@see GdbResponseListener::onNotifyAsyncOut()
-	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration) override;
+	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration) override;
 	/// Notifications that begin with '^': ^done, ^connected, ^error, ^exit
 	///	@see GdbResponseListener::onResult()
-	virtual void onResult(const GdbItemTree& tree, int& maxDuration) override;
+	virtual void onResult(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration) override;
 	/// Console output stream ('~'): text that should be displayed in the CLI console window
 	///	@see GdbResponseListener::onConsoleStreamOutput()
-	virtual void onConsoleStreamOutput(const QString& text, int& maxDuration) override;
+	virtual void onConsoleStreamOutput(const QString& text, VisualizatorContext context, int& maxDuration) override;
 	/// Target output stream (@): any textual output from the running target
 	///	@see GdbResponseListener::onTargetStreamOutput()
-	virtual void onTargetStreamOutput(const QString& str, int& maxDuration) override;
+	virtual void onTargetStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration) override;
 	/// The log stream contains debugging messages being produced by gdb's internals.
 	///	@see GdbResponseListener::onLogStreamOutput()
-	virtual void onLogStreamOutput(const QString& str, int& maxDuration) override;
+	virtual void onLogStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration) override;
 };
 
 #endif // VISUALIZATOR_H

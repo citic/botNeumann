@@ -63,8 +63,9 @@ void CpuCores::createCpuCores()
 	addLayout(idleThreadsLayout, (idleThreadsRows + 2.0) / totalRows, zUnitPlaying::cpuCores);
 }
 
-void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, int& maxDuration)
+void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
 {
+	Q_UNUSED(context);
 	switch ( asyncClass )
 	{
 		case AsyncClass::AC_THREAD_CREATED:
@@ -75,8 +76,9 @@ void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, 
 	}
 }
 
-void CpuCores::onResult(const GdbItemTree& tree, int& maxDuration)
+void CpuCores::onResult(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration)
 {
+	Q_UNUSED(context);
 	const GdbTreeNode* node = nullptr;
 	if ( ( node = tree.findNode("/threads") ) )
 		return updateThreads( node, maxDuration );
