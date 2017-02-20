@@ -1,5 +1,6 @@
 #include "BotNeumannApp.h"
 #include "Compiler.h"
+#include "CtagsCall.h"
 #include "LogManager.h"
 #include "Player.h"
 #include "PlayerSolution.h"
@@ -208,8 +209,40 @@ QString PlayerSolution::createBotNeumannSourceFile()
 
 bool PlayerSolution::extractSymbols()
 {
-	// ToDo: implement call to ctags
-	return false;
+	// If there is another extractor, remove it
+	if ( ctagsCall )
+		ctagsCall->deleteLater();
+
+	// Create an object that does the process. When it finishes, alert us
+	ctagsCall = new CtagsCall(this);
+	connect( ctagsCall, &CtagsCall::extractionFinished, this, &PlayerSolution::ctagsFinished );
+	connect( ctagsCall, &CtagsCall::extractionFailed, this, &PlayerSolution::ctagsFailed );
+
+	// Start the symbol extraction process
+	return ctagsCall->extractSymbols( getEditableSourceFiles(), getPlayerUnitPath() );
+}
+
+bool PlayerSolution::ctagsFinished()
+{
+	// Just print the symbols
+	Q_ASSERT(ctagsCall);
+	const QList<Symbol*>& globalVariables = ctagsCall->getGlobalVariables();
+	const QList<Symbol*>& functionDefinitions = ctagsCall->getFunctionDefinitions();
+
+	qCDebug(logApplication) << "Global variables";
+	for ( int index = 0; index < globalVariables.count(); ++index )
+		qCDebug(logApplication) << globalVariables[index]->name << globalVariables[index]->filename << globalVariables[index]->line;
+
+	qCDebug(logApplication) << "Function definitions";
+	for ( int index = 0; index < functionDefinitions.count(); ++index )
+		qCDebug(logApplication) << functionDefinitions[index]->name << functionDefinitions[index]->filename << functionDefinitions[index]->line;
+
+	return true;
+}
+
+void PlayerSolution::ctagsFailed(QProcess::ProcessError error)
+{
+	qCCritical(logApplication) << "Ctags call failed with code" << error;
 }
 
 bool PlayerSolution::buildPlayerSolution()
@@ -255,7 +288,7 @@ int PlayerSolution::generateTestCases()
 bool PlayerSolution::buildAll()
 {
 	this->builtSteps = 0;
-	return buildPlayerSolution() /* && extractSymbols() */ && generateTestCases();
+	return buildPlayerSolution() && extractSymbols() && generateTestCases();
 }
 
 int PlayerSolution::generateUnitTestCases()

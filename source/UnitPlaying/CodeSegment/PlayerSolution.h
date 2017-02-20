@@ -2,10 +2,11 @@
 #define PLAYERSOLUTION_H
 
 #include <QFileInfo>
-#include <QObject>
+#include <QProcess>
 
 class CompiledProgram;
 class Compiler;
+class CtagsCall;
 class Player;
 struct ProgramText;
 class TestCaseGenerator;
@@ -57,6 +58,8 @@ class PlayerSolution : public QObject
 	CompiledProgram* playerSolutionProgram = nullptr;
 	/// The executable from a random selected Unit's solution
 	CompiledProgram* unitSolutionProgram = nullptr;
+	/// Object that generates the bn_tags.txt file with symbols extracted from source files
+	CtagsCall* ctagsCall = nullptr;
 
   public:
 	/// Constructor
@@ -198,6 +201,10 @@ class PlayerSolution : public QObject
 	/// Called when a generator has finished to generate test cases in order to update the index
 	/// @return True on success, false otherwise
 	bool testCaseGeneratorFinished();
+	/// Called when CtagsCall has finished the symbol extraction process successfully
+	bool ctagsFinished();
+	/// Called when CtagsCall failed
+	void ctagsFailed(QProcess::ProcessError error);
 };
 
 #endif // PLAYERSOLUTION_H

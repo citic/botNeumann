@@ -20,6 +20,7 @@ INCLUDEPATH += \
 	source/Players \
 	source/ToolCall \
 	source/ToolCall/Compiler \
+	source/ToolCall/Ctags \
 	source/ToolCall/Debugger \
 	source/UnitPlaying \
 	source/UnitPlaying/Common \
@@ -67,6 +68,7 @@ HEADERS += \
 	source/ToolCall/Compiler/Diagnostic.h \
 	source/ToolCall/Compiler/LinkerCall.h \
 	source/ToolCall/Compiler/LinkerDiagnostic.h \
+	source/ToolCall/Ctags/CtagsCall.h \
 	source/ToolCall/Debugger/DebuggerCall.h \
 	source/ToolCall/Debugger/GdbCall.h \
 	source/ToolCall/Debugger/GdbCommon.h \
@@ -145,6 +147,7 @@ SOURCES += \
 	source/ToolCall/Compiler/Diagnostic.cpp \
 	source/ToolCall/Compiler/LinkerCall.cpp \
 	source/ToolCall/Compiler/LinkerDiagnostic.cpp \
+	source/ToolCall/Ctags/CtagsCall.cpp \
 	source/ToolCall/Debugger/DebuggerCall.cpp \
 	source/ToolCall/Debugger/GdbCall.cpp \
 	source/ToolCall/Debugger/GdbItemTree.cpp \
