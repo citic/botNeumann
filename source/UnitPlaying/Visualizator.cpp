@@ -1,4 +1,5 @@
 #include "Visualizator.h"
+#include "CtagsCall.h"
 #include "DebuggerBreakpoint.h"
 #include "GdbCall.h"
 #include "GuiBreakpoint.h"
@@ -102,10 +103,31 @@ bool Visualizator::setUserDefinedBreakpoints()
 
 bool Visualizator::setFunctionDefinitionBreakpoints()
 {
+	// Get all function definitions from player solution
+	Q_ASSERT(playerSolution);
+	CtagsCall* ctagsCall = playerSolution->getCtagsCall();
+
+	// If the Ctags call failed, the pointer is null and no symbols are not extracted
+	if ( ctagsCall == nullptr )
+		return false;
+
+	// Get the function definitions symbols and set breakpoints for all of them
+	const QList<Symbol*>& functionDefinitions = ctagsCall->getFunctionDefinitions();
+	for ( int index = 0; index < functionDefinitions.count(); ++index )
+	{
+		const Symbol* symbol = functionDefinitions[index];
+		const QString& fileLine = QString("\"%1:%2\"").arg(symbol->filename).arg(symbol->line);
+		if ( debuggerCall->sendGdbCommand("-break-insert " + fileLine, visFunctionDefinition) == GDB_ERROR )
+		{
+			qCCritical(logVisualizator).noquote() << "Failed to set function definition breakpoint at" << fileLine;
+			return false;
+		}
+	}
+
 	// Always stop execution at main function
 	if ( debuggerCall->sendGdbCommand("-break-insert -f main", visProgramEntryPoint) == GDB_ERROR )
 	{
-		qCritical(logVisualizator(), "Failed to set breakpoint at main() function");
+		qCCritical(logVisualizator, "Failed to set breakpoint at main() function");
 		return false;
 	}
 

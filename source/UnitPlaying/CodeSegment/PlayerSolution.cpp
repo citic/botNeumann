@@ -226,16 +226,12 @@ bool PlayerSolution::ctagsFinished()
 {
 	// Just print the symbols
 	Q_ASSERT(ctagsCall);
+	emit symbolsExtracted();
 	const QList<Symbol*>& globalVariables = ctagsCall->getGlobalVariables();
-	const QList<Symbol*>& functionDefinitions = ctagsCall->getFunctionDefinitions();
 
 	qCDebug(logApplication) << "Global variables";
 	for ( int index = 0; index < globalVariables.count(); ++index )
 		qCDebug(logApplication) << globalVariables[index]->name << globalVariables[index]->filename << globalVariables[index]->line;
-
-	qCDebug(logApplication) << "Function definitions";
-	for ( int index = 0; index < functionDefinitions.count(); ++index )
-		qCDebug(logApplication) << functionDefinitions[index]->name << functionDefinitions[index]->filename << functionDefinitions[index]->line;
 
 	return true;
 }
@@ -243,6 +239,11 @@ bool PlayerSolution::ctagsFinished()
 void PlayerSolution::ctagsFailed(QProcess::ProcessError error)
 {
 	qCCritical(logApplication) << "Ctags call failed with code" << error;
+
+	// We delete the object indicating the symbol extraction failed
+	Q_ASSERT(ctagsCall);
+	ctagsCall->deleteLater();
+	ctagsCall = nullptr;
 }
 
 bool PlayerSolution::buildPlayerSolution()

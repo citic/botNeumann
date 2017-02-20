@@ -110,6 +110,10 @@ class PlayerSolution : public QObject
 	static QString getPlayerUnitSourcePath(Player* player, Unit* unit, const QString& basename);
 	/// @see getPlayerUnitSourcePath(Player*, Unit*, const QString&)
 	inline QString getPlayerUnitSourcePath(const QString& basename) const { return getPlayerUnitSourcePath(player, unit, basename); }
+	/// Get access to the Ctags call object. The object can be used to get the extracted symbols
+	/// @return Pointer to the CtagsCall if the symbol extraction process finished successfully,
+	/// otherwise it returns nullptr
+	inline CtagsCall* getCtagsCall() const { return ctagsCall; }
 
   public:
 	/// Starts to build the executable from the player solution's source files
