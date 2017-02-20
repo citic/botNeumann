@@ -128,7 +128,7 @@ bool TestCaseGenerator::callStandarGenerator()
 
 	// qCCritical(logTemporary) << "bash " << qPrintable( (QStringList() << "-c" << genCall).join(' ') );
 	// process->start( "bash", QStringList() << "-c" << genCall );
-	qCCritical(logTemporary) << qPrintable(genCall);
+	qCDebug(logTemporary) << qPrintable(genCall);
 	if ( system( qPrintable(genCall) ) != 0 )
 	{
 		qCCritical(logApplication) << "Generator call failed: " << qPrintable(genCall);
@@ -146,7 +146,7 @@ bool TestCaseGenerator::callStandarGenerator()
 		.arg( error_ex );
 
 	// Call the solution to generate the expected output
-	qCCritical(logTemporary) << qPrintable(solCall);
+	qCDebug(logTemporary) << qPrintable(solCall);
 	if ( system( qPrintable(solCall) ) != 0 )
 	{
 		qCCritical(logApplication) << "Solution call failed: " << qPrintable(solCall);
@@ -162,7 +162,7 @@ bool TestCaseGenerator::callFileGenerator()
 	QStringList arguments;
 	arguments << number << total << input << output_ex << error_ex << args;
 	QProcess* process = new QProcess(this);
-	qCInfo(logApplication) << executablePath << arguments;
+	qCDebug(logTemporary) << executablePath << arguments;
 	process->start( executablePath, arguments );
 
 	return true;

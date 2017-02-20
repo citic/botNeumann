@@ -35,7 +35,7 @@ bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
 
 	// When the player solution has finished, call a method to check results
 	connect( process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(playerSolutionFinished(int,QProcess::ExitStatus)) );
-	qCInfo(logTemporary) << qPrintable(playerSolution->getExecutablePath()) << arguments << "<" << qPrintable(input) << ">" << qPrintable(output_ps) << "2>" << qPrintable(error_ps);
+	qCDebug(logTemporary) << qPrintable(playerSolution->getExecutablePath()) << arguments << "<" << qPrintable(input) << ">" << qPrintable(output_ps) << "2>" << qPrintable(error_ps);
 
 	// Call the player solution
 	process->setReadChannelMode(QProcess::SeparateChannels);

@@ -48,7 +48,7 @@ bool GdbCall::start()
 	connect( process, SIGNAL(readyReadStandardOutput()), this, SLOT(onReadyReadStandardOutput()) );
 
 	const QString& command = QStringLiteral("%1 -q -i mi").arg(gdbPath);
-	pendingCommands.append( GdbCommand(command, 0) );
+	pendingCommands.append( GdbCommand('$'+ command, 0) );
 	qCInfo(logDebuggerRequest).noquote() << command;
 	process->start(command);
 	process->waitForStarted();
@@ -517,7 +517,7 @@ GdbResponse* GdbCall::parseResultRecord()
 	if ( ! pendingCommands.isEmpty() )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
-		qCDebug(logDebugger).noquote() << cmd.getText() << "command done!";
+		qCDebug(logDebugger).noquote() << "DONE" << cmd.getText();
 	}
 
 	return response;

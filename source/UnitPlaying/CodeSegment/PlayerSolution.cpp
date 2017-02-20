@@ -15,6 +15,8 @@
 const int totalBuildSteps = 2;
 
 
+// Construction -----------------------------------------------------------------------------------
+
 PlayerSolution::PlayerSolution(QObject *parent)
 	: QObject(parent)
 {
@@ -23,6 +25,9 @@ PlayerSolution::PlayerSolution(QObject *parent)
 PlayerSolution::~PlayerSolution()
 {
 }
+
+
+// Player solution files --------------------------------------------------------------------------
 
 int PlayerSolution::loadSolutionForUnit(Unit* unit)
 {
@@ -207,6 +212,52 @@ QString PlayerSolution::createBotNeumannSourceFile()
 	return outputFilename;
 }
 
+
+// Compiling player solution code -----------------------------------------------------------------
+
+bool PlayerSolution::buildAll()
+{
+	this->builtSteps = 0;
+	return buildPlayerSolution() && extractSymbols() && generateTestCases();
+}
+
+bool PlayerSolution::buildPlayerSolution()
+{
+	// This method must be only called if there is a player solution with files
+	Q_ASSERT( this->hasFiles() );
+
+	// ToDo: If there is an active compiling process, stop it
+	//if ( compiler && compiler->isRunning() ) compiler->stop();
+	if ( playerSolutionProgram )
+		playerSolutionProgram->deleteLater();
+
+	// Create an object in charge of compiling the solution files
+	playerSolutionProgram = new CompiledProgram(this);
+	playerSolutionProgram->optimizeForDebug(true);
+
+	// Compile and run the player solution. It requires some time and we do not wait until it
+	// finishes. When the compilation and linking process has finished, our compilerFinished()
+	// slot is called and we continue processing the results there
+	connect( playerSolutionProgram, SIGNAL(buildFinished()), this, SLOT(playerSolutionBuiltFinished()) );
+
+	// Start the compiling process with the files in the solution and the expected executable file
+	playerSolutionProgram->build( getAllSourceFiles(), getExecutablePath() );
+	return true;
+}
+
+bool PlayerSolution::playerSolutionBuiltFinished()
+{
+	emit playerSolutionBuilt(playerSolutionProgram);
+
+	if ( builtSteps >= 0 && ++builtSteps == totalBuildSteps )
+		emit allBuilt();
+
+	return true;
+}
+
+
+// Symbol extraction ------------------------------------------------------------------------------
+
 bool PlayerSolution::extractSymbols()
 {
 	// If there is another extractor, remove it
@@ -246,35 +297,15 @@ void PlayerSolution::ctagsFailed(QProcess::ProcessError error)
 	ctagsCall = nullptr;
 }
 
-bool PlayerSolution::buildPlayerSolution()
-{
-	// This method must be only called if there is a player solution with files
-	Q_ASSERT( this->hasFiles() );
 
-	// ToDo: If there is an active compiling process, stop it
-	//if ( compiler && compiler->isRunning() ) compiler->stop();
-	if ( playerSolutionProgram )
-		playerSolutionProgram->deleteLater();
-
-	// Create an object in charge of compiling the solution files
-	playerSolutionProgram = new CompiledProgram(this);
-	playerSolutionProgram->optimizeForDebug(true);
-
-	// Compile and run the player solution. It requires some time and we do not wait until it
-	// finishes. When the compilation and linking process has finished, our compilerFinished()
-	// slot is called and we continue processing the results there
-	connect( playerSolutionProgram, SIGNAL(buildFinished()), this, SLOT(playerSolutionBuiltFinished()) );
-
-	// Start the compiling process with the files in the solution and the expected executable file
-	playerSolutionProgram->build( getAllSourceFiles(), getExecutablePath() );
-	return true;
-}
+// Test case generation --------------------------------------------------------------------------
 
 int PlayerSolution::generateTestCases()
 {
 	// Copy the literal test cases provided in botnu unit to files in player solution
 	// This method updates the testCasesCount class member
-	generateUnitTestCases();
+	int testCases = generateUnitTestCases();
+	qCInfo(logApplication) << testCases << "unit test cases generated";
 
 	// If there are at least one test case generator in unit, use it to generate more test cases
 	// The testCasesCount class member is updated with each extra test case
@@ -284,12 +315,6 @@ int PlayerSolution::generateTestCases()
 
 	// Done
 	return testCasesCount;
-}
-
-bool PlayerSolution::buildAll()
-{
-	this->builtSteps = 0;
-	return buildPlayerSolution() && extractSymbols() && generateTestCases();
 }
 
 int PlayerSolution::generateUnitTestCases()
@@ -347,21 +372,13 @@ bool PlayerSolution::generateExtraTestCases(const ProgramText* generator)
 	return true;
 }
 
-bool PlayerSolution::playerSolutionBuiltFinished()
-{
-	emit playerSolutionBuilt(playerSolutionProgram);
-
-	if ( builtSteps >= 0 && ++builtSteps == totalBuildSteps )
-		emit allBuilt();
-
-	return true;
-}
-
 bool PlayerSolution::testCaseGeneratorFinished()
 {
 	Q_ASSERT(testCaseGeneratorProgram);
+	int previousTestCasesCount = testCasesCount;
 	testCasesCount = testCaseGeneratorProgram->getLastGeneratedTestCaseIndex();
 
+	qCInfo(logApplication) << testCasesCount - previousTestCasesCount << "extra test cases generated, total:" << testCasesCount;
 	emit testCasesGenerated(testCasesCount);
 
 	if ( builtSteps >= 0 && ++builtSteps == totalBuildSteps )
