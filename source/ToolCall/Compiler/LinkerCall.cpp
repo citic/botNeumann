@@ -40,7 +40,7 @@ void LinkerCall::start()
 
 void LinkerCall::processFinished()
 {
-	qCInfo(logBuild) << "Linking finished with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
+	qCInfo(logBuild) << "Linking" << executablePath.absoluteFilePath() << "finished with exit code" << process->exitCode() << "and exit status" << process->exitStatus();
 
 	// Compilers does not send data to the standard output, but if there are something, print it
 	const QString& compilerStandarOutput = process->readAllStandardOutput();

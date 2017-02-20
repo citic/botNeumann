@@ -305,7 +305,7 @@ int PlayerSolution::generateTestCases()
 	// Copy the literal test cases provided in botnu unit to files in player solution
 	// This method updates the testCasesCount class member
 	int testCases = generateUnitTestCases();
-	qCInfo(logApplication) << testCases << "unit test cases generated";
+	qCInfo(logApplication) << "Unit test cases generated:" << testCases;
 
 	// If there are at least one test case generator in unit, use it to generate more test cases
 	// The testCasesCount class member is updated with each extra test case
