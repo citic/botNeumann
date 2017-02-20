@@ -39,40 +39,19 @@ bool Visualizator::start()
 	// This object also processes GdbResponses
 	connect( this, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), this, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
+	// Start GDB
 	bool result = debuggerCall->start();
 	if ( ! result )
 	{
 		qCritical(logVisualizator(), "Could not start gdb\n");
 		return false;
 	}
-
 	qCDebug(logVisualizator(), "gdb started");
 
-	// Ask GDB run user program
-	const QString executablePath = playerSolution->getExecutablePath();
-	if ( debuggerCall->sendGdbCommand( QString("-file-exec-and-symbols \"%1\"").arg(executablePath), visStarting ) == GDB_ERROR )
-		qCritical(logVisualizator(), "Failed to run user program: '%s'", qPrintable(executablePath));
-
-	// Give inferior parameters to GDB
-	debuggerCall->sendGdbCommand( QString("-exec-arguments %1").arg( buildInferiorArguments() ), visStarting );
-
-	// Get current user-defined breakpoints on GUI, if any as strings "filename:lineNumber"
-	const QList<GuiBreakpoint*>& editorBreakpoints = unitPlayingScene->retrieveBreakpoints();
-	foreach(const GuiBreakpoint* guiBreakpoint, editorBreakpoints)
-	{
-		const QString& originalLocation = guiBreakpoint->buildOriginalLocation();
-		if ( debuggerCall->sendGdbCommand( "-break-insert " + originalLocation, visUserDefinedBreakpoint ) == GDB_ERROR )
-			qCWarning( logVisualizator, "Error: -break-insert %s", qUtf8Printable(originalLocation) );
-	}
-
-	// If user defined at least one breakpoint, animation must seek until reach the first one
-	VisualizationSpeed::getInstance().setSeeking( editorBreakpoints.count() > 0 );
-
-	// Always stop execution at main function
-	if ( debuggerCall->sendGdbCommand("-break-insert -f main", visProgramEntryPoint) == GDB_ERROR )
-		qCritical(logVisualizator(), "Failed to set breakpoint at main() function");
-
-	// ToDo: Extract source filenames. Not required by botNeumann++ for the moment
+	// Do the preparation phase
+	setInferiorAndArguments();
+	setUserDefinedBreakpoints();
+	setFunctionDefinitionBreakpoints();
 
 	// Ask GDB to start execution of user program (inferior), only if it is not running already
 	if ( gdbState == STATE_STARTING )
@@ -89,6 +68,48 @@ bool Visualizator::start()
 	}
 
 	return result;
+}
+
+bool Visualizator::setInferiorAndArguments()
+{
+	// Ask GDB run user program
+	const QString executablePath = playerSolution->getExecutablePath();
+	if ( debuggerCall->sendGdbCommand( QString("-file-exec-and-symbols \"%1\"").arg(executablePath), visStarting ) == GDB_ERROR )
+	{
+		qCritical(logVisualizator(), "Failed to run user program: '%s'", qPrintable(executablePath));
+		return false;
+	}
+
+	// Give inferior parameters to GDB
+	return debuggerCall->sendGdbCommand( QString("-exec-arguments %1").arg( buildInferiorArguments() ), visStarting ) != GDB_ERROR;
+}
+
+bool Visualizator::setUserDefinedBreakpoints()
+{
+	// Get current user-defined breakpoints on GUI, if any as strings "filename:lineNumber"
+	const QList<GuiBreakpoint*>& editorBreakpoints = unitPlayingScene->retrieveBreakpoints();
+	foreach(const GuiBreakpoint* guiBreakpoint, editorBreakpoints)
+	{
+		const QString& originalLocation = guiBreakpoint->buildOriginalLocation();
+		if ( debuggerCall->sendGdbCommand( "-break-insert " + originalLocation, visUserDefinedBreakpoint ) == GDB_ERROR )
+			qCWarning( logVisualizator, "Error: -break-insert %s", qUtf8Printable(originalLocation) );
+	}
+
+	// If user defined at least one breakpoint, animation must seek until reach the first one
+	VisualizationSpeed::getInstance().setSeeking( editorBreakpoints.count() > 0 );
+	return true;
+}
+
+bool Visualizator::setFunctionDefinitionBreakpoints()
+{
+	// Always stop execution at main function
+	if ( debuggerCall->sendGdbCommand("-break-insert -f main", visProgramEntryPoint) == GDB_ERROR )
+	{
+		qCritical(logVisualizator(), "Failed to set breakpoint at main() function");
+		return false;
+	}
+
+	return true;
 }
 
 QString Visualizator::buildInferiorArguments()

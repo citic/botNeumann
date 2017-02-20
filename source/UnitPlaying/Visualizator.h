@@ -149,6 +149,15 @@ class Visualizator : public GdbResponseListener
 	/// The log stream contains debugging messages being produced by gdb's internals.
 	///	@see GdbResponseListener::onLogStreamOutput()
 	virtual void onLogStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration) override;
+
+  protected:
+	/// Set player solution executable and its arguments in GDB
+	bool setInferiorAndArguments();
+	/// Set GDB breakpoints for user defined breakpoints
+	bool setUserDefinedBreakpoints();
+	/// Set GDB breakpoints for the function definitions gathered from ctags
+	bool setFunctionDefinitionBreakpoints();
+
 };
 
 #endif // VISUALIZATOR_H
