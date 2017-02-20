@@ -41,34 +41,26 @@ bool Visualizator::start()
 	connect( this, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), this, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
 	// Start GDB
-	bool result = debuggerCall->start();
-	if ( ! result )
+	if ( ! startGdb() ) return false;
+	// Do the preparation phase
+	if ( ! setInferiorAndArguments() ) return false;
+	setUserDefinedBreakpoints();
+	setFunctionDefinitionBreakpoints();
+	if ( ! startInferior() ) return false;
+
+	// Visualization started
+	return true;
+}
+
+bool Visualizator::startGdb()
+{
+	if ( ! debuggerCall->start() )
 	{
 		qCritical(logVisualizator(), "Could not start gdb\n");
 		return false;
 	}
 	qCDebug(logVisualizator(), "gdb started");
-
-	// Do the preparation phase
-	setInferiorAndArguments();
-	setUserDefinedBreakpoints();
-	setFunctionDefinitionBreakpoints();
-
-	// Ask GDB to start execution of user program (inferior), only if it is not running already
-	if ( gdbState == STATE_STARTING )
-		qCritical(logVisualizator(), "gdb already starting");
-	else if ( gdbState == STATE_RUNNING )
-		qCritical(logVisualizator(), "gdb already running");
-	else
-	{
-		inferiorProcessId = 0;
-		GdbState oldState = gdbState;
-		gdbState = STATE_STARTING;
-		if ( debuggerCall->sendGdbCommand("-exec-run --start", visStarting) == GDB_ERROR )
-			gdbState = oldState;
-	}
-
-	return result;
+	return true;
 }
 
 bool Visualizator::setInferiorAndArguments()
@@ -122,6 +114,33 @@ bool Visualizator::setFunctionDefinitionBreakpoints()
 			qCCritical(logVisualizator).noquote() << "Failed to set function definition breakpoint at" << fileLine;
 			return false;
 		}
+	}
+
+	return true;
+}
+
+bool Visualizator::startInferior()
+{
+	// Ask GDB to start execution of user program (inferior), only if it is not running already
+	if ( gdbState == STATE_STARTING )
+	{
+		qCritical(logVisualizator(), "gdb already starting");
+		return false;
+	}
+
+	if ( gdbState == STATE_RUNNING )
+	{
+		qCritical(logVisualizator(), "gdb already running");
+		return false;
+	}
+
+	inferiorProcessId = 0;
+	GdbState oldState = gdbState;
+	gdbState = STATE_STARTING;
+	if ( debuggerCall->sendGdbCommand("-exec-run --start", visStarting) == GDB_ERROR )
+	{
+		gdbState = oldState;
+		return false;
 	}
 
 	return true;

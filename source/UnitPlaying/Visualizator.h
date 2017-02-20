@@ -153,13 +153,16 @@ class Visualizator : public GdbResponseListener
 	virtual void onLogStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration) override;
 
   protected:
+	/// Start GDB process
+	bool startGdb();
 	/// Set player solution executable and its arguments in GDB
 	bool setInferiorAndArguments();
 	/// Set GDB breakpoints for user defined breakpoints
 	bool setUserDefinedBreakpoints();
 	/// Set GDB breakpoints for the function definitions gathered from ctags
 	bool setFunctionDefinitionBreakpoints();
-
+	/// Starts the execution of inferior (player solution) under GDB
+	bool startInferior();
 };
 
 #endif // VISUALIZATOR_H
