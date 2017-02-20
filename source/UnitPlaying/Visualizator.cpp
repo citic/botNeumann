@@ -64,7 +64,7 @@ bool Visualizator::start()
 		inferiorProcessId = 0;
 		GdbState oldState = gdbState;
 		gdbState = STATE_STARTING;
-		if ( debuggerCall->sendGdbCommand("-exec-run", visStarting) == GDB_ERROR )
+		if ( debuggerCall->sendGdbCommand("-exec-run --start", visStarting) == GDB_ERROR )
 			gdbState = oldState;
 	}
 
@@ -122,13 +122,6 @@ bool Visualizator::setFunctionDefinitionBreakpoints()
 			qCCritical(logVisualizator).noquote() << "Failed to set function definition breakpoint at" << fileLine;
 			return false;
 		}
-	}
-
-	// Always stop execution at main function
-	if ( debuggerCall->sendGdbCommand("-break-insert -f main", visProgramEntryPoint) == GDB_ERROR )
-	{
-		qCCritical(logVisualizator, "Failed to set breakpoint at main() function");
-		return false;
 	}
 
 	return true;
@@ -357,9 +350,15 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 			debuggerCall->sendGdbCommand("-thread-info", visExecutionLoop);
 			break;
 
+		case AsyncClass::AC_BREAKPOINT_CREATED:
 		case AsyncClass::AC_BREAKPOINT_MODIFIED:
 			if ( ( node = tree.findNode("/bkpt") ) )
 				return updateDebuggerBreakpoint( node, context );
+			break;
+
+		case AsyncClass::AC_BREAKPOINT_DELETED:
+			if ( ( node = tree.findNode("/bkpt") ) )
+				return deleteDebuggerBreakpoint( node );
 			break;
 
 		default:
@@ -411,7 +410,7 @@ void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, V
 
 	// Check if the breakpoint already exists in our vector
 	int breakpointNumber = debuggerBreakpoint->getNumber();
-	if ( breakpointNumber < debuggerBreakpoints.size() && debuggerBreakpoints[breakpointNumber] != nullptr )
+	if ( breakpointNumber < debuggerBreakpoints.count() && debuggerBreakpoints[breakpointNumber] != nullptr )
 	{
 		// The breakpoint already exists in our vector, update it by replacing the old one by the new one
 		delete debuggerBreakpoints[breakpointNumber];
@@ -435,5 +434,20 @@ void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, V
 
 	debuggerBreakpoint->print();
 	// Update the interface?
-//	emit breakpointUpdated( debuggerBreakpoints[breakpointNumber] );
+	//	emit breakpointUpdated( debuggerBreakpoints[breakpointNumber] );
+}
+
+void Visualizator::deleteDebuggerBreakpoint(const GdbTreeNode* breakpointNode)
+{
+	// Get the number of breakpoint that was deleted
+	Q_ASSERT(breakpointNode);
+	int breakpointNumber = breakpointNode->findTextValue("number").toInt();
+
+	// Simply remove the object for that breakpoint
+	Q_ASSERT(breakpointNumber < debuggerBreakpoints.count() );
+	delete debuggerBreakpoints[breakpointNumber];
+
+	// Mark the breakpoint entry as null
+	debuggerBreakpoints[breakpointNumber] = nullptr;
+	qCDebug(logApplication) << "Breakpoint deleted:" << breakpointNumber;
 }
