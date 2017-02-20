@@ -189,7 +189,6 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 
 		if ( response )
 		{
-			qCDebug(logTemporary) << "readFromGdb1:" << response->buildDescription(true);
 
 			deleteProcessedTokens();
 
@@ -210,6 +209,7 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 			}
 			response->setUserData( lastUserData );
 
+			qCDebug(logTemporary) << "readFromGdb2:" << response->buildDescription(true);
 			// Each command sent to gdb will generate at least one response. We store them
 			// for inform the call later about the result
 			responseQueue.append(response);

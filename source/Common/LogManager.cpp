@@ -12,6 +12,8 @@
 #include <QStandardPaths>
 #include <QTextStream>
 
+#define LOG_ALL_TO_STDERR 0
+
 Q_LOGGING_CATEGORY(logApplication,      "A---")
 Q_LOGGING_CATEGORY(logEditor,           "AEdt")
 Q_LOGGING_CATEGORY(logDebugger,         "ADbg")
@@ -178,8 +180,13 @@ bool LogManager::shouldLogToFile(QtMsgType type, const QString& category)
 
 bool LogManager::shouldLogToStdErr(QtMsgType type, const QString& category)
 {
+  #if LOG_ALL_TO_STDERR
+	Q_UNUSED(type);
+	Q_UNUSED(category);
+  #else
 	if ( type == QtDebugMsg && category == "!!!!" )
 		return false;
+  #endif
 
 	return true;
 }

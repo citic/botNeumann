@@ -10,6 +10,10 @@
 #include "Util.h"
 #include "VisualizationSpeed.h"
 
+
+
+// Construction -----------------------------------------------------------------------------------
+
 Visualizator::Visualizator(PlayerSolution* playerSolution, int testCase, UnitPlayingScene* unitPlayingScene)
 	: GdbResponseListener(unitPlayingScene)
 	, playerSolution(playerSolution)
@@ -26,10 +30,33 @@ Visualizator::~Visualizator()
 	delete debuggerCall;
 }
 
+
+
+// Start visualization ---------------------------------------------------------------------------
+
 bool Visualizator::start()
 {
+	// Start GDB
+	if ( ! createGdb() ) return false;
+	if ( ! startGdb() ) return false;
+
+	// Do the preparation phase
+	if ( ! setInferiorAndArguments() ) return false;
+	setUserDefinedBreakpoints();
+	setFunctionDefinitionBreakpoints();
+	if ( ! startInferior() ) return false;
+
+	// Visualization started
+	return true;
+}
+
+bool Visualizator::createGdb()
+{
+	// Create the object in charge of communicating with GDB
 	Q_ASSERT(debuggerCall == nullptr);
 	debuggerCall = new GdbCall(this);
+	if ( debuggerCall == nullptr )
+		return false;
 
 	// Connect events
 	// When there is a pending GdbResponse process it
@@ -39,16 +66,6 @@ bool Visualizator::start()
 	animationDone.setSingleShot(true);
 	// This object also processes GdbResponses
 	connect( this, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), this, SLOT(onGdbResponse(const GdbResponse*,int&)) );
-
-	// Start GDB
-	if ( ! startGdb() ) return false;
-	// Do the preparation phase
-	if ( ! setInferiorAndArguments() ) return false;
-	setUserDefinedBreakpoints();
-	setFunctionDefinitionBreakpoints();
-	if ( ! startInferior() ) return false;
-
-	// Visualization started
 	return true;
 }
 
@@ -177,6 +194,10 @@ QString Visualizator::buildInferiorArguments()
 	return result;
 }
 
+
+
+// Control the visualization ---------------------------------------------------------------------
+
 bool Visualizator::stop()
 {
 	// Stop the GdbResult fetching mechanism
@@ -204,41 +225,6 @@ bool Visualizator::resume()
 	return true;
 }
 
-// Setting and removing breakpoints from CodeEditor
-
-void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
-{
-	// Only update breakpoints if there is an active debugger call
-	Q_ASSERT(guiBreakpoint);
-	if ( debuggerCall == nullptr  )
-		return;
-
-	// If breakpoints in code editor are not synchronized with debuger code, dot not continue
-	if ( guiBreakpoint->getLineNumberInObjectCode() == -1 )
-		return;
-
-	// Check if the action is creation or deletion of a breakpoint
-	switch ( guiBreakpoint->getAction() )
-	{
-		case GuiBreakpoint::Action::unknown:
-			Q_ASSERT(false);
-			break;
-
-		case GuiBreakpoint::Action::created:
-			debuggerCall->sendGdbCommand( QString("-break-insert %1").arg(guiBreakpoint->buildOriginalLocation()), visUserDefinedBreakpoint );
-			break;
-
-		case GuiBreakpoint::Action::removed:
-			int breakpointNumber = findDebuggerBreakpointIndex( *guiBreakpoint );
-			if ( breakpointNumber > 0 && debuggerCall->sendGdbCommand( QString("-break-delete %1").arg(breakpointNumber), visUserDefinedBreakpoint ) != GDB_ERROR )
-			{
-				delete debuggerBreakpoints[breakpointNumber];
-				debuggerBreakpoints[breakpointNumber] = nullptr;
-			}
-			break;
-	}
-}
-
 bool Visualizator::step(const QString& gdbCommand, const QString& description)
 {
 	Q_ASSERT(debuggerCall);
@@ -254,18 +240,9 @@ bool Visualizator::step(const QString& gdbCommand, const QString& description)
 	return true;
 }
 
-int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint) const
-{
-	// For all debugger breakpoints, find the one that matches the GUI breakpoint and return its index
-	for ( int index = 0; index < debuggerBreakpoints.size(); ++index )
-		if ( debuggerBreakpoints[index] && guiBreakpoint.matches( *debuggerBreakpoints[index] ) )
-			return index;
 
-	// Not found
-	return -1;
-}
 
-// Responses received by GdbCall
+// Responses received by GdbCall ------------------------------------------------------------------
 
 void Visualizator::processGdbResponse()
 {
@@ -420,6 +397,54 @@ void Visualizator::onLogStreamOutput(const QString& str, VisualizatorContext con
 	qCDebug(logTemporary, "onLogStreamOutput(%s) | ctx=%d", qPrintable(str), context);
 }
 
+
+
+// Breakpoints ------------------------------------------------------------------------------------
+
+void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
+{
+	// Setting and removing breakpoints from CodeEditor
+	// Only update breakpoints if there is an active debugger call
+	Q_ASSERT(guiBreakpoint);
+	if ( debuggerCall == nullptr  )
+		return;
+
+	// If breakpoints in code editor are not synchronized with debuger code, dot not continue
+	if ( guiBreakpoint->getLineNumberInObjectCode() == -1 )
+		return;
+
+	// Check if the action is creation or deletion of a breakpoint
+	switch ( guiBreakpoint->getAction() )
+	{
+		case GuiBreakpoint::Action::unknown:
+			Q_ASSERT(false);
+			break;
+
+		case GuiBreakpoint::Action::created:
+			debuggerCall->sendGdbCommand( QString("-break-insert %1").arg(guiBreakpoint->buildOriginalLocation()), visUserDefinedBreakpoint );
+			break;
+
+		case GuiBreakpoint::Action::removed:
+			int breakpointNumber = findDebuggerBreakpointIndex( *guiBreakpoint );
+			if ( breakpointNumber > 0 && debuggerCall->sendGdbCommand( QString("-break-delete %1").arg(breakpointNumber), visUserDefinedBreakpoint ) != GDB_ERROR )
+			{
+				delete debuggerBreakpoints[breakpointNumber];
+				debuggerBreakpoints[breakpointNumber] = nullptr;
+			}
+			break;
+	}
+}
+
+int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint) const
+{
+	// For all debugger breakpoints, find the one that matches the GUI breakpoint and return its index
+	for ( int index = 0; index < debuggerBreakpoints.size(); ++index )
+		if ( debuggerBreakpoints[index] && guiBreakpoint.matches( *debuggerBreakpoints[index] ) )
+			return index;
+
+	// Not found
+	return -1;
+}
 
 void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, VisualizatorContext context)
 {

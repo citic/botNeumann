@@ -153,6 +153,8 @@ class Visualizator : public GdbResponseListener
 	virtual void onLogStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration) override;
 
   protected:
+	/// Create the object to communicate with GDB
+	bool createGdb();
 	/// Start GDB process
 	bool startGdb();
 	/// Set player solution executable and its arguments in GDB
