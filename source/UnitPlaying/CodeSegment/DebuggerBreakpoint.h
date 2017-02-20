@@ -113,6 +113,10 @@ class DebuggerBreakpoint
 	inline bool hasRole(Role role) const { return roles.testFlag(role); }
 	/// Adds a role to this breakpoint
 	inline void addRole(Role role) { this->roles |= role; }
+	/// Get access to the entire roles
+	inline const Roles& getRoles() const { return roles; }
+	/// Set all the roles
+	inline void setRoles(const Roles& roles) { this->roles = roles; }
 	/// For debugging
 	void print() const;
 };

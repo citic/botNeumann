@@ -146,6 +146,14 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, int userData, GdbItemT
 	GdbCommand gdbCommand(command, userData);
 	pendingCommands.append(gdbCommand);
 
+	// Ugly fix: GDB does not reply command numbers with "-exec-run" command, we enforce it
+	if ( command.startsWith("-exec-run") )
+	{
+		lastCommandNumberReceived = gdbCommand.getNumber();
+		lastUserData = gdbCommand.getUserData();
+		qCDebug(logTemporary).nospace() << "Enforcing cmd=" << lastCommandNumberReceived << " usr=" << lastUserData;
+	}
+
 	qCInfo(logDebuggerRequest).noquote().nospace() << gdbCommand.getText() << " | usr=" << userData;
 	process->write( qPrintable( gdbCommand.getCommand() ) );
 
