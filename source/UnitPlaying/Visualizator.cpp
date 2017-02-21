@@ -8,6 +8,7 @@
 #include "PlayerSolution.h"
 #include "UnitPlayingScene.h"
 #include "Util.h"
+#include "VariableMapper.h"
 #include "VisualizationSpeed.h"
 
 
@@ -29,6 +30,7 @@ Visualizator::~Visualizator()
 
 	delete debuggerCall;
 	delete entryPointTree;
+	delete variableMapper;
 }
 
 
@@ -47,6 +49,7 @@ bool Visualizator::start()
 	setFunctionDefinitionBreakpoints();
 	if ( ! startInferior() ) return false;
 	setDynamicMemoryBreakpoints();
+	watchStandardInputOutput();
 
 	// Visualization started
 	return true;
@@ -68,6 +71,10 @@ bool Visualizator::createGdb()
 	animationDone.setSingleShot(true);
 	// This object also processes GdbResponses
 	connect( this, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), this, SLOT(onGdbResponse(const GdbResponse*,int&)) );
+
+	// Create the object that will map variables between player solution and visualization
+	Q_ASSERT(variableMapper == nullptr);
+	variableMapper = new VariableMapper(this);
 	return true;
 }
 
@@ -173,6 +180,16 @@ bool Visualizator::setDynamicMemoryBreakpoints()
 	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_calloc", visCallocBreakpoint) == GDB_ERROR ) return false;
 	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_realloc", visReallocBreakpoint) == GDB_ERROR ) return false;
 	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_free", visFreeBreakpoint) == GDB_ERROR ) return false;
+
+	return true;
+}
+
+bool Visualizator::watchStandardInputOutput()
+{
+	// Create object variables watching changes in IO, using notation bn_io_file
+	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stdin @ stdin->_IO_read_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
+	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stdout @ stdout->_IO_write_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
+	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stderr @ stderr->_IO_write_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
 
 	return true;
 }
@@ -367,6 +384,11 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext contex
 	qCDebug(logTemporary, "onResult(%s) | ctx=%d", qPrintable(tree.buildDescription()), context);
 	const GdbTreeNode* node = nullptr;
 
+	// If this is the result of watching a standard input/output/error pointer
+	if ( context == visStandardInputOutputWatch )
+		return (void) variableMapper->createStandardInputOutputWatch( tree );
+
+	// If this is the result of inserting or removing a breakpoint
 	if ( ( node = tree.findNode("/bkpt") ) )
 		return updateDebuggerBreakpoint( node, context );
 }

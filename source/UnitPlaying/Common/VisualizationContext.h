@@ -16,6 +16,8 @@ enum VisualizationContext
 	visCallocBreakpoint,
 	visReallocBreakpoint,
 	visFreeBreakpoint,
+
+	visStandardInputOutputWatch,
 };
 
 #endif // VISUALIZATIONCONTEXT_H

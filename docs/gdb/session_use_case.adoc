@@ -658,7 +658,8 @@ Unsure if they are needed, because all of them call libc dynamic memory function
 	(gdb)
 ----
 
-. On Unix: Create object variables watching changes in IO, using notation `bn_io_iofile`
+. On Unix: Create object variables watching changes in IO, using notation `bn_io_file`
+. ToDo: Check these watches work for `std::cin`, `std::cout` and `std::cerr` also.
 . Future work: check if it works with GCC/MinGW for MsWin
 
 

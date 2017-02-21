@@ -12,6 +12,7 @@ class GdbCall;
 class GuiBreakpoint;
 class PlayerSolution;
 class UnitPlayingScene;
+class VariableMapper;
 
 /**
 	@brief Controller class in charge of controlling the visualization process.
@@ -56,6 +57,9 @@ class Visualizator : public GdbResponseListener
 	/// We store the program entry point tree in order to defer the function call animation until
 	/// the starting process has enterely finished
 	GdbItemTree* entryPointTree = nullptr;
+	/// Class in charge of mapping memory blocks (variables) from player solution run and
+	/// visualization's memory blocks (variables)
+	VariableMapper* variableMapper = nullptr;
 
   public:
 	/// Constructor
@@ -173,6 +177,9 @@ class Visualizator : public GdbResponseListener
 	/// internally call the libc standard library functions, we only set breaktpoints for these
 	/// libc functions.
 	bool setDynamicMemoryBreakpoints();
+	/// Create object variables watching changes in IO, using notation bn_io_file
+	bool watchStandardInputOutput();
+	/// Set watches for the standard input, output and error pointers
 	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
 	bool processPlayerSolutionStopped(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
