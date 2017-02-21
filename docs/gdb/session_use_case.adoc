@@ -925,6 +925,7 @@ Each time `=thread-created,id="#"` is issued, create an `ExecutionThread` object
 
 	-thread-info
 	-stack-info-depth
+	-stack-list-frames
 
 
 ==== -thread-info
@@ -983,7 +984,15 @@ All threads? or ` --thread 1`
 	^done,depth="6"
 	(gdb)
 
-. Update the `ExecutionThread::callStackDepth` integer value (init value -1). If decreased animate a <<function-return>>.
+. We are creating an execution thread (context `visCreateExecutionThread`). The `ExecutionThread::callStackDepth` must currently be 0.
+. If `/depth > 1`, there are library functions that were executed before any player solution's function.
+. Call
+
+	-stack-list-frames
+
+. Do <<function-call>> with the result, in order to create a fake call to `<library functions>[/depth]`.
+. [Necessary?] Update the `ExecutionThread::callStackDepth` integer value (init value -1).
+
 
 
 

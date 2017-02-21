@@ -456,15 +456,13 @@ void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, V
 	int breakpointNumber = debuggerBreakpoint->getNumber();
 	if ( breakpointNumber < debuggerBreakpoints.count() && debuggerBreakpoints[breakpointNumber] != nullptr )
 	{
-		// We save the roles from the old object to assign them to thew updated one
-		const DebuggerBreakpoint::Roles& oldRoles = debuggerBreakpoints[breakpointNumber]->getRoles();
+		// The breakpoint already exists in our vector
+		// We preserve the roles from the old object in the updated one
+		debuggerBreakpoint->setRoles( debuggerBreakpoint->getRoles() | debuggerBreakpoints[breakpointNumber]->getRoles() );
 
-		// The breakpoint already exists in our vector, update it by replacing the old one by the new one
+		// We update the breakpoint by replacing the old one by the new one
 		delete debuggerBreakpoints[breakpointNumber];
 		debuggerBreakpoints[breakpointNumber] = debuggerBreakpoint;
-
-		// Apply the roles from the old object to the update one
-		debuggerBreakpoint->setRoles( debuggerBreakpoint->getRoles() | oldRoles );
 	}
 	else
 	{
