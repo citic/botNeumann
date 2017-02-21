@@ -63,7 +63,7 @@ void CpuCores::createCpuCores()
 	addLayout(idleThreadsLayout, (idleThreadsRows + 2.0) / totalRows, zUnitPlaying::cpuCores);
 }
 
-void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
+void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(context);
 	switch ( asyncClass )
@@ -76,7 +76,7 @@ void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, 
 	}
 }
 
-void CpuCores::onResult(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration)
+void CpuCores::onResult(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(context);
 	const GdbTreeNode* node = nullptr;

@@ -118,7 +118,7 @@ class Visualizator : public GdbResponseListener
 	/// done in order to capture the output from player solution while it is being animated
 	QString buildInferiorArguments();
 	/// A Gdb result indicates that a new breakpoint was added
-	void updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, VisualizatorContext context);
+	void updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, VisualizationContext context);
 	/// A Gdb result indicates that a breakpoint was deleted
 	void deleteDebuggerBreakpoint(const GdbTreeNode* breakpointNode);
 	/// Returns the index of the debugger breakpoint that matches the given GUI breakpoint. The
@@ -135,25 +135,25 @@ class Visualizator : public GdbResponseListener
   protected:
 	///	Notifications that begin with '*', example: *running,thread-id="thread"
 	///	@see GdbResponseListener::onExecAsyncOut()
-	virtual void onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration) override;
+	virtual void onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration) override;
 	/// Notifications that begin with '+'
 	///	@see GdbResponseListener::onStatusAsyncOut()
-	virtual void onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration) override;
+	virtual void onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration) override;
 	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
 	///	@see GdbResponseListener::onNotifyAsyncOut()
-	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration) override;
+	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration) override;
 	/// Notifications that begin with '^': ^done, ^connected, ^error, ^exit
 	///	@see GdbResponseListener::onResult()
-	virtual void onResult(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration) override;
+	virtual void onResult(const GdbItemTree& tree, VisualizationContext context, int& maxDuration) override;
 	/// Console output stream ('~'): text that should be displayed in the CLI console window
 	///	@see GdbResponseListener::onConsoleStreamOutput()
-	virtual void onConsoleStreamOutput(const QString& text, VisualizatorContext context, int& maxDuration) override;
+	virtual void onConsoleStreamOutput(const QString& text, VisualizationContext context, int& maxDuration) override;
 	/// Target output stream (@): any textual output from the running target
 	///	@see GdbResponseListener::onTargetStreamOutput()
-	virtual void onTargetStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration) override;
+	virtual void onTargetStreamOutput(const QString& str, VisualizationContext context, int& maxDuration) override;
 	/// The log stream contains debugging messages being produced by gdb's internals.
 	///	@see GdbResponseListener::onLogStreamOutput()
-	virtual void onLogStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration) override;
+	virtual void onLogStreamOutput(const QString& str, VisualizationContext context, int& maxDuration) override;
 
   protected:
 	/// Create the object to communicate with GDB
@@ -174,9 +174,9 @@ class Visualizator : public GdbResponseListener
 	/// libc functions.
 	bool setDynamicMemoryBreakpoints();
 	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
-	bool processPlayerSolutionStopped(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration);
+	bool processPlayerSolutionStopped(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
-	bool processBreakpointHit(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration);
+	bool processBreakpointHit(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 	/// Called when player solution stopped by program entry point breakpoint
 	bool processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
 };

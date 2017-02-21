@@ -48,10 +48,10 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	void createCpuCores();
 	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
 	///	@see GdbResponseListener::onNotifyAsyncOut()
-	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration) override;
+	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration) override;
 	/// Notifications that begin with '^': ^done, ^connected, ^error, ^exit
 	///	@see GdbResponseListener::onResult()
-	virtual void onResult(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration) override;
+	virtual void onResult(const GdbItemTree& tree, VisualizationContext context, int& maxDuration) override;
 	/// Debugger reports the creation of a new execution thread, show it
 	/// @return the duration in milliseconds of the animation
 	int createThread(int id);

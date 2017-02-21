@@ -12,7 +12,7 @@ GdbResponseListener::~GdbResponseListener()
 void GdbResponseListener::onGdbResponse(const GdbResponse* response, int& maxDuration)
 {
 	Q_ASSERT(response);
-	VisualizatorContext context = static_cast<VisualizatorContext>( response->getUserData() );
+	VisualizationContext context = static_cast<VisualizationContext>( response->getUserData() );
 	switch ( response->getType() )
 	{
 		case GdbResponse::EXEC_ASYNC_OUTPUT: return onExecAsyncOut(response->getItemTree(), response->getReason(), context, maxDuration);
@@ -27,7 +27,7 @@ void GdbResponseListener::onGdbResponse(const GdbResponse* response, int& maxDur
 	}
 }
 
-void GdbResponseListener::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
+void GdbResponseListener::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(tree);
 	Q_UNUSED(asyncClass);
@@ -35,7 +35,7 @@ void GdbResponseListener::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asy
 	Q_UNUSED(maxDuration);
 }
 
-void GdbResponseListener::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
+void GdbResponseListener::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(tree);
 	Q_UNUSED(asyncClass);
@@ -43,7 +43,7 @@ void GdbResponseListener::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass a
 	Q_UNUSED(maxDuration);
 }
 
-void GdbResponseListener::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
+void GdbResponseListener::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(tree);
 	Q_UNUSED(asyncClass);
@@ -51,28 +51,28 @@ void GdbResponseListener::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass a
 	Q_UNUSED(maxDuration);
 }
 
-void GdbResponseListener::onResult(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration)
+void GdbResponseListener::onResult(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(tree);
 	Q_UNUSED(context);
 	Q_UNUSED(maxDuration);
 }
 
-void GdbResponseListener::onConsoleStreamOutput(const QString& text, VisualizatorContext context, int& maxDuration)
+void GdbResponseListener::onConsoleStreamOutput(const QString& text, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(text);
 	Q_UNUSED(context);
 	Q_UNUSED(maxDuration);
 }
 
-void GdbResponseListener::onTargetStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration)
+void GdbResponseListener::onTargetStreamOutput(const QString& str, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(str);
 	Q_UNUSED(context);
 	Q_UNUSED(maxDuration);
 }
 
-void GdbResponseListener::onLogStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration)
+void GdbResponseListener::onLogStreamOutput(const QString& str, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(str);
 	Q_UNUSED(context);

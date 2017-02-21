@@ -36,7 +36,7 @@ void DebuggerBreakpoint::print() const
 			, number, lineNumber, qPrintable(filename), qPrintable(functionName), address, (size_t)roles);
 }
 
-DebuggerBreakpoint::Role DebuggerBreakpoint::mapVisualizationContext(VisualizatorContext context)
+DebuggerBreakpoint::Role DebuggerBreakpoint::mapVisualizationContext(VisualizationContext context)
 {
 	switch ( context )
 	{
@@ -54,7 +54,7 @@ DebuggerBreakpoint::Role DebuggerBreakpoint::mapVisualizationContext(Visualizato
 	}
 }
 
-DebuggerBreakpoint::Role DebuggerBreakpoint::addRoleFor(VisualizatorContext context)
+DebuggerBreakpoint::Role DebuggerBreakpoint::addRoleFor(VisualizationContext context)
 {
 	Role role = mapVisualizationContext(context);
 	if ( role != unknown )

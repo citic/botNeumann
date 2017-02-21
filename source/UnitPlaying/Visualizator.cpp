@@ -298,7 +298,7 @@ void Visualizator::processGdbResponse()
 //	qCDebug(logVisualizator, "----processGdbResponse(%lld) next in %dms", callCount, maxDuration);
 }
 
-void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
+void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
 	qCDebug(logTemporary, "onExecAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
@@ -321,13 +321,13 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 	}
 }
 
-void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
+void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
 	qCDebug(logTemporary, "onStatusAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
 }
 
-void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
+void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
 	Q_ASSERT(debuggerCall);
@@ -361,7 +361,7 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 	}
 }
 
-void Visualizator::onResult(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration)
+void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
 	qCDebug(logTemporary, "onResult(%s) | ctx=%d", qPrintable(tree.buildDescription()), context);
@@ -371,7 +371,7 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizatorContext context
 		return updateDebuggerBreakpoint( node, context );
 }
 
-void Visualizator::onConsoleStreamOutput(const QString& text, VisualizatorContext context, int& maxDuration)
+void Visualizator::onConsoleStreamOutput(const QString& text, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(context);
 	Q_UNUSED(maxDuration);
@@ -384,13 +384,13 @@ void Visualizator::onConsoleStreamOutput(const QString& text, VisualizatorContex
 	}
 }
 
-void Visualizator::onTargetStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration)
+void Visualizator::onTargetStreamOutput(const QString& str, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
 	qCDebug(logTemporary, "onTargetStreamOutput(%s) | ctx=%d", qPrintable(str), context);
 }
 
-void Visualizator::onLogStreamOutput(const QString& str, VisualizatorContext context, int& maxDuration)
+void Visualizator::onLogStreamOutput(const QString& str, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
 	qCDebug(logTemporary, "onLogStreamOutput(%s) | ctx=%d", qPrintable(str), context);
@@ -399,7 +399,7 @@ void Visualizator::onLogStreamOutput(const QString& str, VisualizatorContext con
 
 // Reacting to responses --------------------------------------------------------------------------
 
-bool Visualizator::processPlayerSolutionStopped(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration)
+bool Visualizator::processPlayerSolutionStopped(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
 {
 	// Player solution stopped execution. GDB reported: *stopped,reason="text",...
 	// The list of reasons is documented in GDB/MI
@@ -451,7 +451,7 @@ bool Visualizator::processPlayerSolutionStopped(const GdbItemTree& tree, Visuali
 	return false;
 }
 
-bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration)
+bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
 {
 	// Program stopped because a breakpoint was hit. An example of tree:
 
@@ -580,7 +580,7 @@ int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint
 	return -1;
 }
 
-void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, VisualizatorContext context)
+void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, VisualizationContext context)
 {
 	// Create a debugger breakpoint that parsers the output sent by debugger
 	Q_ASSERT(breakpointNode);

@@ -1,7 +1,7 @@
 #ifndef VISUALIZATIONCONTEXT_H
 #define VISUALIZATIONCONTEXT_H
 
-enum VisualizatorContext
+enum VisualizationContext
 {
 	visUnknown,
 	visStarting,
