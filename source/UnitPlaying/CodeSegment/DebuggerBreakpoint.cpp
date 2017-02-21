@@ -35,3 +35,29 @@ void DebuggerBreakpoint::print() const
 	qCDebug(logTemporary, "Breakpoint[number=%d][line=%d][file=%s][function=%s][address=%zx][roles=%zx]"
 			, number, lineNumber, qPrintable(filename), qPrintable(functionName), address, (size_t)roles);
 }
+
+DebuggerBreakpoint::Role DebuggerBreakpoint::mapVisualizationContext(VisualizatorContext context)
+{
+	switch ( context )
+	{
+		case visUserDefinedBreakpoint: return userDefined;
+		case visFunctionDefinition: return functionDefinition;
+		case visStarting: return programEntryPoint;
+		case visProgramEntryPoint: return programEntryPoint;
+
+		case visMallocBreakpoint: return mallocCalled;
+		case visCallocBreakpoint: return callocCalled;
+		case visReallocBreakpoint: return reallocCalled;
+		case visFreeBreakpoint: return freeCalled;
+
+		default: return unknown;
+	}
+}
+
+DebuggerBreakpoint::Role DebuggerBreakpoint::addRoleFor(VisualizatorContext context)
+{
+	Role role = mapVisualizationContext(context);
+	if ( role != unknown )
+		addRole(role);
+	return role;
+}

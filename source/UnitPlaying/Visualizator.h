@@ -168,6 +168,11 @@ class Visualizator : public GdbResponseListener
 	bool setFunctionDefinitionBreakpoints();
 	/// Starts the execution of inferior (player solution) under GDB
 	bool startInferior();
+	/// Set breakpoints to standard library functions to manage dynamic memory: malloc(), calloc(),
+	/// realloc() and free(). Because C++ dynamic memory operators (new, delete, new[], delete[])
+	/// internally call the libc standard library functions, we only set breaktpoints for these
+	/// libc functions.
+	bool setDynamicMemoryBreakpoints();
 	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
 	bool processPlayerSolutionStopped(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration);
 	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range

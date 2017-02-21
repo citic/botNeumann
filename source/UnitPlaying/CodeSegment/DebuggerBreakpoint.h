@@ -1,6 +1,8 @@
 #ifndef DEBUGGERBREAKPOINT_H
 #define DEBUGGERBREAKPOINT_H
 
+#include "VisualizationContext.h"
+
 #include <QFlags>
 #include <QString>
 
@@ -119,6 +121,11 @@ class DebuggerBreakpoint
 	inline void setRoles(const Roles& roles) { this->roles = roles; }
 	/// For debugging
 	void print() const;
+	/// Maps a context to the respective breakpoint role
+	static Role mapVisualizationContext(VisualizatorContext context);
+	/// Adds a role for the respective context
+	/// @return The role that was added, unknown if the context cannot be mapped
+	Role addRoleFor(VisualizatorContext context);
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(DebuggerBreakpoint::Roles)

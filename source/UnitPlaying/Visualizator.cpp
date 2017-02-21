@@ -46,6 +46,7 @@ bool Visualizator::start()
 	setUserDefinedBreakpoints();
 	setFunctionDefinitionBreakpoints();
 	if ( ! startInferior() ) return false;
+	setDynamicMemoryBreakpoints();
 
 	// Visualization started
 	return true;
@@ -160,6 +161,18 @@ bool Visualizator::startInferior()
 		gdbState = oldState;
 		return false;
 	}
+
+	return true;
+}
+
+bool Visualizator::setDynamicMemoryBreakpoints()
+{
+	// Set breakpoint for the dynamic memory management functions: malloc, calloc, realloc, and free
+	// These breakpoints are set after the libc library has been loaded.
+	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_malloc", visMallocBreakpoint) == GDB_ERROR ) return false;
+	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_calloc", visCallocBreakpoint) == GDB_ERROR ) return false;
+	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_realloc", visReallocBreakpoint) == GDB_ERROR ) return false;
+	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_free", visFreeBreakpoint) == GDB_ERROR ) return false;
 
 	return true;
 }
@@ -593,16 +606,7 @@ void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, V
 	}
 
 	// Update the role of the breakpoint according to the context it was created
-	switch ( context )
-	{
-		case visUserDefinedBreakpoint: debuggerBreakpoint->addRole( DebuggerBreakpoint::userDefined ); break;
-
-		case visFunctionDefinition: debuggerBreakpoint->addRole( DebuggerBreakpoint::functionDefinition ); break;
-
-		case visStarting:
-		case visProgramEntryPoint: debuggerBreakpoint->addRole( DebuggerBreakpoint::programEntryPoint ); break;
-		default: break;
-	}
+	debuggerBreakpoint->addRoleFor(context);
 
 	debuggerBreakpoint->print();
 	// Update the interface?

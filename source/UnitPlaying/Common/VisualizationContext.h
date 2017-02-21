@@ -11,6 +11,11 @@ enum VisualizatorContext
 	visUserDefinedBreakpoint,
 	visFunctionDefinition,
 	visProgramEntryPoint,
+
+	visMallocBreakpoint,
+	visCallocBreakpoint,
+	visReallocBreakpoint,
+	visFreeBreakpoint,
 };
 
 #endif // VISUALIZATIONCONTEXT_H
