@@ -53,6 +53,9 @@ class Visualizator : public GdbResponseListener
 	/// When the unit playing scene is paused, not animations are done, but if a step in/out/over
 	/// command is issued, the animation resumes until the step is done
 	bool inStep = false;
+	/// We store the program entry point tree in order to defer the function call animation until
+	/// the starting process has enterely finished
+	GdbItemTree* entryPointTree = nullptr;
 
   public:
 	/// Constructor
@@ -165,6 +168,12 @@ class Visualizator : public GdbResponseListener
 	bool setFunctionDefinitionBreakpoints();
 	/// Starts the execution of inferior (player solution) under GDB
 	bool startInferior();
+	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
+	bool processPlayerSolutionStopped(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration);
+	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
+	bool processBreakpointHit(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration);
+	/// Called when player solution stopped by program entry point breakpoint
+	bool processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
 };
 
 #endif // VISUALIZATOR_H

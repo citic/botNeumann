@@ -28,6 +28,7 @@ Visualizator::~Visualizator()
 		delete debuggerBreakpoints[index];
 
 	delete debuggerCall;
+	delete entryPointTree;
 }
 
 
@@ -291,35 +292,20 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 
 	switch ( asyncClass )
 	{
+		// *running,thread-id="all"
 		case AsyncClass::AC_RUNNING:
 			gdbState = STATE_RUNNING;
 			break;
 
+		// *stopped,reason="text",...
 		case AsyncClass::AC_STOPPED:
 			gdbState = STATE_STOPPED;
-			// Gede gets pid asking the list of threads, we got pid from AC_THREAD_GROUP_STARTED
-			// if (inferiorProcessId == 0) debuggerCall->sendGdbCommand("-list-thread-groups");
-
-			// ToDo: for first breakpoint-hit, save tree
-			// ToDo: These are Gede commands. Check against session example. Contexts may be wrong
-			debuggerCall->sendGdbCommand("-thread-info", visExecutionLoop);
-			debuggerCall->sendGdbCommand("-var-update --all-values *", visExecutionLoop);
-			debuggerCall->sendGdbCommand("-stack-list-locals 1", visExecutionLoop);
+			processPlayerSolutionStopped(tree, context, maxDuration);
 			break;
 
 		default:
 			break;
 	}
-/*
-	// Get the current thread id
-	const QString& threadIdStr = tree.findNodeTextValue("/thread-id");
-	if ( threadIdStr.isEmpty() == false )
-	{
-		bool ok = false;
-		int threadId = threadIdStr.toInt(&ok, 0);
-		if ( ok ) emit currentThreadChanged(threadId);
-	}
-*/
 }
 
 void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizatorContext context, int& maxDuration)
@@ -395,6 +381,141 @@ void Visualizator::onLogStreamOutput(const QString& str, VisualizatorContext con
 {
 	Q_UNUSED(maxDuration);
 	qCDebug(logTemporary, "onLogStreamOutput(%s) | ctx=%d", qPrintable(str), context);
+}
+
+
+// Reacting to responses --------------------------------------------------------------------------
+
+bool Visualizator::processPlayerSolutionStopped(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration)
+{
+	// Player solution stopped execution. GDB reported: *stopped,reason="text",...
+	// The list of reasons is documented in GDB/MI
+	const QString& reason = tree.findNodeTextValue("/reason");
+
+	// A breakpoint was reached.
+	if ( reason == "breakpoint-hit" ) return processBreakpointHit(tree, context, maxDuration);
+	// A watchpoint was triggered.
+	//if ( reason == "watchpoint-trigger" ) return processWatchpointTrigger(tree, context, maxDuration);
+	// A read watchpoint was triggered.
+	//if ( reason == "read-watchpoint-trigger" ) return processReadWatchpointTrigger(tree, context, maxDuration);
+	// An access watchpoint was triggered.
+	//if ( reason == "access-watchpoint-trigger" ) return processAccessWatchpointTrigger(tree, context, maxDuration);
+	// An -exec-finish or similar CLI command was accomplished.
+	//if ( reason == "function-finished" ) return processFunctionFinished(tree, context, maxDuration);
+	// An -exec-until or similar CLI command was accomplished.
+	//if ( reason == "location-reached" ) return processLocationReached(tree, context, maxDuration);
+	// A watchpoint has gone out of scope.
+	//if ( reason == "watchpoint-scope" ) return processWatchpointScope(tree, context, maxDuration);
+	// -exec-next/-exec-next-instruction/-exec-step/-exec-step-instruction was acc
+	//if ( reason == "end-stepping-range" ) return processEndSteppingRange(tree, context, maxDuration);
+	// The inferior exited because of a signal.
+	//if ( reason == "exited-signalled" ) return processExitedSignalled(tree, context, maxDuration);
+	// The inferior exited.
+	//if ( reason == "exited" ) return processExited(tree, context, maxDuration);
+	// The inferior exited normally.
+	//if ( reason == "exited-normally" ) return processExitedNormally(tree, context, maxDuration);
+	// A signal was received by the inferior.
+	//if ( reason == "signal-received" ) return processSignalReceived(tree, context, maxDuration);
+	// Inferior stopped due to a library being loaded or unloaded (catch un/load).
+	//if ( reason == "solib-event" ) return processSolibEvent(tree, context, maxDuration);
+	// The inferior has forked and a fork catchpoint was triggered
+	//if ( reason == "fork" ) return processFork(tree, context, maxDuration);
+	// The inferior has vforked and a catchpoint was used.
+	//if ( reason == "vfork" ) return processVfork(tree, context, maxDuration);
+	// The inferior entered a system call and a catchpoint was used.
+	//if ( reason == "syscall-entry" ) return processSyscallEntry(tree, context, maxDuration);
+	// The inferior returned from a system call and a catchpoint was used.
+	//if ( reason == "syscall-return" ) return processSyscallReturn(tree, context, maxDuration);
+	// The inferior called exec and a catchpoint was used.
+	//if ( reason == "exec" ) return processExec(tree, context, maxDuration);
+
+	// Gede gets pid asking the list of threads, we got pid from AC_THREAD_GROUP_STARTED
+	// if (inferiorProcessId == 0) debuggerCall->sendGdbCommand("-list-thread-groups");
+	// These are Gede commands:
+	//debuggerCall->sendGdbCommand("-thread-info", visExecutionLoop);
+	//debuggerCall->sendGdbCommand("-var-update --all-values *", visExecutionLoop);
+	//debuggerCall->sendGdbCommand("-stack-list-locals 1", visExecutionLoop);
+	return false;
+}
+
+bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizatorContext context, int& maxDuration)
+{
+	// Program stopped because a breakpoint was hit. An example of tree:
+
+	//	*stopped,
+	//	reason="breakpoint-hit",
+	//	disp="keep",
+	//	bkptno="2",
+	//	frame=
+	//	{
+	//		addr="0x00000000004027c3",
+	//		func="InputArgument::InputArgument",
+	//		args=
+	//		[
+	//			{
+	//				name="this",
+	//				value="0x60b580 <global_program_name>"
+	//			},
+	//			{
+	//				name="number",
+	//				value="0"
+	//			},
+	//			{
+	//				name="value",
+	//				value="0x406dc6 \"all_inclusive\""
+	//			}
+	//		],
+	//		file="alli.cpp",
+	//		fullname="/tmp/alli/alli.cpp",
+	//		line="64"
+	//	},
+	//	thread-id="1",
+	//	stopped-threads="all",
+	//	core="6"
+	//	(gdb)
+
+	// Get the number of the breakpoint
+	bool ok = false;
+	int breakpointNumber = tree.findNodeTextValue("/bkptno").toInt(&ok);
+
+	// Get the breakpoint object that is identified by that number
+	Q_ASSERT(ok);
+	Q_ASSERT(breakpointNumber >= 0 && breakpointNumber < debuggerBreakpoints.count() );
+	DebuggerBreakpoint* breakpoint = debuggerBreakpoints[breakpointNumber];
+	Q_ASSERT(breakpoint);
+
+	// If visualization is in starting state and entryPointTree is null process Program entry point:
+	// if ( unitPlayingScene->getState() == UnitPlayingState::starting )
+	if ( context == visStarting )
+		return processEntryPoint(tree, breakpoint, maxDuration);
+
+	// If breakpoint object has one or more roles:
+	// * If breakpoint is functionBody or programEntryPoint: Do 4.2 Function call.
+	// * If breakpoint is userDefined: Do 4.4 User defined breakpoint.
+	// * Do 4.5 Dynamic memory management breakpoint
+	return false;
+}
+
+bool Visualizator::processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration)
+{
+	// Visualization is in starting stage, not animating. Inferior is stopped by a breakpoint hit.
+	// This is the first breakpoint hit, threfore, it is the actual program entry point.
+	// GDB always set the program entry point breakpoint to the main() function, but it may fail
+	// in C++ when there are global objects that call constructors before main().
+	Q_UNUSED(maxDuration);
+
+	// Because there are pending initialization steps, do not animate a function call.
+	// We store the GDB response tree for later use
+	Q_ASSERT(this->entryPointTree == nullptr);
+	this->entryPointTree = new GdbItemTree(tree);
+	qCDebug(logTemporary) << "Program entry point tree saved for later:" << entryPointTree->buildDescription();
+
+	// Add the pogramEntryPoint role to breakpoints[/bkptno].
+	Q_ASSERT(breakpoint);
+	breakpoint->addRole( DebuggerBreakpoint::programEntryPoint );
+
+	// Continue the starting process. It will eventually animate a function call
+	return true;
 }
 
 
