@@ -188,9 +188,18 @@ bool Visualizator::setDynamicMemoryBreakpoints()
 bool Visualizator::watchStandardInputOutput()
 {
 	// Create object variables watching changes in IO, using notation bn_io_file
+
+	// Standard input
 	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stdin @ stdin->_IO_read_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
+	if ( variableMapper->createWatch("stdin->_IO_read_ptr", "bn_io_stdin", MemoryBlock::standardInputOutput ) == false ) return false;
+
+	// Standard output
 	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stdout @ stdout->_IO_write_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
+	if ( variableMapper->createWatch("stdout->_IO_write_ptr", "bn_io_stdout", MemoryBlock::standardInputOutput ) == false ) return false;
+
+	// Standard error
 	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stderr @ stderr->_IO_write_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
+	if ( variableMapper->createWatch("stderr->_IO_write_ptr", "bn_io_stderr", MemoryBlock::standardInputOutput ) == false ) return false;
 
 	return true;
 }
@@ -210,12 +219,14 @@ bool Visualizator::watchGlobalVariables()
 	for ( int index = 0; index < globalVariables.count(); ++index )
 	{
 		const Symbol* symbol = globalVariables[index];
-		const QString& command = QString("-var-create bn_gv_%1 @ %2").arg(index + 1).arg(symbol->name);
+		const QString watchName = QString("bn_gv_%1").arg(index + 1);
+		const QString& command = QString("-var-create %1 @ %2").arg(watchName).arg(symbol->name);
 		if ( debuggerCall->sendGdbCommand(command, visGlobalVariableWatch) == GDB_ERROR )
 		{
 			qCCritical(logVisualizator).noquote() << "Failed to set watch at global variable" << symbol->name;
 			return false;
 		}
+		variableMapper->createWatch(symbol->name, watchName, MemoryBlock::globalVariable);
 	}
 
 	return true;
@@ -411,13 +422,9 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext contex
 	qCDebug(logTemporary, "onResult(%s) | ctx=%d", qPrintable(tree.buildDescription()), context);
 	const GdbTreeNode* node = nullptr;
 
-	// If this is the result of watching a standard input/output/error pointer
-	if ( context == visStandardInputOutputWatch )
-		return (void) variableMapper->createWatch( tree, MemoryBlock::standardInputOutput );
-
-	// If this is the result of watching a global variable
-	if ( context == visGlobalVariableWatch )
-		return (void) variableMapper->createWatch( tree, MemoryBlock::globalVariable );
+	// If this is the result of watching a global variable or standard input/output/error pointer
+	if ( context == visStandardInputOutputWatch || context == visGlobalVariableWatch )
+		return (void) variableMapper->updateWatch( tree );
 
 	// If this is the result of inserting or removing a breakpoint
 	if ( ( node = tree.findNode("/bkpt") ) )

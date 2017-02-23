@@ -15,13 +15,13 @@ bool MemoryBlock::loadFromGdbVariableObject(const GdbItemTree& tree)
 	//	value="0x0",
 	//	type="char *",
 	//	has_more="0"
-	name = tree.findNodeTextValue("name");
+	watchName = tree.findNodeTextValue("name");
 	value = tree.findNodeTextValue("value");
 	dataType = tree.findNodeTextValue("type");
 	//numChildren = tree.findNodeTextValue("numchild");
 	//hasMore = tree.findNodeTextValue("has_more");
 
-	return ! name.isEmpty();
+	return ! watchName.isEmpty();
 }
 
 
@@ -38,21 +38,40 @@ VariableMapper::~VariableMapper()
 		delete itr.value();
 }
 
-bool VariableMapper::createWatch(const GdbItemTree& tree, MemoryBlock::Type type)
+bool VariableMapper::createWatch(const QString& name, const QString& watchName, MemoryBlock::Type type)
 {
 	// Create a memory block for the watch and load it from the tree
 	MemoryBlock* watch = new MemoryBlock(type);
+	watch->name = name;
+	watch->watchName = watchName;
 
-	if ( ! watch->loadFromGdbVariableObject(tree) )
+	// Add the watch to the maps
+	mapNameMemoryBlock.insert( watch->getId(), watch );
+	qCDebug(logApplication) << "Watch created:" << watch->getId();
+
+	return true;
+}
+
+bool VariableMapper::updateWatch(const GdbItemTree& tree)
+{
+	// Find the watch in the hash to update it
+	const QString& watchName = tree.findNodeTextValue("name");
+	if ( ! mapNameMemoryBlock.contains(watchName) )
 	{
-		qCCritical(logApplication) << "Invalid variable-object:" << tree.buildDescription();
-		delete watch;
+		qCCritical(logApplication) << "Variable-object not found in MemoryMapper:" << watchName;
 		return false;
 	}
 
-	// Add the watch to the maps
-	mapNameMemoryBlock.insert( watch->name, watch );
-	qCDebug(logApplication) << "Watch added:" << watch->name;
+	MemoryBlock* watch = mapNameMemoryBlock.value( watchName );
+	Q_ASSERT(watch);
 
+	// Update the watch from GDB's tree result
+	if ( ! watch->loadFromGdbVariableObject(tree) )
+	{
+		qCCritical(logApplication) << "Invalid watch tree:" << tree.buildDescription();
+		return false;
+	}
+
+	qCDebug(logApplication) << "Watch updated:" << watch->getId() << "referring to" << watch->name;
 	return true;
 }

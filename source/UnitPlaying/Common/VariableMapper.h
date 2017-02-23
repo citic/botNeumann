@@ -19,6 +19,8 @@ struct MemoryBlock
 	Type type = typeUnknown;
 	/// Identifier of the variable
 	QString name;
+	/// Name of the GDB's variable-object used to watch the variable, if any
+	QString watchName;
 	/// Physical address of the block on inferior, reported by GDB in hexadecimal, 0 means invalid
 	size_t inferiorAddress = 0;
 	/// Address where this memory block was allocated in visualization, 0 means invalid
@@ -44,6 +46,8 @@ struct MemoryBlock
 	explicit MemoryBlock(Type type = typeUnknown) : type(type) { }
 	/// Create a MemoryBlock from a GDB variable object result
 	bool loadFromGdbVariableObject(const GdbItemTree& tree);
+	/// Get the name to use to find this object in the hash
+	inline const QString& getId() const { return watchName.isEmpty() ? name : watchName; }
 };
 
 /** Maps variables in player solution with graphical variables in visualization. Also manages
@@ -65,10 +69,17 @@ class VariableMapper : public QObject
 	explicit VariableMapper(QObject* parent = nullptr);
 	/// Destructor
 	~VariableMapper();
-	/// Create a watch for standard input/output/error pointer. When this pointer changes, an
-	/// input/output operation was done and it should be animated
-	/// @return true if the tree was successfully parsed and the watch was created
-	bool createWatch(const GdbItemTree& tree, MemoryBlock::Type type);
+	/// Create a watch object, that is, a variable object in GDB that watches for some other
+	/// variable in player solution. When that value changes, we can animate the envolved variable
+	/// @param name Original name of the variable being watched in player solution
+	/// @param watchName Name of the variable object used to watch the @a name variable
+	/// @return true if the watch object was created and added to the hash table
+	bool createWatch(const QString& name, const QString& watchName, MemoryBlock::Type type);
+	/// After creating a variable object, GDB produces a result response. That response has some
+	/// values that we use to update the respective MemoryBlock. The field tree./name must be
+	/// the name of a variable-object (watch).
+	/// @return true if the watch was found and updated, false otherwise
+	bool updateWatch(const GdbItemTree& tree);
 };
 
 #endif // VARIABLEMAPPER_H
