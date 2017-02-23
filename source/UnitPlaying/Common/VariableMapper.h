@@ -4,19 +4,45 @@
 #include <QObject>
 #include <QHash>
 
+class GdbCall;
 class GdbItemTree;
 class GraphicVariable;
+
+/// The data type of the inferior variable
+enum DataType
+{
+	typeUnknown,
+
+	// Atomic types
+	typeBool,      // bool b
+	typeChar,      // char ch, usigned char ch
+	typeInt,       // int i,
+	typeEnum,      // enum { a, b, c }
+	typeBitField,  // struct { unsigned f1: 1, unsigned : 0, ... }
+	typeFloat,     // float x, double y, long double z
+
+	// Indirection types
+	typePointer,   // DataType * ptr, const DataType*** ptr2, DataType[] arr
+	typeReference, // DataType& ref
+	typeRValue,    // DataType&& ref
+
+	// Composite types
+	typeArray,     // DataType[n] arr
+	typeStruct,    // struct { DataType f1; DataType f2; ... }
+	typeClass,     // class  { DataType f1; DataType f2; ... }
+	typeUnion,     // union  { DataType f1; DataType f2; ... }
+};
 
 /** Any piece of memory on the inferior that is mapped to the visualization, e.g: a variable */
 struct MemoryBlock
 {
   public:
 	/// The type of memory in inferior that this object is mapping
-	enum Type { typeUnknown, standardInputOutput, globalVariable };
+	enum WatchType { watchUnknown, standardInputOutput, globalVariable };
 
   public:
 	/// The type of memory in inferior that this object is mapping
-	Type type = typeUnknown;
+	WatchType watchType = watchUnknown;
 	/// Identifier of the variable
 	QString name;
 	/// Name of the GDB's variable-object used to watch the variable, if any
@@ -27,8 +53,10 @@ struct MemoryBlock
 	size_t visualizationAddress = 0;
 	/// Size in bytes of the block
 	size_t size = 0;
+	/// The type of this inferior's variable
+	DataType dataType = typeUnknown;
 	/// The data type reported by GDB as string
-	QString dataType;
+	QString dataTypeStr;
 	/// The value represented as text (from GDB output)
 	QString value;
 	/// Thread that created this memory block
@@ -43,11 +71,14 @@ struct MemoryBlock
 
   public:
 	/// Convenience constructor
-	explicit MemoryBlock(Type type = typeUnknown) : type(type) { }
+	explicit MemoryBlock(WatchType type = watchUnknown) : watchType(type) { }
 	/// Create a MemoryBlock from a GDB variable object result
 	bool loadFromGdbVariableObject(const GdbItemTree& tree);
 	/// Get the name to use to find this object in the hash
 	inline const QString& getId() const { return watchName.isEmpty() ? name : watchName; }
+	/// Request data to GDB in order to get the minimum missing information to display this variable
+	/// in visualization, for example: data size, address, data type
+	bool updateMissingFields(GdbCall* debuggerCall);
 };
 
 /** Maps variables in player solution with graphical variables in visualization. Also manages
@@ -59,6 +90,9 @@ class VariableMapper : public QObject
 	Q_DISABLE_COPY(VariableMapper)
 
   protected:
+	/// Pointer to the GDB communication object. The VariableMapper requires to access GDB in order
+	/// to get more information about variables and watches
+	GdbCall* debuggerCall = nullptr;
 	/// Allows to find memory blocks by their names. Also it owns the memory blocks
 	QHash<QString, MemoryBlock*> mapNameMemoryBlock;
 	/// Allows to find memory blocks by their inferior address
@@ -66,7 +100,7 @@ class VariableMapper : public QObject
 
   public:
 	/// Constructor
-	explicit VariableMapper(QObject* parent = nullptr);
+	explicit VariableMapper(GdbCall* debuggerCall, QObject* parent = nullptr);
 	/// Destructor
 	~VariableMapper();
 	/// Create a watch object, that is, a variable object in GDB that watches for some other
@@ -74,7 +108,7 @@ class VariableMapper : public QObject
 	/// @param name Original name of the variable being watched in player solution
 	/// @param watchName Name of the variable object used to watch the @a name variable
 	/// @return true if the watch object was created and added to the hash table
-	bool createWatch(const QString& name, const QString& watchName, MemoryBlock::Type type);
+	bool createWatch(const QString& name, const QString& watchName, MemoryBlock::WatchType type);
 	/// After creating a variable object, GDB produces a result response. That response has some
 	/// values that we use to update the respective MemoryBlock. The field tree./name must be
 	/// the name of a variable-object (watch).

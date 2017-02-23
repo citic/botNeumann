@@ -1,5 +1,5 @@
 #include "VariableMapper.h"
-#include "GdbItemTree.h"
+#include "GdbCall.h"
 #include "LogManager.h"
 
 
@@ -17,18 +17,48 @@ bool MemoryBlock::loadFromGdbVariableObject(const GdbItemTree& tree)
 	//	has_more="0"
 	watchName = tree.findNodeTextValue("name");
 	value = tree.findNodeTextValue("value");
-	dataType = tree.findNodeTextValue("type");
+	dataTypeStr = tree.findNodeTextValue("type");
 	//numChildren = tree.findNodeTextValue("numchild");
 	//hasMore = tree.findNodeTextValue("has_more");
 
 	return ! watchName.isEmpty();
 }
 
+bool MemoryBlock::updateMissingFields(GdbCall* debuggerCall)
+{
+	// Does GDB/MI offer a method to get data-type size or unroll data types? As a workaround we use
+	// C/C++ expressions and normal GDB user interface to get the missing data
+
+	// The size on bytes
+	if ( size == 0 && debuggerCall->sendGdbCommand(QString("-data-evaluate-expression sizeof(%1)").arg(name)) == GDB_ERROR )
+		return false;
+
+	// The address where the variable is allocated in inferior
+	if ( inferiorAddress == 0 && debuggerCall->sendGdbCommand(QString("-data-evaluate-expression &%1").arg(name)) == GDB_ERROR )
+		return false;
+
+	// If we can infer the data type, OK, otherwise unroll it using GDB ptype user command
+	if ( dataType == typeUnknown )
+	{
+//		dataType = mapDataTypeStr(dataTypeStr);
+		if ( dataType == typeUnknown )
+		{
+			// Try to unroll typedefs
+			if ( debuggerCall->sendGdbCommand(QString("-interpreter-exec console \"ptype /mt %1\"").arg(name)) == GDB_ERROR )
+				return false;
+		}
+	}
+
+	return true;
+}
+
+
 
 // VariableMapper class ---------------------------------------------------------------------------
 
-VariableMapper::VariableMapper(QObject* parent)
+VariableMapper::VariableMapper(GdbCall* debuggerCall, QObject* parent)
 	: QObject(parent)
+	, debuggerCall(debuggerCall)
 {
 }
 
@@ -38,7 +68,7 @@ VariableMapper::~VariableMapper()
 		delete itr.value();
 }
 
-bool VariableMapper::createWatch(const QString& name, const QString& watchName, MemoryBlock::Type type)
+bool VariableMapper::createWatch(const QString& name, const QString& watchName, MemoryBlock::WatchType type)
 {
 	// Create a memory block for the watch and load it from the tree
 	MemoryBlock* watch = new MemoryBlock(type);
@@ -73,5 +103,5 @@ bool VariableMapper::updateWatch(const GdbItemTree& tree)
 	}
 
 	qCDebug(logApplication) << "Watch updated:" << watch->getId() << "referring to" << watch->name;
-	return true;
+	return watch->updateMissingFields(debuggerCall);
 }

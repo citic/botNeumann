@@ -75,7 +75,7 @@ bool Visualizator::createGdb()
 
 	// Create the object that will map variables between player solution and visualization
 	Q_ASSERT(variableMapper == nullptr);
-	variableMapper = new VariableMapper(this);
+	variableMapper = new VariableMapper(debuggerCall, this);
 	return true;
 }
 
