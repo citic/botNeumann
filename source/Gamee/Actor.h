@@ -16,8 +16,6 @@ class Actor : public ScenicElement
 	Q_DISABLE_COPY(Actor)
 
   protected: // Properties to be animated
-	/// Transparency: appear/disappear
-	Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity)
 	/// Controls transitions (eg: changing the face of this actor)
 	QTimeLine timeLine;
 	/// Stores the faces that this Actor can change while it is doing a transition

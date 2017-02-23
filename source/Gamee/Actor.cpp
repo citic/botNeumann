@@ -13,12 +13,12 @@ int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity)
 	updateLayoutItem();
 
 	// Animate the robot while it appears
-	QPropertyAnimation* robotAppearsAnimation = new QPropertyAnimation(this, "opacity", this);
+	QPropertyAnimation* appearsAnimation = new QPropertyAnimation(this, "opacity", this);
 	duration = VisualizationSpeed::getInstance().adjust(duration);
-	robotAppearsAnimation->setDuration(duration);
-	robotAppearsAnimation->setStartValue(fromOpacity);
-	robotAppearsAnimation->setEndValue(toOpacity);
-	robotAppearsAnimation->start();
+	appearsAnimation->setDuration(duration);
+	appearsAnimation->setStartValue(fromOpacity);
+	appearsAnimation->setEndValue(toOpacity);
+	appearsAnimation->start();
 	return duration;
 }
 
