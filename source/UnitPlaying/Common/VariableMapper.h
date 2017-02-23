@@ -12,7 +12,7 @@ struct MemoryBlock
 {
   public:
 	/// The type of memory in inferior that this object is mapping
-	enum Type { typeUnknown, standardInputOutput };
+	enum Type { typeUnknown, standardInputOutput, globalVariable };
 
   public:
 	/// The type of memory in inferior that this object is mapping
@@ -68,7 +68,7 @@ class VariableMapper : public QObject
 	/// Create a watch for standard input/output/error pointer. When this pointer changes, an
 	/// input/output operation was done and it should be animated
 	/// @return true if the tree was successfully parsed and the watch was created
-	bool createStandardInputOutputWatch(const GdbItemTree& tree);
+	bool createWatch(const GdbItemTree& tree, MemoryBlock::Type type);
 };
 
 #endif // VARIABLEMAPPER_H

@@ -50,6 +50,7 @@ bool Visualizator::start()
 	if ( ! startInferior() ) return false;
 	setDynamicMemoryBreakpoints();
 	watchStandardInputOutput();
+	watchGlobalVariables();
 
 	// Visualization started
 	return true;
@@ -190,6 +191,32 @@ bool Visualizator::watchStandardInputOutput()
 	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stdin @ stdin->_IO_read_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
 	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stdout @ stdout->_IO_write_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
 	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stderr @ stderr->_IO_write_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
+
+	return true;
+}
+
+bool Visualizator::watchGlobalVariables()
+{
+	// Get the list of global variables from player solution
+	Q_ASSERT(playerSolution);
+	CtagsCall* ctagsCall = playerSolution->getCtagsCall();
+
+	// If the Ctags call failed, the pointer is null and no symbols are not extracted
+	if ( ctagsCall == nullptr )
+		return false;
+
+	// Get the function definitions symbols and set breakpoints for all of them
+	const QList<Symbol*>& globalVariables = ctagsCall->getGlobalVariables();
+	for ( int index = 0; index < globalVariables.count(); ++index )
+	{
+		const Symbol* symbol = globalVariables[index];
+		const QString& command = QString("-var-create bn_gv_%1 @ %2").arg(index + 1).arg(symbol->name);
+		if ( debuggerCall->sendGdbCommand(command, visGlobalVariableWatch) == GDB_ERROR )
+		{
+			qCCritical(logVisualizator).noquote() << "Failed to set watch at global variable" << symbol->name;
+			return false;
+		}
+	}
 
 	return true;
 }
@@ -386,7 +413,11 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext contex
 
 	// If this is the result of watching a standard input/output/error pointer
 	if ( context == visStandardInputOutputWatch )
-		return (void) variableMapper->createStandardInputOutputWatch( tree );
+		return (void) variableMapper->createWatch( tree, MemoryBlock::standardInputOutput );
+
+	// If this is the result of watching a global variable
+	if ( context == visGlobalVariableWatch )
+		return (void) variableMapper->createWatch( tree, MemoryBlock::globalVariable );
 
 	// If this is the result of inserting or removing a breakpoint
 	if ( ( node = tree.findNode("/bkpt") ) )

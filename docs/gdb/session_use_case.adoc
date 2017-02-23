@@ -742,8 +742,9 @@ Only on MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluat
 
 . Get global variables from `PlayerSolution` (collected with ctags in building process in file `bn_tags.txt`).
 . For each global variable, create a GDB-variable object with name `bn_gv_num`
-. Create a DebuggerVariable object and load it from GDB response
-. Add the DebuggerVariable to the VariableManager
+. Create a [line-through]#DebuggerVariable# `MemoryBlock` object using the (variableName, watchName) pair, because GDB response will not include the original name of the variable
+. When the response from GDB returns, update the rest of fields of the DebuggerVariable from GDB response
+. Add the DebuggerVariable to the VariableMapper
 . Animate variable creation in DataSegment and init it with the value obtained from GDB response
 . If there is an overflow, simulate an DataSegment overflow. Do <<program-termination>>
 . Future work: detect static local variables
@@ -1792,7 +1793,7 @@ Check if we are running on the same function
 Update local variables:
 
 . ToDo: This command is unnecesary if a player solution function was called, because the stack frame has changed. If we try to update the local variables, it will be done in the new function call instead of the caller. This is a problem, because complex calls such as `int x = 3, y = func(++x), z = x + y` will miss the update of variables in the caller before `func()` is called.
-. Get the value of all the local variables, and pass them to the CallStack or VariableManager
+. Get the value of all the local variables, and pass them to the CallStack or VariableMapper
 . If some variables have changed their values, animate them
 . ToDo: If we create variable-objects for each local variable in all threads, this comparison
   step may be not necessary, but GDB may reject to update many of them.

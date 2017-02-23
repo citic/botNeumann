@@ -38,10 +38,10 @@ VariableMapper::~VariableMapper()
 		delete itr.value();
 }
 
-bool VariableMapper::createStandardInputOutputWatch(const GdbItemTree& tree)
+bool VariableMapper::createWatch(const GdbItemTree& tree, MemoryBlock::Type type)
 {
 	// Create a memory block for the watch and load it from the tree
-	MemoryBlock* watch = new MemoryBlock(MemoryBlock::standardInputOutput);
+	MemoryBlock* watch = new MemoryBlock(type);
 
 	if ( ! watch->loadFromGdbVariableObject(tree) )
 	{
@@ -52,7 +52,7 @@ bool VariableMapper::createStandardInputOutputWatch(const GdbItemTree& tree)
 
 	// Add the watch to the maps
 	mapNameMemoryBlock.insert( watch->name, watch );
-//	qCDebug(logApplication) << "Standard input/output watch added:" << watch->name;
+	qCDebug(logApplication) << "Watch added:" << watch->name;
 
 	return true;
 }

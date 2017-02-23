@@ -179,6 +179,8 @@ class Visualizator : public GdbResponseListener
 	bool setDynamicMemoryBreakpoints();
 	/// Create object variables watching changes in IO, using notation bn_io_file
 	bool watchStandardInputOutput();
+	/// Create object variables watching changes in global variables, using notation bn_gv_##
+	bool watchGlobalVariables();
 	/// Set watches for the standard input, output and error pointers
 	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
 	bool processPlayerSolutionStopped(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);

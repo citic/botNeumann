@@ -18,6 +18,7 @@ enum VisualizationContext
 	visFreeBreakpoint,
 
 	visStandardInputOutputWatch,
+	visGlobalVariableWatch,
 };
 
 #endif // VISUALIZATIONCONTEXT_H
