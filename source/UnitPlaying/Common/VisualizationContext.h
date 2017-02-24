@@ -19,6 +19,7 @@ enum VisualizationContext
 
 	visStandardInputOutputWatch,
 	visGlobalVariableWatch,
+	visVariableMapper,
 };
 
 #endif // VISUALIZATIONCONTEXT_H
