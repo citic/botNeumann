@@ -2,6 +2,7 @@
 #define VISUALIZATOR_H
 
 #include "GdbResponseListener.h"
+#include "DebuggerBreakpoint.h"
 
 #include <QFileInfo>
 #include <QTimer>
@@ -129,9 +130,12 @@ class Visualizator : public GdbResponseListener
 	/// done in order to capture the output from player solution while it is being animated
 	QString buildInferiorArguments();
 	/// A Gdb result indicates that a new breakpoint was added
-	void updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, VisualizationContext context);
+	bool updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, DebuggerBreakpoint::Role role);
 	/// A Gdb result indicates that a breakpoint was deleted
 	void deleteDebuggerBreakpoint(const GdbTreeNode* breakpointNode);
+	/// Deletes the debugger breakpoint with the given number from the debuggerBreakpoints[] array
+	/// and from GDB if requested
+	bool deleteDebuggerBreakpoint(int breakpointNumber, bool sendGdbDeleteCommand);
 	/// Returns the index of the debugger breakpoint that matches the given GUI breakpoint. The
 	/// comparison is made by filename and line number. Returns -1 if no matches are found.
 	/// @remark Search is made sequential, therefore O(n) where n is the number of debugger
@@ -177,6 +181,8 @@ class Visualizator : public GdbResponseListener
 	bool setUserDefinedBreakpoints();
 	/// Set GDB breakpoints for the function definitions gathered from ctags
 	bool setFunctionDefinitionBreakpoints();
+	/// Creates a breakpoint
+	bool insertBreakpoint(const QString& position, DebuggerBreakpoint::Role role);
 	/// Starts the execution of inferior (player solution) under GDB
 	bool startInferior();
 	/// Set breakpoints to standard library functions to manage dynamic memory: malloc(), calloc(),

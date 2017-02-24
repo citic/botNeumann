@@ -1,6 +1,5 @@
 #include "Visualizator.h"
 #include "CtagsCall.h"
-#include "DebuggerBreakpoint.h"
 #include "GdbCall.h"
 #include "GuiBreakpoint.h"
 #include "LogManager.h"
@@ -11,6 +10,17 @@
 #include "VariableMapper.h"
 #include "VisualizationSpeed.h"
 
+#ifdef Q_OS_LINUX
+const char* const nameForMalloc = "__libc_malloc";
+const char* const nameForCalloc = "__libc_calloc";
+const char* const nameForRealloc = "__libc_realloc";
+const char* const nameForFree = "__libc_free";
+#else
+const char* const nameForMalloc = "malloc";
+const char* const nameForCalloc = "calloc";
+const char* const nameForRealloc = "realloc";
+const char* const nameForFree = "free";
+#endif
 
 
 // Construction -----------------------------------------------------------------------------------
@@ -117,8 +127,7 @@ bool Visualizator::setUserDefinedBreakpoints()
 	foreach(const GuiBreakpoint* guiBreakpoint, editorBreakpoints)
 	{
 		const QString& originalLocation = guiBreakpoint->buildOriginalLocation();
-		if ( debuggerCall->sendGdbCommand( "-break-insert " + originalLocation, visUserDefinedBreakpoint ) == GDB_ERROR )
-			qCWarning( logVisualizator, "Error: -break-insert %s", qUtf8Printable(originalLocation) );
+		insertBreakpoint( originalLocation, DebuggerBreakpoint::userDefined );
 	}
 
 	// If user defined at least one breakpoint, animation must seek until reach the first one
@@ -142,14 +151,28 @@ bool Visualizator::setFunctionDefinitionBreakpoints()
 	{
 		const Symbol* symbol = functionDefinitions[index];
 		const QString& fileLine = QString("\"%1:%2\"").arg(symbol->filename).arg(symbol->line);
-		if ( debuggerCall->sendGdbCommand("-break-insert " + fileLine, visFunctionDefinition) == GDB_ERROR )
-		{
-			qCCritical(logVisualizator).noquote() << "Failed to set function definition breakpoint at" << fileLine;
+		if ( ! insertBreakpoint(fileLine, DebuggerBreakpoint::functionDefinition) )
 			return false;
-		}
 	}
 
 	return true;
+}
+
+bool Visualizator::insertBreakpoint(const QString& position, DebuggerBreakpoint::Role role)
+{
+	GdbItemTree resultBreakpoint;
+	if ( debuggerCall->sendGdbCommand("-break-insert " + position, 0, &resultBreakpoint) == GDB_ERROR )
+	{
+		qCCritical(logVisualizator).noquote() << "Failed to set breakpoint at" << position;
+		return false;
+	}
+
+	// Get the result tree
+	const GdbTreeNode* node = nullptr;
+	if ( ( node = resultBreakpoint.findNode("/bkpt") ) )
+		return updateDebuggerBreakpoint( node, role );
+
+	return false;
 }
 
 bool Visualizator::startInferior()
@@ -183,12 +206,11 @@ bool Visualizator::setDynamicMemoryBreakpoints()
 {
 	// Set breakpoint for the dynamic memory management functions: malloc, calloc, realloc, and free
 	// These breakpoints are set after the libc library has been loaded.
-	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_malloc", visMallocBreakpoint) == GDB_ERROR ) return false;
-	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_calloc", visCallocBreakpoint) == GDB_ERROR ) return false;
-	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_realloc", visReallocBreakpoint) == GDB_ERROR ) return false;
-	if ( debuggerCall->sendGdbCommand("-break-insert -f __libc_free", visFreeBreakpoint) == GDB_ERROR ) return false;
-
-	return true;
+	const QString& arg = "-f ";
+	return insertBreakpoint(arg + nameForMalloc, DebuggerBreakpoint::mallocCalled)
+		&& insertBreakpoint(arg + nameForCalloc, DebuggerBreakpoint::callocCalled)
+		&& insertBreakpoint(arg + nameForRealloc, DebuggerBreakpoint::reallocCalled)
+		&& insertBreakpoint(arg + nameForFree, DebuggerBreakpoint::freeCalled);
 }
 
 bool Visualizator::watchStandardInputOutput()
@@ -392,7 +414,7 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 		case AsyncClass::AC_BREAKPOINT_CREATED:
 		case AsyncClass::AC_BREAKPOINT_MODIFIED:
 			if ( ( node = tree.findNode("/bkpt") ) )
-				return updateDebuggerBreakpoint( node, context );
+				return (void) updateDebuggerBreakpoint( node, context == visStarting ? DebuggerBreakpoint::programEntryPoint : DebuggerBreakpoint::unknown );
 			break;
 
 		case AsyncClass::AC_BREAKPOINT_DELETED:
@@ -409,11 +431,6 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext contex
 {
 	Q_UNUSED(maxDuration);
 	qCDebug(logTemporary, "onResult(%s) | ctx=%d", qPrintable(tree.buildDescription()), context);
-	const GdbTreeNode* node = nullptr;
-
-	// If this is the result of inserting or removing a breakpoint
-	if ( ( node = tree.findNode("/bkpt") ) )
-		return updateDebuggerBreakpoint( node, context );
 }
 
 void Visualizator::onConsoleStreamOutput(const QString& text, VisualizationContext context, int& maxDuration)
@@ -600,16 +617,13 @@ void Visualizator::breakpointAction(GuiBreakpoint* guiBreakpoint)
 			break;
 
 		case GuiBreakpoint::Action::created:
-			debuggerCall->sendGdbCommand( QString("-break-insert %1").arg(guiBreakpoint->buildOriginalLocation()), visUserDefinedBreakpoint );
+			insertBreakpoint( guiBreakpoint->buildOriginalLocation(), DebuggerBreakpoint::userDefined );
 			break;
 
 		case GuiBreakpoint::Action::removed:
 			int breakpointNumber = findDebuggerBreakpointIndex( *guiBreakpoint );
-			if ( breakpointNumber > 0 && debuggerCall->sendGdbCommand( QString("-break-delete %1").arg(breakpointNumber), visUserDefinedBreakpoint ) != GDB_ERROR )
-			{
-				delete debuggerBreakpoints[breakpointNumber];
-				debuggerBreakpoints[breakpointNumber] = nullptr;
-			}
+			if ( breakpointNumber > 0 )
+				deleteDebuggerBreakpoint(breakpointNumber, true);
 			break;
 	}
 }
@@ -625,7 +639,7 @@ int Visualizator::findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint
 	return -1;
 }
 
-void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, VisualizationContext context)
+bool Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, DebuggerBreakpoint::Role role)
 {
 	// Create a debugger breakpoint that parsers the output sent by debugger
 	Q_ASSERT(breakpointNode);
@@ -637,7 +651,7 @@ void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, V
 	{
 		// The breakpoint already exists in our vector
 		// We preserve the roles from the old object in the updated one
-		debuggerBreakpoint->setRoles( debuggerBreakpoint->getRoles() | debuggerBreakpoints[breakpointNumber]->getRoles() );
+		debuggerBreakpoint->setRoles( debuggerBreakpoints[breakpointNumber]->getRoles() );
 
 		// We update the breakpoint by replacing the old one by the new one
 		delete debuggerBreakpoints[breakpointNumber];
@@ -650,25 +664,32 @@ void Visualizator::updateDebuggerBreakpoint(const GdbTreeNode* breakpointNode, V
 		debuggerBreakpoints[breakpointNumber] = debuggerBreakpoint;
 	}
 
-	// Update the role of the breakpoint according to the context it was created
-	debuggerBreakpoint->addRoleFor(context);
-
+	// Add the role of the breakpoint, if it does not have it already
+	debuggerBreakpoint->addRole(role);
 	debuggerBreakpoint->print();
 	// Update the interface?
 	//	emit breakpointUpdated( debuggerBreakpoints[breakpointNumber] );
+	return true;
 }
 
 void Visualizator::deleteDebuggerBreakpoint(const GdbTreeNode* breakpointNode)
 {
-	// Get the number of breakpoint that was deleted
+	// Get the number of breakpoint that was deleted, and delete its object
 	Q_ASSERT(breakpointNode);
-	int breakpointNumber = breakpointNode->findTextValue("number").toInt();
+	deleteDebuggerBreakpoint( breakpointNode->findTextValue("number").toInt(), false );
+}
 
-	// Simply remove the object for that breakpoint
+bool Visualizator::deleteDebuggerBreakpoint(int breakpointNumber, bool sendGdbDeleteCommand)
+{
+	// If asked, delete breakpoint from GDB in order to avoid it hits again
+	if ( sendGdbDeleteCommand && debuggerCall->sendGdbCommand( QString("-break-delete %1").arg(breakpointNumber), 0 ) == GDB_ERROR )
+		return false;
+
+	// Remove breakpoint object
 	Q_ASSERT(breakpointNumber < debuggerBreakpoints.count() );
 	delete debuggerBreakpoints[breakpointNumber];
-
-	// Mark the breakpoint entry as null
 	debuggerBreakpoints[breakpointNumber] = nullptr;
+
 	qCDebug(logApplication) << "Breakpoint deleted:" << breakpointNumber;
+	return true;
 }

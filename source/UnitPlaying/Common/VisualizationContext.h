@@ -7,18 +7,6 @@ enum VisualizationContext
 	visStarting,
 	visExecutionLoop,
 	visStopping,
-
-	visUserDefinedBreakpoint,
-	visFunctionDefinition,
-	visProgramEntryPoint,
-
-	visMallocBreakpoint,
-	visCallocBreakpoint,
-	visReallocBreakpoint,
-	visFreeBreakpoint,
-
-	visStandardInputOutputWatch,
-	visGlobalVariableWatch,
 	visVariableMapper,
 };
 
