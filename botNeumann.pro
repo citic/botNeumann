@@ -91,6 +91,7 @@ HEADERS += \
 	source/UnitPlaying/DataSegment/DataSegment.h \
 	source/UnitPlaying/DataSegment/StandardInputOutput.h \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
+	source/UnitPlaying/Memory/MemoryAllocation.h \
 	source/UnitPlaying/Memory/MemoryFrame.h \
 	source/UnitPlaying/Memory/MemoryMapper.h \
 	source/UnitPlaying/Memory/MemoryRow.h \
@@ -169,6 +170,7 @@ SOURCES += \
 	source/UnitPlaying/DataSegment/DataSegment.cpp \
 	source/UnitPlaying/DataSegment/StandardInputOutput.cpp \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
+	source/UnitPlaying/Memory/MemoryAllocation.cpp \
 	source/UnitPlaying/Memory/MemoryFrame.cpp \
 	source/UnitPlaying/Memory/MemoryMapper.cpp \
 	source/UnitPlaying/Memory/MemoryRow.cpp \
