@@ -37,20 +37,26 @@ Visualizator::~Visualizator()
 
 // Start visualization ---------------------------------------------------------------------------
 
-bool Visualizator::start()
+bool Visualizator::start(bool preparation)
 {
-	// Start GDB
-	if ( ! createGdb() ) return false;
-	if ( ! startGdb() ) return false;
+	if ( preparation )
+	{
+		// Start GDB
+		if ( ! createGdb() ) return false;
+		if ( ! startGdb() ) return false;
 
-	// Do the preparation phase
-	if ( ! setInferiorAndArguments() ) return false;
-	setUserDefinedBreakpoints();
-	setFunctionDefinitionBreakpoints();
-	if ( ! startInferior() ) return false;
-	setDynamicMemoryBreakpoints();
-	watchStandardInputOutput();
-	watchGlobalVariables();
+		// Do the preparation phase
+		if ( ! setInferiorAndArguments() ) return false;
+		setUserDefinedBreakpoints();
+		setFunctionDefinitionBreakpoints();
+		if ( ! startInferior() ) return false;
+	}
+	else
+	{
+		setDynamicMemoryBreakpoints();
+		watchStandardInputOutput();
+		watchGlobalVariables();
+	}
 
 	// Visualization started
 	return true;
@@ -188,20 +194,9 @@ bool Visualizator::setDynamicMemoryBreakpoints()
 bool Visualizator::watchStandardInputOutput()
 {
 	// Create object variables watching changes in IO, using notation bn_io_file
-
-	// Standard input
-	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stdin @ stdin->_IO_read_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
-	if ( variableMapper->createWatch("stdin->_IO_read_ptr", "bn_io_stdin", MemoryBlock::standardInputOutput ) == false ) return false;
-
-	// Standard output
-	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stdout @ stdout->_IO_write_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
-	if ( variableMapper->createWatch("stdout->_IO_write_ptr", "bn_io_stdout", MemoryBlock::standardInputOutput ) == false ) return false;
-
-	// Standard error
-	if ( debuggerCall->sendGdbCommand("-var-create bn_io_stderr @ stderr->_IO_write_ptr", visStandardInputOutputWatch) == GDB_ERROR ) return false;
-	if ( variableMapper->createWatch("stderr->_IO_write_ptr", "bn_io_stderr", MemoryBlock::standardInputOutput ) == false ) return false;
-
-	return true;
+	return variableMapper->createWatch("stdin->_IO_read_ptr", "bn_io_stdin", MemoryBlock::standardInputOutput )
+		&& variableMapper->createWatch("stdout->_IO_write_ptr", "bn_io_stdout", MemoryBlock::standardInputOutput )
+		&& variableMapper->createWatch("stderr->_IO_write_ptr", "bn_io_stderr", MemoryBlock::standardInputOutput );
 }
 
 bool Visualizator::watchGlobalVariables()
@@ -214,18 +209,12 @@ bool Visualizator::watchGlobalVariables()
 	if ( ctagsCall == nullptr )
 		return false;
 
-	// Get the function definitions symbols and set breakpoints for all of them
+	// Get the global variable declarations and set watches for all of them
 	const QList<Symbol*>& globalVariables = ctagsCall->getGlobalVariables();
 	for ( int index = 0; index < globalVariables.count(); ++index )
 	{
 		const Symbol* symbol = globalVariables[index];
 		const QString watchName = QString("bn_gv_%1").arg(index + 1);
-		const QString& command = QString("-var-create %1 @ %2").arg(watchName).arg(symbol->name);
-		if ( debuggerCall->sendGdbCommand(command, visGlobalVariableWatch) == GDB_ERROR )
-		{
-			qCCritical(logVisualizator).noquote() << "Failed to set watch at global variable" << symbol->name;
-			return false;
-		}
 		variableMapper->createWatch(symbol->name, watchName, MemoryBlock::globalVariable);
 	}
 
@@ -422,10 +411,6 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext contex
 	qCDebug(logTemporary, "onResult(%s) | ctx=%d", qPrintable(tree.buildDescription()), context);
 	const GdbTreeNode* node = nullptr;
 
-	// If this is the result of watching a global variable or standard input/output/error pointer
-	if ( context == visStandardInputOutputWatch || context == visGlobalVariableWatch )
-		return (void) variableMapper->updateWatch( tree );
-
 	// If this is the result of inserting or removing a breakpoint
 	if ( ( node = tree.findNode("/bkpt") ) )
 		return updateDebuggerBreakpoint( node, context );
@@ -588,7 +573,7 @@ bool Visualizator::processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint
 	breakpoint->addRole( DebuggerBreakpoint::programEntryPoint );
 
 	// Continue the starting process. It will eventually animate a function call
-	return true;
+	return start(false);
 }
 
 

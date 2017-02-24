@@ -109,11 +109,6 @@ class VariableMapper : public QObject
 	/// @param watchName Name of the variable object used to watch the @a name variable
 	/// @return true if the watch object was created and added to the hash table
 	bool createWatch(const QString& name, const QString& watchName, MemoryBlock::WatchType type);
-	/// After creating a variable object, GDB produces a result response. That response has some
-	/// values that we use to update the respective MemoryBlock. The field tree./name must be
-	/// the name of a variable-object (watch).
-	/// @return true if the watch was found and updated, false otherwise
-	bool updateWatch(const GdbItemTree& tree);
 };
 
 #endif // VARIABLEMAPPER_H

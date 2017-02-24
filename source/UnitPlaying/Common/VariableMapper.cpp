@@ -89,28 +89,19 @@ bool VariableMapper::createWatch(const QString& name, const QString& watchName, 
 
 	// Add the watch to the maps
 	mapNameMemoryBlock.insert( watch->getId(), watch );
-	qCDebug(logApplication) << "Watch created:" << watch->getId();
 
-	return true;
-}
-
-bool VariableMapper::updateWatch(const GdbItemTree& tree)
-{
-	// Find the watch in the hash to update it
-	const QString& watchName = tree.findNodeTextValue("name");
-	if ( ! mapNameMemoryBlock.contains(watchName) )
+	GdbItemTree resultWatch;
+	const QString& command = QString("-var-create %1 @ %2").arg(watchName).arg(name);
+	if ( debuggerCall->sendGdbCommand(command, visVariableMapper, &resultWatch) == GDB_ERROR )
 	{
-		qCCritical(logApplication) << "Variable-object not found in MemoryMapper:" << watchName;
+		qCCritical(logVisualizator).noquote() << "Failed to set watch for" << name;
 		return false;
 	}
 
-	MemoryBlock* watch = mapNameMemoryBlock.value( watchName );
-	Q_ASSERT(watch);
-
 	// Update the watch from GDB's tree result
-	if ( ! watch->loadFromGdbVariableObject(tree) )
+	if ( ! watch->loadFromGdbVariableObject(resultWatch) )
 	{
-		qCCritical(logApplication) << "Invalid watch tree:" << tree.buildDescription();
+		qCCritical(logApplication) << "Invalid watch result:" << resultWatch.buildDescription();
 		return false;
 	}
 

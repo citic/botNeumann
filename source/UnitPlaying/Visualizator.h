@@ -69,8 +69,15 @@ class Visualizator : public GdbResponseListener
 	/// Destructor
 	~Visualizator();
 	/// Start the visualization process
+	/// @param preparation If true, only the preparation phase will be executed. The preparation
+	/// phase runs GDB, sets the inferior, arguments, user-defined breakpoints, function definition
+	/// breakpoints and runs the inferior. If false, only the starting phase is executed. The
+	/// starting phase assumes the inferior is stopped by the program entry breakpoint, all
+	/// libraries have been loaded. During the second phase, dynamic memory function breakpoints,
+	/// standard input/output breakpoints are set. The second phase is automatically called by
+	/// Visualizator when the inferior stops at the program entry point.
 	/// @return true on success, false otherwise
-	bool start();
+	bool start(bool preparation = true);
 	/// Stops the visualization process
 	/// @return true on success, false otherwise
 	bool stop();
