@@ -744,7 +744,7 @@ Only on MsWin: redirect stdin. Do the same for stdout and stderr: `-data-evaluat
 . For each global variable, create a GDB-variable object with name `bn_gv_num`
 . Create a [line-through]#DebuggerVariable# `MemoryBlock` object using the (variableName, watchName) pair, because GDB response will not include the original name of the variable
 . When the response from GDB returns, update the rest of fields of the DebuggerVariable from GDB response
-. Add the DebuggerVariable to the VariableMapper
+. Add the DebuggerVariable to the `MemoryMapper`
 . Animate variable creation in DataSegment and init it with the value obtained from GDB response
 . If there is an overflow, simulate an DataSegment overflow. Do <<program-termination>>
 . Future work: detect static local variables
@@ -1793,7 +1793,7 @@ Check if we are running on the same function
 Update local variables:
 
 . ToDo: This command is unnecesary if a player solution function was called, because the stack frame has changed. If we try to update the local variables, it will be done in the new function call instead of the caller. This is a problem, because complex calls such as `int x = 3, y = func(++x), z = x + y` will miss the update of variables in the caller before `func()` is called.
-. Get the value of all the local variables, and pass them to the CallStack or VariableMapper
+. Get the value of all the local variables, and pass them to the CallStack or `MemoryMapper`
 . If some variables have changed their values, animate them
 . ToDo: If we create variable-objects for each local variable in all threads, this comparison
   step may be not necessary, but GDB may reject to update many of them.
@@ -1869,7 +1869,7 @@ A variable object indicated there was a change in input/output streams.
 === 5.5 Function return
 
 . Animate stack frame being dropped through the CPU core's memory interface
-. Remove local variables from VariableMapper
+. Remove local variables from `MemoryMapper`
 . If using pointed data variable objects `bn_pd_th_fc`, remove all of the for function call `fc` index running by execution thread `th`. Example:
 
 	-var-delete bn_pd_1_2

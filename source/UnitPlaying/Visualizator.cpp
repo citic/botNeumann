@@ -7,7 +7,7 @@
 #include "PlayerSolution.h"
 #include "UnitPlayingScene.h"
 #include "Util.h"
-#include "VariableMapper.h"
+#include "MemoryMapper.h"
 #include "VisualizationSpeed.h"
 
 #ifdef Q_OS_LINUX
@@ -53,7 +53,7 @@ Visualizator::~Visualizator()
 
 	delete debuggerCall;
 	delete entryPointTree;
-	delete variableMapper;
+	delete memoryMapper;
 }
 
 
@@ -103,8 +103,8 @@ bool Visualizator::createGdb()
 	connect( this, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), this, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
 	// Create the object that will map variables between player solution and visualization
-	Q_ASSERT(variableMapper == nullptr);
-	variableMapper = new VariableMapper(debuggerCall, this);
+	Q_ASSERT(memoryMapper == nullptr);
+	memoryMapper = new MemoryMapper(debuggerCall, this);
 	return true;
 }
 
@@ -229,9 +229,9 @@ bool Visualizator::setDynamicMemoryBreakpoints()
 bool Visualizator::watchStandardInputOutput()
 {
 	// Create object variables watching changes in IO, using notation bn_io_file
-	return variableMapper->createWatch(nameForStdinPtr, "bn_io_stdin", MemoryBlock::standardInputOutput )
-		&& variableMapper->createWatch(nameForStdoutPtr, "bn_io_stdout", MemoryBlock::standardInputOutput )
-		&& variableMapper->createWatch(nameForStderrPtr, "bn_io_stderr", MemoryBlock::standardInputOutput );
+	return memoryMapper->createWatch(nameForStdinPtr, "bn_io_stdin", MemoryBlock::standardInputOutput )
+		&& memoryMapper->createWatch(nameForStdoutPtr, "bn_io_stdout", MemoryBlock::standardInputOutput )
+		&& memoryMapper->createWatch(nameForStderrPtr, "bn_io_stderr", MemoryBlock::standardInputOutput );
 }
 
 bool Visualizator::watchGlobalVariables()
@@ -250,7 +250,7 @@ bool Visualizator::watchGlobalVariables()
 	{
 		const Symbol* symbol = globalVariables[index];
 		const QString watchName = QString("bn_gv_%1").arg(index + 1);
-		variableMapper->createWatch(symbol->name, watchName, MemoryBlock::globalVariable);
+		memoryMapper->createWatch(symbol->name, watchName, MemoryBlock::globalVariable);
 	}
 
 	return true;

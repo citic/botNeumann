@@ -7,7 +7,7 @@ enum VisualizationContext
 	visStarting,
 	visExecutionLoop,
 	visStopping,
-	visVariableMapper,
+	visMemoryMapper,
 };
 
 #endif // VISUALIZATIONCONTEXT_H

@@ -13,7 +13,7 @@ class GdbCall;
 class GuiBreakpoint;
 class PlayerSolution;
 class UnitPlayingScene;
-class VariableMapper;
+class MemoryMapper;
 
 /**
 	@brief Controller class in charge of controlling the visualization process.
@@ -60,7 +60,7 @@ class Visualizator : public GdbResponseListener
 	GdbItemTree* entryPointTree = nullptr;
 	/// Class in charge of mapping memory blocks (variables) from player solution run and
 	/// visualization's memory blocks (variables)
-	VariableMapper* variableMapper = nullptr;
+	MemoryMapper* memoryMapper = nullptr;
 
   public:
 	/// Constructor

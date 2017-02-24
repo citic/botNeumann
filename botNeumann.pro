@@ -27,6 +27,7 @@ INCLUDEPATH += \
 	source/UnitPlaying/CodeSegment \
 	source/UnitPlaying/DataSegment \
 	source/UnitPlaying/HeapSegment \
+	source/UnitPlaying/Memory \
 	source/UnitPlaying/Messages \
 	source/UnitPlaying/TestCases \
 	source/UnitPlaying/Threads \
@@ -85,16 +86,16 @@ HEADERS += \
 	source/UnitPlaying/CodeSegment/PlayerSolution.h \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
 	source/UnitPlaying/Common/GdbResponseListener.h \
-	source/UnitPlaying/Common/MemoryFrame.h \
-	source/UnitPlaying/Common/MemoryRow.h \
-	source/UnitPlaying/Common/MemorySegment.h \
-	source/UnitPlaying/Common/MemoryTop.h \
-	source/UnitPlaying/Common/VariableMapper.h \
 	source/UnitPlaying/Common/VisualizationContext.h \
 	source/UnitPlaying/Common/VisualizationSpeed.h \
 	source/UnitPlaying/DataSegment/DataSegment.h \
 	source/UnitPlaying/DataSegment/StandardInputOutput.h \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
+	source/UnitPlaying/Memory/MemoryFrame.h \
+	source/UnitPlaying/Memory/MemoryMapper.h \
+	source/UnitPlaying/Memory/MemoryRow.h \
+	source/UnitPlaying/Memory/MemorySegment.h \
+	source/UnitPlaying/Memory/MemoryTop.h \
 	source/UnitPlaying/Messages/MessagesArea.h \
 	source/UnitPlaying/Messages/StandardInputOutputInspector.h \
 	source/UnitPlaying/TestCases/TestCaseActor.h \
@@ -164,15 +165,15 @@ SOURCES += \
 	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
 	source/UnitPlaying/Common/GdbResponseListener.cpp \
-	source/UnitPlaying/Common/MemoryFrame.cpp \
-	source/UnitPlaying/Common/MemoryRow.cpp \
-	source/UnitPlaying/Common/MemorySegment.cpp \
-	source/UnitPlaying/Common/MemoryTop.cpp \
-	source/UnitPlaying/Common/VariableMapper.cpp \
 	source/UnitPlaying/Common/VisualizationSpeed.cpp \
 	source/UnitPlaying/DataSegment/DataSegment.cpp \
 	source/UnitPlaying/DataSegment/StandardInputOutput.cpp \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
+	source/UnitPlaying/Memory/MemoryFrame.cpp \
+	source/UnitPlaying/Memory/MemoryMapper.cpp \
+	source/UnitPlaying/Memory/MemoryRow.cpp \
+	source/UnitPlaying/Memory/MemorySegment.cpp \
+	source/UnitPlaying/Memory/MemoryTop.cpp \
 	source/UnitPlaying/Messages/MessagesArea.cpp \
 	source/UnitPlaying/Messages/StandardInputOutputInspector.cpp \
 	source/UnitPlaying/TestCases/TestCaseActor.cpp \

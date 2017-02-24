@@ -1,5 +1,5 @@
-#ifndef VARIABLEMAPPER_H
-#define VARIABLEMAPPER_H
+#ifndef MEMORYMAPPER_H
+#define MEMORYMAPPER_H
 
 #include <QObject>
 #include <QHash>
@@ -84,13 +84,13 @@ struct MemoryBlock
 /** Maps variables in player solution with graphical variables in visualization. Also manages
 	some control variables that are used to produce the visualization, but they are not directly
 	displayed, e.g: standard input/output watches. */
-class VariableMapper : public QObject
+class MemoryMapper : public QObject
 {
 	Q_OBJECT
-	Q_DISABLE_COPY(VariableMapper)
+	Q_DISABLE_COPY(MemoryMapper)
 
   protected:
-	/// Pointer to the GDB communication object. The VariableMapper requires to access GDB in order
+	/// Pointer to the GDB communication object. The MemoryMapper requires to access GDB in order
 	/// to get more information about variables and watches
 	GdbCall* debuggerCall = nullptr;
 	/// Allows to find memory blocks by their names. Also it owns the memory blocks
@@ -100,9 +100,9 @@ class VariableMapper : public QObject
 
   public:
 	/// Constructor
-	explicit VariableMapper(GdbCall* debuggerCall, QObject* parent = nullptr);
+	explicit MemoryMapper(GdbCall* debuggerCall, QObject* parent = nullptr);
 	/// Destructor
-	~VariableMapper();
+	~MemoryMapper();
 	/// Create a watch object, that is, a variable object in GDB that watches for some other
 	/// variable in player solution. When that value changes, we can animate the envolved variable
 	/// @param name Original name of the variable being watched in player solution
@@ -111,4 +111,4 @@ class VariableMapper : public QObject
 	bool createWatch(const QString& name, const QString& watchName, MemoryBlock::WatchType type);
 };
 
-#endif // VARIABLEMAPPER_H
+#endif // MEMORYMAPPER_H

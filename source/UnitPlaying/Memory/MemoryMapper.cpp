@@ -1,4 +1,4 @@
-#include "VariableMapper.h"
+#include "MemoryMapper.h"
 #include "GdbCall.h"
 #include "LogManager.h"
 #include "VisualizationContext.h"
@@ -32,13 +32,13 @@ bool MemoryBlock::updateMissingFields(GdbCall* debuggerCall)
 
 	// The size on bytes of this variable in inferior, it may not match the size the Botnu architecture
 	GdbItemTree resultSizeof;
-	if ( size == 0 && debuggerCall->sendGdbCommand(QString("-data-evaluate-expression sizeof(%1)").arg(name), visVariableMapper, &resultSizeof) == GDB_ERROR )
+	if ( size == 0 && debuggerCall->sendGdbCommand(QString("-data-evaluate-expression sizeof(%1)").arg(name), visMemoryMapper, &resultSizeof) == GDB_ERROR )
 		return false;
 	size = resultSizeof.findNodeTextValue("value").toULongLong();
 
 	// The address where the variable is allocated in inferior
 	GdbItemTree resultAddress;
-	if ( inferiorAddress == 0 && debuggerCall->sendGdbCommand(QString("-data-evaluate-expression &%1").arg(name), visVariableMapper, &resultAddress) == GDB_ERROR )
+	if ( inferiorAddress == 0 && debuggerCall->sendGdbCommand(QString("-data-evaluate-expression &%1").arg(name), visMemoryMapper, &resultAddress) == GDB_ERROR )
 		return false;
 
 	// The address may have extra text, eg: "14^done,value="0x1000020b8 <i_love_globals>"
@@ -68,19 +68,19 @@ bool MemoryBlock::updateMissingFields(GdbCall* debuggerCall)
 
 // VariableMapper class ---------------------------------------------------------------------------
 
-VariableMapper::VariableMapper(GdbCall* debuggerCall, QObject* parent)
+MemoryMapper::MemoryMapper(GdbCall* debuggerCall, QObject* parent)
 	: QObject(parent)
 	, debuggerCall(debuggerCall)
 {
 }
 
-VariableMapper::~VariableMapper()
+MemoryMapper::~MemoryMapper()
 {
 	for ( QHash<QString, MemoryBlock*>::Iterator itr = mapNameMemoryBlock.begin(); itr != mapNameMemoryBlock.end(); ++itr )
 		delete itr.value();
 }
 
-bool VariableMapper::createWatch(const QString& name, const QString& watchName, MemoryBlock::WatchType type)
+bool MemoryMapper::createWatch(const QString& name, const QString& watchName, MemoryBlock::WatchType type)
 {
 	// Create a memory block for the watch and load it from the tree
 	MemoryBlock* watch = new MemoryBlock(type);
@@ -92,7 +92,7 @@ bool VariableMapper::createWatch(const QString& name, const QString& watchName, 
 
 	GdbItemTree resultWatch;
 	const QString& command = QString("-var-create %1 @ %2").arg(watchName).arg(name);
-	if ( debuggerCall->sendGdbCommand(command, visVariableMapper, &resultWatch) == GDB_ERROR )
+	if ( debuggerCall->sendGdbCommand(command, visMemoryMapper, &resultWatch) == GDB_ERROR )
 	{
 		qCCritical(logVisualizator).noquote() << "Failed to set watch for" << name;
 		return false;
