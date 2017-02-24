@@ -12,7 +12,11 @@
 #include <QStandardPaths>
 #include <QTextStream>
 
-#define LOG_ALL_TO_STDERR 0
+#ifdef QT_DEBUG
+	#define LOG_ALL_TO_STDERR 1
+#else
+	#define LOG_ALL_TO_STDERR 0
+#endif
 
 Q_LOGGING_CATEGORY(logApplication,      "A---")
 Q_LOGGING_CATEGORY(logEditor,           "AEdt")

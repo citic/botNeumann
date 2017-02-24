@@ -110,6 +110,10 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 	button->setEnabled(currentUnitEnabled);
 	if ( ! playerCompletedUnit ) currentUnitEnabled = false;
 
+  #ifdef QT_DEBUG
+	currentUnitEnabled = true;
+  #endif
+
 	// Each button represents an unit. When the button is pressed, the respective unit should be
 	// loaded, pass the filename by a QObject's dynamic property
 	button->setObjectName(label);
