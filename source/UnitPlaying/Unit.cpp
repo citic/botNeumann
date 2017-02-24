@@ -54,7 +54,13 @@ bool Unit::load(const QString& filename)
 	loadDocument(xmlReader);
 	distributeMemory();
 
-	return xmlReader.error() == false;
+	if ( xmlReader.error() != QXmlStreamReader::Error::NoError )
+	{
+		qCCritical(logApplication) << "XML Error:" << xmlReader.errorString();
+		return false;
+	}
+
+	return true;
 }
 
 bool Unit::isArchitectureSupported(int bits)
