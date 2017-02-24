@@ -11,11 +11,12 @@ class GraphicVariable;
 enum DataType
 {
 	typeUnknown,
+	typeVoid,
 
 	// Atomic types
 	typeBool,      // bool b
 	typeChar,      // char ch, usigned char ch
-	typeInt,       // int i,
+	typeInt,       // int i, unsigned long long int, volatile signed short
 	typeEnum,      // enum { a, b, c }
 	typeBitField,  // struct { unsigned f1: 1, unsigned : 0, ... }
 	typeFloat,     // float x, double y, long double z
@@ -24,6 +25,7 @@ enum DataType
 	typePointer,   // DataType * ptr, const DataType*** ptr2, DataType[] arr
 	typeReference, // DataType& ref
 	typeRValue,    // DataType&& ref
+	typeFunction,  // DataType func(args) [Not function pointer]
 
 	// Composite types
 	typeArray,     // DataType[n] arr
@@ -80,6 +82,20 @@ struct MemoryAllocation
 	/// Request data to GDB in order to get the minimum missing information to display this variable
 	/// in visualization, for example: data size, address, data type
 	bool updateMissingFields(GdbCall* debuggerCall);
+
+  protected:
+	/// Parses the @a dataTypeStr text trying to identify the data type of the variable
+	/// The fields are updated acording to the result (i.e: @a dataType member)
+	/// @return true if the data type was recognized, false otherwise
+	bool parseDataTypeStr();
+	/// @return true if @a dataTypeStr has an atomic data type declaration
+	bool parseAtomicDataTypeStr();
+	/// @return true if @a dataTypeStr has a pointer or reference declaration
+	bool parseIndirectionDataTypeStr();
+	/// @return true if @a dataTypeStr has an array declaration
+	bool parseArrayDataTypeStr();
+	/// @return true if @a dataTypeStr has a struct, class or union declaration
+	bool parseCompositeDataTypeStr();
 };
 
 #endif // MEMORYALLOCATION_H

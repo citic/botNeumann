@@ -3,6 +3,8 @@
 #include "LogManager.h"
 #include "VisualizationContext.h"
 
+#include <QRegularExpression>
+
 bool MemoryAllocation::loadFromGdbVariableObject(const GdbItemTree& tree)
 {
 	// The tree has the result of creation of a GDB's variable object, eg:
@@ -49,8 +51,7 @@ bool MemoryAllocation::updateMissingFields(GdbCall* debuggerCall)
 	// If we can infer the data type, OK, otherwise unroll it using GDB ptype user command
 	if ( dataType == typeUnknown )
 	{
-//		dataType = mapDataTypeStr(dataTypeStr);
-		if ( dataType == typeUnknown )
+		if ( ! parseDataTypeStr() )
 		{
 			// Try to unroll typedefs
 			if ( debuggerCall->sendGdbCommand(QString("-interpreter-exec console \"ptype /mt %1\"").arg(name)) == GDB_ERROR )
@@ -59,4 +60,59 @@ bool MemoryAllocation::updateMissingFields(GdbCall* debuggerCall)
 	}
 
 	return true;
+}
+
+bool MemoryAllocation::parseDataTypeStr()
+{
+	dataTypeStr = dataTypeStr.simplified();
+	return parseAtomicDataTypeStr()
+		|| parseIndirectionDataTypeStr()
+		|| parseArrayDataTypeStr()
+		|| parseCompositeDataTypeStr();
+}
+
+bool MemoryAllocation::parseAtomicDataTypeStr()
+{
+	// ToDo: A static code analyzer should be used, instead of simplified regular expressions
+	// Atomic data types have the following structure on most cases:
+
+	// ^(const|volatile)?\s*(signed|unsigned)?\s*((short|long long|long)|(char|char16_t|char32_t|wchar_t|bool|int|float|void))+$
+	//   1=constVolatile     2=sign              3 4=sizeQualifier        5=dataType
+
+	QRegularExpression re("^(const|volatile)?\\s*(signed|unsigned)?\\s*((short|long long|long)|(char|char16_t|char32_t|wchar_t|bool|int|float|void))+$");
+	QRegularExpressionMatch match = re.match(dataTypeStr);
+	if ( ! match.hasMatch() )
+		return false;
+
+	// Extract each piece of the declaration
+	const QString& constVolatile = match.captured(1); // const|volatile
+	const QString& signQualifier = match.captured(2); // signed|unsigned
+	const QString& sizeQualifier = match.captured(4); // short|long long|long
+	const QString& dataTypeText  = match.captured(5); // char|char16_t|char32_t|wchar_t|bool|int|float|void
+
+	qCCritical(logTemporary).nospace() << "cv=" << constVolatile << " sign=" << signQualifier << " size=" << sizeQualifier << " dataType=" << dataTypeText;
+	return true;
+}
+
+bool MemoryAllocation::parseIndirectionDataTypeStr()
+{
+	/*
+	Indirection
+		^(const )?(.+)\s*(\&|\*)( const)?$
+	*/
+	return false;
+}
+
+bool MemoryAllocation::parseArrayDataTypeStr()
+{
+	/*
+	Compound: array
+		^(const )?(.+)\s*\[(\d+)\]?$
+	*/
+	return false;
+}
+
+bool MemoryAllocation::parseCompositeDataTypeStr()
+{
+	return false;
 }
