@@ -11,15 +11,28 @@
 #include "VisualizationSpeed.h"
 
 #ifdef Q_OS_LINUX
-const char* const nameForMalloc = "__libc_malloc";
-const char* const nameForCalloc = "__libc_calloc";
+const char* const nameForMalloc  = "__libc_malloc";
+const char* const nameForCalloc  = "__libc_calloc";
 const char* const nameForRealloc = "__libc_realloc";
-const char* const nameForFree = "__libc_free";
+const char* const nameForFree    = "__libc_free";
+
+const char* const nameForStdinPtr  = "stdin->_IO_read_ptr";
+const char* const nameForStdoutPtr = "stdout->_IO_write_ptr";
+const char* const nameForStderrPtr = "stderr->_IO_write_ptr";
 #else
 const char* const nameForMalloc = "malloc";
 const char* const nameForCalloc = "calloc";
 const char* const nameForRealloc = "realloc";
 const char* const nameForFree = "free";
+#ifdef Q_OS_MAC
+const char* const nameForStdinPtr  = "__stdinp";
+const char* const nameForStdoutPtr = "__stdoutp";
+const char* const nameForStderrPtr = "__stderrp";
+#else
+const char* const nameForStdinPtr  = "stdin";
+const char* const nameForStdoutPtr = "stdout";
+const char* const nameForStderrPtr = "stderr";
+#endif
 #endif
 
 
@@ -216,9 +229,9 @@ bool Visualizator::setDynamicMemoryBreakpoints()
 bool Visualizator::watchStandardInputOutput()
 {
 	// Create object variables watching changes in IO, using notation bn_io_file
-	return variableMapper->createWatch("stdin->_IO_read_ptr", "bn_io_stdin", MemoryBlock::standardInputOutput )
-		&& variableMapper->createWatch("stdout->_IO_write_ptr", "bn_io_stdout", MemoryBlock::standardInputOutput )
-		&& variableMapper->createWatch("stderr->_IO_write_ptr", "bn_io_stderr", MemoryBlock::standardInputOutput );
+	return variableMapper->createWatch(nameForStdinPtr, "bn_io_stdin", MemoryBlock::standardInputOutput )
+		&& variableMapper->createWatch(nameForStdoutPtr, "bn_io_stdout", MemoryBlock::standardInputOutput )
+		&& variableMapper->createWatch(nameForStderrPtr, "bn_io_stderr", MemoryBlock::standardInputOutput );
 }
 
 bool Visualizator::watchGlobalVariables()
