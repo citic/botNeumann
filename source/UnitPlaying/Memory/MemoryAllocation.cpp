@@ -59,12 +59,17 @@ bool MemoryAllocation::updateMissingFields(GdbCall* debuggerCall)
 		}
 	}
 
+	qCCritical(logTemporary).nospace() << getId() << " will be visualized as " << dataType << " from " << dataTypeStr;
 	return true;
 }
 
 bool MemoryAllocation::parseDataTypeStr()
 {
+	// Unnecessary but safer
 	dataTypeStr = dataTypeStr.simplified();
+
+	// Do some basic static analysis to recognize the data type in order to represent this value
+	// in visualization
 	return parseAtomicDataTypeStr()
 		|| parseIndirectionDataTypeStr()
 		|| parseArrayDataTypeStr()
@@ -79,7 +84,9 @@ bool MemoryAllocation::parseAtomicDataTypeStr()
 	// ^(const|volatile)?\s*(signed|unsigned)?\s*((short|long long|long)|(char|char16_t|char32_t|wchar_t|bool|int|float|void))+$
 	//   1=constVolatile     2=sign              3 4=sizeQualifier        5=dataType
 
-	QRegularExpression re("^(const|volatile)?\\s*(signed|unsigned)?\\s*((short|long long|long)|(char|char16_t|char32_t|wchar_t|bool|int|float|void))+$");
+	// Notice that C/C++ allows declarations in any order, eg 'double long const g = 6.67e-11'
+	// but GDB reorder them, so we can evaluate them in the GDB's order
+	QRegularExpression re("^(const|volatile)?\\s*(signed|unsigned)?\\s*((short|long long|long)|(char|char16_t|char32_t|wchar_t|bool|int|float|double|void))+$");
 	QRegularExpressionMatch match = re.match(dataTypeStr);
 	if ( ! match.hasMatch() )
 		return false;
@@ -88,10 +95,53 @@ bool MemoryAllocation::parseAtomicDataTypeStr()
 	const QString& constVolatile = match.captured(1); // const|volatile
 	const QString& signQualifier = match.captured(2); // signed|unsigned
 	const QString& sizeQualifier = match.captured(4); // short|long long|long
-	const QString& dataTypeText  = match.captured(5); // char|char16_t|char32_t|wchar_t|bool|int|float|void
+	QString dataTypeText = match.captured(5); // char|char16_t|char32_t|wchar_t|bool|int|float|double|void
+
+	// Update atomic value data
+	this->isConst = constVolatile == "const";
+	this->isVolatile = constVolatile == "volatile";
+	this->isSigned = signQualifier != "unsigned";
+	this->sizeQualifier = mapSizeQualifier(sizeQualifier);
+
+	// "int" is optional when used preceded by short|long|long long|unsigned
+	if ( dataTypeText.isEmpty() && (! isSigned || ! sizeQualifier.isEmpty()) )
+		dataTypeText = "int";
+
+	// Map the data type text to the enumeration. This is the most important value to be able to
+	// choose the graphical representation of this memory allocation
+	this->dataType = mapDataType(dataTypeText);
+
+	// Do some adjustments
+	if ( this->dataType == typeFloat && dataTypeText == "double" )
+		this->sizeQualifier = sizeLong;
 
 	qCCritical(logTemporary).nospace() << "cv=" << constVolatile << " sign=" << signQualifier << " size=" << sizeQualifier << " dataType=" << dataTypeText;
 	return true;
+}
+
+SizeQualifier MemoryAllocation::mapSizeQualifier(const QString& text)
+{
+	if ( text.isEmpty() ) return sizeDefault;
+	if ( text == "long" ) return sizeLong;
+	if ( text == "long long" ) return sizeLongLong;
+	if ( text == "short" ) return sizeShort;
+
+	return sizeDefault;
+}
+
+DataType MemoryAllocation::mapDataType(const QString& text)
+{
+	if ( text == "int" ) return typeInt;
+	if ( text == "char" ) return typeChar;
+	if ( text == "double" ) return typeFloat;
+	if ( text == "bool" ) return typeBool;
+	if ( text == "float" ) return typeFloat;
+	if ( text == "char16_t" ) return typeInt;
+	if ( text == "char32_t" ) return typeInt;
+	if ( text == "wchar_t" ) return typeInt;
+	if ( text == "void" ) return typeVoid;
+
+	return typeUnknown;
 }
 
 bool MemoryAllocation::parseIndirectionDataTypeStr()

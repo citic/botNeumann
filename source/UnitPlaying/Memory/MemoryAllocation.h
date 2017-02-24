@@ -34,6 +34,16 @@ enum DataType
 	typeUnion,     // union  { DataType f1; DataType f2; ... }
 };
 
+/// For integral types (int), its size can be adjusted
+enum SizeQualifier
+{
+	sizeShort,
+	sizeDefault,
+	sizeLong,
+	sizeLongLong
+};
+
+
 /** Any piece of memory on the inferior that is mapped to the visualization, e.g: a variable */
 struct MemoryAllocation
 {
@@ -43,7 +53,7 @@ struct MemoryAllocation
 	/// The type of memory in inferior that this object is mapping
 	enum WatchType { watchUnknown, standardInputOutput, globalVariable };
 
-  public:
+  public: // Mapping properties
 	/// The type of memory in inferior that this object is mapping
 	WatchType watchType = watchUnknown;
 	/// Identifier of the variable
@@ -72,6 +82,16 @@ struct MemoryAllocation
 	/// Pointer to the graphical object representing this memory block, nullptr if none
 	GraphicVariable* graphicVariable = nullptr;
 
+  public: // Atomic value
+	/// True if the value is const. For a pointer, true if the address stored in value cannot change
+	bool isConst = false;
+	/// True if the atomic value is volatile
+	bool isVolatile = false;
+	/// For integral types, true if the value has sign, false otherwise
+	bool isSigned = true;
+	/// For integral types (int), its size can be adjusted
+	SizeQualifier sizeQualifier = sizeDefault;
+
   public:
 	/// Convenience constructor
 	explicit MemoryAllocation(WatchType type = watchUnknown) : watchType(type) { }
@@ -90,6 +110,10 @@ struct MemoryAllocation
 	bool parseDataTypeStr();
 	/// @return true if @a dataTypeStr has an atomic data type declaration
 	bool parseAtomicDataTypeStr();
+	/// Converts a text to the enumeration type
+	static SizeQualifier mapSizeQualifier(const QString& text);
+	/// Converts a text to the enumeration type
+	static DataType mapDataType(const QString& text);
 	/// @return true if @a dataTypeStr has a pointer or reference declaration
 	bool parseIndirectionDataTypeStr();
 	/// @return true if @a dataTypeStr has an array declaration
