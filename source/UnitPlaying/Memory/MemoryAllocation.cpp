@@ -1,9 +1,15 @@
 #include "MemoryAllocation.h"
+#include "Common.h"
 #include "GdbCall.h"
 #include "LogManager.h"
 #include "VisualizationContext.h"
 
 #include <QRegularExpression>
+
+MemoryAllocation::~MemoryAllocation()
+{
+	DELETE_POINTERS_ARRAY(children);
+}
 
 bool MemoryAllocation::loadFromGdbVariableObject(const GdbItemTree& tree)
 {
@@ -98,10 +104,10 @@ bool MemoryAllocation::parseAtomicDataTypeStr(const QString& text)
 		return false;
 
 	// Extract each piece of the declaration
-	const QString& constVolatile = match.captured(1); // const|volatile
-	const QString& signQualifier = match.captured(2); // signed|unsigned
-	const QString& sizeQualifier = match.captured(4); // short|long long|long
-	QString dataTypeText = match.captured(5); // char|char16_t|char32_t|wchar_t|bool|int|float|double|void
+	const QString& constVolatile = match.captured(1).trimmed(); // const|volatile
+	const QString& signQualifier = match.captured(2).trimmed(); // signed|unsigned
+	const QString& sizeQualifier = match.captured(4).trimmed(); // short|long long|long
+	QString dataTypeText = match.captured(5).trimmed(); // char|char16_t|char32_t|wchar_t|bool|int|float|double|void
 
 	// Update atomic value data
 	this->isConst = constVolatile == "const";
@@ -152,12 +158,47 @@ DataType MemoryAllocation::mapDataType(const QString& text)
 
 bool MemoryAllocation::parseIndirectionDataTypeStr(const QString& text)
 {
-	Q_UNUSED(text);
-	/*
-	Indirection
-		^(const )?(.+)\s*(\&|\*)( const)?$
-	*/
-	return false;
+	// Data types for indirection (pointers and references) have the following structure:
+
+	// ^(.+)\s*(\&|\*)(\s?const)?$
+	// 1=pd   2=PRef 3=constancy
+
+	QRegularExpression re("^(.+)\\s*(\\&|\\*)(\\s?const)?$");
+	QRegularExpressionMatch match = re.match(text);
+	if ( ! match.hasMatch() )
+		return false;
+
+	// Extract each piece of the declaration
+	const QString& pointedDataTypeStr = match.captured(1).trimmed(); // pointed data type
+	const QString& pointerReference = match.captured(2).trimmed(); // *|&
+	const QString& pointerConstancy = match.captured(3).trimmed(); // const
+
+	// Set the type according to the symbol used in declaration
+	if ( pointerReference == '*' )
+		this->dataType = typePointer;
+	else if ( pointerReference == '&' )
+		this->dataType = typeReference;
+	else
+		return false;
+
+	// We know we have a pointer or reference, it may be constant
+	this->isConst = pointerConstancy == "const";
+
+	// The pointed data type may be atomic or very complex declaration (recursive)
+	if ( pointedDataTypeStr.isEmpty() )
+	{
+		qCCritical(logApplication) << "Pointer to empty data type:" << text;
+		return false;
+	}
+	// For the moment, we create a child MemoryAllocation declaration that will be unrolled later
+	// when the pointer/reference will be used to access data
+	MemoryAllocation* pointedDataTypeObject = new MemoryAllocation(compoundType);
+	pointedDataTypeObject->parent = this;
+	pointedDataTypeObject->dataTypeStr = pointedDataTypeStr;
+	children.append( pointedDataTypeObject );
+
+	qCCritical(logApplication) << "Pointer/Reference" << name << " to " << pointedDataTypeStr;
+	return true;
 }
 
 bool MemoryAllocation::parseArrayDataTypeStr(const QString& text)

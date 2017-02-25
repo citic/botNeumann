@@ -1,6 +1,7 @@
 #ifndef MEMORYALLOCATION_H
 #define MEMORYALLOCATION_H
 
+#include <QList>
 #include <QString>
 
 class GdbCall;
@@ -51,7 +52,7 @@ struct MemoryAllocation
 
   public:
 	/// The type of memory in inferior that this object is mapping
-	enum WatchType { watchUnknown, standardInputOutput, globalVariable };
+	enum WatchType { watchUnknown, standardInputOutput, globalVariable, compoundType };
 
   public: // Mapping properties
 	/// The type of memory in inferior that this object is mapping
@@ -95,9 +96,17 @@ struct MemoryAllocation
 	/// For integral types (int), its size can be adjusted
 	SizeQualifier sizeQualifier = sizeDefault;
 
+  public: // Indirection and composite types
+	/// Composite types are recursive, therefore represented as a tree
+	MemoryAllocation* parent = nullptr;
+	/// For pointers and references, children[0] is the pointed data
+	QList<MemoryAllocation*> children;
+
   public:
 	/// Convenience constructor
 	explicit MemoryAllocation(WatchType type = watchUnknown) : watchType(type) { }
+	/// Destructor
+	~MemoryAllocation();
 	/// Create a MemoryAllocation from a GDB variable object result
 	bool loadFromGdbVariableObject(const GdbItemTree& tree);
 	/// Get the name to use to find this object in the hash
