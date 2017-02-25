@@ -70,6 +70,9 @@ struct MemoryAllocation
 	DataType dataType = typeUnknown;
 	/// The data type reported by GDB as string
 	QString dataTypeStr;
+	/// The unrolled data type reported by GDB as string. An unrolled type results of converting
+	/// typedefs and templates in built-in types
+	QString unrolledDataTypeStr;
 	/// The value represented as text (from GDB output)
 	QString value;
 	/// Thread that created this memory block
@@ -107,19 +110,19 @@ struct MemoryAllocation
 	/// Parses the @a dataTypeStr text trying to identify the data type of the variable
 	/// The fields are updated acording to the result (i.e: @a dataType member)
 	/// @return true if the data type was recognized, false otherwise
-	bool parseDataTypeStr();
+	bool parseDataTypeStr(const QString& text);
 	/// @return true if @a dataTypeStr has an atomic data type declaration
-	bool parseAtomicDataTypeStr();
+	bool parseAtomicDataTypeStr(const QString& text);
 	/// Converts a text to the enumeration type
 	static SizeQualifier mapSizeQualifier(const QString& text);
 	/// Converts a text to the enumeration type
 	static DataType mapDataType(const QString& text);
 	/// @return true if @a dataTypeStr has a pointer or reference declaration
-	bool parseIndirectionDataTypeStr();
+	bool parseIndirectionDataTypeStr(const QString& text);
 	/// @return true if @a dataTypeStr has an array declaration
-	bool parseArrayDataTypeStr();
+	bool parseArrayDataTypeStr(const QString& text);
 	/// @return true if @a dataTypeStr has a struct, class or union declaration
-	bool parseCompositeDataTypeStr();
+	bool parseCompositeDataTypeStr(const QString& text);
 };
 
 #endif // MEMORYALLOCATION_H

@@ -51,11 +51,17 @@ bool MemoryAllocation::updateMissingFields(GdbCall* debuggerCall)
 	// If we can infer the data type, OK, otherwise unroll it using GDB ptype user command
 	if ( dataType == typeUnknown )
 	{
-		if ( ! parseDataTypeStr() )
+		if ( ! parseDataTypeStr(dataTypeStr) )
 		{
 			// Try to unroll typedefs
-			if ( debuggerCall->sendGdbCommand(QString("-interpreter-exec console \"ptype /mt %1\"").arg(name)) == GDB_ERROR )
-				return false;
+			GdbItemTree resultUnrolledDataType;
+			if ( debuggerCall->sendGdbCommand(QString("-interpreter-exec console \"ptype /mt %1\"").arg(name), visMemoryMapper, &resultUnrolledDataType ) != GDB_ERROR )
+			{
+				this->unrolledDataTypeStr = resultUnrolledDataType.getRoot()->getTextValue();
+				this->unrolledDataTypeStr.replace("type = ", "");
+				this->unrolledDataTypeStr.replace("\n", "");
+				parseDataTypeStr( unrolledDataTypeStr );
+			}
 		}
 	}
 
@@ -63,20 +69,20 @@ bool MemoryAllocation::updateMissingFields(GdbCall* debuggerCall)
 	return true;
 }
 
-bool MemoryAllocation::parseDataTypeStr()
+bool MemoryAllocation::parseDataTypeStr(const QString& text)
 {
 	// Unnecessary but safer
-	dataTypeStr = dataTypeStr.simplified();
+//	dataTypeStr = dataTypeStr.simplified();
 
 	// Do some basic static analysis to recognize the data type in order to represent this value
 	// in visualization
-	return parseAtomicDataTypeStr()
-		|| parseIndirectionDataTypeStr()
-		|| parseArrayDataTypeStr()
-		|| parseCompositeDataTypeStr();
+	return parseAtomicDataTypeStr(text)
+		|| parseIndirectionDataTypeStr(text)
+		|| parseArrayDataTypeStr(text)
+		|| parseCompositeDataTypeStr(text);
 }
 
-bool MemoryAllocation::parseAtomicDataTypeStr()
+bool MemoryAllocation::parseAtomicDataTypeStr(const QString& text)
 {
 	// ToDo: A static code analyzer should be used, instead of simplified regular expressions
 	// Atomic data types have the following structure on most cases:
@@ -87,7 +93,7 @@ bool MemoryAllocation::parseAtomicDataTypeStr()
 	// Notice that C/C++ allows declarations in any order, eg 'double long const g = 6.67e-11'
 	// but GDB reorder them, so we can evaluate them in the GDB's order
 	QRegularExpression re("^(const|volatile)?\\s*(signed|unsigned)?\\s*((short|long long|long)|(char|char16_t|char32_t|wchar_t|bool|int|float|double|void))+$");
-	QRegularExpressionMatch match = re.match(dataTypeStr);
+	QRegularExpressionMatch match = re.match(text);
 	if ( ! match.hasMatch() )
 		return false;
 
@@ -144,8 +150,9 @@ DataType MemoryAllocation::mapDataType(const QString& text)
 	return typeUnknown;
 }
 
-bool MemoryAllocation::parseIndirectionDataTypeStr()
+bool MemoryAllocation::parseIndirectionDataTypeStr(const QString& text)
 {
+	Q_UNUSED(text);
 	/*
 	Indirection
 		^(const )?(.+)\s*(\&|\*)( const)?$
@@ -153,8 +160,9 @@ bool MemoryAllocation::parseIndirectionDataTypeStr()
 	return false;
 }
 
-bool MemoryAllocation::parseArrayDataTypeStr()
+bool MemoryAllocation::parseArrayDataTypeStr(const QString& text)
 {
+	Q_UNUSED(text);
 	/*
 	Compound: array
 		^(const )?(.+)\s*\[(\d+)\]?$
@@ -162,7 +170,8 @@ bool MemoryAllocation::parseArrayDataTypeStr()
 	return false;
 }
 
-bool MemoryAllocation::parseCompositeDataTypeStr()
+bool MemoryAllocation::parseCompositeDataTypeStr(const QString& text)
 {
+	Q_UNUSED(text);
 	return false;
 }
