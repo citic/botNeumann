@@ -249,6 +249,21 @@ bool MemoryAllocation::parseArrayDataTypeStr(const QString& text, GdbCall* debug
 
 bool MemoryAllocation::parseCompositeDataTypeStr(const QString& text)
 {
-	Q_UNUSED(text);
+	// If this method is called, the other methods failed to recognize the data type for this
+	// memory allocation. A final shot is checking for classes, structures and unions
+	// These begin with their respective names when unrolling with ptype gdb command
+
+	if ( text.startsWith("class") )
+		this->dataType = typeClass;
+	else if ( text.startsWith("struct") )
+		this->dataType = typeStruct;
+	else if ( text.startsWith("union") )
+		this->dataType = typeUnion;
+	else
+		return false;
+
+	// ToDo: unroll structure fields
+	qCCritical(logApplication) << "Class/struct/union" << name << "from" << dataTypeStr.mid(0, 10) << "...";
+
 	return false;
 }
