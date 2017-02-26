@@ -57,7 +57,7 @@ bool MemoryAllocation::updateMissingFields(GdbCall* debuggerCall)
 	// If we can infer the data type, OK, otherwise unroll it using GDB ptype user command
 	if ( dataType == typeUnknown )
 	{
-		if ( ! parseDataTypeStr(dataTypeStr) )
+		if ( ! parseDataTypeStr(dataTypeStr, debuggerCall) )
 		{
 			// Try to unroll typedefs
 			GdbItemTree resultUnrolledDataType;
@@ -66,7 +66,7 @@ bool MemoryAllocation::updateMissingFields(GdbCall* debuggerCall)
 				this->unrolledDataTypeStr = resultUnrolledDataType.getRoot()->getTextValue();
 				this->unrolledDataTypeStr.replace("type = ", "");
 				this->unrolledDataTypeStr.replace("\n", "");
-				parseDataTypeStr( unrolledDataTypeStr );
+				parseDataTypeStr( unrolledDataTypeStr, debuggerCall );
 			}
 		}
 	}
@@ -75,7 +75,7 @@ bool MemoryAllocation::updateMissingFields(GdbCall* debuggerCall)
 	return true;
 }
 
-bool MemoryAllocation::parseDataTypeStr(const QString& text)
+bool MemoryAllocation::parseDataTypeStr(const QString& text, GdbCall* debuggerCall)
 {
 	// Unnecessary but safer
 //	dataTypeStr = dataTypeStr.simplified();
@@ -84,7 +84,7 @@ bool MemoryAllocation::parseDataTypeStr(const QString& text)
 	// in visualization
 	return parseAtomicDataTypeStr(text)
 		|| parseIndirectionDataTypeStr(text)
-		|| parseArrayDataTypeStr(text)
+		|| parseArrayDataTypeStr(text, debuggerCall)
 		|| parseCompositeDataTypeStr(text);
 }
 
@@ -197,18 +197,54 @@ bool MemoryAllocation::parseIndirectionDataTypeStr(const QString& text)
 	pointedDataTypeObject->dataTypeStr = pointedDataTypeStr;
 	children.append( pointedDataTypeObject );
 
-	qCCritical(logApplication) << "Pointer/Reference" << name << " to " << pointedDataTypeStr;
+	qCCritical(logApplication) << "Pointer/Reference" << name << "to" << pointedDataTypeStr;
 	return true;
 }
 
-bool MemoryAllocation::parseArrayDataTypeStr(const QString& text)
+bool MemoryAllocation::parseArrayDataTypeStr(const QString& text, GdbCall* debuggerCall)
 {
-	Q_UNUSED(text);
-	/*
-	Compound: array
-		^(const )?(.+)\s*\[(\d+)\]?$
-	*/
-	return false;
+	// Compound types can be sliced in two types: arrays and structures (struct, class, union)
+	// Arrays always finish with brackets, and its size is known:
+
+	// ^(.+)\s*\[(\d+)\]?$
+	//  1=et     2=sz
+
+	QRegularExpression re("^(.+)\\s*\\[(\\d+)\\]?$");
+	QRegularExpressionMatch match = re.match(text);
+	if ( ! match.hasMatch() )
+		return false;
+
+	// Extract each piece of the declaration
+	bool ok = false;
+	const QString& elementTypeStr = match.captured(1).trimmed(); // element type
+	size_t arraySize = match.captured(2).toULongLong(&ok);
+
+	// The type of elements and the size must be known to have a valid array
+	if ( ok == false || elementTypeStr.isEmpty() )
+	{
+		qCCritical(logApplication) << "Invalid array type:" << text;
+		return false;
+	}
+
+	// We know this is a valid array
+	this->dataType = typeArray;
+
+	// We create an array of child MemoryAllocation elements
+	children.reserve( arraySize );
+	for ( size_t index = 0; index < arraySize; ++index )
+	{
+		// For each element, we get missing information in order to visualize it
+		// ToDo: This can be done updating just one elment, and copying the results to the rest
+		MemoryAllocation* arrayElement = new MemoryAllocation(compoundType);
+		arrayElement->name = QString("%1[%2]").arg(name).arg(index);
+		arrayElement->parent = this;
+		arrayElement->dataTypeStr = elementTypeStr;
+		children.append( arrayElement );
+		arrayElement->updateMissingFields(debuggerCall);
+	}
+
+	qCCritical(logApplication) << "Array" << name << ":" << arraySize << "of" << elementTypeStr;
+	return true;
 }
 
 bool MemoryAllocation::parseCompositeDataTypeStr(const QString& text)

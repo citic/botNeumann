@@ -119,7 +119,7 @@ struct MemoryAllocation
 	/// Parses the @a dataTypeStr text trying to identify the data type of the variable
 	/// The fields are updated acording to the result (i.e: @a dataType member)
 	/// @return true if the data type was recognized, false otherwise
-	bool parseDataTypeStr(const QString& text);
+	bool parseDataTypeStr(const QString& text, GdbCall* debuggerCall);
 	/// @return true if @a dataTypeStr has an atomic data type declaration
 	bool parseAtomicDataTypeStr(const QString& text);
 	/// Converts a text to the enumeration type
@@ -129,7 +129,7 @@ struct MemoryAllocation
 	/// @return true if @a dataTypeStr has a pointer or reference declaration
 	bool parseIndirectionDataTypeStr(const QString& text);
 	/// @return true if @a dataTypeStr has an array declaration
-	bool parseArrayDataTypeStr(const QString& text);
+	bool parseArrayDataTypeStr(const QString& text, GdbCall* debuggerCall);
 	/// @return true if @a dataTypeStr has a struct, class or union declaration
 	bool parseCompositeDataTypeStr(const QString& text);
 };
