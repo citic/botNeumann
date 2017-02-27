@@ -275,15 +275,13 @@ bool PlayerSolution::extractSymbols()
 
 bool PlayerSolution::ctagsFinished()
 {
-	// Just print the symbols
+	// Alert other objects that ctags finished
 	Q_ASSERT(ctagsCall);
 	emit symbolsExtracted();
-	const QList<Symbol*>& globalVariables = ctagsCall->getGlobalVariables();
 
-	qCDebug(logApplication) << "Global variables";
-	for ( int index = 0; index < globalVariables.count(); ++index )
-		qCDebug(logApplication) << globalVariables[index]->name << globalVariables[index]->filename << globalVariables[index]->line;
-
+	// For debugging purposes
+	qCDebug(logApplication, "Ctags extracted %d global variables and %i funcion definitions"
+		, ctagsCall->getGlobalVariables().count(), ctagsCall->getFunctionDefinitions().count() );
 	return true;
 }
 
