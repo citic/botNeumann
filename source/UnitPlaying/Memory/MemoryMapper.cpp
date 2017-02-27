@@ -15,10 +15,10 @@ MemoryMapper::~MemoryMapper()
 		delete itr.value();
 }
 
-bool MemoryMapper::createWatch(const QString& name, const QString& watchName, MemoryAllocation::WatchType type)
+bool MemoryMapper::createWatch(const QString& name, const QString& watchName, AllocationSegment segment)
 {
 	// Create a memory block for the watch and load it from the tree
-	MemoryAllocation* watch = new MemoryAllocation(type);
+	MemoryAllocation* watch = new MemoryAllocation(segment);
 	watch->name = name;
 	watch->watchName = watchName;
 

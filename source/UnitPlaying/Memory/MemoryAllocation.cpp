@@ -192,7 +192,7 @@ bool MemoryAllocation::parseIndirectionDataTypeStr(const QString& text)
 	}
 	// For the moment, we create a child MemoryAllocation declaration that will be unrolled later
 	// when the pointer/reference will be used to access data
-	MemoryAllocation* pointedDataTypeObject = new MemoryAllocation(compoundType);
+	MemoryAllocation* pointedDataTypeObject = new MemoryAllocation(AllocationSegment::unknown);
 	pointedDataTypeObject->parent = this;
 	pointedDataTypeObject->dataTypeStr = pointedDataTypeStr;
 	children.append( pointedDataTypeObject );
@@ -235,7 +235,7 @@ bool MemoryAllocation::parseArrayDataTypeStr(const QString& text, GdbCall* debug
 	{
 		// For each element, we get missing information in order to visualize it
 		// ToDo: This can be done updating just one elment, and copying the results to the rest
-		MemoryAllocation* arrayElement = new MemoryAllocation(compoundType);
+		MemoryAllocation* arrayElement = new MemoryAllocation(this->segment);
 		arrayElement->name = QString("%1[%2]").arg(name).arg(index);
 		arrayElement->parent = this;
 		arrayElement->dataTypeStr = elementTypeStr;

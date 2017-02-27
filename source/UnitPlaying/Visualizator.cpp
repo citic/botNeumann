@@ -229,9 +229,9 @@ bool Visualizator::setDynamicMemoryBreakpoints()
 bool Visualizator::watchStandardInputOutput()
 {
 	// Create object variables watching changes in IO, using notation bn_io_file
-	return memoryMapper->createWatch(nameForStdinPtr, "bn_io_stdin", MemoryAllocation::standardInputOutput )
-		&& memoryMapper->createWatch(nameForStdoutPtr, "bn_io_stdout", MemoryAllocation::standardInputOutput )
-		&& memoryMapper->createWatch(nameForStderrPtr, "bn_io_stderr", MemoryAllocation::standardInputOutput );
+	return memoryMapper->createWatch(nameForStdinPtr, "bn_io_stdin", AllocationSegment::inputOutput )
+		&& memoryMapper->createWatch(nameForStdoutPtr, "bn_io_stdout", AllocationSegment::inputOutput )
+		&& memoryMapper->createWatch(nameForStderrPtr, "bn_io_stderr", AllocationSegment::inputOutput );
 }
 
 bool Visualizator::watchGlobalVariables()
@@ -250,7 +250,7 @@ bool Visualizator::watchGlobalVariables()
 	{
 		const Symbol* symbol = globalVariables[index];
 		const QString watchName = QString("bn_gv_%1").arg(index + 1);
-		memoryMapper->createWatch(symbol->name, watchName, MemoryAllocation::globalVariable);
+		memoryMapper->createWatch(symbol->name, watchName, AllocationSegment::data);
 	}
 
 	return true;

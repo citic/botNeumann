@@ -33,7 +33,7 @@ class MemoryMapper : public QObject
 	/// @param name Original name of the variable being watched in player solution
 	/// @param watchName Name of the variable object used to watch the @a name variable
 	/// @return true if the watch object was created and added to the hash table
-	bool createWatch(const QString& name, const QString& watchName, MemoryAllocation::WatchType type);
+	bool createWatch(const QString& name, const QString& watchName, AllocationSegment segment);
 };
 
 #endif // MEMORYMAPPER_H

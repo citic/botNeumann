@@ -44,19 +44,25 @@ enum SizeQualifier
 	sizeLongLong
 };
 
+/// The segment where a piece of memory can be allocated
+enum class AllocationSegment
+{
+	unknown,
+	code,
+	inputOutput,
+	data,
+	stack,
+	heap,
+};
 
 /** Any piece of memory on the inferior that is mapped to the visualization, e.g: a variable */
 struct MemoryAllocation
 {
 	Q_DISABLE_COPY(MemoryAllocation)
 
-  public:
-	/// The type of memory in inferior that this object is mapping
-	enum WatchType { watchUnknown, standardInputOutput, globalVariable, compoundType };
-
   public: // Mapping properties
 	/// The type of memory in inferior that this object is mapping
-	WatchType watchType = watchUnknown;
+	AllocationSegment segment = AllocationSegment::unknown;
 	/// Identifier of the variable
 	QString name;
 	/// Name of the GDB's variable-object used to watch the variable, if any
@@ -104,7 +110,7 @@ struct MemoryAllocation
 
   public:
 	/// Convenience constructor
-	explicit MemoryAllocation(WatchType type = watchUnknown) : watchType(type) { }
+	explicit MemoryAllocation(AllocationSegment segment = AllocationSegment::unknown) : segment(segment) { }
 	/// Destructor
 	~MemoryAllocation();
 	/// Create a MemoryAllocation from a GDB variable object result
