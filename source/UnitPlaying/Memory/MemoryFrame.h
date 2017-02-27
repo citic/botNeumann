@@ -27,14 +27,14 @@ class MemoryFrame : public LinearLayout
 
   public:
 	/// Constructor
-	explicit MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, qreal zValue);
+	explicit MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, qreal zValue, bool withGarbage);
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const;
 
   protected:
 	/// Create the memory rows and place them into the scene
-	void buildMemoryFrame(qreal zValue);
+	void buildMemoryFrame(qreal zValue, bool withGarbage);
 };
 
 #endif // MEMORYFRAME_H

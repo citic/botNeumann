@@ -6,14 +6,14 @@
 // The roof requires half memory row
 const double memoryRoofRows = 0.5;
 
-MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, qreal zValue)
+MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, qreal zValue, bool withGarbage)
 	: LinearLayout(Qt::Vertical)
 	, scene(scene)
 	, rowCount(rowCount)
 	, startByte(startByte)
 	, rowSize(rowSize)
 {
-	buildMemoryFrame(zValue);
+	buildMemoryFrame(zValue, withGarbage);
 }
 
 double MemoryFrame::getHeightInRows() const
@@ -21,7 +21,7 @@ double MemoryFrame::getHeightInRows() const
 	return rowCount + memoryRoofRows;
 }
 
-void MemoryFrame::buildMemoryFrame(qreal zValue)
+void MemoryFrame::buildMemoryFrame(qreal zValue, bool withGarbage)
 {
 	// Create the memory roof
 	Q_ASSERT(scene);
@@ -32,7 +32,7 @@ void MemoryFrame::buildMemoryFrame(qreal zValue)
 	size_t rowStartByte = startByte;
 	for (size_t index = 0; index < rowCount; ++index)
 	{
-		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene, zValue);
+		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene, zValue, withGarbage);
 		addItem(memoryRow, 1.0 / getHeightInRows(), zValue);
 		rowStartByte += rowSize;
 	}

@@ -33,10 +33,12 @@ class MemoryRow : public LinearLayout
 	Scene* scene;
 	/// The type of lables to show under each shelf
 	LabelType labelType;
+	/// The z-index where this memory row is shown
+	qreal zValue = 0.0;
 
   public:
 	/// Constructor
-	explicit MemoryRow(size_t start, size_t size, Scene* scene, qreal zValue);
+	explicit MemoryRow(size_t start, size_t size, Scene* scene, qreal zValue, bool withGarbage);
 	/// Destructor
 	~MemoryRow();
 	/// Display memory addresses on labels
@@ -50,9 +52,13 @@ class MemoryRow : public LinearLayout
 
   protected:
 	/// Build the shelves and labels
-	void buildMemoryRow(qreal zValue);
+	void buildMemoryRow(bool withGarbage);
 	/// Build labels for memory addresses
-	void buildMemoryAddresses(qreal zValue);
+	void buildMemoryAddresses();
+	/// Fills this memory row with garbage in each byte
+	void fillWithGarbage();
+	/// Calculates the horizontal proportion of a byte in this memory row
+	inline qreal getByteProportion() const { return 1.0 / (size + 2.0); }
 };
 
 #endif // MEMORYROW_H
