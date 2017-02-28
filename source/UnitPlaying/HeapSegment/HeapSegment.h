@@ -28,6 +28,10 @@ class HeapSegment : public GdbResponseListener, public MemorySegment
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;
+	/// Allocate variables in dynamic memory
+	virtual bool allocate(MemoryAllocation* memoryAllocation) override;
+	/// Deallocate variables in dynamic memory
+	virtual bool deallocate(MemoryAllocation* memoryAllocation) override;
 
   public slots:
 	/// Called when visualization has finished in order to clear variables

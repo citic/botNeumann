@@ -34,6 +34,10 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;
+	/// Allocate local variables in some thread that is running
+	virtual bool allocate(MemoryAllocation* memoryAllocation) override;
+	/// Deallocate local variables in some thread that is running
+	virtual bool deallocate(MemoryAllocation* memoryAllocation) override;
 
   signals:
 	/// Emitted when an execution thread was updated from GDB

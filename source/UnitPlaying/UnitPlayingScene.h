@@ -85,6 +85,14 @@ class UnitPlayingScene : public GameScene
 	virtual void finishedEnteringStage() override;
 	/// Return the state of the unit playing scene
 	inline UnitPlayingState getState() const { return state; }
+	/// Give access to the code segment object
+	inline CodeSegment* getCodeSegment() const { return codeSegment; }
+	/// Give access to the heap segment object
+	inline HeapSegment* getHeapSegment() const { return heapSegment; }
+	/// Give access to the CPU cores object
+	inline CpuCores* getCpuCores() const { return cpuCores; }
+	/// Give access to the data segment object
+	inline DataSegment* getDataSegment() const { return dataSegment; }
 	/// Give access to the messages area object
 	inline MessagesArea* getMessagesArea() const { return messagesArea; }
 	/// Get access to the breakpoints list set by the user

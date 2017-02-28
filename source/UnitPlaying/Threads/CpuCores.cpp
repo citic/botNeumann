@@ -27,6 +27,22 @@ double CpuCores::getHeightInRows() const
 	return cpuCores[0]->getHeightInRows() + idleThreadsRows;
 }
 
+bool CpuCores::allocate(MemoryAllocation* memoryAllocation)
+{
+	// ToDo: Implement allocation
+	Q_UNUSED(memoryAllocation);
+	Q_ASSERT(false);
+	return false;
+}
+
+bool CpuCores::deallocate(MemoryAllocation* memoryAllocation)
+{
+	// ToDo: Implement deallocation
+	Q_UNUSED(memoryAllocation);
+	Q_ASSERT(false);
+	return false;
+}
+
 void CpuCores::createCpuCores()
 {
 	// CPU cores are in a horizontal layout

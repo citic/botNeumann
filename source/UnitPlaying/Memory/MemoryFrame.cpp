@@ -1,4 +1,6 @@
 #include "MemoryFrame.h"
+#include "LogManager.h"
+#include "MemoryAllocation.h"
 #include "MemoryRow.h"
 #include "MemoryTop.h"
 #include "Scene.h"
@@ -19,6 +21,20 @@ MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t
 double MemoryFrame::getHeightInRows() const
 {
 	return rowCount + memoryRoofRows;
+}
+
+bool MemoryFrame::allocate(MemoryAllocation* memoryAllocation)
+{
+	// ToDo: implement allocation
+	qCCritical(logTemporary) << "Memory Frame: Allocating" << memoryAllocation->name << "for" << memoryAllocation->size << "bytes";
+	return true;
+}
+
+bool MemoryFrame::deallocate(MemoryAllocation* memoryAllocation)
+{
+	// ToDo: implement deallocation
+	qCCritical(logTemporary) << "Memory Frame: Deallocating" << memoryAllocation->name << "releasing" << memoryAllocation->size << "bytes";
+	return true;
 }
 
 void MemoryFrame::buildMemoryFrame(qreal zValue, bool withGarbage)

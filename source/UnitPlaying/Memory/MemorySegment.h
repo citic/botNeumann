@@ -3,6 +3,7 @@
 
 #include "LinearLayout.h"
 
+struct MemoryAllocation;
 class Scene;
 class Unit;
 
@@ -29,6 +30,18 @@ class MemorySegment : public LinearLayout
 	/// calculated from the @a Unit. Then the height of the scene is distributed proportionally
 	/// between the objects according to the number of memory rows they require.
 	virtual double getHeightInRows() const { return 0; }
+	/// Memory segments are able to allocate variables, unless they are read-only (eg: code segment)
+	/// @return true if the variable was allocated, false if there are not enough memory and a
+	/// segment overflow should be animated
+	/// @remarks The default implementation of this method is to stop botNeumann. If an inherited
+	/// class is a read-write segment, it must override this method
+	virtual bool allocate(MemoryAllocation* memoryAllocation);
+	/// Read-write segments are able to deallocate variables
+	/// @return true if the given memory allocation (variable) was deallocated, false if the
+	/// variable does not exist
+	/// @remarks The default implementation of this method is to stop botNeumann. If an inherited
+	/// class is a read-write segment that allows deallocation, it must override this method
+	virtual bool deallocate(MemoryAllocation* memoryAllocation);
 };
 
 #endif // MEMORYSEGMENT_H

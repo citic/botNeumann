@@ -3,6 +3,7 @@
 
 #include "LinearLayout.h"
 
+struct MemoryAllocation;
 class MemoryRow;
 class Scene;
 
@@ -31,6 +32,18 @@ class MemoryFrame : public LinearLayout
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const;
+	/// Allocate the given piece of memory (usually a variable) in this memory frame. If there is
+	/// enough memory the variable will appear in some memory rows in the visualization. The
+	/// the visualizationAddress will be updated in the @a memoryAllocation object.
+	/// @return true, if the allocation was done successfully, false if there is not enough space
+	/// to allocate the piece of memory (eg: frame is full, or there is free fragments but none is
+	/// larger than memoryAllocation.size). In that case, the caller should animate a segment
+	/// overflow and stop the animation
+	bool allocate(MemoryAllocation* memoryAllocation);
+	/// Deallocate the given piece of memory (usually a variable). The memoryAllocation object
+	/// will be removed from the scene, but not deleted from memory. The memoryMapper should do
+	/// the deletion of the object
+	bool deallocate(MemoryAllocation* memoryAllocation);
 
   protected:
 	/// Create the memory rows and place them into the scene

@@ -25,6 +25,11 @@ double DataSegment::getHeightInRows() const
 	return memoryFrame->getHeightInRows() + stdInOutRows;
 }
 
+bool DataSegment::allocate(MemoryAllocation* memoryAllocation)
+{
+	return memoryFrame->allocate(memoryAllocation);
+}
+
 void DataSegment::buildDataSegment()
 {
 	// Memory rows are over the table

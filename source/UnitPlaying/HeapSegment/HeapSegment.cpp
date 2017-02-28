@@ -24,6 +24,22 @@ double HeapSegment::getHeightInRows() const
 	return memoryFrame ? memoryFrame->getHeightInRows() + interfaceRows : 3.0;
 }
 
+bool HeapSegment::allocate(MemoryAllocation* memoryAllocation)
+{
+	// ToDo: Implement allocation
+	Q_UNUSED(memoryAllocation);
+	Q_ASSERT(false);
+	return false;
+}
+
+bool HeapSegment::deallocate(MemoryAllocation* memoryAllocation)
+{
+	// ToDo: Implement deallocation
+	Q_UNUSED(memoryAllocation);
+	Q_ASSERT(false);
+	return false;
+}
+
 void HeapSegment::buildSegment()
 {
 	// Get the number of memory rows that the heap segment requires

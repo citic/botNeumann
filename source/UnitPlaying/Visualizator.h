@@ -173,6 +173,8 @@ class Visualizator : public GdbResponseListener
   protected:
 	/// Create the object to communicate with GDB
 	bool createGdb();
+	/// Create the object to map variables between inferior and visualization
+	bool createMemoryMapper();
 	/// Start GDB process
 	bool startGdb();
 	/// Set player solution executable and its arguments in GDB

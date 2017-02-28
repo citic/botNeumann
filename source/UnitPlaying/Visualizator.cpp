@@ -66,6 +66,7 @@ bool Visualizator::start(bool preparation)
 	{
 		// Start GDB
 		if ( ! createGdb() ) return false;
+		if ( ! createMemoryMapper() ) return false;
 		if ( ! startGdb() ) return false;
 
 		// Do the preparation phase
@@ -101,10 +102,22 @@ bool Visualizator::createGdb()
 	animationDone.setSingleShot(true);
 	// This object also processes GdbResponses
 	connect( this, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), this, SLOT(onGdbResponse(const GdbResponse*,int&)) );
+	return true;
+}
 
+bool Visualizator::createMemoryMapper()
+{
 	// Create the object that will map variables between player solution and visualization
 	Q_ASSERT(memoryMapper == nullptr);
 	memoryMapper = new MemoryMapper(debuggerCall, this);
+
+	// The memory mapper requires to access the segments in order to allocate or deallocate variables
+	Q_ASSERT(unitPlayingScene);
+	memoryMapper->setCodeSegment( unitPlayingScene->getCodeSegment() );
+	memoryMapper->setHeapSegment( unitPlayingScene->getHeapSegment() );
+	memoryMapper->setCpuCores( unitPlayingScene->getCpuCores() );
+	memoryMapper->setDataSegment( unitPlayingScene->getDataSegment() );
+
 	return true;
 }
 
@@ -229,9 +242,9 @@ bool Visualizator::setDynamicMemoryBreakpoints()
 bool Visualizator::watchStandardInputOutput()
 {
 	// Create object variables watching changes in IO, using notation bn_io_file
-	return memoryMapper->createWatch(nameForStdinPtr, "bn_io_stdin", AllocationSegment::inputOutput )
-		&& memoryMapper->createWatch(nameForStdoutPtr, "bn_io_stdout", AllocationSegment::inputOutput )
-		&& memoryMapper->createWatch(nameForStderrPtr, "bn_io_stderr", AllocationSegment::inputOutput );
+	return memoryMapper->createWatch(nameForStdinPtr, "bn_io_stdin", AllocationSegment::inputOutput, false )
+		&& memoryMapper->createWatch(nameForStdoutPtr, "bn_io_stdout", AllocationSegment::inputOutput, false )
+		&& memoryMapper->createWatch(nameForStderrPtr, "bn_io_stderr", AllocationSegment::inputOutput, false );
 }
 
 bool Visualizator::watchGlobalVariables()
@@ -250,7 +263,7 @@ bool Visualizator::watchGlobalVariables()
 	{
 		const Symbol* symbol = globalVariables[index];
 		const QString watchName = QString("bn_gv_%1").arg(index + 1);
-		memoryMapper->createWatch(symbol->name, watchName, AllocationSegment::data);
+		memoryMapper->createWatch(symbol->name, watchName, AllocationSegment::data, true);
 	}
 
 	return true;

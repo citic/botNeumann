@@ -28,6 +28,13 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;
+	/// Allocate a global or static variable in the first empty space. Notice that data segment
+	/// only allows allocation, not deallocation of variables.
+	/// @return true if the variable was allocated, false if there is no room for the variable.
+	/// In the last case, a segment overflow should be animated
+	/// @remarks Deallocation is not allowed in data segment. If @a deallocate() method is called,
+	/// botNeumann will be stopped
+	virtual bool allocate(MemoryAllocation* memoryAllocation) override;
 
   public slots:
 	/// Called when visualization has finished in order to clear variables
