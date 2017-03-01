@@ -67,6 +67,9 @@ class MemoryFrame : public LinearLayout
 	/// fragment (iterator) and the offset in that iterator. If no fragment is found, returns false
 	/// and the parameters are set to invalid iterators and a negative offset
 	bool findSmallestFreeFragmentToAllocate(const MemoryAllocation* variable, MemoryAllocations::iterator& smallestFragment, VisAddress& offset);
+	/// Distribute the variables allocated in this memory frame to the respective memory rows
+	/// @return true if all variables were set, false if there is a segment overflow
+	bool setVariablesToMemoryRows();
 	/// For debugging purposes
 	void printAllocationQueue();
 };

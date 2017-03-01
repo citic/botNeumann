@@ -75,7 +75,7 @@ struct MemoryAllocation
 	/// Address where this memory block was allocated in visualization, 0 means invalid
 	VisAddress visualizationAddress = 0;
 	/// Size in bytes of the block
-	size_t size = 0;
+	VisAddress size = 0;
 	/// The type of this inferior's variable
 	DataType dataType = typeUnknown;
 	/// The data type reported by GDB as string
@@ -116,7 +116,7 @@ struct MemoryAllocation
 
   public:
 	/// Convenience constructor
-	explicit MemoryAllocation(AllocationSegment segment = AllocationSegment::unknown, size_t size = 0, VisAddress visualizationAddress = 0);
+	explicit MemoryAllocation(AllocationSegment segment = AllocationSegment::unknown, VisAddress size = 0, VisAddress visualizationAddress = 0);
 	/// Destructor
 	~MemoryAllocation();
 	/// Create a MemoryAllocation from a GDB variable object result
@@ -133,7 +133,7 @@ struct MemoryAllocation
 	/// the variable could not be allocated
 	VisAddress calculateAllocationOffset(const MemoryAllocation* variable, VisAddress frameStartAddress) const;
 	/// Reduces the size of this free fragment by the amount of bytes
-	void reduceSize(size_t bytes);
+	void reduceSize(VisAddress bytes);
 	/// Get the number of bytes that this variable requires to be aligned
 	short getWordAlignment() const;
 

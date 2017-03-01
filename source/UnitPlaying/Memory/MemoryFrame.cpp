@@ -66,7 +66,7 @@ bool MemoryFrame::allocate(MemoryAllocation* memoryAllocation)
 
 	// The variable was allocated
 	// ToDo: add variable to scene and update interface
-	return true;
+	return setVariablesToMemoryRows();
 }
 
 bool MemoryFrame::findSmallestFreeFragmentToAllocate(const MemoryAllocation* variable, MemoryAllocations::iterator& smallestFragment, VisAddress& offset)
@@ -95,6 +95,37 @@ bool MemoryFrame::findSmallestFreeFragmentToAllocate(const MemoryAllocation* var
 	}
 
 	return smallestFragment != memoryAllocations.end();
+}
+
+bool MemoryFrame::setVariablesToMemoryRows()
+{
+	MemoryAllocations::iterator currentVariable = memoryAllocations.begin();
+	int currentRow = 0;
+
+	// Traverse all the variables
+	while ( currentVariable != memoryAllocations.end() )
+	{
+		// For convenience
+		MemoryAllocation* variable = *currentVariable;
+
+		// We have to allocate a variable, if all rows were filled, we have a segment overflow
+		if ( currentRow >= memoryRows.count() )
+			return false;
+
+		// If the current row did not accept the variable, or accepted it partially
+		if ( memoryRows[currentRow]->allocate(variable) == false )
+		{
+			// Try to allocate the variable in the next row
+			++currentRow;
+			continue;
+		}
+
+		// The row accepted the variable, and it is completely allocated, move to the next variable
+		++currentVariable;
+	}
+
+	// All variables were distributed in the available rows
+	return true;
 }
 
 void MemoryFrame::printAllocationQueue()

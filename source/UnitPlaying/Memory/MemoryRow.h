@@ -1,8 +1,10 @@
 #ifndef MEMORYROW_H
 #define MEMORYROW_H
 
+#include "Common.h"
 #include "LinearLayout.h"
 
+struct MemoryAllocation;
 class Scene;
 
 /**
@@ -26,9 +28,9 @@ class MemoryRow : public LinearLayout
 
   protected:
 	/// This row starts at this byte, it could be also called offset
-	size_t start;
+	VisAddress start;
 	/// This is the size of the memory row
-	size_t size;
+	VisAddress size;
 	/// To reparent children to this scene
 	Scene* scene;
 	/// The type of lables to show under each shelf
@@ -38,7 +40,7 @@ class MemoryRow : public LinearLayout
 
   public:
 	/// Constructor
-	explicit MemoryRow(size_t start, size_t size, Scene* scene, qreal zValue, bool withGarbage);
+	explicit MemoryRow(VisAddress start, VisAddress size, Scene* scene, qreal zValue, bool withGarbage);
 	/// Destructor
 	~MemoryRow();
 	/// Display memory addresses on labels
@@ -49,6 +51,12 @@ class MemoryRow : public LinearLayout
 	void displayDataTypes();
 	/// Cycle between label types
 	void cycleLabelType();
+	/// Allocate the given variable in this memory row if the variable is within the range of this
+	/// memory row.
+	/// @return true if the variable is entirelly allocated, false if the variable is not
+	/// allocated at all or there is pending bytes of the variable to be allocated in the next
+	/// memory row
+	bool allocate(MemoryAllocation* variable);
 
   protected:
 	/// Build the shelves and labels
@@ -59,6 +67,9 @@ class MemoryRow : public LinearLayout
 	void fillWithGarbage();
 	/// Calculates the horizontal proportion of a byte in this memory row
 	inline qreal getByteProportion() const { return 1.0 / (size + 2.0); }
+	/// Calculate the intersection between the addresses of the variable and the addresses of this
+	/// memory row.@return true if there is intersection, false if intersection is empty
+	bool calculateIntersection(const MemoryAllocation* variable, VisAddress& firstByte, VisAddress& lastByte);
 };
 
 #endif // MEMORYROW_H

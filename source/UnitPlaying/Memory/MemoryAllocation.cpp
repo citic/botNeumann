@@ -6,7 +6,7 @@
 
 #include <QRegularExpression>
 
-MemoryAllocation::MemoryAllocation(AllocationSegment segment, size_t size, VisAddress visualizationAddress)
+MemoryAllocation::MemoryAllocation(AllocationSegment segment, VisAddress size, VisAddress visualizationAddress)
 	: segment(segment)
 	, visualizationAddress(visualizationAddress)
 	, size(size)
@@ -302,7 +302,7 @@ VisAddress MemoryAllocation::calculateAllocationOffset(const MemoryAllocation* v
 	return offset;
 }
 
-void MemoryAllocation::reduceSize(size_t bytes)
+void MemoryAllocation::reduceSize(VisAddress bytes)
 {
 	Q_ASSERT( isFreeFragment() );
 	Q_ASSERT(this->size >= bytes);

@@ -1,5 +1,7 @@
 #include "BotNeumannApp.h"
 #include "LabelButton.h"
+#include "LogManager.h"
+#include "MemoryAllocation.h"
 #include "MemoryRow.h"
 #include "Prop.h"
 #include "Scene.h"
@@ -8,7 +10,7 @@
 #include <QBrush>
 #include <QFont>
 
-MemoryRow::MemoryRow(size_t start, size_t size, Scene* scene, qreal zValue, bool withGarbage)
+MemoryRow::MemoryRow(VisAddress start, VisAddress size, Scene* scene, qreal zValue, bool withGarbage)
 	: LinearLayout(Qt::Horizontal)
 	, start(start)
 	, size(size)
@@ -59,7 +61,7 @@ void MemoryRow::buildMemoryAddresses()
 	addItem(new Spacer(), byteProportion, zMemoryAddress);
 
 	// Create a label for each byte
-	for (size_t index = start; index < start + size; ++index)
+	for (VisAddress index = start; index < start + size; ++index)
 	{
 		const QString& label = QString("%1 ").arg(index, 3, 10, QChar(' '));
 		LabelButton* memoryAddress = new LabelButton(label, scene);
@@ -91,7 +93,7 @@ void MemoryRow::fillWithGarbage()
 	addItem(new Spacer(), byteProportion, zGarbage);
 
 	// Create a label for each byte
-	for ( size_t index = 0; index < size; ++index )
+	for ( VisAddress index = 0; index < size; ++index )
 	{
 		int garbageNum = qrand() % 3 + 1;
 		const QString& resource = QString("up_uninitialized_%1").arg( garbageNum );
@@ -103,4 +105,35 @@ void MemoryRow::fillWithGarbage()
 		//garbage->setOpacity(0.75);
 		addItem(garbage, byteProportion, zGarbage);
 	}
+}
+
+bool MemoryRow::allocate(MemoryAllocation* variable)
+{
+	Q_ASSERT(variable);
+
+	// If the variable should be entirelly or partially allocated, the intersection with the
+	// addresses of this memory rows is not empty
+	VisAddress firstByte = 0;
+	VisAddress lastByte = 0;
+
+	// We return false if intersection is empty
+	if ( ! calculateIntersection(variable, firstByte, lastByte) )
+		return false;
+
+	// There is intersection, place the variable in the memory row
+	// ToDo: variable may be already placed in the scene
+/*	qreal byteProportion = getByteProportion();
+	qreal zVariable = this->zValue + 0.4;
+	addItem( variable, (firstByte - start) * byteProportion, zVariable );
+*/
+	qCCritical(logTemporary, "Memory row: allocating %s in [%lld, %lld]", qPrintable(variable->name), firstByte, lastByte);
+	return lastByte >= variable->visualizationAddress + variable->size - 1;
+}
+
+bool MemoryRow::calculateIntersection(const MemoryAllocation* variable, VisAddress& firstByte, VisAddress& lastByte)
+{
+	Q_ASSERT(variable);
+	firstByte = qMax( variable->visualizationAddress, this->start );
+	lastByte = qMin( variable->visualizationAddress + variable->size, this->start + this->size ) - 1;
+	return firstByte <= lastByte;
 }
