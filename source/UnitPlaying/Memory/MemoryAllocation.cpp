@@ -6,6 +6,15 @@
 
 #include <QRegularExpression>
 
+MemoryAllocation::MemoryAllocation(AllocationSegment segment, size_t size, VisAddress visualizationAddress)
+	: segment(segment)
+	, visualizationAddress(visualizationAddress)
+	, size(size)
+{
+	if ( isFreeFragment() )
+		name = watchName = "free";
+}
+
 MemoryAllocation::~MemoryAllocation()
 {
 	DELETE_POINTERS_ARRAY(children);
@@ -266,4 +275,64 @@ bool MemoryAllocation::parseCompositeDataTypeStr(const QString& text)
 	qCCritical(logApplication) << "Class/struct/union" << name << "from" << dataTypeStr.mid(0, 10) << "...";
 
 	return false;
+}
+
+VisAddress MemoryAllocation::calculateAllocationOffset(const MemoryAllocation* variable, VisAddress frameStartAddress) const
+{
+	// Only free fragments can allocate variables
+	if ( this->isFreeFragment() == false ) return -1;
+
+	// If the variable requires more bytes than the size of this free fragment
+	Q_ASSERT(variable);
+	if ( variable->size > this->size ) return -2;
+
+	// The offset is calculated by applying word-alignment according to the size of the variable
+	VisAddress wordSize = variable->getWordAlignment();
+	VisAddress offset = wordSize - (this->visualizationAddress - frameStartAddress) % wordSize;
+
+	// After applying word-alignment, the variable may exceed the available space
+	if ( offset + variable->size > this->size ) return -3;
+
+	// It seems, the variable can be allocated at this offset
+	return offset;
+}
+
+void MemoryAllocation::reduceSize(size_t bytes)
+{
+	Q_ASSERT( isFreeFragment() );
+	Q_ASSERT(this->size >= bytes);
+
+	this->visualizationAddress += bytes;
+	this->size -= bytes;
+}
+
+short MemoryAllocation::getWordAlignment() const
+{
+	// ToDo: depends on the architecture of the botnu file
+
+	// Depends on the type of this variable:
+	switch ( dataType )
+	{
+		case typeUnknown: Q_ASSERT(false); return 1;
+		case typeVoid: Q_ASSERT(false); return 1;
+		case typeBool: return alignof(bool);
+		case typeChar: return alignof(char);
+		case typeInt: return alignof(int);
+		case typeEnum: return alignof(unsigned);
+		case typeBitField: return alignof(unsigned);
+		case typeFloat: return alignof(float);
+		case typePointer: return alignof(void*);
+		case typeReference: return alignof(void*);
+		case typeRValue: return alignof(void*);
+		case typeFunction: Q_ASSERT(false); return 1;
+
+		// ToDo: Alignment of composite types is the largest alignment of their fields
+		case typeArray: return alignof(void*);
+		case typeStruct: return alignof(void*);
+		case typeClass: return alignof(void*);
+		case typeUnion: return alignof(void*);
+	}
+
+	Q_ASSERT(false);
+	return 1;
 }

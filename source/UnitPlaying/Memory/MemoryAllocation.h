@@ -1,6 +1,8 @@
 #ifndef MEMORYALLOCATION_H
 #define MEMORYALLOCATION_H
 
+#include "Common.h"
+
 #include <QList>
 #include <QString>
 
@@ -47,12 +49,13 @@ enum SizeQualifier
 /// The segment where a piece of memory can be allocated
 enum class AllocationSegment
 {
-	unknown,
-	code,
-	inputOutput,
-	data,
-	stack,
-	heap,
+	unknown,     // Temporary objects?
+	code,        // Constants, functions
+	inputOutput, // Watches to stdin/stdout/stderr pointers
+	data,        // Global or static variables
+	stack,       // Local variables
+	heap,        // Dynamic allocated chunks with malloc/calloc
+	free         // Free fragments in memory frames
 };
 
 /** Any piece of memory on the inferior that is mapped to the visualization, e.g: a variable */
@@ -70,7 +73,7 @@ struct MemoryAllocation
 	/// Physical address of the block on inferior, reported by GDB in hexadecimal, 0 means invalid
 	size_t inferiorAddress = 0;
 	/// Address where this memory block was allocated in visualization, 0 means invalid
-	size_t visualizationAddress = 0;
+	VisAddress visualizationAddress = 0;
 	/// Size in bytes of the block
 	size_t size = 0;
 	/// The type of this inferior's variable
@@ -82,6 +85,9 @@ struct MemoryAllocation
 	QString unrolledDataTypeStr;
 	/// The value represented as text (from GDB output)
 	QString value;
+	/// True if the value has not been initiallized yet. When displayed in the visualization,
+	/// garbage artifacts are used instead or overlapped in front of the variable value
+	bool hasGarbage = false;
 	/// Thread that created this memory block
 	int thread = 0;
 	/// Stack frame index, if this is a local variable
@@ -110,7 +116,7 @@ struct MemoryAllocation
 
   public:
 	/// Convenience constructor
-	explicit MemoryAllocation(AllocationSegment segment = AllocationSegment::unknown) : segment(segment) { }
+	explicit MemoryAllocation(AllocationSegment segment = AllocationSegment::unknown, size_t size = 0, VisAddress visualizationAddress = 0);
 	/// Destructor
 	~MemoryAllocation();
 	/// Create a MemoryAllocation from a GDB variable object result
@@ -120,6 +126,16 @@ struct MemoryAllocation
 	/// Request data to GDB in order to get the minimum missing information to display this variable
 	/// in visualization, for example: data size, address, data type
 	bool updateMissingFields(GdbCall* debuggerCall);
+	/// Returns true if this is a free memory fragment
+	inline bool isFreeFragment() const { return segment == AllocationSegment::free; }
+	/// If this is a free fragment, returns the offset (due to word-alignment) where the given
+	/// variable would be stored. Returns a negative value if this memory fragment is not free or
+	/// the variable could not be allocated
+	VisAddress calculateAllocationOffset(const MemoryAllocation* variable, VisAddress frameStartAddress) const;
+	/// Reduces the size of this free fragment by the amount of bytes
+	void reduceSize(size_t bytes);
+	/// Get the number of bytes that this variable requires to be aligned
+	short getWordAlignment() const;
 
   protected:
 	/// Parses the @a dataTypeStr text trying to identify the data type of the variable

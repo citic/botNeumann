@@ -1,11 +1,17 @@
 #ifndef MEMORYFRAME_H
 #define MEMORYFRAME_H
 
+#include "Common.h"
 #include "LinearLayout.h"
+
+#include <QLinkedList>
 
 struct MemoryAllocation;
 class MemoryRow;
+class MemoryTop;
 class Scene;
+
+typedef QLinkedList<MemoryAllocation*> MemoryAllocations;
 
 /** A memory frame is graphical object to represent a piece of computer memory sliced into
 	one or more memory rows, covered by a roof row. A label can be placed on the roof.
@@ -23,15 +29,23 @@ class MemoryFrame : public LinearLayout
 	size_t startByte;
 	/// The size in bytes of each memory row
 	size_t rowSize;
+	/// The top row of the memory frame, that can contain a name for the frame
+	MemoryTop* memoryTop = nullptr;
 	/// The list of memory rows to show in this frame
 	QList<MemoryRow*> memoryRows;
+	/// The list of variables assigned in this memory frame, some of the may be free space
+	MemoryAllocations memoryAllocations;
 
   public:
 	/// Constructor
 	explicit MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, qreal zValue, bool withGarbage);
+	/// Destructor
+	~MemoryFrame();
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const;
+	/// Calculates the size in bytes of this MemoryFrame
+	inline size_t getSize() const { return rowSize * rowCount; }
 	/// Allocate the given piece of memory (usually a variable) in this memory frame. If there is
 	/// enough memory the variable will appear in some memory rows in the visualization. The
 	/// the visualizationAddress will be updated in the @a memoryAllocation object.
@@ -47,7 +61,14 @@ class MemoryFrame : public LinearLayout
 
   protected:
 	/// Create the memory rows and place them into the scene
-	void buildMemoryFrame(qreal zValue, bool withGarbage);
+	void buildMemoryFrame(qreal zValue);
+	/// Finds the smallest free fragment to allocate a variable
+	/// If a free fragment is found, retuns true and the parameters are assigned to the free
+	/// fragment (iterator) and the offset in that iterator. If no fragment is found, returns false
+	/// and the parameters are set to invalid iterators and a negative offset
+	bool findSmallestFreeFragmentToAllocate(const MemoryAllocation* variable, MemoryAllocations::iterator& smallestFragment, VisAddress& offset);
+	/// For debugging purposes
+	void printAllocationQueue();
 };
 
 #endif // MEMORYFRAME_H

@@ -57,6 +57,10 @@ enum zUnitPlaying
 	standardInputOutput = dataSegment,
 };
 
+
+/// Data type for addresses in visualization
+typedef long long VisAddress;
+
 typedef unsigned long long ullint;
 
 inline ullint ipow(ullint base, unsigned int exp)

@@ -262,7 +262,7 @@ bool Visualizator::watchGlobalVariables()
 	for ( int index = 0; index < globalVariables.count(); ++index )
 	{
 		const Symbol* symbol = globalVariables[index];
-		const QString watchName = QString("bn_gv_%1").arg(index + 1);
+		const QString& watchName = QString("bn_gv_%1").arg(index + 1);
 		memoryMapper->createWatch(symbol->name, watchName, AllocationSegment::data, true);
 	}
 

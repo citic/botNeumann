@@ -81,6 +81,7 @@ bool MemoryMapper::allocate(MemoryAllocation* memoryAllocation)
 
 		case AllocationSegment::unknown:
 		case AllocationSegment::inputOutput:
+		case AllocationSegment::free:
 			// Variables cannot be allocated in standard input/output or unknown segments
 			Q_ASSERT(false);
 			return false;
