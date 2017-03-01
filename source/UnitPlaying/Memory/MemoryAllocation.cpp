@@ -288,7 +288,12 @@ VisAddress MemoryAllocation::calculateAllocationOffset(const MemoryAllocation* v
 
 	// The offset is calculated by applying word-alignment according to the size of the variable
 	VisAddress wordSize = variable->getWordAlignment();
-	VisAddress offset = wordSize - (this->visualizationAddress - frameStartAddress) % wordSize;
+	VisAddress offset = (this->visualizationAddress - frameStartAddress) % wordSize;
+
+	// If offset is 0, we are at alignment boundary, otherwise, we have to move to the next boundary
+	// that is, to move the remaining bytes to reach it
+	if ( offset > 0 )
+		offset = wordSize - offset;
 
 	// After applying word-alignment, the variable may exceed the available space
 	if ( offset + variable->size > this->size ) return -3;
