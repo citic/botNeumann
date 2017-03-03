@@ -111,21 +111,49 @@ bool MemoryRow::allocate(MemoryAllocation* variable)
 {
 	Q_ASSERT(variable);
 
-	// If the variable should be entirelly or partially allocated, the intersection with the
+	// If the variable should be entirely or partially allocated, the intersection with the
 	// addresses of this memory rows is not empty
 	VisAddress firstByte = 0;
 	VisAddress lastByte = 0;
 
-	// We return false if intersection is empty
+	// If intersection of the variable with this row is empty, we do not allocate it here
 	if ( ! calculateIntersection(variable, firstByte, lastByte) )
 		return false;
 
-	// There is intersection, place the variable in the memory row
-	// ToDo: variable may be already placed in the scene
-/*	qreal byteProportion = getByteProportion();
-	qreal zVariable = this->zValue + 0.4;
-	addItem( variable, (firstByte - start) * byteProportion, zVariable );
-*/
+	// There is some intersection. We place a part of the variable (intersection) in this memory row
+	// We ask the variable to create a graphical variable to draw this intersection
+//	GraphicalVariable* graphicalVariable = variable->getGraphicalVariableFor(firstByte, lastByte);
+
+	// If variable is free space, we do not need to allocate values in its bytes, just garbage
+//	if( graphicalVariable == nullptr )
+//		return showGarbage(firstByte, lastByte);
+
+	// Dimensions of the row are calculated in terms of the lenght of a byte
+//	const qreal byteProportion = getByteProportion();
+//	const qreal zVariable = this->zValue + 0.4;
+
+	// If the variable is already allocated, we just update it
+//	if ( graphicalVariables.contains(graphicalVariable) )
+	{
+		// The graphical variable is already allocated in its place, but it may be changed in case
+		// of free space that may have been used to allocate a new variable
+	//	if ( graphicalVariable->getFirstByte() != firstByte )
+	//		insertItem(graphicalVariable, (firstByte - start) * byteProportion, zVariable );
+
+		// The size of a free memory allocation may be updated, reflect it on visualization
+	//	graphicalVariable->update(firstByte, lastByte);
+	}
+//	else
+	{
+		// Add the graphical variable to the list of variables allocated in this memory row
+//		graphicalVariables.append(graphicalVariable);
+
+		// ToDo: we need to set absolute positions in layout, instead of appending them
+	//	insertItem( graphicalVariable, (lastByte - firstByte + 1) * byteProportion, zVariable );
+//		addItem( graphicalVariable, (lastByte - firstByte + 1) * byteProportion, zVariable );
+	}
+
+	// Return true if the variable was entirely allocated in this memory row
 	qCCritical(logTemporary, "Memory row: allocating %s in [%lld, %lld]", qPrintable(variable->name), firstByte, lastByte);
 	return lastByte >= variable->visualizationAddress + variable->size - 1;
 }
@@ -133,7 +161,15 @@ bool MemoryRow::allocate(MemoryAllocation* variable)
 bool MemoryRow::calculateIntersection(const MemoryAllocation* variable, VisAddress& firstByte, VisAddress& lastByte)
 {
 	Q_ASSERT(variable);
+
+	// If var.min and row.min is the first byte of the variable and the row respectively, and
+	// var.max and row.max the last byte of the variable and the row respectively;
+	// the intersection is [ max(var.min, row.min), min(var.max, row.max) ]
+	// that is, intersection is "the maximum of the minimums, and the minimum of the maximums".
 	firstByte = qMax( variable->visualizationAddress, this->start );
 	lastByte = qMin( variable->visualizationAddress + variable->size, this->start + this->size ) - 1;
+
+	// Intersection [firstByte, lastByte] is valid if they are ordered and there is at least one
+	// byte-length as intersection
 	return firstByte <= lastByte;
 }

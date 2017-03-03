@@ -69,7 +69,7 @@ class MemoryFrame : public LinearLayout
 	bool findSmallestFreeFragmentToAllocate(const MemoryAllocation* variable, MemoryAllocations::iterator& smallestFragment, VisAddress& offset);
 	/// Distribute the variables allocated in this memory frame to the respective memory rows
 	/// @return true if all variables were set, false if there is a segment overflow
-	bool setVariablesToMemoryRows();
+	bool distributeVariablesIntoMemoryRows();
 	/// For debugging purposes
 	void printAllocationQueue();
 };

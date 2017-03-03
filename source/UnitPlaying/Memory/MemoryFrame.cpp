@@ -19,10 +19,14 @@ MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t
 	MemoryAllocation* freeFragment = new MemoryAllocation(AllocationSegment::free, getSize(), startByte );
 	freeFragment->hasGarbage = withGarbage;
 	memoryAllocations.append(freeFragment);
-	printAllocationQueue();
 
 	// Draw the memory frame in the visualization
 	buildMemoryFrame(zValue);
+
+	// Distribute the free fragment to all the memory rows. This is required in order to draw
+	// initial garbage if this segment has it by default
+	printAllocationQueue();
+	distributeVariablesIntoMemoryRows();
 }
 
 MemoryFrame::~MemoryFrame()
@@ -43,6 +47,9 @@ bool MemoryFrame::allocate(MemoryAllocation* memoryAllocation)
 	// Find free space to allocate the variable
 	MemoryAllocations::iterator freeFragment = memoryAllocations.end();
 	VisAddress offset = -1;
+
+	// We look for the smallest free fragment able to allocate the given variable
+	// If the function finds such fragment, it will update our freeFragment iterator and our offset
 	if ( findSmallestFreeFragmentToAllocate(memoryAllocation, freeFragment, offset) == false )
 	{
 		// There is not space to allocate the variable in visualization, animate segment overflow
@@ -51,22 +58,21 @@ bool MemoryFrame::allocate(MemoryAllocation* memoryAllocation)
 	}
 
 	// We found empty space, the iterator points to it
-	// If there is a positive offet, empty space will left in front of the variable
+	// If there is a positive offet, empty space (padding) will remain in front of the variable
 	if ( offset > 0 )
 		memoryAllocations.insert( freeFragment, new MemoryAllocation(AllocationSegment::free, offset, (*freeFragment)->visualizationAddress ) );
 
-	// Allocate the variable in front of the free fragment
+	// Allocate the variable in first bytes of the free fragment
 	memoryAllocations.insert( freeFragment, memoryAllocation );
 	memoryAllocation->visualizationAddress = (*freeFragment)->visualizationAddress + offset;
 
-	// Extract the memory from the free fragment
+	// Extract the assigned memory from the free fragment
 	(*freeFragment)->reduceSize(offset + memoryAllocation->size);
 
 	printAllocationQueue();
 
-	// The variable was allocated
-	// ToDo: add variable to scene and update interface
-	return setVariablesToMemoryRows();
+	// The variable must be placed in one or more memory rows, distribute it
+	return distributeVariablesIntoMemoryRows();
 }
 
 bool MemoryFrame::findSmallestFreeFragmentToAllocate(const MemoryAllocation* variable, MemoryAllocations::iterator& smallestFragment, VisAddress& offset)
@@ -76,20 +82,21 @@ bool MemoryFrame::findSmallestFreeFragmentToAllocate(const MemoryAllocation* var
 	offset = -1;
 
 	// Search for free memory
-	for ( MemoryAllocations::iterator current = memoryAllocations.begin(); current != memoryAllocations.end(); ++current )
+	for ( MemoryAllocations::iterator fragmentIterator = memoryAllocations.begin(); fragmentIterator != memoryAllocations.end(); ++fragmentIterator )
 	{
 		// If this is free space, get the offset where the variable would be allocated
-		VisAddress currentOffset = (*current)->calculateAllocationOffset(variable, startByte);
+		VisAddress currentOffset = (*fragmentIterator)->calculateAllocationOffset(variable, startByte);
 
 		// Negative offset means that itr memory is unable to allocate the variable
 		if ( currentOffset < 0 )
 			continue;
 
-		// If current is the first free fragment we found, or current is smaller than the one we
-		// known free at the moment, take current as a better option
-		if ( smallestFragment == memoryAllocations.end() || (*current)->size < (*smallestFragment)->size )
+		// Check if we have found a smaller (minimum) free fragment
+		if ( smallestFragment == memoryAllocations.end() || (*fragmentIterator)->size < (*smallestFragment)->size )
 		{
-			smallestFragment = current;
+			// current is the first free fragment we found, or current is smaller than the one we
+			// known at the moment. Save current as our better known option
+			smallestFragment = fragmentIterator;
 			offset = currentOffset;
 		}
 	}
@@ -97,18 +104,19 @@ bool MemoryFrame::findSmallestFreeFragmentToAllocate(const MemoryAllocation* var
 	return smallestFragment != memoryAllocations.end();
 }
 
-bool MemoryFrame::setVariablesToMemoryRows()
+bool MemoryFrame::distributeVariablesIntoMemoryRows()
 {
-	MemoryAllocations::iterator currentVariable = memoryAllocations.begin();
+	// We iterate for all variables assigned to this frame, distributing them to its memory rows
+	MemoryAllocations::iterator variableIterator = memoryAllocations.begin();
 	int currentRow = 0;
 
 	// Traverse all the variables
-	while ( currentVariable != memoryAllocations.end() )
+	while ( variableIterator != memoryAllocations.end() )
 	{
 		// For convenience
-		MemoryAllocation* variable = *currentVariable;
+		MemoryAllocation* variable = *variableIterator;
 
-		// We have to allocate a variable, if all rows were filled, we have a segment overflow
+		// We must allocate a variable, if all rows were filled, we have a segment overflow
 		if ( currentRow >= memoryRows.count() )
 			return false;
 
@@ -121,7 +129,7 @@ bool MemoryFrame::setVariablesToMemoryRows()
 		}
 
 		// The row accepted the variable, and it is completely allocated, move to the next variable
-		++currentVariable;
+		++variableIterator;
 	}
 
 	// All variables were distributed in the available rows

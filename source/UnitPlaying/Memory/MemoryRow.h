@@ -4,7 +4,10 @@
 #include "Common.h"
 #include "LinearLayout.h"
 
+#include <QList>
+
 struct MemoryAllocation;
+class GraphicalVariable;
 class Scene;
 
 /**
@@ -37,6 +40,8 @@ class MemoryRow : public LinearLayout
 	LabelType labelType;
 	/// The z-index where this memory row is shown
 	qreal zValue = 0.0;
+	/// The list of variables that are allocated in this memory row
+	QList<GraphicalVariable*> graphicalVariables;
 
   public:
 	/// Constructor
@@ -53,7 +58,7 @@ class MemoryRow : public LinearLayout
 	void cycleLabelType();
 	/// Allocate the given variable in this memory row if the variable is within the range of this
 	/// memory row.
-	/// @return true if the variable is entirelly allocated, false if the variable is not
+	/// @return true if the variable is entirely allocated, false if the variable is not
 	/// allocated at all or there is pending bytes of the variable to be allocated in the next
 	/// memory row
 	bool allocate(MemoryAllocation* variable);
