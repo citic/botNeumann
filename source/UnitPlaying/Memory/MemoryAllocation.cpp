@@ -1,6 +1,7 @@
 #include "MemoryAllocation.h"
 #include "Common.h"
 #include "GdbCall.h"
+#include "GraphicVariable.h"
 #include "LogManager.h"
 #include "VisualizationContext.h"
 
@@ -340,4 +341,22 @@ short MemoryAllocation::getWordAlignment() const
 
 	Q_ASSERT(false);
 	return 1;
+}
+
+GraphicVariable* MemoryAllocation::getGraphicVariableFor(VisAddress firstByte, VisAddress lastByte, MemoryRow* memoryRow)
+{
+	// Check ranges are right
+	if ( firstByte < visualizationAddress || firstByte > visualizationAddress + size ) return nullptr;
+	if ( lastByte < visualizationAddress || lastByte > visualizationAddress + size ) return nullptr;
+	if ( lastByte < firstByte ) return nullptr;
+
+	// Locate the variable at the given bytes, if there is one variable, return it
+	for ( int index = 0; index < graphicVariables.count(); ++index )
+		if ( graphicVariables[index]->isAllocatedAt(firstByte, lastByte) )
+			return graphicVariables[index];
+
+	// The variable does not exist, we create one
+	GraphicVariable* graphicVariable = new GraphicVariable(this, firstByte, lastByte, memoryRow);
+	graphicVariables.append(graphicVariable);
+	return graphicVariable;
 }

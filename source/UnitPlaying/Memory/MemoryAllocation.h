@@ -9,6 +9,7 @@
 class GdbCall;
 class GdbItemTree;
 class GraphicVariable;
+class MemoryRow;
 
 /// The data type of the inferior variable
 enum DataType
@@ -95,8 +96,6 @@ struct MemoryAllocation
 	/// True if this memory block was allocated in dyanamic memory by a direct call from player
 	/// solution code, false if it was allocated by a library call
 	bool directHeapAllocation = false;
-	/// Pointer to the graphical object representing this memory block, nullptr if none
-	GraphicVariable* graphicVariable = nullptr;
 
   public: // Atomic value
 	/// True if the value is const. For a pointer, true if the address stored in value cannot change
@@ -113,6 +112,12 @@ struct MemoryAllocation
 	MemoryAllocation* parent = nullptr;
 	/// For pointers and references, children[0] is the pointed data
 	QList<MemoryAllocation*> children;
+
+  public:
+	/// Pointers to the graphical objects representing this memory block. A memory allocation
+	/// (usually a variable) may require several memory rows to be displayed. Each slice of this
+	/// memory allocation is managed by a GraphicVariable object
+	QList<GraphicVariable*> graphicVariables;
 
   public:
 	/// Convenience constructor
@@ -136,6 +141,15 @@ struct MemoryAllocation
 	void reduceSize(VisAddress bytes);
 	/// Get the number of bytes that this variable requires to be aligned
 	short getWordAlignment() const;
+	/// A variable may require several memory rows to be displayed, eg: an array. We may create
+	/// several GraphicVariables to represent one real variable. This method returns the graphical
+	/// variable to be allocated in the asked bytes. If the graphical variable exists, it is
+	/// just returned. Otherwise it is created and returned.
+	/// @param lastByte This byte is included in range [firstByte, lastByte]
+	/// @param MemoryRow The memory row where the graphical variable should be placed
+	/// @return Pointer to the object to be placed in the given bytes; nullptr if this memory
+	/// allocation is not placed in the given address range or this memory allocation is free
+	GraphicVariable* getGraphicVariableFor(VisAddress firstByte, VisAddress lastByte, MemoryRow* memoryRow);
 
   protected:
 	/// Parses the @a dataTypeStr text trying to identify the data type of the variable

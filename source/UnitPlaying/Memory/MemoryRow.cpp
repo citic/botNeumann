@@ -1,4 +1,5 @@
 #include "BotNeumannApp.h"
+#include "GraphicVariable.h"
 #include "LabelButton.h"
 #include "LogManager.h"
 #include "MemoryAllocation.h"
@@ -47,7 +48,7 @@ void MemoryRow::buildMemoryRow(bool withGarbage)
 	// Create the memory addresses in a new layer
 	buildMemoryAddresses();
 	if ( withGarbage )
-		fillWithGarbage();
+		buildGarbage();
 }
 
 void MemoryRow::buildMemoryAddresses()
@@ -73,8 +74,11 @@ void MemoryRow::buildMemoryAddresses()
 	}
 }
 
+// Garbage graphics are smaller than the memory row's height
 const qreal refRowHeight = 34.879;
 
+// Garbage graphics have different height, but we place all of them aligned to the bottom
+// So, we need to calculate the top percent. These numbers come from the SVG dimensions
 const qreal garbageMarginTop[] =
 {
 	1.0 - ( 14.500 + 15.515 ) / refRowHeight,
@@ -82,29 +86,55 @@ const qreal garbageMarginTop[] =
 	1.0 - ( 14.500 +  7.478 ) / refRowHeight,
 };
 
-void MemoryRow::fillWithGarbage()
+void MemoryRow::buildGarbage()
 {
 	// We place garbage in each byte
 	const qreal byteProportion = getByteProportion();
 	// Memory address labels are in a higher layer
-	qreal zGarbage = this->zValue + 0.3;
+	qreal zGarbage = this->zValue + 0.4;
 
 	// Create a spacer for the left extreme
 	addItem(new Spacer(), byteProportion, zGarbage);
 
-	// Create a label for each byte
+	// Create a garbage artifact for each byte
 	for ( VisAddress index = 0; index < size; ++index )
 	{
+		// We selected the garbage prop for this byte randomly
 		int garbageNum = qrand() % 3 + 1;
 		const QString& resource = QString("up_uninitialized_%1").arg( garbageNum );
+
+		// Create the garbage artifact and place it in its byte within the memory row
 		Prop* garbage = new Prop(resource, scene);
+
+		// We use margins because artifacts are smaller than the memory row's height
 		garbage->setMarginLeft(0.15);
 		garbage->setMarginRight(0.15);
 		garbage->setMarginTop( garbageMarginTop[garbageNum - 1] );
 		garbage->setMarginBottom( 14.500 / refRowHeight );
 		//garbage->setOpacity(0.75);
+
+		// We ad the garbage to the scene, and also to the list of artifacts
 		addItem(garbage, byteProportion, zGarbage);
+		this->garbage.append( garbage );
 	}
+}
+
+bool MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible)
+{
+	// Map addresses to array indexes
+	lastByte  -= start;
+	firstByte -= start;
+
+	// Check index out of bounds
+	if ( firstByte < 0 || firstByte >= garbage.count() ) return false;
+	if ( lastByte  < 0 || lastByte  >= garbage.count() ) return false;
+
+	// Make the garbage visible or hidden
+	while ( firstByte <= lastByte )
+		garbage[firstByte++]->setVisible(visible);
+
+	// Success
+	return true;
 }
 
 bool MemoryRow::allocate(MemoryAllocation* variable)
@@ -120,37 +150,30 @@ bool MemoryRow::allocate(MemoryAllocation* variable)
 	if ( ! calculateIntersection(variable, firstByte, lastByte) )
 		return false;
 
-	// There is some intersection. We place a part of the variable (intersection) in this memory row
-	// We ask the variable to create a graphical variable to draw this intersection
-//	GraphicalVariable* graphicalVariable = variable->getGraphicalVariableFor(firstByte, lastByte);
-
 	// If variable is free space, we do not need to allocate values in its bytes, just garbage
-//	if( graphicalVariable == nullptr )
-//		return showGarbage(firstByte, lastByte);
+	if ( variable->isFreeFragment() )
+		return showGarbage(firstByte, lastByte);
+
+	// There is some intersection. We place a part of the variable (intersection) in this memory row
+	// We ask the variable to create a graphical variable to draw only this intersection
+	GraphicVariable* graphicVariable = variable->getGraphicVariableFor(firstByte, lastByte, this);
+	Q_ASSERT(graphicVariable);
 
 	// Dimensions of the row are calculated in terms of the lenght of a byte
-//	const qreal byteProportion = getByteProportion();
-//	const qreal zVariable = this->zValue + 0.4;
+	const qreal byteProportion = getByteProportion();
+	const qreal zVariable = this->zValue + 0.3;
 
 	// If the variable is already allocated, we just update it
-//	if ( graphicalVariables.contains(graphicalVariable) )
-	{
-		// The graphical variable is already allocated in its place, but it may be changed in case
-		// of free space that may have been used to allocate a new variable
-	//	if ( graphicalVariable->getFirstByte() != firstByte )
-	//		insertItem(graphicalVariable, (firstByte - start) * byteProportion, zVariable );
-
-		// The size of a free memory allocation may be updated, reflect it on visualization
-	//	graphicalVariable->update(firstByte, lastByte);
-	}
-//	else
+	if ( graphicVariables.contains(graphicVariable) == false )
 	{
 		// Add the graphical variable to the list of variables allocated in this memory row
-//		graphicalVariables.append(graphicalVariable);
+		graphicVariables.append(graphicVariable);
 
 		// ToDo: we need to set absolute positions in layout, instead of appending them
-	//	insertItem( graphicalVariable, (lastByte - firstByte + 1) * byteProportion, zVariable );
-//		addItem( graphicalVariable, (lastByte - firstByte + 1) * byteProportion, zVariable );
+	//	insertItem( graphicVariable, (lastByte - firstByte + 1) * byteProportion, zVariable );
+		addItem( graphicVariable, (lastByte - firstByte + 1) * byteProportion, zVariable );
+		qCCritical(logTemporary, "MemRow: %s proportion %lf", qPrintable(variable->name), (lastByte - firstByte + 1) * byteProportion);
+		this->updateLayoutItem();
 	}
 
 	// Return true if the variable was entirely allocated in this memory row
