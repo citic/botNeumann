@@ -39,6 +39,9 @@ class ScenicElement : public QGraphicsSvgItem, public LayoutItem, public Aligned
 	/// letters of @a prefixedSvgElementId
 	/// @see mapSceneIdFromPrefix() to get the list of supported prefixes
 	explicit ScenicElement(const QString& prefixedSvgElementId, QGraphicsItem* parentItem);
+	/// Overloaded constructor that loads a given svg file instead of using a shared renderer
+	/// @param loadFile Dummy value to distinguish this constructor from the former
+	explicit ScenicElement(const QString& svgFilename, QGraphicsItem* parentItem, bool loadFile);
 	/// Destructor
 	virtual ~ScenicElement();
 	/// Used to differentiate between pure-layout items and scenic elements

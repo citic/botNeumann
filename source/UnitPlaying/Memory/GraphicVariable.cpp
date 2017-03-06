@@ -41,16 +41,16 @@ bool GraphicVariable::buildGraphicVariable()
 		// Atomic types
 		case typeBool:      buildSingleByteVariable("up_bool_false"); break;
 		case typeChar:      buildSingleByteVariable("up_char"); break;
-		case typeInt:       buildMultiByteVariable("up_int"); break;
-		case typeEnum:      buildMultiByteVariable("up_int"); break;
-		case typeBitField:  buildMultiByteVariable("up_int"); break;
-		case typeFloat:     buildMultiByteVariable("up_float"); break;
+		case typeInt:       buildMultiByteVariable("int"); break;
+		case typeEnum:      buildMultiByteVariable("int"); break;
+		case typeBitField:  buildMultiByteVariable("int"); break;
+		case typeFloat:     buildMultiByteVariable("float"); break;
 
 		// Indirection types
-		case typePointer:   buildMultiByteVariable("up_pointer"); break;
-		case typeReference: buildMultiByteVariable("up_pointer"); break;
-		case typeRValue:    buildMultiByteVariable("up_pointer"); break;
-		case typeFunction:  buildMultiByteVariable("up_pointer"); break;
+		case typePointer:   buildMultiByteVariable("pointer"); break;
+		case typeReference: buildMultiByteVariable("pointer"); break;
+		case typeRValue:    buildMultiByteVariable("pointer"); break;
+		case typeFunction:  buildMultiByteVariable("pointer"); break;
 
 		// Composite types
 		case typeArray:     buildArray(); break;
@@ -78,19 +78,25 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset)
 	// Left and right parts always require 1 byte, middle the remaining bytes
 	const qreal zPod = memoryRow->getZValue() + zPodOffset;
 	const VisAddress size = getSize();
+	const QString& svgFileBase = ":/unit_playing/data_types/" + asset;
 
 	// Pod: left
 	Q_ASSERT(podLeft == nullptr);
 	if ( leftComplete )
 	{
-		podLeft = new Prop(asset + "_left", memoryRow->getScene());
+		podLeft = asset.startsWith("up_")
+				? new ScenicElement(asset + "_left", memoryRow->getScene())
+				: new ScenicElement(svgFileBase + "_left.svg", memoryRow->getScene(), true);
+
 		podLeft->setMarginTop(0.139453539378996);
 		podLeft->setMarginBottom(0.415722927836234);
 		addItem(podLeft, 1.0 / size, zPod);
 	}
 
 	// Pod: middle
-	Prop* podMiddle = new Prop(asset + "_middle", memoryRow->getScene());
+	ScenicElement* podMiddle = asset.startsWith("up_")
+			? new ScenicElement(asset + "_middle", memoryRow->getScene())
+			: new ScenicElement(svgFileBase + "_middle.svg", memoryRow->getScene(), true);
 	qreal middleSize = size - (VisAddress)leftComplete - (VisAddress)rightComplete;
 	podMiddle->setMarginTop(0.139453539378996);
 	podMiddle->setMarginBottom(0.415722927836234);
@@ -99,7 +105,9 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset)
 	// Pod: right
 	if ( rightComplete )
 	{
-		Prop* podRight = new Prop(asset + "_right", memoryRow->getScene());
+		ScenicElement* podRight = asset.startsWith("up_")
+				? new ScenicElement(asset + "_right", memoryRow->getScene())
+				: new ScenicElement(svgFileBase + "_right.svg", memoryRow->getScene(), true);
 		podRight->setMarginTop(0.139453539378996);
 		podRight->setMarginBottom(0.415722927836234);
 		addItem(podRight, 1.0 / size, zPod);

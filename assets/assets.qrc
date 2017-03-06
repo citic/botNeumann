@@ -41,4 +41,17 @@
 		<file alias="undo.svg">unit_playing/buttons/undo.svg</file>
 		<file alias="warning.svg">unit_playing/buttons/warning.svg</file>
 	</qresource>
+	<qresource prefix="/unit_playing/data_types">
+		<file alias="float_left.svg">unit_playing/data_types/float_left.svg</file>
+		<file alias="float_middle.svg">unit_playing/data_types/float_middle.svg</file>
+		<file alias="float_right.svg">unit_playing/data_types/float_right.svg</file>
+		<file alias="int_left.svg">unit_playing/data_types/int_left.svg</file>
+		<file alias="int_middle.svg">unit_playing/data_types/int_middle.svg</file>
+		<file alias="int_right.svg">unit_playing/data_types/int_right.svg</file>
+		<file alias="pointer_left.svg">unit_playing/data_types/pointer_left.svg</file>
+		<file alias="pointer_left_invalid.svg">unit_playing/data_types/pointer_left_invalid.svg</file>
+		<file alias="pointer_left_ok.svg">unit_playing/data_types/pointer_left_ok.svg</file>
+		<file alias="pointer_middle.svg">unit_playing/data_types/pointer_middle.svg</file>
+		<file alias="pointer_right.svg">unit_playing/data_types/pointer_right.svg</file>
+	</qresource>
 </RCC>

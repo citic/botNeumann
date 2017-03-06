@@ -14,6 +14,12 @@ ScenicElement::ScenicElement(const QString& prefixedSvgElementId, QGraphicsItem*
 	}
 }
 
+ScenicElement::ScenicElement(const QString& svgFilename, QGraphicsItem* parentItem, bool loadFile)
+	: QGraphicsSvgItem(svgFilename, parentItem)
+{
+	Q_UNUSED(loadFile);
+}
+
 ScenicElement::~ScenicElement()
 {
 	delete layout;

@@ -9,7 +9,7 @@
 class LabelButton;
 struct MemoryAllocation;
 class MemoryRow;
-class Prop;
+class ScenicElement;
 class SvgButton;
 
 /** Represents graphically a variable within a memory row, or a segment of the variable if it does
@@ -32,7 +32,7 @@ class GraphicVariable : public LinearLayout
 	/// The memory row where this graphic variable is placed
 	MemoryRow* memoryRow = nullptr;
 	/// For pointers, the left part of the pod, may be changed for valid or invalid
-	Prop* podLeft = nullptr;
+	ScenicElement* podLeft = nullptr;
 	/// A label to show the variable name. Only available in large pods (4 or more bytes)
 	SvgButton* label = nullptr;
 	/// A label to show the value of the variable
