@@ -262,20 +262,28 @@ bool MemoryAllocation::parseCompositeDataTypeStr(const QString& text)
 	// If this method is called, the other methods failed to recognize the data type for this
 	// memory allocation. A final shot is checking for classes, structures and unions
 	// These begin with their respective names when unrolling with ptype gdb command
+	this->dataType = mapCompositeDataTypeStr(text);
 
-	if ( text.startsWith("class") )
-		this->dataType = typeClass;
-	else if ( text.startsWith("struct") )
-		this->dataType = typeStruct;
-	else if ( text.startsWith("union") )
-		this->dataType = typeUnion;
-	else
-		return false;
+	// ToDo: recursively extract composite fields and fill children[] array
 
-	// ToDo: unroll structure fields
-	qCCritical(logApplication) << "Class/struct/union" << name << "from" << dataTypeStr.mid(0, 10) << "...";
+	return this->dataType != typeUnknown;
+}
 
-	return false;
+DataType MemoryAllocation::mapCompositeDataTypeStr(const QString& text)
+{
+	// GDB's ptype command provides the name of the type at the beginning of the result
+	if ( text.startsWith("class") ) return typeClass;
+	if ( text.startsWith("struct") ) return typeStruct;
+	if ( text.startsWith("union") ) return typeUnion;
+
+	// Desperate effort to find any clue in the text. Eg: GDB's prepends Python interpreter error
+	// messages before the data type result
+	if ( text.indexOf("class") >= 0 ) return typeClass;
+	if ( text.indexOf("struct") >= 0 ) return typeStruct;
+	if ( text.indexOf("union") >= 0 ) return typeUnion;
+
+	// Unknown
+	return typeUnknown;
 }
 
 VisAddress MemoryAllocation::calculateAllocationOffset(const MemoryAllocation* variable, VisAddress frameStartAddress) const

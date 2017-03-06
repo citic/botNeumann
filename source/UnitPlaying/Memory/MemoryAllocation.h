@@ -168,6 +168,8 @@ struct MemoryAllocation
 	bool parseArrayDataTypeStr(const QString& text, GdbCall* debuggerCall);
 	/// @return true if @a dataTypeStr has a struct, class or union declaration
 	bool parseCompositeDataTypeStr(const QString& text);
+	/// Tries to find a clue of composite data type (struct, class, union) in the text
+	static DataType mapCompositeDataTypeStr(const QString& text);
 };
 
 #endif // MEMORYALLOCATION_H
