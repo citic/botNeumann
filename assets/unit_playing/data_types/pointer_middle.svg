@@ -2,7 +2,7 @@
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="pointer_x5F_middle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="13.333px" height="22px" viewBox="0 0 13.333 22" enable-background="new 0 0 13.333 22" xml:space="preserve">
+	 y="0px" width="13.333px" height="22px" viewBox="0 0 13.333 22" fill="none" xml:space="preserve">
 <g>
 	<g>
 		<defs>
@@ -21,8 +21,8 @@
 						C-18.73,6.729-20,7.998-20,9.563v8.332c0,1.564,1.27,2.834,2.835,2.834H30.5c1.563,0,2.834-1.27,2.834-2.834V9.563
 						C33.333,7.998,32.064,6.729,30.5,6.729L30.5,6.729z"/>
 				</g>
-				<rect x="-15.082" y="8.313" opacity="0.3" fill="#FFFFFF" enable-background="new    " width="45.749" height="0.958"/>
-				<ellipse opacity="0.3" fill="#231F20" enable-background="new    " cx="-12.689" cy="10.038" rx="3.779" ry="4.757"/>
+				<rect x="-15.082" y="8.313" opacity="0.3" fill="#FFFFFF" width="45.749" height="0.958"/>
+				<ellipse opacity="0.3" fill="#231F20" cx="-12.689" cy="10.038" rx="3.779" ry="4.757"/>
 				<g>
 					<g>
 						<path fill="#B6B8BA" d="M-12.555,9.597c-1.107,0-2.17-0.21-2.708-0.534c-0.085-0.051-0.231-0.152-0.246-0.245
@@ -53,18 +53,18 @@
 						M-15.984,3.331c-0.51,0.849-1.633,1.106-2.505,0.579c-0.873-0.527-1.167-1.64-0.655-2.488c0.51-0.847,1.634-1.105,2.506-0.58
 						c0.436,0.265,0.728,0.675,0.846,1.125C-15.674,2.417-15.728,2.908-15.984,3.331z"/>
 				</g>
-				
+
 					<rect x="21.75" y="11.75" fill="none" stroke="#46484E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="8.438" height="8.5"/>
-				
+
 					<line fill="none" stroke="#46484E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="23.82" y1="12.063" x2="23.82" y2="19.875"/>
-				
+
 					<line fill="none" stroke="#46484E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="25.97" y1="12.063" x2="25.97" y2="19.875"/>
-				
+
 					<line fill="none" stroke="#46484E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="28.064" y1="12.063" x2="28.064" y2="19.875"/>
 				<polyline fill="none" stroke="#46484E" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 					-9.785,19.875 -9.785,15.969 21.25,15.969 				"/>
 			</g>
-			<rect x="-18.027" y="18.479" opacity="0.3" fill="#231F20" enable-background="new    " width="48.693" height="3.521"/>
+			<rect x="-18.027" y="18.479" opacity="0.3" fill="#231F20" width="48.693" height="3.521"/>
 		</g>
 	</g>
 </g>

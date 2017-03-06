@@ -2456,7 +2456,7 @@
       <path inkscape:connector-curvature="0" d="m6.477 28.063c1.613 0 2.921 1.346 2.921 3.006s-1.308 3.006-2.921 3.006-2.92-1.346-2.92-3.006 1.306-3.006 2.92-3.006m0-1c-2.162 0-3.92 1.797-3.92 4.006s1.759 4.006 3.92 4.006c2.162 0 3.921-1.797 3.921-4.006s-1.759-4.006-3.921-4.006z" />
       <ellipse rx="1.167" stroke="#000" ry="1.203" cy="31.068" cx="6.477" stroke-miterlimit="10" fill="#868478" />
     </g>
-    <g id="up_array_left" inkscape:label="" transform="translate(400.23 697.86)">
+    <g id="up_array_left" inkscape:label="" transform="translate(400.23 697.86)" fill="none">
       <path opacity=".3" d="m6.254 16.738c0-1.525 1.237-2.762 2.762-2.762h7.734v5.524h-7.734c-1.526 0-2.762-1.236-2.762-2.762z" inkscape:connector-curvature="0" enable-background="new    " fill="#231f20" />
       <path opacity=".4" d="m9.418 0.5h7.332v17h-7.332c-4.693 0-8.5-3.807-8.5-8.5 0-4.694 3.807-8.5 8.5-8.5z" inkscape:connector-curvature="0" enable-background="new    " fill="#fff" />
       <clipPath>
@@ -2467,7 +2467,7 @@
       <path d="m1.382 14.316c0.498 0 0.903-0.383 0.903-0.853v-8.77c0-0.471-0.405-0.854-0.903-0.854s-0.903 0.383-0.903 0.854v8.771c0 0.47 0.405 0.852 0.903 0.852z" inkscape:connector-curvature="0" fill="#caa95a" />
       <path d="m1.382 4.304c0.234 0 0.425 0.175 0.425 0.389v8.771c0 0.215-0.19 0.389-0.425 0.389s-0.425-0.174-0.425-0.389v-8.771c0-0.214 0.189-0.389 0.425-0.389m0-0.929c-0.763 0-1.382 0.591-1.382 1.318v8.771c0 0.726 0.619 1.317 1.382 1.317s1.382-0.592 1.382-1.317v-8.771c0-0.727-0.619-1.318-1.382-1.318z" inkscape:connector-curvature="0" fill="#936440" />
     </g>
-    <g id="up_array_right" inkscape:label="" transform="translate(416.98 697.86)">
+    <g id="up_array_right" inkscape:label="" transform="translate(416.98 697.86)" fill="none">
       <path opacity=".3" d="m10.496 16.738c0-1.525-1.237-2.762-2.761-2.762h-7.735v5.524h7.735c1.525 0 2.761-1.236 2.761-2.762z" inkscape:connector-curvature="0" enable-background="new    " fill="#231f20" />
       <path opacity=".4" d="m7.332 0.5h-7.332v17h7.332c4.693 0 8.5-3.807 8.5-8.5 0-4.694-3.807-8.5-8.5-8.5z" inkscape:connector-curvature="0" enable-background="new    " fill="#fff" />
       <rect opacity=".4" height=".641" width="8.499" y="1.594" x="0" enable-background="new    " fill="#fff" />
@@ -2494,7 +2494,7 @@
       <rect opacity=".3" height=".958" width="8.667" y="1.667" x="5.183" fill="#fff" />
       <polygon opacity=".3" points="0 13.954 0.44 12.123 13.329 12.123 13.329 16.681 0 16.681" fill="#231f20" />
     </g>
-    <g id="up_float_left" inkscape:label="" transform="translate(207.63 701.36)">
+    <g id="up_float_left" inkscape:label="" transform="translate(207.63 701.36)" fill="none">
       <clipPath id="SVGID_2_-73">
         <use xlink:href="#SVGID_1_-33" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2505,7 +2505,7 @@
         <rect opacity=".3" height="4.502" width="39.999" y="10.997" x="0" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_float_middle" inkscape:label="" transform="translate(220.92 701.36)">
+    <g id="up_float_middle" inkscape:label="" transform="translate(220.92 701.36)" fill="none">
       <clipPath id="SVGID_2_-52">
         <use xlink:href="#SVGID_1_-26" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2516,7 +2516,7 @@
         <rect opacity=".3" height="4.502" width="39.999" y="10.997" x="-13.354" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_float_right" inkscape:label="" transform="translate(234.21 701.36)">
+    <g id="up_float_right" inkscape:label="" transform="translate(234.21 701.36)" fill="none">
       <clipPath id="SVGID_2_-796">
         <use xlink:href="#SVGID_1_-658" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2527,7 +2527,7 @@
         <rect opacity=".3" height="4.502" width="39.998" y="10.997" x="-26.705" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_int_left" inkscape:label="" transform="translate(156.35 701.36)">
+    <g id="up_int_left" inkscape:label="" transform="translate(156.35 701.36)" fill="none">
       <clipPath id="SVGID_2_-10">
         <use xlink:href="#SVGID_1_-04" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2538,7 +2538,7 @@
         <path opacity=".3" d="m49.261 13.248c0 1.243-1.009 2.251-2.251 2.251h-41.175c-1.243 0-2.251-1.008-2.251-2.251s1.008-2.251 2.251-2.251h41.175c1.242 0 2.251 1.008 2.251 2.251z" inkscape:connector-curvature="0" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_int_middle" inkscape:label="" transform="translate(169.68 701.36)">
+    <g id="up_int_middle" inkscape:label="" transform="translate(169.68 701.36)" fill="none">
       <clipPath id="SVGID_2_-08">
         <use xlink:href="#SVGID_1_-487" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2549,7 +2549,7 @@
         <path opacity=".3" fill="#231f20" d="m29.261 13.248c0 1.243-1.008 2.251-2.251 2.251h-41.175c-1.243 0-2.251-1.008-2.251-2.251s1.008-2.251 2.251-2.251h41.175c1.243 0 2.251 1.008 2.251 2.251z" inkscape:connector-curvature="0" />
       </g>
     </g>
-    <g id="up_int_right" inkscape:label="" transform="translate(183.01 701.36)">
+    <g id="up_int_right" inkscape:label="" transform="translate(183.01 701.36)" fill="none">
       <clipPath id="SVGID_2_-47">
         <use xlink:href="#SVGID_1_-62" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2560,7 +2560,7 @@
         <path opacity=".3" d="m-35.928 13.248c0-1.243 1.009-2.251 2.251-2.251h41.176c1.242 0 2.25 1.008 2.25 2.251s-1.008 2.251-2.25 2.251h-41.176c-1.242 0-2.251-1.008-2.251-2.251z" inkscape:connector-curvature="0" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_pointer_left" inkscape:label="" transform="translate(260.37 695.36)">
+    <g id="up_pointer_left" inkscape:label="" transform="translate(260.37 695.36)" fill="none">
       <clipPath id="SVGID_2_-92">
         <use xlink:href="#SVGID_1_-93" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2587,7 +2587,7 @@
         <rect opacity=".3" height="3.521" width="48.694" y="18.479" x="1.974" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_pointer_left_invalid" inkscape:label="" transform="translate(290.01 695.36)">
+    <g id="up_pointer_left_invalid" inkscape:label="" transform="translate(290.01 695.36)" fill="none">
       <clipPath id="SVGID_2_-01">
         <use xlink:href="#SVGID_1_-83" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2614,7 +2614,7 @@
         <rect opacity=".3" height="3.522" width="48.694" y="18.477" x="1.974" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_pointer_left_valid" inkscape:label="" transform="translate(275.19 695.36)">
+    <g id="up_pointer_left_valid" inkscape:label="" transform="translate(275.19 695.36)" fill="none">
       <clipPath id="SVGID_2_-91">
         <use xlink:href="#SVGID_1_-78" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2641,7 +2641,7 @@
         <rect opacity=".3" height="3.522" width="48.694" y="18.477" x="1.974" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_pointer_middle" inkscape:label="" transform="translate(303.35 695.36)">
+    <g id="up_pointer_middle" inkscape:label="" transform="translate(303.35 695.36)" fill="none">
       <clipPath id="SVGID_2_-925">
         <use xlink:href="#SVGID_1_-54" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2668,7 +2668,7 @@
         <rect opacity=".3" height="3.521" width="48.693" y="18.479" x="-18.027" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_pointer_right" inkscape:label="" transform="translate(316.68 695.36)">
+    <g id="up_pointer_right" inkscape:label="" transform="translate(316.68 695.36)" fill="none">
       <clipPath id="SVGID_2_-94">
         <use xlink:href="#SVGID_1_-749" height="100%" width="100%" y="0" x="0" overflow="visible" />
       </clipPath>
@@ -2695,13 +2695,13 @@
         <rect opacity=".3" height="3.521" width="48.694" y="18.479" x="-38.028" enable-background="new    " fill="#231f20" />
       </g>
     </g>
-    <g id="up_struct_left" inkscape:label="" transform="translate(341.26 697.86)">
+    <g id="up_struct_left" inkscape:label="" transform="translate(341.26 697.86)" fill="none">
       <path opacity=".3" d="m9.016 19.5h7.734v-5.523h-7.734c-1.524 0-2.762 1.236-2.762 2.762s1.236 2.761 2.762 2.761z" inkscape:connector-curvature="0" enable-background="new    " fill="#231f20" />
       <path opacity=".4" d="m0.918 9c0 4.693 3.807 8.5 8.5 8.5h7.332v-17h-7.332c-4.693 0-8.5 3.806-8.5 8.5z" inkscape:connector-curvature="0" enable-background="new    " fill="#fff" />
       <rect opacity=".4" height=".641" width="8.499" y="1.594" x="8.251" enable-background="new    " fill="#fff" />
       <path d="m16.75 1v-1h-7.332c-4.963 0-9 4.038-9 9 0 1.9 0.585 3.716 1.691 5.254 1.691 2.346 4.423 3.746 7.309 3.746h7.332v-1h-7.332c-2.564 0-4.994-1.245-6.497-3.33-0.983-1.367-1.503-2.982-1.503-4.67 0-4.411 3.589-8 8-8h7.332z" inkscape:connector-curvature="0" fill="#8ec0d1" />
     </g>
-    <g id="up_struct_middle" inkscape:label="" transform="translate(358.01 697.86)">
+    <g id="up_struct_middle" inkscape:label="" transform="translate(358.01 697.86)" fill="none">
       <g display="none">
         <rect height="19.5" width="16.75" y="0" x="0" display="inline" fill="#8e3640" />
       </g>
@@ -2718,7 +2718,7 @@
         <rect opacity=".4" height=".656" width="16.75" y="1.579" x="0" enable-background="new    " fill="#fff" />
       </g>
     </g>
-    <g id="up_struct_right" inkscape:label="" transform="translate(374.76 697.86)">
+    <g id="up_struct_right" inkscape:label="" transform="translate(374.76 697.86)" fill="none">
       <path opacity=".3" d="m10.496 16.738c0-1.525-1.237-2.762-2.761-2.762h-7.735v5.524h7.735c1.525 0 2.761-1.236 2.761-2.762z" inkscape:connector-curvature="0" enable-background="new    " fill="#231f20" />
       <path opacity=".4" d="m7.332 0.5h-7.332v17h7.332c4.693 0 8.5-3.807 8.5-8.5 0-4.694-3.807-8.5-8.5-8.5z" inkscape:connector-curvature="0" enable-background="new    " fill="#fff" />
       <rect opacity=".4" height=".641" width="8.499" y="1.594" x="0" enable-background="new    " fill="#fff" />
