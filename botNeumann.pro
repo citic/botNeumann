@@ -85,6 +85,7 @@ HEADERS += \
 	source/UnitPlaying/CodeSegment/LineNumberArea.h \
 	source/UnitPlaying/CodeSegment/PlayerSolution.h \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
+	source/UnitPlaying/Common/Assets.h \
 	source/UnitPlaying/Common/GdbResponseListener.h \
 	source/UnitPlaying/Common/VisualizationContext.h \
 	source/UnitPlaying/Common/VisualizationSpeed.h \

@@ -1,27 +1,9 @@
 #include "ExecutionThreadActor.h"
+#include "Assets.h"
 #include "Common.h"
 #include "LabelButton.h"
 #include "LinearLayout.h"
 #include "Scene.h"
-
-#include <QColor>
-
-/// The line number must appear within the display of the robot, but each robot has the display
-/// at different top
-const qreal lineNumberTopMargin[] = {30, 60, 58, 34};
-const qreal lineNumberRefWidth =  33; // px
-const qreal lineNumberRefHeight = 19; // px
-
-static const int alpha = 127;
-
-/// Each actor (robot) has its own color
-static const QColor threadColors[] =
-{
-	QColor(  0,  90, 170, alpha), // thread 1 #005ab3 blue
-	QColor(255, 192,   0, alpha), // thread 2 #ffc000 yellow
-	QColor(222, 107,   0, alpha), // thread 3 #de6b00 orange
-	QColor(114, 140,   0, alpha), // thread 4 #728c00 green
-};
 
 
 ExecutionThreadActor::ExecutionThreadActor(int threadId, QGraphicsItem* parentItem)

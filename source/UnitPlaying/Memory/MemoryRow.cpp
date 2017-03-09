@@ -1,4 +1,5 @@
 #include "BotNeumannApp.h"
+#include "Assets.h"
 #include "GraphicVariable.h"
 #include "LabelButton.h"
 #include "LogManager.h"
@@ -73,18 +74,6 @@ void MemoryRow::buildMemoryAddresses()
 		addItem(memoryAddress, byteProportion, zMemoryAddress);
 	}
 }
-
-// Garbage graphics are smaller than the memory row's height
-const qreal refRowHeight = 34.879;
-
-// Garbage graphics have different height, but we place all of them aligned to the bottom
-// So, we need to calculate the top percent. These numbers come from the SVG dimensions
-const qreal garbageMarginTop[] =
-{
-	1.0 - ( 14.500 + 15.515 ) / refRowHeight,
-	1.0 - ( 14.500 + 11.480 ) / refRowHeight,
-	1.0 - ( 14.500 +  7.478 ) / refRowHeight,
-};
 
 void MemoryRow::buildGarbage()
 {
