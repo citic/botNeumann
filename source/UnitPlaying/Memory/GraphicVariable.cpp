@@ -40,18 +40,18 @@ bool GraphicVariable::buildGraphicVariable()
 		case typeVoid: return false;
 
 		// Atomic types
-		case typeBool:      buildSingleByteVariable("up_bool_false", boolMarginTop, boolMarginBottom); break;
-		case typeChar:      buildSingleByteVariable("up_char", charMarginTop, charMarginBottom); break;
-		case typeInt:       buildMultiByteVariable("int", intMarginTop, intMarginBottom); break;
-		case typeEnum:      buildMultiByteVariable("int", intMarginTop, intMarginBottom); break;
-		case typeBitField:  buildMultiByteVariable("int", intMarginTop, intMarginBottom); break;
-		case typeFloat:     buildMultiByteVariable("float", floatMarginTop, floatMarginBottom); break;
+		case typeBool:      buildSingleByteVariable("up_bool_false", refBoolMargins); break;
+		case typeChar:      buildSingleByteVariable("up_char", refCharMargins); break;
+		case typeInt:       buildMultiByteVariable("int", refIntMargins); break;
+		case typeEnum:      buildMultiByteVariable("int", refIntMargins); break;
+		case typeBitField:  buildMultiByteVariable("int", refIntMargins); break;
+		case typeFloat:     buildMultiByteVariable("float", refFloatMargins); break;
 
 		// Indirection types
-		case typePointer:   buildMultiByteVariable("pointer", pointerMarginTop, pointerMarginBottom); break;
-		case typeReference: buildMultiByteVariable("pointer", pointerMarginTop, pointerMarginBottom); break;
-		case typeRValue:    buildMultiByteVariable("pointer", pointerMarginTop, pointerMarginBottom); break;
-		case typeFunction:  buildMultiByteVariable("pointer", pointerMarginTop, pointerMarginBottom); break;
+		case typePointer:   buildMultiByteVariable("pointer", refPointerMargins); break;
+		case typeReference: buildMultiByteVariable("pointer", refPointerMargins); break;
+		case typeRValue:    buildMultiByteVariable("pointer", refPointerMargins); break;
+		case typeFunction:  buildMultiByteVariable("pointer", refPointerMargins); break;
 
 		// Composite types
 		case typeArray:     buildArray(); break;
@@ -69,10 +69,10 @@ void GraphicVariable::applyDataTypeMargins(const qreal dataMarginTop, const qrea
 	setMarginBottom( parent ? dataMarginBottom + 0.1 : dataMarginBottom );
 }
 
-bool GraphicVariable::buildSingleByteVariable(const QString& asset, const qreal dataMarginTop, const qreal dataMarginBottom)
+bool GraphicVariable::buildSingleByteVariable(const QString& asset, const qreal refDataMargins[])
 {
 	// Apply margins according to the height of the data type and the nesting on composite data types
-	applyDataTypeMargins(dataMarginTop, dataMarginBottom);
+	applyDataTypeMargins(refDataMargins[refMarginTop], refDataMargins[refMarginBottom]);
 
 	// Pod
 	// A single-byte variable requires just a prop
@@ -83,10 +83,10 @@ bool GraphicVariable::buildSingleByteVariable(const QString& asset, const qreal 
 	return true;
 }
 
-bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal dataMarginTop, const qreal dataMarginBottom)
+bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal refDataMargins[])
 {
 	// Apply margins according to the height of the data type and the nesting on composite data types
-	applyDataTypeMargins(dataMarginTop, dataMarginBottom);
+	applyDataTypeMargins(refDataMargins[refMarginTop], refDataMargins[refMarginBottom]);
 
 	// Left and right parts always require 1 byte, middle the remaining bytes
 	const qreal zPod = memoryRow->getZValue() + zPodOffset;
@@ -127,8 +127,8 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal d
 		Q_ASSERT(label == nullptr);
 		label = new SvgButton("up_variable_name_middle", memoryRow->getScene(), variable->name);
 		label->setMarginLeft(0.15);
-		label->setMarginTop(0.139453539378996);
-		label->setMarginBottom(0.415722927836234);
+		label->setMarginTop( refDataMargins[refLabelTop] );
+		label->setMarginBottom( refDataMargins[refLabelBottom] );
 		addItem(label, 2.0 / size, memoryRow->getZValue() + zLabelOffset);
 	}
 
@@ -139,8 +139,8 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal d
 
 	Q_ASSERT(value == nullptr);
 	value = new LabelButton( variable->value, memoryRow->getScene() );
-	value->setMarginTop(0.139453539378996);
-	value->setMarginBottom(0.415722927836234);
+	value->setMarginTop( refDataMargins[refLabelTop] );
+	value->setMarginBottom( refDataMargins[refLabelBottom] );
 	value->alignRight();
 	addItem(value, valueProportion / size, memoryRow->getZValue() + zValueOffset);
 
@@ -152,6 +152,9 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal d
 
 bool GraphicVariable::buildArray()
 {
+	// We use the same proportions of structs for arrays
+	applyDataTypeMargins(refStructMargins[refMarginTop], refStructMargins[refMarginBottom]);
+
 	// We create an sub-array of the variable
 	Q_ASSERT( variable->children.count() > 0 );
 	VisAddress elementSize = variable->children[0]->size;
@@ -176,5 +179,5 @@ bool GraphicVariable::buildArray()
 bool GraphicVariable::buildStruct()
 {
 	// ToDo: We have to traverse the data members of the structure
-	return buildMultiByteVariable("up_struct", structMarginTop, structMarginBottom);
+	return buildMultiByteVariable("up_struct", refStructMargins);
 }

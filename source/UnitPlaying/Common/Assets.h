@@ -1,7 +1,8 @@
 #ifndef ASSETS_H
 #define ASSETS_H
 
-// Threads
+
+// Threads ---------------------------------------------------------------------------------------
 
 #include <QColor>
 
@@ -23,7 +24,7 @@ const QColor threadColors[] =
 };
 
 
-// Memory row
+// Memory row ------------------------------------------------------------------------------------
 
 // Garbage graphics are smaller than the memory row's height
 const qreal refRowHeight = 34.879;
@@ -37,19 +38,45 @@ const qreal garbageMarginTop[] =
 	1.0 - ( 14.500 +  7.478 ) / refRowHeight,
 };
 
-// Convert Inkscape positions and dimensions to percents
-#define RefMarginTop(name, y, height) const qreal name = 1.0 - (y + height) / refRowHeight;
-#define RefMarginBottom(name, y) const qreal name = y / refRowHeight;
-#define RefMarginTopBottom(type, y, height) \
-	RefMarginTop(type ## MarginTop, y, height) \
-	RefMarginBottom(type ## MarginBottom, y)
 
-// MemoryAllocation (variables)
-RefMarginTopBottom(bool, 11.529, 16.500)
-RefMarginTopBottom(char, 11.529, 16.681)
-RefMarginTopBottom(int, 12.545, 15.500)
-RefMarginTopBottom(float, 12.545, 15.500)
-RefMarginTopBottom(pointer, 12.545, 21.944)
-RefMarginTopBottom(struct, 12.545, 19.500)
+// MemoryAllocation (variables) ------------------------------------------------------------------
+
+// Position and dimensions of the variable label for name and value
+const qreal variableLabelY = 15.067;
+const qreal variableLabelHeight = 11.946;
+
+// Convert Inkscape positions and dimensions to percents
+enum refDataElements
+{
+	refMarginTop,
+	refMarginBottom,
+	refLabelTop,
+	refLabelBottom,
+
+	refElementsSize
+};
+
+#define RefMarginTop(y, height)    (1.0 - (y + height) / refRowHeight)
+#define RefMarginBottom(y)         (y / refRowHeight)
+#define RefLabelTop(height)        ((height - variableLabelHeight) / height)
+#define RefLabelBottom(y, height)  ((variableLabelY - y) / height)
+
+#define RefMarginArray(type, y, height) \
+	const qreal ref ## type ## Margins[] =\
+	{ \
+		RefMarginTop(y, height) ,\
+		RefMarginBottom(y) ,\
+		RefLabelTop(height) ,\
+		RefLabelBottom(y, height) \
+	}; \
+	//static_assert( sizeof(ref ## type ## Margins) / sizeof(qreal) == refElementsSize );
+
+
+RefMarginArray(Bool, 11.529, 16.500)
+RefMarginArray(Char, 11.529, 16.681)
+RefMarginArray(Int, 12.545, 15.500)
+RefMarginArray(Float, 12.545, 15.500)
+RefMarginArray(Pointer, 12.545, 21.944)
+RefMarginArray(Struct, 12.545, 19.500)
 
 #endif // ASSETS_H

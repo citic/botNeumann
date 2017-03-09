@@ -55,9 +55,9 @@ class GraphicVariable : public LinearLayout
 	/// Constructs this variable fragment
 	bool buildGraphicVariable();
 	/// Create the pod, the value, and the label for a bool or char variable
-	bool buildSingleByteVariable(const QString& asset, const qreal dataMarginTop, const qreal dataMarginBottom);
+	bool buildSingleByteVariable(const QString& asset, const qreal refDataMargins[]);
 	/// Create the pod, the value, and the label for an int or float variable
-	bool buildMultiByteVariable(const QString& asset, const qreal dataMarginTop, const qreal dataMarginBottom);
+	bool buildMultiByteVariable(const QString& asset, const qreal refDataMargins[]);
 	/// Create a recursive array of variables
 	bool buildArray();
 	/// Create a recursive structure of variables
