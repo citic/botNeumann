@@ -58,7 +58,7 @@ enum refDataElements
 
 #define RefMarginTop(y, height)    (1.0 - (y + height) / refRowHeight)
 #define RefMarginBottom(y)         (y / refRowHeight)
-#define RefLabelTop(height)        ((height - variableLabelHeight) / height)
+#define RefLabelTop(y, height)     (((y + height) - (variableLabelY + variableLabelHeight)) / height)
 #define RefLabelBottom(y, height)  ((variableLabelY - y) / height)
 
 #define RefMarginArray(type, y, height) \
@@ -66,7 +66,7 @@ enum refDataElements
 	{ \
 		RefMarginTop(y, height) ,\
 		RefMarginBottom(y) ,\
-		RefLabelTop(height) ,\
+		RefLabelTop(y, height) ,\
 		RefLabelBottom(y, height) \
 	}; \
 	//static_assert( sizeof(ref ## type ## Margins) / sizeof(qreal) == refElementsSize );

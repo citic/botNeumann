@@ -129,7 +129,7 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 		label->setMarginLeft(0.15);
 		label->setMarginTop( refDataMargins[refLabelTop] );
 		label->setMarginBottom( refDataMargins[refLabelBottom] );
-		addItem(label, 2.0 / size, memoryRow->getZValue() + zLabelOffset);
+		addItem(label, qMax(2.0, size / 3.0) / size, memoryRow->getZValue() + zLabelOffset);
 	}
 
 	// Variable value
@@ -179,5 +179,7 @@ bool GraphicVariable::buildArray()
 bool GraphicVariable::buildStruct()
 {
 	// ToDo: We have to traverse the data members of the structure
-	return buildMultiByteVariable("up_struct", refStructMargins);
+	// Label asset is not proportioned for structs. We fix it
+	const qreal refStructMarginsFixed[] = { refStructMargins[refMarginTop], refStructMargins[refMarginBottom], 0.1, 0.1 };
+	return buildMultiByteVariable("up_struct", refStructMarginsFixed);
 }
