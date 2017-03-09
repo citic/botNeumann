@@ -37,5 +37,19 @@ const qreal garbageMarginTop[] =
 	1.0 - ( 14.500 +  7.478 ) / refRowHeight,
 };
 
+// Convert Inkscape positions and dimensions to percents
+#define RefMarginTop(name, y, height) const qreal name = 1.0 - (y + height) / refRowHeight;
+#define RefMarginBottom(name, y) const qreal name = y / refRowHeight;
+#define RefMarginTopBottom(type, y, height) \
+	RefMarginTop(type ## MarginTop, y, height) \
+	RefMarginBottom(type ## MarginBottom, y)
+
+// MemoryAllocation (variables)
+RefMarginTopBottom(bool, 11.529, 16.500)
+RefMarginTopBottom(char, 11.529, 16.681)
+RefMarginTopBottom(int, 12.545, 15.500)
+RefMarginTopBottom(float, 12.545, 15.500)
+RefMarginTopBottom(pointer, 12.545, 21.944)
+RefMarginTopBottom(struct, 12.545, 19.500)
 
 #endif // ASSETS_H

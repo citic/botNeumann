@@ -1,4 +1,5 @@
 #include "GraphicVariable.h"
+#include "Assets.h"
 #include "LabelButton.h"
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
@@ -39,18 +40,18 @@ bool GraphicVariable::buildGraphicVariable()
 		case typeVoid: return false;
 
 		// Atomic types
-		case typeBool:      buildSingleByteVariable("up_bool_false"); break;
-		case typeChar:      buildSingleByteVariable("up_char"); break;
-		case typeInt:       buildMultiByteVariable("int"); break;
-		case typeEnum:      buildMultiByteVariable("int"); break;
-		case typeBitField:  buildMultiByteVariable("int"); break;
-		case typeFloat:     buildMultiByteVariable("float"); break;
+		case typeBool:      buildSingleByteVariable("up_bool_false", boolMarginTop, boolMarginBottom); break;
+		case typeChar:      buildSingleByteVariable("up_char", charMarginTop, charMarginBottom); break;
+		case typeInt:       buildMultiByteVariable("int", intMarginTop, intMarginBottom); break;
+		case typeEnum:      buildMultiByteVariable("int", intMarginTop, intMarginBottom); break;
+		case typeBitField:  buildMultiByteVariable("int", intMarginTop, intMarginBottom); break;
+		case typeFloat:     buildMultiByteVariable("float", floatMarginTop, floatMarginBottom); break;
 
 		// Indirection types
-		case typePointer:   buildMultiByteVariable("pointer"); break;
-		case typeReference: buildMultiByteVariable("pointer"); break;
-		case typeRValue:    buildMultiByteVariable("pointer"); break;
-		case typeFunction:  buildMultiByteVariable("pointer"); break;
+		case typePointer:   buildMultiByteVariable("pointer", pointerMarginTop, pointerMarginBottom); break;
+		case typeReference: buildMultiByteVariable("pointer", pointerMarginTop, pointerMarginBottom); break;
+		case typeRValue:    buildMultiByteVariable("pointer", pointerMarginTop, pointerMarginBottom); break;
+		case typeFunction:  buildMultiByteVariable("pointer", pointerMarginTop, pointerMarginBottom); break;
 
 		// Composite types
 		case typeArray:     buildArray(); break;
@@ -62,8 +63,17 @@ bool GraphicVariable::buildGraphicVariable()
 	return true;
 }
 
-bool GraphicVariable::buildSingleByteVariable(const QString& asset)
+void GraphicVariable::applyDataTypeMargins(const qreal dataMarginTop, const qreal dataMarginBottom)
 {
+	setMarginTop( parent ? dataMarginTop + 0.1 : dataMarginTop );
+	setMarginBottom( parent ? dataMarginBottom + 0.1 : dataMarginBottom );
+}
+
+bool GraphicVariable::buildSingleByteVariable(const QString& asset, const qreal dataMarginTop, const qreal dataMarginBottom)
+{
+	// Apply margins according to the height of the data type and the nesting on composite data types
+	applyDataTypeMargins(dataMarginTop, dataMarginBottom);
+
 	// Pod
 	// A single-byte variable requires just a prop
 	Prop* pod = new Prop(asset, memoryRow->getScene());
@@ -73,8 +83,11 @@ bool GraphicVariable::buildSingleByteVariable(const QString& asset)
 	return true;
 }
 
-bool GraphicVariable::buildMultiByteVariable(const QString& asset)
+bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal dataMarginTop, const qreal dataMarginBottom)
 {
+	// Apply margins according to the height of the data type and the nesting on composite data types
+	applyDataTypeMargins(dataMarginTop, dataMarginBottom);
+
 	// Left and right parts always require 1 byte, middle the remaining bytes
 	const qreal zPod = memoryRow->getZValue() + zPodOffset;
 	const VisAddress size = getSize();
@@ -88,8 +101,6 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset)
 				? new ScenicElement(asset + "_left", memoryRow->getScene())
 				: new ScenicElement(svgFileBase + "_left.svg", memoryRow->getScene(), true);
 
-		podLeft->setMarginTop(0.139453539378996);
-		podLeft->setMarginBottom(0.415722927836234);
 		addItem(podLeft, 1.0 / size, zPod);
 	}
 
@@ -98,8 +109,6 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset)
 			? new ScenicElement(asset + "_middle", memoryRow->getScene())
 			: new ScenicElement(svgFileBase + "_middle.svg", memoryRow->getScene(), true);
 	qreal middleSize = size - (VisAddress)leftComplete - (VisAddress)rightComplete;
-	podMiddle->setMarginTop(0.139453539378996);
-	podMiddle->setMarginBottom(0.415722927836234);
 	addItem(podMiddle, middleSize / size, zPod);
 
 	// Pod: right
@@ -108,12 +117,10 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset)
 		ScenicElement* podRight = asset.startsWith("up_")
 				? new ScenicElement(asset + "_right", memoryRow->getScene())
 				: new ScenicElement(svgFileBase + "_right.svg", memoryRow->getScene(), true);
-		podRight->setMarginTop(0.139453539378996);
-		podRight->setMarginBottom(0.415722927836234);
 		addItem(podRight, 1.0 / size, zPod);
 	}
 
-	// Label is created only if there is enough room
+	// Variable name: label is created only if there is enough room
 	if ( size >= 4 )
 	{
 		// ToDo: Modify SvgButton to receive an array of asset names
@@ -125,7 +132,7 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset)
 		addItem(label, 2.0 / size, memoryRow->getZValue() + zLabelOffset);
 	}
 
-	// A label to store the value
+	// Variable value
 	qreal valueProportion = size - 1.0;
 	if ( label )
 		valueProportion -= 2.0;
@@ -169,5 +176,5 @@ bool GraphicVariable::buildArray()
 bool GraphicVariable::buildStruct()
 {
 	// ToDo: We have to traverse the data members of the structure
-	return buildMultiByteVariable("up_struct");
+	return buildMultiByteVariable("up_struct", structMarginTop, structMarginBottom);
 }
