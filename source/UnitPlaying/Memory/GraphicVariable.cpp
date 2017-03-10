@@ -3,9 +3,9 @@
 #include "LabelButton.h"
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
+#include "MultiSvgButton.h"
 #include "Prop.h"
 #include "Scene.h"
-#include "SvgButton.h"
 
 // Extra z-values for the parts of the graphic variable
 const qreal zPodOffset   = 0.30;
@@ -123,13 +123,25 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 	// Variable name: label is created only if there is enough room
 	if ( size >= 4 )
 	{
-		// ToDo: Modify SvgButton to receive an array of asset names
 		Q_ASSERT(label == nullptr);
-		label = new SvgButton("up_variable_name_middle", memoryRow->getScene(), variable->name);
+
+		// Create a label that uses an array of images (represented by a piece of tape)
+		QStringList labelAssets;
+		labelAssets << "up_variable_name_left" << "up_variable_name_middle" << "up_variable_name_right";
+
+		// Calculate proportions of each part of the tape, using the bytes they require
+		const qreal labelBytes = qMax(2.0, size / 3.0);
+		const qreal leftRightProportion = 3.246 / 11.951 / labelBytes;
+		const qreal middleProportion =  1.0 - 2 * leftRightProportion;
+		QList<qreal> proportions;
+		proportions << leftRightProportion << middleProportion << leftRightProportion;
+
+		// Create the label and add it to the scene
+		label = new MultiSvgButton(labelAssets, proportions, memoryRow->getScene(), variable->name, memoryRow->getZValue() + zLabelOffset );
 		label->setMarginLeft(0.15);
 		label->setMarginTop( refDataMargins[refLabelTop] );
 		label->setMarginBottom( refDataMargins[refLabelBottom] );
-		addItem(label, qMax(2.0, size / 3.0) / size, memoryRow->getZValue() + zLabelOffset);
+		addItem(label, labelBytes / size, memoryRow->getZValue() + zLabelOffset);
 	}
 
 	// Variable value

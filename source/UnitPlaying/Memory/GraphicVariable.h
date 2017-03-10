@@ -10,7 +10,7 @@ class LabelButton;
 struct MemoryAllocation;
 class MemoryRow;
 class ScenicElement;
-class SvgButton;
+class MultiSvgButton;
 
 /** Represents graphically a variable within a memory row, or a segment of the variable if it does
 	not fit within the memory row (in such case, the variable spans for several memory rows). */
@@ -34,7 +34,7 @@ class GraphicVariable : public LinearLayout
 	/// For pointers, the left part of the pod, may be changed for valid or invalid
 	ScenicElement* podLeft = nullptr;
 	/// A label to show the variable name. Only available in large pods (4 or more bytes)
-	SvgButton* label = nullptr;
+	MultiSvgButton* label = nullptr;
 	/// A label to show the value of the variable
 	LabelButton* value = nullptr;
 	/// Composite types are recursive, therefore represented as a tree
