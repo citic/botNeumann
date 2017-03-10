@@ -30,6 +30,10 @@ class MultiSvgButton : public LinearLayout
 	explicit MultiSvgButton(const QStringList& prefixedSvgElementIds, const QList<qreal>& proportions, QGraphicsItem* parentItem, const QString& text, qreal zValue);
 	/// Destructor
 	virtual ~MultiSvgButton();
+	/// Set label font
+	void setFont(const QFont& font);
+	/// Set foreground color
+	void setBrush(const QBrush& brush);
 
   public slots:
 	/// When disabled, the button becomes semi-transparent

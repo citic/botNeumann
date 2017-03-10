@@ -1,11 +1,15 @@
 #include "GraphicVariable.h"
 #include "Assets.h"
+#include "BotNeumannApp.h"
 #include "LabelButton.h"
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
 #include "MultiSvgButton.h"
 #include "Prop.h"
 #include "Scene.h"
+
+#include <QBrush>
+#include <QFont>
 
 // Extra z-values for the parts of the graphic variable
 const qreal zPodOffset   = 0.30;
@@ -120,6 +124,9 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 		addItem(podRight, 1.0 / size, zPod);
 	}
 
+	// Amount of bytes required by the variable name
+	const qreal labelBytes = qMax(2.0, size / 3.0);
+
 	// Variable name: label is created only if there is enough room
 	if ( size >= 4 )
 	{
@@ -130,7 +137,6 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 		labelAssets << "up_variable_name_left" << "up_variable_name_middle" << "up_variable_name_right";
 
 		// Calculate proportions of each part of the tape, using the bytes they require
-		const qreal labelBytes = qMax(2.0, size / 3.0);
 		const qreal leftRightProportion = 3.246 / 11.951 / labelBytes;
 		const qreal middleProportion =  1.0 - 2 * leftRightProportion;
 		QList<qreal> proportions;
@@ -141,20 +147,24 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 		label->setMarginLeft(0.15);
 		label->setMarginTop( refDataMargins[refLabelTop] );
 		label->setMarginBottom( refDataMargins[refLabelBottom] );
+		label->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
+		label->setBrush(QBrush(Qt::black));
 		addItem(label, labelBytes / size, memoryRow->getZValue() + zLabelOffset);
 	}
 
 	// Variable value
 	qreal valueProportion = size - 1.0;
 	if ( label )
-		valueProportion -= 2.0;
+		valueProportion -= labelBytes;
 
 	Q_ASSERT(value == nullptr);
 	value = new LabelButton( variable->value, memoryRow->getScene() );
-	value->setMarginTop( refDataMargins[refLabelTop] );
+	value->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
 	value->setMarginBottom( refDataMargins[refLabelBottom] );
 	value->alignRight();
-	addItem(value, valueProportion / size, memoryRow->getZValue() + zValueOffset);
+	//value->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
+	value->setBrush(QBrush(Qt::black));
+	addItem(value, valueProportion / size, memoryRow->getZValue() + zLabelOffset);
 
 	// ToDo: If dataType is pointer, we can save a pointer to the pointed data, but it may be
 	// more realistic to find the pointed data any time it is required

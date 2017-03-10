@@ -27,6 +27,18 @@ MultiSvgButton::~MultiSvgButton()
 {
 }
 
+void MultiSvgButton::setFont(const QFont& font)
+{
+	if ( label )
+		label->setFont(font);
+}
+
+void MultiSvgButton::setBrush(const QBrush& brush)
+{
+	if ( label )
+		label->setBrush(brush);
+}
+
 void MultiSvgButton::buildLabel(const QString& text, QGraphicsItem* parentItem, qreal zValue)
 {
 	if ( ! text.isEmpty() )
