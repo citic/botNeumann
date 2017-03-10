@@ -13,8 +13,14 @@ Layout::~Layout()
 
 void Layout::addItem(LayoutItem* item, qreal proportion, qreal zValue)
 {
+	return insertItem(item, -1.0, proportion, zValue);
+}
+
+void Layout::insertItem(LayoutItem* item, qreal startProportion, qreal proportion, qreal zValue)
+{
 	Q_ASSERT(item);
 	item->setParentLayoutItem(this);
+	item->setStartProportion(startProportion);
 	item->setProportion(proportion);
 	item->setZ(zValue);
 	items[zValue].append(item);

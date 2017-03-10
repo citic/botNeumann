@@ -25,6 +25,8 @@ class Layout : public LayoutItem
 	virtual ~Layout();
 	/// Add the given item to the sequence of items
 	virtual void addItem(LayoutItem* item, qreal proportion, qreal zValue = 0.0);
+	/// Insert the item at the given percent
+	virtual void insertItem(LayoutItem* item, qreal startProportion, qreal proportion, qreal zValue = 0.0);
 	/// Add any Qt graphics item, including QGraphicsWidget
 //	virtual void addItem(QGraphicsItem* widget);
 	/// Removes the item from the layout, and the scene

@@ -158,9 +158,8 @@ bool MemoryRow::allocate(MemoryAllocation* variable)
 		// Add the graphical variable to the list of variables allocated in this memory row
 		graphicVariables.append(graphicVariable);
 
-		// ToDo: we need to set absolute positions in layout, instead of appending them
-	//	insertItem( graphicVariable, (lastByte - firstByte + 1) * byteProportion, zVariable );
-		addItem( graphicVariable, (lastByte - firstByte + 1) * byteProportion, zVariable );
+		// We add the variable to an absolute position in layout, +1 for memory legs at the left
+		insertItem( graphicVariable, (firstByte - start + 1) * byteProportion, (lastByte - firstByte + 1) * byteProportion, zVariable );
 		qCCritical(logTemporary, "MemRow: %s proportion %lf", qPrintable(variable->name), (lastByte - firstByte + 1) * byteProportion);
 		this->updateLayoutItem();
 	}

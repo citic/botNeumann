@@ -16,6 +16,9 @@ class LayoutItem
 	/// Pointer to the parent item that contains this one
 	/// @remarks Implemented but not used, as well as Layout::findZValue()
 	LayoutItem* parentLayoutItem = nullptr;
+	/// Percent of the parent where this item starts. A negative value means it starts just after
+	/// the previous element that has been added to the parent.
+	qreal startProportion = -1.0;
 	/// Percent of extension (aka proportion) this item will occupy in parent's space
 	qreal proportion;
 	/// Percent of extension of each margin of this item
@@ -45,6 +48,9 @@ class LayoutItem
 	/// The parent item that contains this one
 	inline LayoutItem* getParentLayoutItem() const { return parentLayoutItem; }
 	inline void setParentLayoutItem(LayoutItem* parent) { this->parentLayoutItem = parent; }
+	/// The proportion in parent where this item starts
+	inline qreal getStartProportion() const { return startProportion; }
+	inline void setStartProportion(qreal startProportion) { this->startProportion = startProportion; }
 	/// The proportion of space this item occupies of its layout
 	inline qreal getProportion() const { return proportion; }
 	inline void setProportion(qreal proportion) { this->proportion = proportion; }
