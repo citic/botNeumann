@@ -124,7 +124,10 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 	}
 
 	// Amount of bytes required by the variable name
-	const qreal labelBytes = qMax(2.0, size / 3.0);
+	qreal valueBytes = qMin( variable->value.length() / 2.5, size - 2.0 );
+	qreal labelBytes = qMin( variable->name.length() / 2.5, size - valueBytes  );
+	if ( valueBytes + labelBytes < size - 2 )
+		valueBytes = size - 2 - labelBytes;
 
 	// Variable name: label is created only if there is enough room
 	if ( size >= 4 )
@@ -151,12 +154,10 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 		//label->setShear(-0.2, 0.0);
 		addItem(label, labelBytes / size, memoryRow->getZValue() + zLabelValueOffset);
 	}
+	else
+		valueBytes = size - 2;
 
 	// Variable value
-	qreal valueProportion = size - 1.0;
-	if ( label )
-		valueProportion -= labelBytes;
-
 	Q_ASSERT(value == nullptr);
 	value = new LabelButton( variable->value, memoryRow->getScene() );
 	value->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
@@ -164,7 +165,7 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 	value->alignRight();
 	//value->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 	value->setBrush(QBrush(Qt::black));
-	addItem(value, valueProportion / size, memoryRow->getZValue() + zLabelValueOffset);
+	addItem(value, valueBytes / size, memoryRow->getZValue() + zLabelValueOffset);
 
 	// ToDo: If dataType is pointer, we can save a pointer to the pointed data, but it may be
 	// more realistic to find the pointed data any time it is required
