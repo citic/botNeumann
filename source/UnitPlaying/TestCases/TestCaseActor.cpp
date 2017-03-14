@@ -106,18 +106,36 @@ void TestCaseActor::playerSolutionTimeout()
 
 void TestCaseActor::setTestCaseResult(TestCaseActor::TestCaseResult result, const QString& reason)
 {
+	// Copy the result internally
 	this->result = result;
 	this->failReason = reason;
 
-	switch (result)
+	// Update the graphical interface to the result
+	reflectTestCaseResult(true);
+
+	if ( ! failReason.isEmpty() )
+		qCInfo( logPlayer, "Test case %d failed: %s", index, qUtf8Printable(failReason) );
+}
+
+void TestCaseActor::reflectTestCaseResult(bool hideActiveTestCaseResult)
+{
+	TestCaseResult state = result;
+	if ( hideActiveTestCaseResult && isTheActiveTestCase )
+		state = unknown;
+
+	switch (state)
 	{
 		case unknown: setElementId("up_standard_output_test_inactive1"); break;
 		case passed: setElementId("up_standard_output_test_valid1"); break;
 		case failed: setElementId("up_standard_output_test_invalid1"); break;
 	}
+}
 
-	if ( ! failReason.isEmpty() )
-		qCInfo( logPlayer, "Test case %d failed: %s", index, qUtf8Printable(failReason) );
+void TestCaseActor::setActiveTestCase(bool active, bool updateInterface)
+{
+	isTheActiveTestCase = active;
+	if ( updateInterface )
+		reflectTestCaseResult(true);
 }
 
 void TestCaseActor::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)

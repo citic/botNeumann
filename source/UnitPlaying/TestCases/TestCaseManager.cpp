@@ -4,6 +4,7 @@
 #include "Prop.h"
 #include "Scene.h"
 #include "TestCaseActor.h"
+#include "LogManager.h"
 
 #include <QMessageBox>
 
@@ -31,9 +32,9 @@ bool TestCaseManager::testPlayerSolution()
 	clearAnimation();
 
 	// Create a new layer for the new test cases
-	Q_ASSERT(currentTestCases == nullptr);
-	currentTestCases = new LinearLayout(Qt::Horizontal);
-	addLayout(currentTestCases, 1.0);
+	Q_ASSERT(testCaseLayout == nullptr);
+	testCaseLayout = new LinearLayout(Qt::Horizontal);
+	addLayout(testCaseLayout, 1.0);
 
 	// If there are not test cases, do nothing
 	int testCasesCount = playerSolution->getTestCasesCount();
@@ -68,14 +69,21 @@ bool TestCaseManager::createAndRunTestCase(int index, const qreal testerWidthPro
 {
 	// Separate this tester from previous or left edge
 	qreal zTesters = zUnitPlaying::testCases + 0.1;
-	currentTestCases->addStretch(testerWidthProportion / 2.0, zTesters);
+	testCaseLayout->addStretch(testerWidthProportion / 2.0, zTesters);
 
 	// Create the test case and add it to the scene
 	TestCaseActor* testCaseActor = new TestCaseActor(index, scene);
-	currentTestCases->addItem( testCaseActor, testerWidthProportion, zTesters );
+	testCaseLayout->addItem( testCaseActor, testerWidthProportion, zTesters );
+
+	// Add the test case to the list of actors
+	testCaseActors.append(testCaseActor);
+	Q_ASSERT( index == testCaseActors.count() );
 
 	// When the test case actor is activated, user wants to change the active test case
 	connect( testCaseActor, SIGNAL(testCaseActivated(int)), this, SLOT(setActiveTestCase(int)) );
+
+	// The active test case does not show the result because it is being visualized
+	testCaseActor->setActiveTestCase( index == activeTestCase );
 
 	// Run the player solution against the test
 	return testCaseActor->testPlayerSolution(playerSolution);
@@ -84,12 +92,12 @@ bool TestCaseManager::createAndRunTestCase(int index, const qreal testerWidthPro
 void TestCaseManager::clearAnimation()
 {
 	// If there are not test cases, done
-	if ( currentTestCases == nullptr )
+	if ( testCaseLayout == nullptr )
 		return;
 
-	currentTestCases->removeAllItems(true);
-	removeItem(currentTestCases, true);
-	currentTestCases = nullptr;
+	testCaseLayout->removeAllItems(true);
+	removeItem(testCaseLayout, true);
+	testCaseLayout = nullptr;
 }
 
 void TestCaseManager::setActiveTestCase(int newTestCaseNumber)
@@ -98,11 +106,21 @@ void TestCaseManager::setActiveTestCase(int newTestCaseNumber)
 	if ( activeTestCase == newTestCaseNumber )
 		return;
 
-	// Ask confirmation
-	const QString& text = QString("Do you want to visualize test case %1?\nIt will stop current visualization.").arg(newTestCaseNumber);
-	if ( QMessageBox::question(nullptr, tr("Change test case?"), text) == QMessageBox::Yes )
-	{
-		activeTestCase = newTestCaseNumber;
-		emit activeTestCaseChanged(activeTestCase);
-	}
+	// Ask confirmation, if user cancels, ignore the event
+	const QString& text = QString("Do you want to visualize test case %1?\nThis will stop current visualization.").arg(newTestCaseNumber);
+	if ( QMessageBox::question(nullptr, tr("Change test case?"), text) != QMessageBox::Yes )
+		return;
+
+	// User confirmed, tell the old test case it is not active now
+	Q_ASSERT( activeTestCase - 1 < testCaseActors.count() );
+	testCaseActors[activeTestCase - 1]->setActiveTestCase(false, true);
+	qCInfo( logPlayer, "Test case changed from %d to %d", activeTestCase, newTestCaseNumber);
+
+	// Make the new test case the active one
+	activeTestCase = newTestCaseNumber;
+	Q_ASSERT( newTestCaseNumber - 1 < testCaseActors.count() );
+	testCaseActors[newTestCaseNumber - 1]->setActiveTestCase(true, true);
+
+	// Alert other objects that we shall start a new visualization
+	emit activeTestCaseChanged(activeTestCase);
 }

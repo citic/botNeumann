@@ -25,8 +25,10 @@ class TestCaseManager : public QObject, public LinearLayout
 	Scene* scene;
 	/// To get the test cases and the player solution executable
 	PlayerSolution* playerSolution = nullptr;
+	/// The list of test cases actors
+	QList<TestCaseActor*> testCaseActors;
 	/// Manages the list of test cases of the current run
-	LinearLayout* currentTestCases = nullptr;
+	LinearLayout* testCaseLayout = nullptr;
 	/// Number of the active test case being visualized, by default 1
 	int activeTestCase = 1;
 
