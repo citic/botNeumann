@@ -8,7 +8,7 @@
 // The roof requires half memory row
 const double memoryRoofRows = 0.5;
 
-MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, qreal zValue, bool withGarbage)
+MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage)
 	: LinearLayout(Qt::Vertical)
 	, scene(scene)
 	, rowCount(rowCount)
@@ -21,7 +21,7 @@ MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t
 	memoryAllocations.append(freeFragment);
 
 	// Draw the memory frame in the visualization
-	buildMemoryFrame(zValue);
+	buildMemoryFrame(topLabel, zValue);
 
 	// Distribute the free fragment to all the memory rows. This is required in order to draw
 	// initial garbage if this segment has it by default
@@ -152,12 +152,12 @@ bool MemoryFrame::deallocate(MemoryAllocation* memoryAllocation)
 	return true;
 }
 
-void MemoryFrame::buildMemoryFrame(qreal zValue)
+void MemoryFrame::buildMemoryFrame(const QString& topLabel, qreal zValue)
 {
 	// Create the memory roof
 	Q_ASSERT(scene);
 	Q_ASSERT(memoryTop == nullptr);
-	memoryTop = new MemoryTop(rowSize, scene, zValue);
+	memoryTop = new MemoryTop(rowSize, topLabel, scene, zValue);
 	addItem(memoryTop, memoryRoofRows / getHeightInRows(), zValue);
 
 	// Create the memory rows

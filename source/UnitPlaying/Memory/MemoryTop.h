@@ -3,6 +3,7 @@
 
 #include "LinearLayout.h"
 
+class MultiSvgButton;
 class Scene;
 
 /// Draws a memory roof on top of the memory rows
@@ -15,14 +16,20 @@ class MemoryTop : public LinearLayout
 	size_t size;
 	/// To reparent children to this scene
 	Scene* scene;
+	/// The z-value for child graphic elements
+	qreal zValue;
+	/// The label to identify the entire memory frame is placed on the memory top
+	MultiSvgButton* label = nullptr;
 
   public:
 	/// Constructor
-	MemoryTop(size_t size, Scene* scene, qreal zValue);
+	MemoryTop(size_t size, const QString& labelText, Scene* scene, qreal zValue);
 
   protected:
 	/// Creates the props to display a memory roof
-	void buildMemoryTop(qreal zValue);
+	void buildMemoryTop();
+	/// Creates the label for the memory frame
+	void buildLabel(const QString& label);
 };
 
 #endif // MEMORYTOP_H

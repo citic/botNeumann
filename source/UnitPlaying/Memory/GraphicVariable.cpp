@@ -13,8 +13,7 @@
 
 // Extra z-values for the parts of the graphic variable
 const qreal zPodOffset   = 0.30;
-const qreal zValueOffset = 0.31;
-const qreal zLabelOffset = 0.32;
+const qreal zLabelValueOffset = 0.31;
 
 GraphicVariable::GraphicVariable(MemoryAllocation* variable, VisAddress firstByte, VisAddress lastByte, MemoryRow* memoryRow)
 	: LinearLayout(Qt::Horizontal)
@@ -78,7 +77,7 @@ bool GraphicVariable::buildSingleByteVariable(const QString& asset, const qreal 
 	// Apply margins according to the height of the data type and the nesting on composite data types
 	applyDataTypeMargins(refDataMargins[refMarginTop], refDataMargins[refMarginBottom]);
 
-	// Pod
+	// Pod:
 	// A single-byte variable requires just a prop
 	Prop* pod = new Prop(asset, memoryRow->getScene());
 	addItem(pod, 1.0, memoryRow->getZValue() + zPodOffset );
@@ -143,13 +142,13 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 		proportions << leftRightProportion << middleProportion << leftRightProportion;
 
 		// Create the label and add it to the scene
-		label = new MultiSvgButton(labelAssets, proportions, memoryRow->getScene(), variable->name, memoryRow->getZValue() + zLabelOffset );
+		label = new MultiSvgButton(labelAssets, proportions, memoryRow->getScene(), variable->name, memoryRow->getZValue() + zLabelValueOffset );
 		label->setMarginLeft(0.15);
 		label->setMarginTop( refDataMargins[refLabelTop] );
 		label->setMarginBottom( refDataMargins[refLabelBottom] );
 		label->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 		label->setBrush(QBrush(Qt::black));
-		addItem(label, labelBytes / size, memoryRow->getZValue() + zLabelOffset);
+		addItem(label, labelBytes / size, memoryRow->getZValue() + zLabelValueOffset);
 	}
 
 	// Variable value
@@ -164,7 +163,7 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 	value->alignRight();
 	//value->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 	value->setBrush(QBrush(Qt::black));
-	addItem(value, valueProportion / size, memoryRow->getZValue() + zLabelOffset);
+	addItem(value, valueProportion / size, memoryRow->getZValue() + zLabelValueOffset);
 
 	// ToDo: If dataType is pointer, we can save a pointer to the pointed data, but it may be
 	// more realistic to find the pointed data any time it is required

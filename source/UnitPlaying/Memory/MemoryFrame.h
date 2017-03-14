@@ -38,7 +38,7 @@ class MemoryFrame : public LinearLayout
 
   public:
 	/// Constructor
-	explicit MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, qreal zValue, bool withGarbage);
+	explicit MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage);
 	/// Destructor
 	~MemoryFrame();
 	/// Get the number of memory rows required by this object
@@ -61,7 +61,7 @@ class MemoryFrame : public LinearLayout
 
   protected:
 	/// Create the memory rows and place them into the scene
-	void buildMemoryFrame(qreal zValue);
+	void buildMemoryFrame(const QString& topLabel, qreal zValue);
 	/// Finds the smallest free fragment to allocate a variable
 	/// If a free fragment is found, retuns true and the parameters are assigned to the free
 	/// fragment (iterator) and the offset in that iterator. If no fragment is found, returns false
