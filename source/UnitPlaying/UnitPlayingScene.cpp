@@ -103,6 +103,10 @@ void UnitPlayingScene::finishedEnteringStage()
 	testCaseManager->setPlayerSolution(playerSolution);
 	connect( playerSolution, SIGNAL(allBuilt()), testCaseManager, SLOT(testPlayerSolution()) );
 
+	// When user wants to change the active test case, we have to stop current visualization and
+	// start a new one for the selected test case
+	connect( testCaseManager, SIGNAL(activeTestCaseChanged(int)), this, SLOT(activeTestCaseChanged(int)) );
+
 	// Load the source file list that compounds the player's solution
 	playerSolution->loadSolutionForUnit( &unit );
 
@@ -270,10 +274,14 @@ void UnitPlayingScene::playerSolutionBuilt(CompiledProgram* compiledProgram)
 
 	// By default, the first test case (the example) is always animated. If user wants another,
 	// s/he can press it later
-	int testCaseNumber = 1;
+	startVisualization(1);
+}
 
-	// The player solution generated an executable and we are ready to visualize it
-	delete visualizator;
+void UnitPlayingScene::startVisualization(int testCaseNumber)
+{
+	// The player solution generated an executable and we are ready to visualize it, or a new
+	// test case was actived and the previuous visualization is finished
+	visualizator->deleteLater();
 	visualizator = new Visualizator(playerSolution, testCaseNumber, this);
 
 	// When user creates or removes breakpoints and visualization is running, update them
@@ -297,7 +305,7 @@ void UnitPlayingScene::playerSolutionBuilt(CompiledProgram* compiledProgram)
 	messagesArea->loadTestCase(testCaseNumber, playerSolution);
 }
 
-void UnitPlayingScene::userStopped()
+void UnitPlayingScene::userStopped(bool removeTestCases)
 {
 	// Stop the animation
 	Q_ASSERT(visualizator);
@@ -307,10 +315,19 @@ void UnitPlayingScene::userStopped()
 		changeState(UnitPlayingState::editing);
 
 		// Tell the segments to remove animation artifacts
-		testCaseManager->clearAnimation();
+		if (removeTestCases) testCaseManager->clearAnimation();
 		codeSegment->clearAnimation();
 		heapSegment->clearAnimation();
 		cpuCores->clearAnimation();
 		dataSegment->clearAnimation();
 	}
+}
+
+void UnitPlayingScene::activeTestCaseChanged(int newTestCaseNumber)
+{
+	// Stop current visualization
+	userStopped(false);
+
+	// Start a new visualization for the new active test case
+	startVisualization(newTestCaseNumber);
 }

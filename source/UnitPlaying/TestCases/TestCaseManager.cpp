@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "TestCaseActor.h"
 
+#include <QMessageBox>
+
 TestCaseManager::TestCaseManager(Scene* scene, QObject* parent)
 	: QObject(parent)
 	, LinearLayout(Qt::Horizontal)
@@ -29,6 +31,7 @@ bool TestCaseManager::testPlayerSolution()
 	clearAnimation();
 
 	// Create a new layer for the new test cases
+	Q_ASSERT(currentTestCases == nullptr);
 	currentTestCases = new LinearLayout(Qt::Horizontal);
 	addLayout(currentTestCases, 1.0);
 
@@ -71,6 +74,9 @@ bool TestCaseManager::createAndRunTestCase(int index, const qreal testerWidthPro
 	TestCaseActor* testCaseActor = new TestCaseActor(index, scene);
 	currentTestCases->addItem( testCaseActor, testerWidthProportion, zTesters );
 
+	// When the test case actor is activated, user wants to change the active test case
+	connect( testCaseActor, SIGNAL(testCaseActivated(int)), this, SLOT(setActiveTestCase(int)) );
+
 	// Run the player solution against the test
 	return testCaseActor->testPlayerSolution(playerSolution);
 }
@@ -84,4 +90,19 @@ void TestCaseManager::clearAnimation()
 	currentTestCases->removeAllItems(true);
 	removeItem(currentTestCases, true);
 	currentTestCases = nullptr;
+}
+
+void TestCaseManager::setActiveTestCase(int newTestCaseNumber)
+{
+	// If user pressed the current test case being visualized, ignore the event
+	if ( activeTestCase == newTestCaseNumber )
+		return;
+
+	// Ask confirmation
+	const QString& text = QString("Do you want to visualize test case %1?\nIt will stop current visualization.").arg(newTestCaseNumber);
+	if ( QMessageBox::question(nullptr, tr("Change test case?"), text) == QMessageBox::Yes )
+	{
+		activeTestCase = newTestCaseNumber;
+		emit activeTestCaseChanged(activeTestCase);
+	}
 }

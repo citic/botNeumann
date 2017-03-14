@@ -27,6 +27,8 @@ class TestCaseManager : public QObject, public LinearLayout
 	PlayerSolution* playerSolution = nullptr;
 	/// Manages the list of test cases of the current run
 	LinearLayout* currentTestCases = nullptr;
+	/// Number of the active test case being visualized, by default 1
+	int activeTestCase = 1;
 
   public:
 	/// Constructor
@@ -34,12 +36,18 @@ class TestCaseManager : public QObject, public LinearLayout
 	/// Set the player solution for later use
 	inline void setPlayerSolution(PlayerSolution* playerSolution) { this->playerSolution = playerSolution; }
 
+  signals:
+	/// Emitted when user changed the test case being visualized
+	void activeTestCaseChanged(int newTestCaseNumber);
+
   public slots:
 	/// Called when all test cases and player solution has been built
 	/// This method starts the process of running the player solution against the generated cases
 	bool testPlayerSolution();
 	/// Called when visualization has finished in order to remove old testers
 	void clearAnimation();
+	/// Called when user asked to change the test case being visualized
+	void setActiveTestCase(int newTestCaseNumber);
 
   protected:
 	/// Build a region to place future test cases (an empty tube)

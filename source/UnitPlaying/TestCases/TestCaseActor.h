@@ -62,11 +62,19 @@ class TestCaseActor : public Actor
 	/// red for failed, gray for unknown)
 	void setTestCaseResult(TestCaseResult result, const QString& reason = "");
 
+  signals:
+	/// Emitted when user presses this test case in order to make it active
+	void testCaseActivated(int testCaseNumber);
+
   protected slots:
 	/// Called when player solution has finished running agianst this test case
 	void playerSolutionFinished(int exitCode, QProcess::ExitStatus exitStatus);
 	/// Called when player solution took more time than the allowed (timeout)
 	void playerSolutionTimeout();
+
+  protected:
+	/// Overriden to manage click or tap events
+	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif // TESTCASEACTOR_H

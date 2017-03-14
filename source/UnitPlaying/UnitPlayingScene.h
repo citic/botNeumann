@@ -117,10 +117,15 @@ class UnitPlayingScene : public GameScene
 	/// If there were no errorors, the visualization starts
 	void playerSolutionBuilt(CompiledProgram* compiledProgram);
 	/// Called when the stop button is pressed in order to stop the visualization
-	void userStopped();
+	/// @param removeTestCases Send true if user stopped the visualization, false if only wanted
+	/// to change the active test case
+	void userStopped(bool removeTestCases = true);
 	/// Called to show the unit selection scene, some milliseconds later when the dock widgets
 	/// (code segment and messages area) have been hidden using the docksHidingTimer
 	void callUnitSelectionScene();
+	/// Called when user changed the test case being visualized. Current visualization must be
+	/// stopped, and a new visualization must be started
+	void activeTestCaseChanged(int newTestCaseNumber);
 
   protected:
 	/// Starts the process of build the player solution code, test cases and symbol extraction
@@ -135,6 +140,8 @@ class UnitPlayingScene : public GameScene
 	void createMessagesArea();
 	/// Change the state of the visualization and emit the @a stateChanged signal
 	void changeState(UnitPlayingState newState);
+	/// Start a new visualization with the given test case number
+	void startVisualization(int testCaseNumber);
 };
 
 #endif // UNITPLAYINGSCENE_H

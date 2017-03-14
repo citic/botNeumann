@@ -11,6 +11,7 @@ TestCaseActor::TestCaseActor(int index, QGraphicsItem* parentItem)
 	, index(index)
 {
 	Q_ASSERT(index >= 1);
+	setFlag( QGraphicsItem::ItemIsSelectable );
 }
 
 bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
@@ -117,4 +118,11 @@ void TestCaseActor::setTestCaseResult(TestCaseActor::TestCaseResult result, cons
 
 	if ( ! failReason.isEmpty() )
 		qCInfo( logPlayer, "Test case %d failed: %s", index, qUtf8Printable(failReason) );
+}
+
+void TestCaseActor::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+	Q_ASSERT(index > 0);
+	emit testCaseActivated(index);
+	Actor::mouseReleaseEvent(event);
 }

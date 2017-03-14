@@ -10,6 +10,7 @@ SvgButton::SvgButton(const QString& prefixedSvgElementId, QGraphicsItem* parentI
 	: ScenicElement(prefixedSvgElementId, parentItem)
 {
 	buildLabel(text);
+	setFlag( QGraphicsItem::ItemIsSelectable );
 }
 
 SvgButton::~SvgButton()
@@ -33,7 +34,6 @@ void SvgButton::buildLabel(const QString& text)
 		label->setTransform(QTransform().scale(sw, sh));
 	}
 	setMargins(0.1); // I am not sure if it is a good margin default for buttons
-	setFlags( flags() | QGraphicsItem::ItemIsSelectable );
 }
 
 void SvgButton::setEnabled(bool enabled)
