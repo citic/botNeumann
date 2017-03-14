@@ -54,10 +54,11 @@ void MemoryTop::buildLabel(const QString& labelText)
 	// Create the label and add it to the scene
 	label = new MultiSvgButton(labelAssets, proportions, scene, labelText, zValue + 0.01 );
 	const qreal refTopHeight = 21.737;
-	label->setMarginLeft(0.15);
+	label->setMarginLeft(0.2);
 	label->setMarginTop( 1.128 / refTopHeight );
 	label->setMarginBottom( 5.756 / refTopHeight );
 	label->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 	label->setBrush(QBrush(Qt::black));
+	label->setShear(-0.2, 0.0);
 	addItem(label, labelBytes / size, zValue + 0.01);
 }

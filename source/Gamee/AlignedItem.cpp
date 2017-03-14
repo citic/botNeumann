@@ -34,7 +34,7 @@ void AlignedItem::resizeItem(QGraphicsItem* item, qreal& left, qreal& top, qreal
 	qreal scaleWidth = width / item->boundingRect().width();
 	qreal scaleHeight = height / item->boundingRect().height();
 	applyAlignment(item, left, top, width, height, scaleWidth, scaleHeight);
-	item->setTransform(QTransform().scale(scaleWidth, scaleHeight));
+	item->setTransform( QTransform().shear(shearX, shearY).scale(scaleWidth, scaleHeight) );
 
 	// If this element is a nested child, map coordinates from scene to its parent
 	QPointF posChild(left, top);

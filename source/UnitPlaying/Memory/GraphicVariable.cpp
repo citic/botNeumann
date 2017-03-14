@@ -148,6 +148,7 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 		label->setMarginBottom( refDataMargins[refLabelBottom] );
 		label->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 		label->setBrush(QBrush(Qt::black));
+		//label->setShear(-0.2, 0.0);
 		addItem(label, labelBytes / size, memoryRow->getZValue() + zLabelValueOffset);
 	}
 

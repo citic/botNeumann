@@ -34,6 +34,8 @@ class MultiSvgButton : public LinearLayout
 	void setFont(const QFont& font);
 	/// Set foreground color
 	void setBrush(const QBrush& brush);
+	/// Skew the svg button
+	void setShear(qreal shearX, qreal shearY);
 
   public slots:
 	/// When disabled, the button becomes semi-transparent

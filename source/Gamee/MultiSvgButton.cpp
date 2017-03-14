@@ -39,6 +39,15 @@ void MultiSvgButton::setBrush(const QBrush& brush)
 		label->setBrush(brush);
 }
 
+void MultiSvgButton::setShear(qreal shearX, qreal shearY)
+{
+	foreach ( Prop* back, background )
+		back->setShearX(shearX, shearY);
+
+	if ( label )
+		label->setShearX(shearX, shearY);
+}
+
 void MultiSvgButton::buildLabel(const QString& text, QGraphicsItem* parentItem, qreal zValue)
 {
 	if ( ! text.isEmpty() )
