@@ -302,6 +302,7 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 		return changeState(UnitPlayingState::editing);
 
 	// Load the test case expected input/output/error in the StandardInputOutputInspector
+	dataSegment->loadTestCase(testCaseNumber, playerSolution);
 	messagesArea->loadTestCase(testCaseNumber, playerSolution);
 }
 

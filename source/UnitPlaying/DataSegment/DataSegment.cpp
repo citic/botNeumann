@@ -1,6 +1,7 @@
 #include "DataSegment.h"
 #include "Common.h"
 #include "MemoryFrame.h"
+#include "PlayerSolution.h"
 #include "Scene.h"
 #include "StandardInputOutput.h"
 #include "Unit.h"
@@ -28,6 +29,20 @@ double DataSegment::getHeightInRows() const
 bool DataSegment::allocate(MemoryAllocation* memoryAllocation)
 {
 	return memoryFrame->allocate(memoryAllocation);
+}
+
+bool DataSegment::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution)
+{
+	// Get the full path to the test case's input/output files
+//	const QString& args      = playerSolution->buildTestCaseFilepath(testCaseNumber, "args");
+	const QString& input     = playerSolution->buildTestCaseFilepath(testCaseNumber, "input");
+//	const QString& output_ex = playerSolution->buildTestCaseFilepath(testCaseNumber, "output_ex");
+//	const QString& output_ps = playerSolution->buildTestCaseFilepath(testCaseNumber, "output_ps");
+//	const QString& error_ex  = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ex");
+//	const QString& error_ps  = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ps");
+
+	// The data segment owns the standard input/output, and the messages area owns the inspector
+	return standardInput->loadFile(input) /* && standardOutput->loadFiles(output_ex, output_ps) */;
 }
 
 void DataSegment::buildDataSegment()
@@ -59,12 +74,12 @@ void DataSegment::buildStandardInOut(const double stdInOutProportion)
 
 	// First stdin tube
 	Q_ASSERT(standardInput == nullptr);
-	standardInput = new StandardInputOutput("input", unit, scene);
+	standardInput = new StandardInput(unit, scene);
 	stdInOutLayout->addItem(standardInput, 0.5, zUnitPlaying::standardInputOutput);
 
 	// Second stdout tube
 	Q_ASSERT(standardOutput == nullptr);
-	standardOutput = new StandardInputOutput("output", unit, scene);
+	standardOutput = new StandardOutput(unit, scene);
 	stdInOutLayout->addItem(standardOutput, 0.5, zUnitPlaying::standardInputOutput);
 }
 

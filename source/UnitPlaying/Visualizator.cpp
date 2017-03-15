@@ -62,6 +62,7 @@ Visualizator::~Visualizator()
 
 bool Visualizator::start(bool preparation)
 {
+	// If the preparation phase was asked to be done
 	if ( preparation )
 	{
 		// Start GDB
@@ -77,9 +78,12 @@ bool Visualizator::start(bool preparation)
 	}
 	else
 	{
+		// The preparation phase is done, continue with the starting process
 		setDynamicMemoryBreakpoints();
 		watchStandardInputOutput();
 		watchGlobalVariables();
+		// UnitPlayingScene loads standard input after the prepration phase
+		// loadTestCaseInStandardInputOutput();
 	}
 
 	// Visualization started

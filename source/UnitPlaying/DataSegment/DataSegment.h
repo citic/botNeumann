@@ -5,7 +5,9 @@
 #include "MemorySegment.h"
 
 class MemoryFrame;
-class StandardInputOutput;
+class PlayerSolution;
+class StandardInput;
+class StandardOutput;
 
 class DataSegment : public GdbResponseListener, public MemorySegment
 {
@@ -16,9 +18,9 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	/// Manages the rows of memory for the data segment
 	MemoryFrame* memoryFrame = nullptr;
 	/// Standard input graphic manager
-	StandardInputOutput* standardInput = nullptr;
+	StandardInput* standardInput = nullptr;
 	/// Standard output graphic manager
-	StandardInputOutput* standardOutput = nullptr;
+	StandardOutput* standardOutput = nullptr;
 
   public:
 	/// Constructor
@@ -35,6 +37,9 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	/// @remarks Deallocation is not allowed in data segment. If @a deallocate() method is called,
 	/// botNeumann will be stopped
 	virtual bool allocate(MemoryAllocation* memoryAllocation) override;
+	/// Loads the expected input/output/error in the StandardInputOutput tubes from the test
+	/// case files. It animates characters arriving by the standard input.
+	bool loadTestCase(int testCaseNumber, PlayerSolution* playerSolution);
 
   public slots:
 	/// Called when visualization has finished in order to clear variables

@@ -1,20 +1,23 @@
 #include "StandardInputOutput.h"
 #include "Common.h"
+#include "LogManager.h"
 #include "Prop.h"
 #include "Scene.h"
 #include "Unit.h"
 
+
+// StandardInputOutput class ----------------------------------------------------------------------
+
 StandardInputOutput::StandardInputOutput(const QString& type, Unit& unit, Scene* scene)
 	: MemorySegment(unit, scene, Qt::Horizontal)
-	, type(type)
 {
-	Q_ASSERT(type == "input" || type == "output");
-	buildStandardInputOutput();
+	buildStandardInputOutput(type);
 }
 
-void StandardInputOutput::buildStandardInputOutput()
+void StandardInputOutput::buildStandardInputOutput(QString type)
 {
 	Q_ASSERT(scene);
+	Q_ASSERT(type == "input" || type == "output");
 
 	// Calculate the percent size of a byte of the data segment
 	size_t rowSize = unit.getDataSegmentSize() / unit.getDataSegmentRows();
@@ -57,4 +60,24 @@ void StandardInputOutput::buildStandardInputOutput()
 		// Make the middle tube to plug to the tester
 		middle->setMarginLeft(-0.011);
 	}
+}
+
+
+// StandardInput class ----------------------------------------------------------------------------
+
+StandardInput::StandardInput(Unit& unit, Scene* scene)
+	: StandardInputOutput("input", unit, scene)
+{
+}
+
+bool StandardInput::loadFile(const QString& inputFilepath)
+{
+	qCCritical(logTemporary()) << "StandardInput: loading" << inputFilepath;
+	return true;
+}
+
+
+StandardOutput::StandardOutput(Unit& unit, Scene* scene)
+	: StandardInputOutput("output", unit, scene)
+{
 }
