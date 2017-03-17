@@ -93,6 +93,7 @@ HEADERS += \
 	source/UnitPlaying/DataSegment/DataSegment.h \
 	source/UnitPlaying/DataSegment/StandardInputOutput.h \
 	source/UnitPlaying/HeapSegment/HeapSegment.h \
+	source/UnitPlaying/Memory/GraphicValue.h \
 	source/UnitPlaying/Memory/GraphicVariable.h \
 	source/UnitPlaying/Memory/MemoryAllocation.h \
 	source/UnitPlaying/Memory/MemoryFrame.h \
@@ -174,6 +175,7 @@ SOURCES += \
 	source/UnitPlaying/DataSegment/DataSegment.cpp \
 	source/UnitPlaying/DataSegment/StandardInputOutput.cpp \
 	source/UnitPlaying/HeapSegment/HeapSegment.cpp \
+	source/UnitPlaying/Memory/GraphicValue.cpp \
 	source/UnitPlaying/Memory/GraphicVariable.cpp \
 	source/UnitPlaying/Memory/MemoryAllocation.cpp \
 	source/UnitPlaying/Memory/MemoryFrame.cpp \

@@ -3,11 +3,17 @@
 
 #include "MemorySegment.h"
 
+class GraphicValue;
+
 /// Base class that represents a standard input, output or error object with a tube
 /// They behave as a memory segment
 class StandardInputOutput : public MemorySegment
 {
 	Q_DISABLE_COPY(StandardInputOutput)
+
+  protected:
+	/// Characteres traveling by the tube
+	QList<GraphicValue*> characters;
 
   public:
 	/// @param type One of the following: "input", "output", "error"

@@ -11,12 +11,8 @@
 #include <QBrush>
 #include <QFont>
 
-// Extra z-values for the parts of the graphic variable
-const qreal zPodOffset   = 0.30;
-const qreal zLabelValueOffset = 0.31;
-
 GraphicVariable::GraphicVariable(MemoryAllocation* variable, VisAddress firstByte, VisAddress lastByte, MemoryRow* memoryRow)
-	: LinearLayout(Qt::Horizontal)
+	: GraphicValue( variable->dataType, memoryRow->getScene(), memoryRow->getZValue() )
 	, variable(variable)
 	, firstByte(firstByte)
 	, lastByte(lastByte)
@@ -28,100 +24,18 @@ GraphicVariable::GraphicVariable(MemoryAllocation* variable, VisAddress firstByt
 	leftComplete = firstByte == variable->visualizationAddress;
 	rightComplete = lastByte == variable->visualizationAddress + variable->size - 1;
 
-	buildGraphicVariable();
+	buildGraphicValue( variable->dataType );
 }
 
-bool GraphicVariable::buildGraphicVariable()
+void GraphicVariable::applyDataTypeMargins(const qreal refDataMargins[])
 {
-	Q_ASSERT(variable);
-	Q_ASSERT(memoryRow);
-
-	// Create the pod, the value, and the label of the variable
-	switch ( variable->dataType )
-	{
-		case typeUnknown: return false;
-		case typeVoid: return false;
-
-		// Atomic types
-		case typeBool:      buildSingleByteVariable("up_bool_false", refBoolMargins); break;
-		case typeChar:      buildSingleByteVariable("up_char", refCharMargins); break;
-		case typeInt:       buildMultiByteVariable("int", refIntMargins); break;
-		case typeEnum:      buildMultiByteVariable("int", refIntMargins); break;
-		case typeBitField:  buildMultiByteVariable("int", refIntMargins); break;
-		case typeFloat:     buildMultiByteVariable("float", refFloatMargins); break;
-
-		// Indirection types
-		case typePointer:   buildMultiByteVariable("pointer", refPointerMargins); break;
-		case typeReference: buildMultiByteVariable("pointer", refPointerMargins); break;
-		case typeRValue:    buildMultiByteVariable("pointer", refPointerMargins); break;
-		case typeFunction:  buildMultiByteVariable("pointer", refPointerMargins); break;
-
-		// Composite types
-		case typeArray:     buildArray(); break;
-		case typeStruct:    buildStruct(); break;
-		case typeClass:     buildStruct(); break;
-		case typeUnion:     buildStruct(); break;
-	}
-
-	return true;
+	setMarginTop( parent ? refDataMargins[refMarginTop] + 0.1 : refDataMargins[refMarginTop] );
+	setMarginBottom( parent ? refDataMargins[refMarginBottom] + 0.1 : refDataMargins[refMarginBottom] );
 }
 
-void GraphicVariable::applyDataTypeMargins(const qreal dataMarginTop, const qreal dataMarginBottom)
+bool GraphicVariable::buildNameLabel(const qreal refDataMargins[])
 {
-	setMarginTop( parent ? dataMarginTop + 0.1 : dataMarginTop );
-	setMarginBottom( parent ? dataMarginBottom + 0.1 : dataMarginBottom );
-}
-
-bool GraphicVariable::buildSingleByteVariable(const QString& asset, const qreal refDataMargins[])
-{
-	// Apply margins according to the height of the data type and the nesting on composite data types
-	applyDataTypeMargins(refDataMargins[refMarginTop], refDataMargins[refMarginBottom]);
-
-	// Pod:
-	// A single-byte variable requires just a prop
-	Prop* pod = new Prop(asset, memoryRow->getScene());
-	addItem(pod, 1.0, memoryRow->getZValue() + zPodOffset );
-
-	// No variable label or value
-	return true;
-}
-
-bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal refDataMargins[])
-{
-	// Apply margins according to the height of the data type and the nesting on composite data types
-	applyDataTypeMargins(refDataMargins[refMarginTop], refDataMargins[refMarginBottom]);
-
-	// Left and right parts always require 1 byte, middle the remaining bytes
-	const qreal zPod = memoryRow->getZValue() + zPodOffset;
 	const VisAddress size = getSize();
-	const QString& svgFileBase = ":/unit_playing/data_types/" + asset;
-
-	// Pod: left
-	Q_ASSERT(podLeft == nullptr);
-	if ( leftComplete )
-	{
-		podLeft = asset.startsWith("up_")
-				? new ScenicElement(asset + "_left", memoryRow->getScene())
-				: new ScenicElement(svgFileBase + "_left.svg", memoryRow->getScene(), true);
-
-		addItem(podLeft, 1.0 / size, zPod);
-	}
-
-	// Pod: middle
-	ScenicElement* podMiddle = asset.startsWith("up_")
-			? new ScenicElement(asset + "_middle", memoryRow->getScene())
-			: new ScenicElement(svgFileBase + "_middle.svg", memoryRow->getScene(), true);
-	qreal middleSize = size - (VisAddress)leftComplete - (VisAddress)rightComplete;
-	addItem(podMiddle, middleSize / size, zPod);
-
-	// Pod: right
-	if ( rightComplete )
-	{
-		ScenicElement* podRight = asset.startsWith("up_")
-				? new ScenicElement(asset + "_right", memoryRow->getScene())
-				: new ScenicElement(svgFileBase + "_right.svg", memoryRow->getScene(), true);
-		addItem(podRight, 1.0 / size, zPod);
-	}
 
 	// Amount of bytes required by the variable name
 	qreal valueBytes = qMin( variable->value.length() / 2.5, size - 2.0 );
@@ -132,7 +46,7 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 	// Variable name: label is created only if there is enough room
 	if ( size >= 4 )
 	{
-		Q_ASSERT(label == nullptr);
+		Q_ASSERT(nameLabel == nullptr);
 
 		// Create a label that uses an array of images (represented by a piece of tape)
 		QStringList labelAssets;
@@ -145,27 +59,27 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 		proportions << leftRightProportion << middleProportion << leftRightProportion;
 
 		// Create the label and add it to the scene
-		label = new MultiSvgButton(labelAssets, proportions, memoryRow->getScene(), variable->name, memoryRow->getZValue() + zLabelValueOffset );
-		label->setMarginLeft(0.15);
-		label->setMarginTop( refDataMargins[refLabelTop] );
-		label->setMarginBottom( refDataMargins[refLabelBottom] );
-		label->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
-		label->setBrush(QBrush(Qt::black));
+		nameLabel = new MultiSvgButton(labelAssets, proportions, memoryRow->getScene(), variable->name, memoryRow->getZValue() + zLabelValueOffset );
+		nameLabel->setMarginLeft(0.15);
+		nameLabel->setMarginTop( refDataMargins[refLabelTop] );
+		nameLabel->setMarginBottom( refDataMargins[refLabelBottom] );
+		nameLabel->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
+		nameLabel->setBrush(QBrush(Qt::black));
 		//label->setShear(-0.2, 0.0);
-		addItem(label, labelBytes / size, memoryRow->getZValue() + zLabelValueOffset);
+		addItem(nameLabel, labelBytes / size, memoryRow->getZValue() + zLabelValueOffset);
 	}
 	else
 		valueBytes = size - 2;
 
 	// Variable value
 	Q_ASSERT(value == nullptr);
-	value = new LabelButton( variable->value, memoryRow->getScene() );
+	value = new LabelButton( variable->value, scene );
 	value->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
 	value->setMarginBottom( refDataMargins[refLabelBottom] );
 	value->alignRight();
 	//value->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 	value->setBrush(QBrush(Qt::black));
-	addItem(value, valueBytes / size, memoryRow->getZValue() + zLabelValueOffset);
+	addItem(value, valueBytes / size, zValue + zLabelValueOffset);
 
 	// ToDo: If dataType is pointer, we can save a pointer to the pointed data, but it may be
 	// more realistic to find the pointed data any time it is required
@@ -173,10 +87,20 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 	return true;
 }
 
+bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal refDataMargins[])
+{
+	// Apply margins according to the height of the data type and the nesting on composite data types
+	applyDataTypeMargins(refDataMargins);
+	buildPod(asset, leftComplete, rightComplete);
+	buildNameLabel(refDataMargins);
+	buildValue(refDataMargins);
+	return true;
+}
+
 bool GraphicVariable::buildArray()
 {
 	// We use the same proportions of structs for arrays
-	applyDataTypeMargins(refStructMargins[refMarginTop], refStructMargins[refMarginBottom]);
+	applyDataTypeMargins(refStructMargins);
 
 	// We create an sub-array of the variable
 	Q_ASSERT( variable->children.count() > 0 );
