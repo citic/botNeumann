@@ -6,8 +6,7 @@
 
 class MemoryFrame;
 class PlayerSolution;
-class StandardInput;
-class StandardOutput;
+class StandardInputOutput;
 
 class DataSegment : public GdbResponseListener, public MemorySegment
 {
@@ -18,9 +17,9 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	/// Manages the rows of memory for the data segment
 	MemoryFrame* memoryFrame = nullptr;
 	/// Standard input graphic manager
-	StandardInput* standardInput = nullptr;
+	StandardInputOutput* standardInput = nullptr;
 	/// Standard output graphic manager
-	StandardOutput* standardOutput = nullptr;
+	StandardInputOutput* standardOutput = nullptr;
 
   public:
 	/// Constructor

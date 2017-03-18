@@ -2,6 +2,7 @@
 #include "Assets.h"
 #include "Common.h"
 #include "GraphicValue.h"
+#include "LinearLayout.h"
 #include "LogManager.h"
 #include "Prop.h"
 #include "Scene.h"
@@ -18,10 +19,13 @@ const qreal zOpening = zUnitPlaying::standardInputOutput + 0.0;
 
 // InputOutputBuffer class ------------------------------------------------------------------------
 
-InputOutputBuffer::InputOutputBuffer(qreal zValue, QGraphicsItem* parent)
-	: QGraphicsRectItem(parent)
+InputOutputBuffer::InputOutputBuffer(Scene* scene, qreal zValue, int capacity)
+	: QGraphicsRectItem(scene)
+	, scene(scene)
 	, zValue(zValue)
+	, capacity(capacity)
 {
+	characterLayout = new LinearLayout(Qt::Horizontal);
 }
 
 void InputOutputBuffer::resize(qreal left, qreal top, qreal width, qreal height)
@@ -29,9 +33,36 @@ void InputOutputBuffer::resize(qreal left, qreal top, qreal width, qreal height)
 	// Update the LayoutItem part of this object
 	LayoutItem::resize(left, top, width, height);
 	applyMargins(left, top, width, height);
+	characterLayout->resize(left, top, width, height);
 
 	// Update the QGraphicsRectIem part of this object
 	setRect(left, top, width, height);
+}
+
+#include "LogManager.h"
+int InputOutputBuffer::animateFill()
+{
+	// The amount of free space that can be filled
+	int charsToFill = qMin( getFreeCharacters(), getPendingCharacters() );
+
+	// Create characters, place them and animate them arriving
+	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
+	{
+		qCCritical(logTemporary()) << "Buffer: character" << text[cursor];
+		GraphicValue* character = new GraphicValue(typeChar, scene, zBuffer, text.mid(cursor++, 1));
+		character->buildGraphicValue(typeChar);
+		characterLayout->addItem(character, 1.0 / (capacity + 3), zBuffer);
+		characters.append(character);
+	}
+
+	this->updateLayoutItem();
+	return 0;
+}
+
+int InputOutputBuffer::animateRead(int length)
+{
+	Q_UNUSED(length);
+	return 0;
 }
 
 
@@ -41,6 +72,22 @@ StandardInputOutput::StandardInputOutput(const QString& type, Unit& unit, Scene*
 	: MemorySegment(unit, scene, Qt::Horizontal)
 {
 	buildStandardInputOutput(type);
+}
+
+bool StandardInputOutput::loadFile(const QString& filepath)
+{
+	// Open the test case's standard input file
+	QFile file(filepath);
+	if ( file.open(QIODevice::ReadOnly | QIODevice::Text) == false )
+		{ qCritical(logApplication) << "Could not open" << filepath; return false; }
+
+	// At least one file has data, we have to read them to compare
+	Q_ASSERT(buffer);
+	const QString& text = QTextStream(&file).readAll();
+	buffer->setText(text);
+
+	animateFill();
+	return true;
 }
 
 void StandardInputOutput::buildStandardInputOutput(QString type)
@@ -96,49 +143,21 @@ void StandardInputOutput::buildStandardInputOutput(QString type)
 		middle->setMarginLeft(-0.011);
 	}
 
-	buildBuffer(type, scene);
+	// The buffer has half size of the data segment row, and 3 chars are lost by elbows and edges
+	const size_t bufferSize = rowSize / 2 - 3;
+	buildBuffer(type, bufferSize, scene);
 }
 
-void StandardInputOutput::buildBuffer(const QString& type, Scene* scene)
+void StandardInputOutput::buildBuffer(const QString& type, size_t bufferSize, Scene* scene)
 {
 	// Build the area to show characters
 	Q_ASSERT(buffer == nullptr);
-	buffer = new InputOutputBuffer(zBuffer, scene);
+	buffer = new InputOutputBuffer(scene, zBuffer, bufferSize);
 	buffer->setMarginTop( (refTubeHeight - refBufferTop) / refTubeHeight );
 	const qreal bufferMarginLeft = refBufferLeft / refTubeWidth / 2.0;
 	const qreal bufferMarginRight = (refTubeWidth - refBufferRight) / refTubeWidth / 2.0 + bufferMarginLeft;
 	buffer->setMarginLeft( type == "input" ? bufferMarginLeft : bufferMarginRight );
 	buffer->setMarginRight( type == "input" ? bufferMarginRight : bufferMarginLeft );
 	buffer->setMarginBottom( refBufferBottom / refTubeHeight) ;
-	buffer->setBrush(QBrush(Qt::magenta));
 	addItem(buffer, 1.0, zBuffer);
-}
-
-
-// StandardInput class ----------------------------------------------------------------------------
-
-StandardInput::StandardInput(Unit& unit, Scene* scene)
-	: StandardInputOutput("input", unit, scene)
-{
-}
-
-bool StandardInput::loadFile(const QString& inputFilepath)
-{
-	// Open the test case's standard input file
-	QFile inputFile(inputFilepath);
-	if ( inputFile.open(QIODevice::ReadOnly | QIODevice::Text) == false )
-		{ qCritical(logApplication) << "Could not open" << inputFilepath; return false; }
-
-	// At least one file has data, we have to read them to compare
-	Q_ASSERT(buffer);
-	const QString& allInput = QTextStream(&inputFile).readAll();
-	Q_UNUSED(allInput);
-//	buffer->buildCharacters(allInput);
-	return true;
-}
-
-
-StandardOutput::StandardOutput(Unit& unit, Scene* scene)
-	: StandardInputOutput("output", unit, scene)
-{
 }

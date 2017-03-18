@@ -14,17 +14,43 @@ class InputOutputBuffer : public QGraphicsRectItem, public LayoutItem, public Al
 	Q_DISABLE_COPY(InputOutputBuffer)
 
   protected:
+	/// Pointer to the scene to place the chars (they float by the scene)
+	Scene* scene = nullptr;
 	/// zValue where the characteres will be placed on the scene
 	qreal zValue = 0.0;
+	/// Capacity in bytes of the buffer
+	int capacity = 0;
+	/// Characteres traveling by the tube
+	QList<GraphicValue*> characters;
+	/// The text of the test case or the generated output
+	QString text;
+	/// Cursor that indicates the next byte to be read or printed in the @a text string
+	int cursor = 0;
+	/// ToDo: inherit Linearlayout
+	LinearLayout* characterLayout = nullptr;
 
   public:
 	/// Constructor
-	explicit InputOutputBuffer(qreal zValue, QGraphicsItem* parent);
+	explicit InputOutputBuffer(Scene* scene, qreal zValue, int capacity);
 	/// Resize this element
 	/// This method is called each time the Stage and Scene has been resized
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) override;
 	/// Sets the Z-index provided by layouts to the QGraphicsItem system
 	virtual void setZ(qreal zValue) override { setZValue(zValue); }
+	/// Set the text to be read (standard input) or printed (standard output)
+	inline void setText(const QString& text) { this->text = text; cursor = 0; }
+	/// Animate buffering (filling) the standard input. It fills all empty spaces with pending
+	/// characters in @a text
+	/// @return The duration of the animation in milliseconds
+	int animateFill();
+	/// Animate the read of @a length characters, which are extracted from standard input tube
+	/// The remaining empty space is filled calling @a animateFill() function
+	/// @return The duration of the animation in milliseconds
+	int animateRead(int length);
+	/// Returns the amount of free space or characters
+	inline int getFreeCharacters() const { return capacity - characters.count(); }
+	/// Returns the amount of available chars that are still not loaded in the tube
+	inline int getPendingCharacters() const { return text.length() - cursor; }
 };
 
 /// Base class that represents a standard input, output or error object with a tube
@@ -38,12 +64,20 @@ class StandardInputOutput : public MemorySegment
 	Prop* tester = nullptr;
 	/// An area to show the characters moving through the tube
 	InputOutputBuffer* buffer = nullptr;
-	/// Characteres traveling by the tube
-	QList<GraphicValue*> characters;
 
   public:
 	/// @param type One of the following: "input", "output", "error"
 	explicit StandardInputOutput(const QString& type, Unit& unit, Scene* scene);
+	/// Loads the active test case input file, and animates characters arriving by the input tube
+	bool loadFile(const QString& inputFilepath);
+	/// Animate buffering (filling) the standard input. It fills all empty spaces with pending
+	/// characters in @a text
+	/// @return The duration of the animation in milliseconds
+	inline int animateFill() { return buffer->animateFill(); }
+	/// Animate the read of @a length characters, which are extracted from standard input tube
+	/// The remaining empty space is filled calling @a animateFill() function
+	/// @return The duration of the animation in milliseconds
+	inline int animateRead(int length) { return buffer->animateRead(length); }
 
   protected:
 	/// Load graphic elements to represent this object
@@ -51,31 +85,7 @@ class StandardInputOutput : public MemorySegment
 	/// be one of the following: "input", "output", "error"
 	void buildStandardInputOutput(QString type);
 	/// Builds the are where characteres will travel inside the tube
-	void buildBuffer(const QString& type, Scene* scene);
-};
-
-
-/// Manages the standard input getting data from the current test case input file
-class StandardInput : public StandardInputOutput
-{
-	Q_DISABLE_COPY(StandardInput)
-
-  public:
-	/// Constructor
-	explicit StandardInput(Unit& unit, Scene* scene);
-	/// Loads the active test case input file, and animates characters arriving by the input tube
-	bool loadFile(const QString& inputFilepath);
-};
-
-
-/// Manages the standard ouput writing data
-class StandardOutput : public StandardInputOutput
-{
-	Q_DISABLE_COPY(StandardOutput)
-
-  public:
-	/// Constructor
-	explicit StandardOutput(Unit& unit, Scene* scene);
+	void buildBuffer(const QString& type, size_t bufferSize, Scene* scene);
 };
 
 #endif // STANDARDINPUTOUTPUT_H

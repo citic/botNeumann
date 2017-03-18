@@ -49,10 +49,10 @@ class GraphicValue : public LinearLayout
 	virtual VisAddress getSize() const;
 	/// Set the value and update the interface
 	void setValue(const QString& value);
-
-  protected:
 	/// Constructs this value
 	bool buildGraphicValue(DataType dataType = typeUnknown);
+
+  protected:
 	/// Create the pod, the value, and the label for a bool or char value
 	virtual bool buildSingleByteVariable(const QString& asset, const qreal refDataMargins[]);
 	/// Create the pod, the value, and the label for an int or float value

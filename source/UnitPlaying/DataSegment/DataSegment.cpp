@@ -74,12 +74,12 @@ void DataSegment::buildStandardInOut(const double stdInOutProportion)
 
 	// First stdin tube
 	Q_ASSERT(standardInput == nullptr);
-	standardInput = new StandardInput(unit, scene);
+	standardInput = new StandardInputOutput("input", unit, scene);
 	stdInOutLayout->addItem(standardInput, 0.5, zUnitPlaying::standardInputOutput);
 
 	// Second stdout tube
 	Q_ASSERT(standardOutput == nullptr);
-	standardOutput = new StandardOutput(unit, scene);
+	standardOutput = new StandardInputOutput("output", unit, scene);
 	stdInOutLayout->addItem(standardOutput, 0.5, zUnitPlaying::standardInputOutput);
 }
 
