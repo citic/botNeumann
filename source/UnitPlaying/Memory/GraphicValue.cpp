@@ -1,14 +1,18 @@
 #include "GraphicValue.h"
 #include "Assets.h"
 #include "BotNeumannApp.h"
+#include "LabelButton.h"
 #include "Prop.h"
 #include "Scene.h"
 
-GraphicValue::GraphicValue(DataType dataType, Scene* scene, qreal zValue)
+#include <QBrush>
+
+GraphicValue::GraphicValue(DataType dataType, Scene* scene, qreal zValue, const QString& value)
 	: LinearLayout(Qt::Horizontal)
 	, dataType(dataType)
 	, scene(scene)
 	, zValue(zValue)
+	, value(value)
 {
 }
 
@@ -41,6 +45,13 @@ VisAddress GraphicValue::getSize() const
 
 	Q_ASSERT(false);
 	return 1;
+}
+
+void GraphicValue::setValue(const QString& value)
+{
+	this->value = value;
+	if ( valueLabel )
+		valueLabel->setText( value, true );
 }
 
 bool GraphicValue::buildGraphicValue(DataType dataType)
@@ -98,7 +109,7 @@ bool GraphicValue::buildMultiByteVariable(const QString& asset, const qreal refD
 	// Apply margins according to the height of the data type and the nesting on composite data types
 	applyDataTypeMargins(refDataMargins);
 	buildPod(asset, true, true);
-	buildValue(refDataMargins);
+	buildValueLabel(refDataMargins);
 	return true;
 }
 
@@ -157,7 +168,16 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 	return true;
 }
 
-bool GraphicValue::buildValue(const qreal refDataMargins[])
+bool GraphicValue::buildValueLabel(const qreal refDataMargins[], qreal proportion)
 {
-	return false;
+	// Variable value
+	Q_ASSERT(valueLabel == nullptr);
+	valueLabel = new LabelButton( value, scene );
+	valueLabel->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
+	valueLabel->setMarginBottom( refDataMargins[refLabelBottom] );
+	valueLabel->alignRight();
+	//value->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
+	valueLabel->setBrush(QBrush(Qt::black));
+	addItem(valueLabel, proportion, zValue + zLabelValueOffset);
+	return true;
 }

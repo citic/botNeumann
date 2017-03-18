@@ -38,13 +38,17 @@ class GraphicValue : public LinearLayout
 	ScenicElement* podMiddle = nullptr;
 	ScenicElement* podRight = nullptr;
 	/// A label to show the value of the variable
-	LabelButton* value = nullptr;
+	LabelButton* valueLabel = nullptr;
+	/// The label represented as a string
+	QString value;
 
   public:
 	/// Constructor
-	explicit GraphicValue(DataType dataType, Scene* scene, qreal zValue);
+	explicit GraphicValue(DataType dataType, Scene* scene, qreal zValue, const QString& value = "");
 	/// Get the size in bytes of this value
 	virtual VisAddress getSize() const;
+	/// Set the value and update the interface
+	void setValue(const QString& value);
 
   protected:
 	/// Constructs this value
@@ -63,7 +67,7 @@ class GraphicValue : public LinearLayout
 	/// memory rows)
 	bool buildPod(const QString& asset, bool buildLeftPod, bool buildRightPod);
 	/// Builds a label to show the value (or variable value)
-	bool buildValue(const qreal refDataMargins[]);
+	bool buildValueLabel(const qreal refDataMargins[], qreal proportion = 1.0 - 0.2);
 };
 
 #endif // GRAPHICVALUE_H

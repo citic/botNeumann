@@ -55,7 +55,7 @@ class GraphicVariable : public GraphicValue
 	/// other variable (composite data types), minimum margins are applied instead
 	virtual void applyDataTypeMargins(const qreal refDataMargins[]) override;
 	/// Variables have a name. If there is enough room, name is shown
-	bool buildNameLabel(const qreal refDataMargins[]);
+	bool buildVariableName(const qreal refDataMargins[]);
 };
 
 #endif // GRAPHICVARIABLE_H

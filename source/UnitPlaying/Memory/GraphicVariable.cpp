@@ -1,7 +1,6 @@
 #include "GraphicVariable.h"
 #include "Assets.h"
 #include "BotNeumannApp.h"
-#include "LabelButton.h"
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
 #include "MultiSvgButton.h"
@@ -12,7 +11,7 @@
 #include <QFont>
 
 GraphicVariable::GraphicVariable(MemoryAllocation* variable, VisAddress firstByte, VisAddress lastByte, MemoryRow* memoryRow)
-	: GraphicValue( variable->dataType, memoryRow->getScene(), memoryRow->getZValue() )
+	: GraphicValue( variable->dataType, memoryRow->getScene(), memoryRow->getZValue(), variable->value )
 	, variable(variable)
 	, firstByte(firstByte)
 	, lastByte(lastByte)
@@ -33,7 +32,7 @@ void GraphicVariable::applyDataTypeMargins(const qreal refDataMargins[])
 	setMarginBottom( parent ? refDataMargins[refMarginBottom] + 0.1 : refDataMargins[refMarginBottom] );
 }
 
-bool GraphicVariable::buildNameLabel(const qreal refDataMargins[])
+bool GraphicVariable::buildVariableName(const qreal refDataMargins[])
 {
 	const VisAddress size = getSize();
 
@@ -71,20 +70,10 @@ bool GraphicVariable::buildNameLabel(const qreal refDataMargins[])
 	else
 		valueBytes = size - 2;
 
-	// Variable value
-	Q_ASSERT(value == nullptr);
-	value = new LabelButton( variable->value, scene );
-	value->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
-	value->setMarginBottom( refDataMargins[refLabelBottom] );
-	value->alignRight();
-	//value->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
-	value->setBrush(QBrush(Qt::black));
-	addItem(value, valueBytes / size, zValue + zLabelValueOffset);
-
 	// ToDo: If dataType is pointer, we can save a pointer to the pointed data, but it may be
 	// more realistic to find the pointed data any time it is required
 
-	return true;
+	return buildValueLabel(refDataMargins, valueBytes / size);
 }
 
 bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal refDataMargins[])
@@ -92,8 +81,7 @@ bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal r
 	// Apply margins according to the height of the data type and the nesting on composite data types
 	applyDataTypeMargins(refDataMargins);
 	buildPod(asset, leftComplete, rightComplete);
-	buildNameLabel(refDataMargins);
-	buildValue(refDataMargins);
+	buildVariableName(refDataMargins);
 	return true;
 }
 
