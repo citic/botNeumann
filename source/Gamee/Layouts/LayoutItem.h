@@ -56,7 +56,7 @@ class LayoutItem
 	inline void setProportion(qreal proportion) { this->proportion = proportion; }
 	/// Scenic elements require this method.
 	/// This is dirty hack, it is no implemented by other LayoutItems
-	virtual void setZ(qreal) { }
+	virtual void setZ(qreal) = 0;
 	/// Set the percent of margin for all the margins
 	inline void setMargins(qreal sameForAll) { setMargins(sameForAll, sameForAll); }
 	inline void setMargins(qreal topBottom, qreal leftRight) { setMargins(topBottom, leftRight, topBottom, leftRight); }

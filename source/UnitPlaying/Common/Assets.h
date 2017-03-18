@@ -79,4 +79,14 @@ RefMarginArray(Float, 12.545, 15.500)
 RefMarginArray(Pointer, 12.545, 21.944)
 RefMarginArray(Struct, 12.545, 19.500)
 
+
+// StandardInputOutput ----------------------------------------------------------------------------
+
+const qreal refTubeWidth = 384.644;
+const qreal refTubeHeight = 38.800;
+const qreal refBufferTop = 35.762;
+const qreal refBufferBottom = 15.108;
+const qreal refBufferLeft = 29.653;
+const qreal refBufferRight = 353.631;
+
 #endif // ASSETS_H

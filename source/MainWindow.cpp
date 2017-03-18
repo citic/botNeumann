@@ -8,8 +8,6 @@
 #include <QDesktopServices>
 #include <QDockWidget>
 #include <QGraphicsView>
-#include <QGraphicsRectItem>
-#include <QGraphicsSvgItem>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QSettings>

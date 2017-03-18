@@ -2,8 +2,30 @@
 #define STANDARDINPUTOUTPUT_H
 
 #include "MemorySegment.h"
+#include "AlignedItem.h"
+
+#include <QGraphicsRectItem>
 
 class GraphicValue;
+class Prop;
+
+class InputOutputBuffer : public QGraphicsRectItem, public LayoutItem, public AlignedItem
+{
+	Q_DISABLE_COPY(InputOutputBuffer)
+
+  protected:
+	/// zValue where the characteres will be placed on the scene
+	qreal zValue = 0.0;
+
+  public:
+	/// Constructor
+	explicit InputOutputBuffer(qreal zValue, QGraphicsItem* parent);
+	/// Resize this element
+	/// This method is called each time the Stage and Scene has been resized
+	virtual void resize(qreal left, qreal top, qreal width, qreal height) override;
+	/// Sets the Z-index provided by layouts to the QGraphicsItem system
+	virtual void setZ(qreal zValue) override { setZValue(zValue); }
+};
 
 /// Base class that represents a standard input, output or error object with a tube
 /// They behave as a memory segment
@@ -12,6 +34,10 @@ class StandardInputOutput : public MemorySegment
 	Q_DISABLE_COPY(StandardInputOutput)
 
   protected:
+	/// Tester placed in standard output
+	Prop* tester = nullptr;
+	/// An area to show the characters moving through the tube
+	InputOutputBuffer* buffer = nullptr;
 	/// Characteres traveling by the tube
 	QList<GraphicValue*> characters;
 
@@ -24,6 +50,8 @@ class StandardInputOutput : public MemorySegment
 	/// @param type The type of standard input or output this graphical object represents. It must
 	/// be one of the following: "input", "output", "error"
 	void buildStandardInputOutput(QString type);
+	/// Builds the are where characteres will travel inside the tube
+	void buildBuffer(const QString& type, Scene* scene);
 };
 
 
