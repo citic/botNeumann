@@ -27,6 +27,7 @@ InputOutputBuffer::InputOutputBuffer(Scene* scene, qreal zValue, int capacity)
 	, zValue(zValue)
 	, capacity(capacity)
 {
+	setFlag(ItemClipsChildrenToShape);
 }
 
 void InputOutputBuffer::resize(qreal left, qreal top, qreal width, qreal height)
@@ -47,7 +48,7 @@ int InputOutputBuffer::animateFill()
 	// Create characters, place them and animate them arriving
 	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
 	{
-		GraphicValue* character = new GraphicValue(typeChar, scene, zBuffer, text.mid(cursor++, 1));
+		GraphicValue* character = new GraphicValue(typeChar, this, zBuffer, text.mid(cursor++, 1));
 		character->buildGraphicValue(typeChar);
 		character->setMargins(0.0, -0.11);
 		addItem(character, 1.0 / capacity, zBuffer);
@@ -154,7 +155,7 @@ void StandardInputOutput::buildBuffer(const QString& type, size_t bufferSize, Sc
 	buffer = new InputOutputBuffer(scene, zBuffer, bufferSize);
 	buffer->setMarginTop( (refTubeHeight - refBufferTop) / refTubeHeight );
 	const qreal bufferMarginLeft = refBufferLeft / refTubeWidth / 2.0 + 0.025;
-	const qreal bufferMarginRight = (refTubeWidth - refBufferRight) / refTubeWidth / 2.0 + bufferMarginLeft;
+	const qreal bufferMarginRight = (refTubeWidth - refBufferRight) / refTubeWidth / 2.0 + 0.025;
 	buffer->setMarginLeft( type == "input" ? bufferMarginLeft : bufferMarginRight );
 	buffer->setMarginRight( type == "input" ? bufferMarginRight : bufferMarginLeft );
 	buffer->setMarginBottom( refBufferBottom / refTubeHeight) ;

@@ -7,10 +7,10 @@
 
 #include <QBrush>
 
-GraphicValue::GraphicValue(DataType dataType, Scene* scene, qreal zValue, const QString& value)
+GraphicValue::GraphicValue(DataType dataType, QGraphicsItem* graphicsParent, qreal zValue, const QString& value)
 	: LinearLayout(Qt::Horizontal)
 	, dataType(dataType)
-	, scene(scene)
+	, graphicsParent(graphicsParent)
 	, zValue(zValue)
 	, value(value)
 {
@@ -95,7 +95,7 @@ bool GraphicValue::buildSingleByteVariable(const QString& asset, const qreal ref
 
 	// Pod:
 	// A single-byte variable requires just a prop
-	Prop* pod = new Prop(asset, scene);
+	Prop* pod = new Prop(asset, graphicsParent);
 	addItem(pod, 1.0, zValue + zPodOffset );
 
 	// ToDo: draw value
@@ -143,16 +143,16 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 	if ( buildLeftPod )
 	{
 		podLeft = asset.startsWith("up_")
-				? new ScenicElement(asset + "_left", scene)
-				: new ScenicElement(svgFileBase + "_left.svg", scene, true);
+				? new ScenicElement(asset + "_left", graphicsParent)
+				: new ScenicElement(svgFileBase + "_left.svg", graphicsParent, true);
 
 		addItem(podLeft, 1.0 / size, zPod);
 	}
 
 	// Pod: middle
 	podMiddle = asset.startsWith("up_")
-			? new ScenicElement(asset + "_middle", scene)
-			: new ScenicElement(svgFileBase + "_middle.svg", scene, true);
+			? new ScenicElement(asset + "_middle", graphicsParent)
+			: new ScenicElement(svgFileBase + "_middle.svg", graphicsParent, true);
 	qreal middleSize = size - (VisAddress)buildLeftPod - (VisAddress)buildRightPod;
 	addItem(podMiddle, middleSize / size, zPod);
 
@@ -160,8 +160,8 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 	if ( buildRightPod )
 	{
 		podRight = asset.startsWith("up_")
-				? new ScenicElement(asset + "_right", scene)
-				: new ScenicElement(svgFileBase + "_right.svg", scene, true);
+				? new ScenicElement(asset + "_right", graphicsParent)
+				: new ScenicElement(svgFileBase + "_right.svg", graphicsParent, true);
 		addItem(podRight, 1.0 / size, zPod);
 	}
 
@@ -172,7 +172,7 @@ bool GraphicValue::buildValueLabel(const qreal refDataMargins[], qreal proportio
 {
 	// Variable value
 	Q_ASSERT(valueLabel == nullptr);
-	valueLabel = new LabelButton( value, scene );
+	valueLabel = new LabelButton( value, graphicsParent );
 	valueLabel->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
 	valueLabel->setMarginBottom( refDataMargins[refLabelBottom] );
 	valueLabel->alignRight();

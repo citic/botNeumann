@@ -8,6 +8,7 @@
 class LabelButton;
 class Scene;
 class ScenicElement;
+class QGraphicsItem;
 
 // Extra z-values for the parts of the graphic variable
 const qreal zPodOffset = 0.30;
@@ -30,7 +31,7 @@ class GraphicValue : public LinearLayout
 	DataType dataType = typeUnknown;
 	/// The scene will be the parent for the props used to represent this value, because values
 	/// can "float" along the entire scene
-	Scene* scene = nullptr;
+	QGraphicsItem* graphicsParent = nullptr;
 	/// Z Index where the value should be placed
 	qreal zValue = 0.0;
 	/// For pointers, the left part of the pod, may be changed for valid or invalid
@@ -44,7 +45,7 @@ class GraphicValue : public LinearLayout
 
   public:
 	/// Constructor
-	explicit GraphicValue(DataType dataType, Scene* scene, qreal zValue, const QString& value = "");
+	explicit GraphicValue(DataType dataType, QGraphicsItem* graphicsParent, qreal zValue, const QString& value = "");
 	/// Get the size in bytes of this value
 	virtual VisAddress getSize() const;
 	/// Set the value and update the interface
