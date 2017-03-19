@@ -9,6 +9,7 @@
 #include "Unit.h"
 
 #include <QBrush>
+#include <QPen>
 #include <QTextStream>
 
 const qreal zTube =    zUnitPlaying::standardInputOutput + 0.3;
@@ -21,25 +22,23 @@ const qreal zOpening = zUnitPlaying::standardInputOutput + 0.0;
 
 InputOutputBuffer::InputOutputBuffer(Scene* scene, qreal zValue, int capacity)
 	: QGraphicsRectItem(scene)
+	, LinearLayout(Qt::Horizontal)
 	, scene(scene)
 	, zValue(zValue)
 	, capacity(capacity)
 {
-	characterLayout = new LinearLayout(Qt::Horizontal);
 }
 
 void InputOutputBuffer::resize(qreal left, qreal top, qreal width, qreal height)
 {
-	// Update the LayoutItem part of this object
-	LayoutItem::resize(left, top, width, height);
-	applyMargins(left, top, width, height);
-	characterLayout->resize(left, top, width, height);
+	// Update the LinearLayout part of this object
+	LinearLayout::resize(left, top, width, height);
 
 	// Update the QGraphicsRectIem part of this object
+	applyMargins(left, top, width, height);
 	setRect(left, top, width, height);
 }
 
-#include "LogManager.h"
 int InputOutputBuffer::animateFill()
 {
 	// The amount of free space that can be filled
@@ -48,10 +47,9 @@ int InputOutputBuffer::animateFill()
 	// Create characters, place them and animate them arriving
 	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
 	{
-		qCCritical(logTemporary()) << "Buffer: character" << text[cursor];
 		GraphicValue* character = new GraphicValue(typeChar, scene, zBuffer, text.mid(cursor++, 1));
 		character->buildGraphicValue(typeChar);
-		characterLayout->addItem(character, 1.0 / (capacity + 3), zBuffer);
+		addItem(character, 1.0 / (capacity + 3), zBuffer);
 		characters.append(character);
 	}
 
@@ -159,5 +157,7 @@ void StandardInputOutput::buildBuffer(const QString& type, size_t bufferSize, Sc
 	buffer->setMarginLeft( type == "input" ? bufferMarginLeft : bufferMarginRight );
 	buffer->setMarginRight( type == "input" ? bufferMarginRight : bufferMarginLeft );
 	buffer->setMarginBottom( refBufferBottom / refTubeHeight) ;
+	buffer->setPen(Qt::NoPen);
+	buffer->setBrush(Qt::NoBrush);
 	addItem(buffer, 1.0, zBuffer);
 }

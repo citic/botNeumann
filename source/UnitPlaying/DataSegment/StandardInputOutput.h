@@ -9,7 +9,7 @@
 class GraphicValue;
 class Prop;
 
-class InputOutputBuffer : public QGraphicsRectItem, public LayoutItem, public AlignedItem
+class InputOutputBuffer : public QGraphicsRectItem, public LinearLayout, public AlignedItem
 {
 	Q_DISABLE_COPY(InputOutputBuffer)
 
@@ -26,8 +26,6 @@ class InputOutputBuffer : public QGraphicsRectItem, public LayoutItem, public Al
 	QString text;
 	/// Cursor that indicates the next byte to be read or printed in the @a text string
 	int cursor = 0;
-	/// ToDo: inherit Linearlayout
-	LinearLayout* characterLayout = nullptr;
 
   public:
 	/// Constructor
