@@ -42,14 +42,15 @@ void InputOutputBuffer::resize(qreal left, qreal top, qreal width, qreal height)
 int InputOutputBuffer::animateFill()
 {
 	// The amount of free space that can be filled
-	int charsToFill = qMin( getFreeCharacters(), getPendingCharacters() );
+	int charsToFill = qMin( getFreeCharacters() + 1, getPendingCharacters() );
 
 	// Create characters, place them and animate them arriving
 	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
 	{
 		GraphicValue* character = new GraphicValue(typeChar, scene, zBuffer, text.mid(cursor++, 1));
 		character->buildGraphicValue(typeChar);
-		addItem(character, 1.0 / (capacity + 3), zBuffer);
+		character->setMargins(0.0, -0.11);
+		addItem(character, 1.0 / capacity, zBuffer);
 		characters.append(character);
 	}
 
@@ -152,7 +153,7 @@ void StandardInputOutput::buildBuffer(const QString& type, size_t bufferSize, Sc
 	Q_ASSERT(buffer == nullptr);
 	buffer = new InputOutputBuffer(scene, zBuffer, bufferSize);
 	buffer->setMarginTop( (refTubeHeight - refBufferTop) / refTubeHeight );
-	const qreal bufferMarginLeft = refBufferLeft / refTubeWidth / 2.0;
+	const qreal bufferMarginLeft = refBufferLeft / refTubeWidth / 2.0 + 0.025;
 	const qreal bufferMarginRight = (refTubeWidth - refBufferRight) / refTubeWidth / 2.0 + bufferMarginLeft;
 	buffer->setMarginLeft( type == "input" ? bufferMarginLeft : bufferMarginRight );
 	buffer->setMarginRight( type == "input" ? bufferMarginRight : bufferMarginLeft );
