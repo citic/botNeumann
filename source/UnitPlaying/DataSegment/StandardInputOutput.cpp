@@ -49,7 +49,7 @@ int InputOutputBuffer::animateFill()
 	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
 	{
 		GraphicValue* character = new GraphicValue(typeChar, this, zBuffer, text.mid(cursor++, 1));
-		character->buildGraphicValue(typeChar);
+		character->buildGraphicValue();
 		character->setMargins(0.0, -0.11);
 		addItem(character, 1.0 / capacity, zBuffer);
 		characters.append(character);

@@ -23,7 +23,7 @@ GraphicVariable::GraphicVariable(MemoryAllocation* variable, VisAddress firstByt
 	leftComplete = firstByte == variable->visualizationAddress;
 	rightComplete = lastByte == variable->visualizationAddress + variable->size - 1;
 
-	buildGraphicValue( variable->dataType );
+	buildGraphicValue();
 }
 
 void GraphicVariable::applyDataTypeMargins(const qreal refDataMargins[])

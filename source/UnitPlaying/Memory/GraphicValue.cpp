@@ -54,10 +54,8 @@ void GraphicValue::setValue(const QString& value)
 		valueLabel->setText( value, true );
 }
 
-bool GraphicValue::buildGraphicValue(DataType dataType)
+bool GraphicValue::buildGraphicValue()
 {
-	this->dataType = dataType;
-
 	// Create the pod, the value, and the label of the variable
 	switch ( dataType )
 	{
@@ -98,9 +96,10 @@ bool GraphicValue::buildSingleByteVariable(const QString& asset, const qreal ref
 	Prop* pod = new Prop(asset, graphicsParent);
 	addItem(pod, 1.0, zValue + zPodOffset );
 
-	// ToDo: draw value
+	// Characters can contain a single value
+	buildValueLabel(refDataMargins);
 
-	// No variable label
+	// No variable name
 	return true;
 }
 
@@ -175,7 +174,7 @@ bool GraphicValue::buildValueLabel(const qreal refDataMargins[], qreal proportio
 	valueLabel = new LabelButton( value, graphicsParent );
 	valueLabel->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
 	valueLabel->setMarginBottom( refDataMargins[refLabelBottom] );
-	valueLabel->alignRight();
+	dataType == typeChar ? valueLabel->alignCenter() : valueLabel->alignRight();
 	//value->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 	valueLabel->setBrush(QBrush(Qt::black));
 	addItem(valueLabel, proportion, zValue + zLabelValueOffset);

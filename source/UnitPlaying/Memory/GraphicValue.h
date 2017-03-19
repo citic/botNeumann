@@ -45,13 +45,15 @@ class GraphicValue : public LinearLayout
 
   public:
 	/// Constructor
+	/// @remarks Client class must call @a buildGraphicValue in order to create the graphics
+	/// according to the data type
 	explicit GraphicValue(DataType dataType, QGraphicsItem* graphicsParent, qreal zValue, const QString& value = "");
 	/// Get the size in bytes of this value
 	virtual VisAddress getSize() const;
 	/// Set the value and update the interface
 	void setValue(const QString& value);
-	/// Constructs this value
-	bool buildGraphicValue(DataType dataType = typeUnknown);
+	/// Constructs this value according to its data type
+	bool buildGraphicValue();
 
   protected:
 	/// Create the pod, the value, and the label for a bool or char value
