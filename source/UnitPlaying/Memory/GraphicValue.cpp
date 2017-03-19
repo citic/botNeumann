@@ -166,17 +166,50 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 
 	return true;
 }
-
+#include <QFont>
 bool GraphicValue::buildValueLabel(const qreal refDataMargins[], qreal proportion)
 {
 	// Variable value
 	Q_ASSERT(valueLabel == nullptr);
-	valueLabel = new LabelButton( value, graphicsParent );
+	QString visibleValue = value;
+	if ( dataType == typeChar )
+		visibleValue = processInvisibleChars();
+	valueLabel = new LabelButton( visibleValue, graphicsParent );
 	valueLabel->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
 	valueLabel->setMarginBottom( refDataMargins[refLabelBottom] );
-	dataType == typeChar ? valueLabel->alignCenter() : valueLabel->alignRight();
-	//value->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
+	if ( dataType == typeChar )
+	{
+		//valueLabel->alignCenter();
+		valueLabel->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
+		valueLabel->setMarginLeft(1.0 / 3.0);
+		valueLabel->setMarginRight(0.1);
+	}
+	else
+		valueLabel->alignRight();
 	valueLabel->setBrush(QBrush(Qt::black));
 	addItem(valueLabel, proportion, zValue + zLabelValueOffset);
 	return true;
+}
+
+QString GraphicValue::processInvisibleChars()
+{
+	QString result;
+	for ( int index = 0; index < value.length(); ++index )
+	{
+		switch ( value[index].toLatin1() )
+		{
+			case '\n': result += "\\n"; break; // newline
+			case '\t': result += "\\t"; break; // horizontal tab
+			case '\\': result += "\\\\"; break; // backslash
+			case '\r': result += "\\r"; break; // carriage return
+			case '\a': result += "\\a"; break; // alert
+			case '\b': result += "\\b"; break; // backspace
+			case '\f': result += "\\f"; break; // formfeed
+			case '\v': result += "\\v"; break; // vertical tab
+
+			default: result += value[index];
+		}
+	}
+
+	return result;
 }
