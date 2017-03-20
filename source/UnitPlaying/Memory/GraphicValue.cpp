@@ -4,8 +4,11 @@
 #include "LabelButton.h"
 #include "Prop.h"
 #include "Scene.h"
+#include "VisualizationSpeed.h"
 
 #include <QBrush>
+#include <QFont>
+#include <QPropertyAnimation>
 
 GraphicValue::GraphicValue(DataType dataType, QGraphicsItem* graphicsParent, qreal zValue, const QString& value)
 	: LinearLayout(Qt::Horizontal)
@@ -166,7 +169,7 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 
 	return true;
 }
-#include <QFont>
+
 bool GraphicValue::buildValueLabel(const qreal refDataMargins[], qreal proportion)
 {
 	// Variable value
@@ -212,4 +215,23 @@ QString GraphicValue::processInvisibleChars()
 	}
 
 	return result;
+}
+
+int GraphicValue::animateMoveTo(qreal startProportion, int duration)
+{
+	// Animate the robot while it appears
+	QPropertyAnimation* moveToAnimation = new QPropertyAnimation(this, "startProportion", this);
+	duration = VisualizationSpeed::getInstance().adjust(duration);
+	moveToAnimation->setDuration(duration);
+	moveToAnimation->setStartValue(this->startProportion);
+	moveToAnimation->setEndValue(startProportion);
+	moveToAnimation->start();
+	return duration;
+}
+
+void GraphicValue::updateStartProportion(qreal startProportion)
+{
+	setStartProportion(startProportion);
+	Q_ASSERT(parentLayoutItem);
+	parentLayoutItem->updateLayoutItem();
 }

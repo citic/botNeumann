@@ -13,6 +13,7 @@ class MultiSvgButton;
 	not fit within the memory row (in such case, the variable spans for several memory rows). */
 class GraphicVariable : public GraphicValue
 {
+	Q_OBJECT
 	Q_DISABLE_COPY(GraphicVariable)
 
   protected:

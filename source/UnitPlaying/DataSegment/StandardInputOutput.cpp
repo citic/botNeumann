@@ -48,11 +48,21 @@ int InputOutputBuffer::animateFill()
 	// Create characters, place them and animate them arriving
 	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
 	{
+		// Create the character as a value
 		GraphicValue* character = new GraphicValue(typeChar, this, zBuffer, text.mid(cursor++, 1));
 		character->buildGraphicValue();
-		character->setMargins(0.0, -0.11);
-		addItem(character, 1.0 / capacity, zBuffer);
 		characters.append(character);
+
+		// Characters are slighly inclined, adjust their margins to overlap themselves
+		character->setMargins(0.0, -0.11);
+
+		// To animate them arriving, we place them at the first not visible position
+		qreal finalPercent = getMarginLeft() + 0.015 + qreal(charCounter) / capacity;
+		insertItem(character, finalPercent + 1.0, 1.0 / capacity, zBuffer);
+
+		// The duration of the animation is proportional to the number of spaces that characters
+		// have to move, i.e: empty spaces
+		/*int duration =*/ character->animateMoveTo( finalPercent, charsToFill * 250 );
 	}
 
 	this->updateLayoutItem();
@@ -154,7 +164,7 @@ void StandardInputOutput::buildBuffer(const QString& type, size_t bufferSize, Sc
 	Q_ASSERT(buffer == nullptr);
 	buffer = new InputOutputBuffer(scene, zBuffer, bufferSize);
 	buffer->setMarginTop( (refTubeHeight - refBufferTop) / refTubeHeight );
-	const qreal bufferMarginLeft = refBufferLeft / refTubeWidth / 2.0 + 0.025;
+	const qreal bufferMarginLeft = refBufferLeft / refTubeWidth / 2.0 + 0.02;
 	const qreal bufferMarginRight = (refTubeWidth - refBufferRight) / refTubeWidth / 2.0 + 0.025;
 	buffer->setMarginLeft( type == "input" ? bufferMarginLeft : bufferMarginRight );
 	buffer->setMarginRight( type == "input" ? bufferMarginRight : bufferMarginLeft );

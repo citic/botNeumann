@@ -2,8 +2,6 @@
 
 LayoutItem::LayoutItem(qreal proportion)
 	: proportion(proportion)
-	, margins{0}
-	, floating(false)
 {
 }
 

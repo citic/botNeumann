@@ -20,16 +20,16 @@ class LayoutItem
 	/// the previous element that has been added to the parent.
 	qreal startProportion = -1.0;
 	/// Percent of extension (aka proportion) this item will occupy in parent's space
-	qreal proportion;
+	qreal proportion = 0.0;
 	/// Percent of extension of each margin of this item
-	qreal margins[marginCount];
+	qreal margins[marginCount] = { 0 };
 	/// Current dimensions of this item set in the last resize event
 	qreal layoutLeft = 0.0;
 	qreal layoutTop = 0.0;
 	qreal layoutWidth = 0.0;
 	qreal layoutHeight = 0.0;
 	/// True if this item is floating over other items
-	bool floating;
+	bool floating = false;
 
   public:
 	/// Constructor
