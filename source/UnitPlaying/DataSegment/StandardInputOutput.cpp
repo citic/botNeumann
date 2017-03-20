@@ -75,6 +75,15 @@ int InputOutputBuffer::animateRead(int length)
 	return 0;
 }
 
+int InputOutputBuffer::clear()
+{
+	// Characters in tube are not animated to disappear, because that animation does not convey
+	// any meaning. They disappear when they are discarded
+	removeAllItems(true);
+	characters.clear();
+	return 0;
+}
+
 
 // StandardInputOutput class ----------------------------------------------------------------------
 

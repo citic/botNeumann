@@ -85,6 +85,11 @@ void DataSegment::buildStandardInOut(const double stdInOutProportion)
 
 void DataSegment::clearAnimation()
 {
-	// ToDo: remove any global variables and convert them to garbage
-	// ToDo: remove all input or output traversing the stddin/stdout tubes
+	// ToDo: remove any global variables
+//	memoryFrame->deallocateAll();
+
+	// ToDo: remove all input or output traversing the stdin/stdout tubes
+	Q_ASSERT(standardInput && standardOutput);
+	standardInput->clear();
+	standardOutput->clear();
 }

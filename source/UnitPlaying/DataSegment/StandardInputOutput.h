@@ -49,6 +49,9 @@ class InputOutputBuffer : public QGraphicsRectItem, public LinearLayout, public 
 	inline int getFreeCharacters() const { return capacity - characters.count(); }
 	/// Returns the amount of available chars that are still not loaded in the tube
 	inline int getPendingCharacters() const { return text.length() - cursor; }
+	/// Clear all the values on the buffer
+	/// @return The duration in milliseconds of the animation
+	int clear();
 };
 
 /// Base class that represents a standard input, output or error object with a tube
@@ -76,6 +79,8 @@ class StandardInputOutput : public MemorySegment
 	/// The remaining empty space is filled calling @a animateFill() function
 	/// @return The duration of the animation in milliseconds
 	inline int animateRead(int length) { return buffer->animateRead(length); }
+	/// Removes all values from the buffer
+	inline int clear() { return buffer->clear(); }
 
   protected:
 	/// Load graphic elements to represent this object
