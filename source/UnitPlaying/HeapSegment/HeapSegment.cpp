@@ -49,7 +49,7 @@ void HeapSegment::buildSegment()
 
 	// Create the memory rows and their roof
 	Q_ASSERT(scene);
-	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize, tr("Heap segment"), zUnitPlaying::heapSegment, true);
+	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize, tr("Heap segment"), zUnitPlaying::heapSegment, true, true);
 
 	// Distribute child elements according to the number of rows they require
 	const double allRows = this->getHeightInRows();

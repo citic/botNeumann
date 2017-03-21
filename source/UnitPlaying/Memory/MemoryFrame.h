@@ -35,10 +35,12 @@ class MemoryFrame : public LinearLayout
 	QList<MemoryRow*> memoryRows;
 	/// The list of variables assigned in this memory frame, some of the may be free space
 	MemoryAllocations memoryAllocations;
+	/// True if this memory fame has legs at the bottom
+	bool withLegs = false;
 
   public:
 	/// Constructor
-	explicit MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage);
+	explicit MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs);
 	/// Destructor
 	~MemoryFrame();
 	/// Get the number of memory rows required by this object
@@ -65,6 +67,8 @@ class MemoryFrame : public LinearLayout
   protected:
 	/// Create the memory rows and place them into the scene
 	void buildMemoryFrame(const QString& topLabel, qreal zValue);
+	/// Create the memory legs, if asked
+	void buildMemoryLegs(qreal zValue);
 	/// Finds the smallest free fragment to allocate a variable
 	/// If a free fragment is found, retuns true and the parameters are assigned to the free
 	/// fragment (iterator) and the offset in that iterator. If no fragment is found, returns false

@@ -3,19 +3,22 @@
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
 #include "MemoryTop.h"
+#include "Prop.h"
 
 // The roof requires half memory row
 const double memoryRoofRows = 0.5;
+const double memoryLegsRows = 0.25;
 
-MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage)
+MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs)
 	: LinearLayout(Qt::Vertical)
 	, graphicsParentItem(graphicsParentItem)
 	, rowCount(rowCount)
 	, startByte(startByte)
 	, rowSize(rowSize)
+	, withLegs(withLegs)
 {
 	// Initially there is just one big fragment of free memory
-	MemoryAllocation* freeFragment = new MemoryAllocation(AllocationSegment::free, getSize(), startByte );
+	MemoryAllocation* freeFragment = new MemoryAllocation( AllocationSegment::free, getSize(), startByte );
 	freeFragment->hasGarbage = withGarbage;
 	memoryAllocations.append(freeFragment);
 
@@ -33,6 +36,47 @@ MemoryFrame::~MemoryFrame()
 	removeMemoryAllocations();
 }
 
+void MemoryFrame::buildMemoryFrame(const QString& topLabel, qreal zValue)
+{
+	// Create the memory roof
+	Q_ASSERT(graphicsParentItem);
+	Q_ASSERT(memoryTop == nullptr);
+	memoryTop = new MemoryTop(rowSize, topLabel, graphicsParentItem, zValue);
+	addItem(memoryTop, memoryRoofRows / getHeightInRows(), zValue);
+
+	// Create the memory rows
+	size_t rowStartByte = startByte;
+	for (size_t index = 0; index < rowCount; ++index)
+	{
+		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, graphicsParentItem, zValue, memoryAllocations.first()->hasGarbage);
+		addItem(memoryRow, 1.0 / getHeightInRows(), zValue);
+		memoryRows.append( memoryRow );
+		rowStartByte += rowSize;
+	}
+
+	// If asked, create memory legs
+	if ( withLegs )
+		buildMemoryLegs(zValue);
+}
+
+void MemoryFrame::buildMemoryLegs(qreal zValue)
+{
+	// We need a layout to place the legs vertically
+	LinearLayout* legsLayout = new LinearLayout(Qt::Horizontal);
+	Prop* leftLegs = new Prop("up_memory_row_base_left1", graphicsParentItem);
+	Prop* rightLegs = new Prop("up_memory_row_base_right1", graphicsParentItem);
+
+	// We use the same byte proportion than any memory row
+	qreal byteProportion = 1.0 / (rowSize + 2.0);
+
+	// We place the legs in the edge positions
+	legsLayout->insertItem( leftLegs, 0.0, 1.0 * byteProportion, zValue );
+	legsLayout->insertItem( rightLegs, (rowSize + 1) * byteProportion, 1.0 * byteProportion, zValue );
+
+	// We add the horizontal layout to this object
+	addItem( legsLayout, memoryLegsRows / getHeightInRows(), zValue );
+}
+
 void MemoryFrame::removeMemoryAllocations()
 {
 	// Free fragments are not added to the scene because they are invisible
@@ -45,7 +89,7 @@ void MemoryFrame::removeMemoryAllocations()
 
 double MemoryFrame::getHeightInRows() const
 {
-	return rowCount + memoryRoofRows;
+	return rowCount + memoryRoofRows + withLegs * memoryLegsRows;
 }
 
 bool MemoryFrame::allocate(MemoryAllocation* memoryAllocation)
@@ -167,23 +211,4 @@ bool MemoryFrame::deallocateAll()
 	// Remove invisible memory allocations
 	removeMemoryAllocations();
 	return true;
-}
-
-void MemoryFrame::buildMemoryFrame(const QString& topLabel, qreal zValue)
-{
-	// Create the memory roof
-	Q_ASSERT(graphicsParentItem);
-	Q_ASSERT(memoryTop == nullptr);
-	memoryTop = new MemoryTop(rowSize, topLabel, graphicsParentItem, zValue);
-	addItem(memoryTop, memoryRoofRows / getHeightInRows(), zValue);
-
-	// Create the memory rows
-	size_t rowStartByte = startByte;
-	for (size_t index = 0; index < rowCount; ++index)
-	{
-		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, graphicsParentItem, zValue, memoryAllocations.first()->hasGarbage);
-		addItem(memoryRow, 1.0 / getHeightInRows(), zValue);
-		memoryRows.append( memoryRow );
-		rowStartByte += rowSize;
-	}
 }

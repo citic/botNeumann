@@ -17,10 +17,11 @@ int CallStack::callFunction(const GdbItemTree& tree)
 	size_t rowSize = 16;
 	const QString& functionName = tree.findNodeTextValue("/frame/func") + "()";
 	bool withGarbage = true;
+	bool withLegs = true;
 
 	// Build a memory frame for the new stack frame with the function name (/frame/func) in the roof
 	// By default, memory frames are filled of garbage.
-	MemoryFrame* functionCall = new MemoryFrame(parent, rowCount, startByte, rowSize, functionName, zValue, withGarbage);
+	MemoryFrame* functionCall = new MemoryFrame(parent, rowCount, startByte, rowSize, functionName, zValue, withGarbage, withLegs);
 
 	// Add the functionCall to the list
 	stackFrames.append(functionCall);
