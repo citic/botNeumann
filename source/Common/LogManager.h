@@ -24,6 +24,8 @@ Q_DECLARE_LOGGING_CATEGORY(logPlayer)
 Q_DECLARE_LOGGING_CATEGORY(logTemporary)
 /// Logs events related to the controller in charge of the visualization process
 Q_DECLARE_LOGGING_CATEGORY(logVisualizator)
+/// Logs events related to user program crash (stack overflow, segmentation fault, thread overflow)
+Q_DECLARE_LOGGING_CATEGORY(logSolutionCrash)
 
 // A kind of delegate
 class MessagesArea;

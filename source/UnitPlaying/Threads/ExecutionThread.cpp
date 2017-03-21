@@ -15,10 +15,12 @@
 const qreal busyCallStackSpacerProportion = 0.9;
 
 
-ExecutionThread::ExecutionThread(Scene* scene, int id)
+ExecutionThread::ExecutionThread(size_t startByte, size_t rowSize, Scene* scene, int id)
 	: LinearLayout(Qt::Vertical)
 	, scene(scene)
 	, id(id)
+	, startByte(startByte)
+	, rowSize(rowSize)
 {
 	buildExecutionThread();
 }
@@ -44,7 +46,7 @@ void ExecutionThread::buildExecutionThread()
 	// Create the object in charge of managing the function calls for this execution thread
 	// No functions are added to the call stack until the execution thread gets updated form GDB
 	Q_ASSERT(callStack == nullptr);
-	callStack = new CallStack(zUnitPlaying::stackFrame, scene);
+	callStack = new CallStack(startByte, rowSize, zUnitPlaying::stackFrame, scene);
 }
 
 int ExecutionThread::animateAppear()

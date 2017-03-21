@@ -26,6 +26,7 @@ Q_LOGGING_CATEGORY(logDebuggerResponse, "ADbR")
 Q_LOGGING_CATEGORY(logNotImplemented,   "ANIm")
 Q_LOGGING_CATEGORY(logVisualizator,     "AVis")
 Q_LOGGING_CATEGORY(logPlayer,           "P---")
+Q_LOGGING_CATEGORY(logSolutionCrash,    "PCrs")
 Q_LOGGING_CATEGORY(logBuild,            "PBld")
 Q_LOGGING_CATEGORY(logTemporary,        "!!!!")
 

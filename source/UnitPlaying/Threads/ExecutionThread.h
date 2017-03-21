@@ -58,6 +58,10 @@ class ExecutionThread : public LinearLayout
 	/// If this execution thread is assigned to a CPU core, this will point to it. If this thread
 	/// is detached from the CPU core (for example, is set to sleep), this pointer will be nullptr
 	CpuCore* cpuCore = nullptr;
+	/// The memory address of the first byte assigned for stack memory to this execution thread
+	size_t startByte = 0;
+	/// The size in bytes of each memory row of the stack segment
+	size_t rowSize = 0;
 	/// The stack of function calls (frames) that this thread has executed
 	/// The call stack is visible if this thread is assigned to a CPU core, otherwise they are
 	/// invisible on the visualization, but not deleted. The call stack gets deleted only when the
@@ -66,7 +70,7 @@ class ExecutionThread : public LinearLayout
 
   public:
 	/// Constructor
-	explicit ExecutionThread(Scene* scene, int id);
+	explicit ExecutionThread(size_t startByte, size_t rowSize, Scene* scene, int id);
 	/// Animate the apparition of the robot
 	/// @return The duration of the animation in milliseconds
 	int animateAppear();

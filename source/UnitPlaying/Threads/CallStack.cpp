@@ -3,8 +3,10 @@
 #include "MemoryFrame.h"
 #include "Scene.h"
 
-CallStack::CallStack(qreal zValue, QGraphicsItem* graphicsParentItem)
+CallStack::CallStack(size_t startByte, size_t rowSize, qreal zValue, QGraphicsItem* graphicsParentItem)
 	: RectLayoutItem(Qt::Vertical, zValue, graphicsParentItem)
+	, startByte(startByte)
+	, rowSize(rowSize)
 {
 }
 
@@ -13,8 +15,6 @@ int CallStack::callFunction(const GdbItemTree& tree)
 	// Parameters to build a memory frame:
 	QGraphicsItem* parent = parentItem();
 	size_t rowCount = 2;
-	size_t startByte = 100;
-	size_t rowSize = 16;
 	const QString& functionName = tree.findNodeTextValue("/frame/func") + "()";
 	bool withGarbage = true;
 	bool withLegs = true;

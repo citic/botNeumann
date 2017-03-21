@@ -146,6 +146,8 @@ class Unit : public QObject
 	inline int getCpuCores() const { return cpuCores; }
 	/// Mininum number of execution threads (robots) required to resolve this unit.
 	inline int getMinThreads() const { return minThreads; }
+	/// Maxinum number of execution threads (robots) allowed to resolve this unit.
+	inline int getMaxThreads() const { return maxThreads; }
 	/// Maximum number of seconds to consider an solution valid
 	inline int getTimeout() const { return timeout; }
 	/// True if player solution output must be compared ignoring whitespace against the answer

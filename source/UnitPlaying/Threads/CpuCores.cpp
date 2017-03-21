@@ -3,6 +3,7 @@
 #include "CpuCores.h"
 #include "DebuggerBreakpoint.h"
 #include "ExecutionThread.h"
+#include "LogManager.h"
 #include "Scene.h"
 #include "Unit.h"
 
@@ -103,8 +104,21 @@ void CpuCores::onResult(const GdbItemTree& tree, VisualizationContext context, i
 
 int CpuCores::createThread(int id)
 {
+	// If user exceed the number of allowed threads, animate a program terminated
+	if ( unit.getMaxThreads() > 0 && executionThreads.count() + 1 > unit.getMaxThreads() )
+	{
+		// ToDo: Animate program termination due to exceeded allowed threads
+		qCCritical(logSolutionCrash) << "Player solution exceeded max allowed threads" << unit.getMaxThreads();
+		return -1;
+	}
+
+	// Get memory for the stack segment of the new execution thread
+	// ToDo: The unit's memory distribution model assigns memory to cores, not threads
+	size_t startByte = unit.getCoreStartByte( executionThreads.count() );
+	size_t rowSize = unit.getStackSegmentVisibleSize() / unit.getStackSegmentVisibleRows() / 2;
+
 	// Create an execution thread, that is represeted by a robot with racks
-	ExecutionThread* thread = new ExecutionThread(scene, id);
+	ExecutionThread* thread = new ExecutionThread(startByte, rowSize, scene, id);
 	executionThreads.append(thread);
 
 	// If there is an idle CPU core, assign the new execution thread to it
