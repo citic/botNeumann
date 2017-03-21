@@ -121,6 +121,12 @@ qreal ExecutionThread::getActorReferenceWidth() const
 	return robot->boundingRect().width();
 }
 
+void ExecutionThread::setCpuCore(CpuCore* cpuCore)
+{
+	this->cpuCore = cpuCore;
+	cpuCore->addItem(callStack, 1.0);
+}
+
 ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
@@ -167,6 +173,8 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, DebuggerBreak
 	// The ExecutionThread must be active (must have an assigned CPU core)
 	if ( isIdle() )
 	{
+		// ToDo: If execution thread is idle in visualization (does not have an assigned CPU core),
+		// it should be stopped at inferior through GDB, to avoid it generating more responses.
 		qCCritical(logVisualizator) << "ERROR: idle execution thread running a function call. Disable GDB's all-stop mode";
 		return false;
 	}
@@ -178,11 +186,10 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, DebuggerBreak
 	// For testing only: close the interface after the function is called
 	QTimer::singleShot( maxDuration + 2000, cpuCore, SLOT(closeMemoryInterface()) );
 
-	// Build a memory frame for the new stack frame with the function name (/frame/func) in the roof. By default, memory frames are filled of garbage.
+	// Animate the function call
+	Q_ASSERT(callStack);
 	functionName = tree.findNodeTextValue("/frame/func");
+	updateMaxDuration( callStack->callFunction(tree) );
 
-	//Raise the memory roof to the CPU core opened door, to make the roof visible only. Arguments and variables will be made visible next.
-
-	//ToDo: If execution thread is idle in visualization (does not have an assigned CPU core), it should be stopped at inferior through GDB, to avoid it generating more responses.
 	return true;
 }
