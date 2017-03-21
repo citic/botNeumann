@@ -135,15 +135,10 @@ void StandardInputOutput::buildStandardInputOutput(QString type)
 	Prop* coupling = new Prop(QString("up_standard_input_output_coupling").arg(type), scene);
 	Prop* right = new Prop(QString("up_standard_%1_right").arg(type), scene);
 
-	const qreal refCouplingWidth = 4.970;
-	const qreal refCouplingHeight = 25.776;
-	const qreal refOpeningWidth = 162.979;
-	const qreal refOpeningHeight = 38.799;
-
-	coupling->setMarginBottom(1.0 - refCouplingHeight / refOpeningHeight);
-
+	// Ugly fix: the coupling is part of the opening, but it must be placed in a higher layer
 	const qreal couplingStart = (refOpeningWidth - refCouplingWidth) / refOpeningWidth * openingProportion;
 	const qreal couplingPercent = refCouplingWidth / refOpeningWidth * openingProportion;
+	coupling->setMarginBottom(1.0 - refCouplingHeight / refOpeningHeight);
 
 	// But proportions vary depending on the type of stream
 	if ( type == "input" )

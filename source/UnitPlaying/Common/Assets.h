@@ -89,4 +89,9 @@ const qreal refBufferBottom = 15.108;
 const qreal refBufferLeft = 29.653;
 const qreal refBufferRight = 353.631;
 
+const qreal refCouplingWidth = 4.970;
+const qreal refCouplingHeight = 25.776;
+const qreal refOpeningWidth = 162.979;
+const qreal refOpeningHeight = 38.799;
+
 #endif // ASSETS_H
