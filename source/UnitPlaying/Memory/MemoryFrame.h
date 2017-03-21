@@ -58,6 +58,9 @@ class MemoryFrame : public LinearLayout
 	/// will be removed from the scene, but not deleted from memory. The memoryMapper should do
 	/// the deletion of the object
 	bool deallocate(MemoryAllocation* memoryAllocation);
+	/// Deallocate all variables in this frame
+	/// @todo: Receive duration by parameter and return actual duration
+	bool deallocateAll();
 
   protected:
 	/// Create the memory rows and place them into the scene
@@ -70,6 +73,8 @@ class MemoryFrame : public LinearLayout
 	/// Distribute the variables allocated in this memory frame to the respective memory rows
 	/// @return true if all variables were set, false if there is a segment overflow
 	bool distributeVariablesIntoMemoryRows();
+	/// Remove free fragments from memory
+	void removeMemoryAllocations();
 	/// For debugging purposes
 	void printAllocationQueue();
 };

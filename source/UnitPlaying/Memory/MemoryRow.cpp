@@ -184,3 +184,12 @@ bool MemoryRow::calculateIntersection(const MemoryAllocation* variable, VisAddre
 	// byte-length as intersection
 	return firstByte <= lastByte;
 }
+
+bool MemoryRow::deallocateAll()
+{
+	for ( int index = 0; index < graphicVariables.count(); ++index )
+		graphicVariables[index]->removeFromScene();
+
+	graphicVariables.clear();
+	return true;
+}

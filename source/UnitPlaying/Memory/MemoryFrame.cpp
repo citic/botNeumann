@@ -31,10 +31,17 @@ MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t
 
 MemoryFrame::~MemoryFrame()
 {
+	removeMemoryAllocations();
+}
+
+void MemoryFrame::removeMemoryAllocations()
+{
 	// Free fragments are not added to the scene because they are invisible
 	for ( MemoryAllocations::iterator current = memoryAllocations.begin(); current != memoryAllocations.end(); ++current )
 		if ( (*current)->isFreeFragment() )
 			delete *current;
+
+	memoryAllocations.clear();
 }
 
 double MemoryFrame::getHeightInRows() const
@@ -62,7 +69,7 @@ bool MemoryFrame::allocate(MemoryAllocation* memoryAllocation)
 	if ( offset > 0 )
 		memoryAllocations.insert( freeFragment, new MemoryAllocation(AllocationSegment::free, offset, (*freeFragment)->visualizationAddress ) );
 
-	// Allocate the variable in first bytes of the free fragment
+	// Allocate the variable in first bytes of the free fragment, after the offset (if any)
 	memoryAllocations.insert( freeFragment, memoryAllocation );
 	memoryAllocation->visualizationAddress = (*freeFragment)->visualizationAddress + offset;
 
@@ -149,6 +156,17 @@ bool MemoryFrame::deallocate(MemoryAllocation* memoryAllocation)
 {
 	// ToDo: implement deallocation
 	qCCritical(logTemporary) << "Memory Frame: Deallocating" << memoryAllocation->name << "releasing" << memoryAllocation->size << "bytes";
+	return true;
+}
+
+bool MemoryFrame::deallocateAll()
+{
+	// Visible variables are allocated in memory rows, not in the frame directly
+	for ( int index = 0; index < memoryRows.count(); ++index )
+		memoryRows[index]->deallocateAll();
+
+	// Remove invisible memory allocations
+	removeMemoryAllocations();
 	return true;
 }
 

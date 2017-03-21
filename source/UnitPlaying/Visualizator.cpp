@@ -257,7 +257,7 @@ bool Visualizator::watchGlobalVariables()
 	Q_ASSERT(playerSolution);
 	CtagsCall* ctagsCall = playerSolution->getCtagsCall();
 
-	// If the Ctags call failed, the pointer is null and no symbols are not extracted
+	// If the Ctags call failed, the pointer is null and no symbols were extracted
 	if ( ctagsCall == nullptr )
 		return false;
 

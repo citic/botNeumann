@@ -78,6 +78,9 @@ class MemoryRow : public LinearLayout
 	/// Convenience function to hide a range of garbage artifacts
 	inline bool hideGarbage(VisAddress firstByte, VisAddress lastByte)
 		{ return showGarbage(firstByte, lastByte, false); }
+	/// Deallocate all variable fragmets in this memory row. They may be replaced by garbage if
+	/// this is a part of a memory segment that is not initiallized
+	bool deallocateAll();
 
   protected:
 	/// Build the shelves and labels
