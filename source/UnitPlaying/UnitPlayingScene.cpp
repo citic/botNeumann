@@ -304,6 +304,7 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 	// Load the test case expected input/output/error in the StandardInputOutputInspector
 	dataSegment->loadTestCase(testCaseNumber, playerSolution);
 	messagesArea->loadTestCase(testCaseNumber, playerSolution);
+	changeState(UnitPlayingState::animating);
 }
 
 void UnitPlayingScene::userStopped(bool removeTestCases)
