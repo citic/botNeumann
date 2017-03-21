@@ -3,14 +3,13 @@
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
 #include "MemoryTop.h"
-#include "Scene.h"
 
 // The roof requires half memory row
 const double memoryRoofRows = 0.5;
 
-MemoryFrame::MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage)
+MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage)
 	: LinearLayout(Qt::Vertical)
-	, scene(scene)
+	, graphicsParentItem(graphicsParentItem)
 	, rowCount(rowCount)
 	, startByte(startByte)
 	, rowSize(rowSize)
@@ -173,16 +172,16 @@ bool MemoryFrame::deallocateAll()
 void MemoryFrame::buildMemoryFrame(const QString& topLabel, qreal zValue)
 {
 	// Create the memory roof
-	Q_ASSERT(scene);
+	Q_ASSERT(graphicsParentItem);
 	Q_ASSERT(memoryTop == nullptr);
-	memoryTop = new MemoryTop(rowSize, topLabel, scene, zValue);
+	memoryTop = new MemoryTop(rowSize, topLabel, graphicsParentItem, zValue);
 	addItem(memoryTop, memoryRoofRows / getHeightInRows(), zValue);
 
 	// Create the memory rows
 	size_t rowStartByte = startByte;
 	for (size_t index = 0; index < rowCount; ++index)
 	{
-		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, scene, zValue, memoryAllocations.first()->hasGarbage);
+		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, graphicsParentItem, zValue, memoryAllocations.first()->hasGarbage);
 		addItem(memoryRow, 1.0 / getHeightInRows(), zValue);
 		memoryRows.append( memoryRow );
 		rowStartByte += rowSize;

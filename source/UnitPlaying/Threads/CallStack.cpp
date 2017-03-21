@@ -11,12 +11,7 @@ CallStack::CallStack(qreal zValue, QGraphicsItem* graphicsParentItem)
 int CallStack::callFunction(const GdbItemTree& tree)
 {
 	// Parameters to build a memory frame:
-
-	// ToDo: Remove Scene* by QGraphicsItem*
-	//QGraphicsItem* parent = parentItem();
-	Scene* parent = dynamic_cast<Scene*>( parentItem() );
-	Q_ASSERT(parent);
-
+	QGraphicsItem* parent = parentItem();
 	size_t rowCount = 2;
 	size_t startByte = 100;
 	size_t rowSize = 16;

@@ -5,13 +5,12 @@
 #include "MemoryRow.h"
 #include "MultiSvgButton.h"
 #include "Prop.h"
-#include "Scene.h"
 
 #include <QBrush>
 #include <QFont>
 
 GraphicVariable::GraphicVariable(MemoryAllocation* variable, VisAddress firstByte, VisAddress lastByte, MemoryRow* memoryRow)
-	: GraphicValue( variable->dataType, memoryRow->getScene(), memoryRow->getZValue(), variable->value )
+	: GraphicValue( variable->dataType, memoryRow->getGraphicsParentItem(), memoryRow->getZValue(), variable->value )
 	, variable(variable)
 	, firstByte(firstByte)
 	, lastByte(lastByte)
@@ -58,7 +57,7 @@ bool GraphicVariable::buildVariableName(const qreal refDataMargins[])
 		proportions << leftRightProportion << middleProportion << leftRightProportion;
 
 		// Create the label and add it to the scene
-		nameLabel = new MultiSvgButton(labelAssets, proportions, memoryRow->getScene(), variable->name, memoryRow->getZValue() + zLabelValueOffset );
+		nameLabel = new MultiSvgButton(labelAssets, proportions, memoryRow->getGraphicsParentItem(), variable->name, memoryRow->getZValue() + zLabelValueOffset );
 		nameLabel->setMarginLeft(0.15);
 		nameLabel->setMarginTop( refDataMargins[refLabelTop] );
 		nameLabel->setMarginBottom( refDataMargins[refLabelBottom] );

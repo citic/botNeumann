@@ -2,15 +2,14 @@
 #include "BotNeumannApp.h"
 #include "MultiSvgButton.h"
 #include "Prop.h"
-#include "Scene.h"
 
 #include <QBrush>
 #include <QFont>
 
-MemoryTop::MemoryTop(size_t size, const QString& labelText, Scene* scene, qreal zValue)
+MemoryTop::MemoryTop(size_t size, const QString& labelText, QGraphicsItem* graphicsParentItem, qreal zValue)
 	: LinearLayout(Qt::Horizontal)
 	, size(size)
-	, scene(scene)
+	, graphicsParentItem(graphicsParentItem)
 	, zValue(zValue)
 {
 	buildMemoryTop();
@@ -19,7 +18,7 @@ MemoryTop::MemoryTop(size_t size, const QString& labelText, Scene* scene, qreal 
 
 void MemoryTop::buildMemoryTop()
 {
-	Q_ASSERT(scene);
+	Q_ASSERT(graphicsParentItem);
 
 	// The left and right extremes of the shelf require 1 byte each
 	const double leftRightProportion = 1.0 / (size + 2.0);
@@ -27,9 +26,9 @@ void MemoryTop::buildMemoryTop()
 	const double middleProportion = size / (size + 2.0);
 
 	// Create the images
-	Prop* leftRoof = new Prop("up_memory_top_left", scene);
-	Prop* middleRoof = new Prop("up_memory_top_middle", scene);
-	Prop* rightRoof = new Prop("up_memory_top_right", scene);
+	Prop* leftRoof = new Prop("up_memory_top_left", graphicsParentItem);
+	Prop* middleRoof = new Prop("up_memory_top_middle", graphicsParentItem);
+	Prop* rightRoof = new Prop("up_memory_top_right", graphicsParentItem);
 
 	// Add them to the layout
 	addItem(leftRoof, leftRightProportion, zValue);
@@ -52,7 +51,7 @@ void MemoryTop::buildLabel(const QString& labelText)
 	proportions << leftRightProportion << middleProportion << leftRightProportion;
 
 	// Create the label and add it to the scene
-	label = new MultiSvgButton(labelAssets, proportions, scene, labelText, zValue + 0.01 );
+	label = new MultiSvgButton(labelAssets, proportions, graphicsParentItem, labelText, zValue + 0.01 );
 	const qreal refTopHeight = 21.737;
 	label->setMarginLeft(0.2);
 	label->setMarginTop( 1.128 / refTopHeight );

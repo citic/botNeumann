@@ -6,17 +6,16 @@
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
 #include "Prop.h"
-#include "Scene.h"
 #include "Spacer.h"
 
 #include <QBrush>
 #include <QFont>
 
-MemoryRow::MemoryRow(VisAddress start, VisAddress size, Scene* scene, qreal zValue, bool withGarbage)
+MemoryRow::MemoryRow(VisAddress start, VisAddress size, QGraphicsItem* graphicsParentItem, qreal zValue, bool withGarbage)
 	: LinearLayout(Qt::Horizontal)
 	, start(start)
 	, size(size)
-	, scene(scene)
+	, graphicsParentItem(graphicsParentItem)
 	, labelType(LabelType::memoryAddresses)
 	, zValue(zValue)
 {
@@ -29,7 +28,7 @@ MemoryRow::~MemoryRow()
 
 void MemoryRow::buildMemoryRow(bool withGarbage)
 {
-	Q_ASSERT(scene);
+	Q_ASSERT(graphicsParentItem);
 
 	// The left and right extremes of the shelf require 1 byte each
 	const double leftRightProportion = getByteProportion();
@@ -37,9 +36,9 @@ void MemoryRow::buildMemoryRow(bool withGarbage)
 	const double middleProportion = size / (size + 2.0);
 
 	// Create the images
-	Prop* leftShelf = new Prop("up_memory_row_left", scene);
-	Prop* middleShelf = new Prop("up_memory_row_middle", scene);
-	Prop* rightShelf = new Prop("up_memory_row_right", scene);
+	Prop* leftShelf = new Prop("up_memory_row_left", graphicsParentItem);
+	Prop* middleShelf = new Prop("up_memory_row_middle", graphicsParentItem);
+	Prop* rightShelf = new Prop("up_memory_row_right", graphicsParentItem);
 
 	// Add them to the layout
 	addItem(leftShelf, leftRightProportion, zValue);
@@ -66,7 +65,7 @@ void MemoryRow::buildMemoryAddresses()
 	for (VisAddress index = start; index < start + size; ++index)
 	{
 		const QString& label = QString("%1 ").arg(index, 3, 10, QChar(' '));
-		LabelButton* memoryAddress = new LabelButton(label, scene);
+		LabelButton* memoryAddress = new LabelButton(label, graphicsParentItem);
 		memoryAddress->setMarginTop(0.77);
 		memoryAddress->setMarginBottom(0.073);
 		memoryAddress->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
@@ -93,7 +92,7 @@ void MemoryRow::buildGarbage()
 		const QString& resource = QString("up_uninitialized_%1").arg( garbageNum );
 
 		// Create the garbage artifact and place it in its byte within the memory row
-		Prop* garbage = new Prop(resource, scene);
+		Prop* garbage = new Prop(resource, graphicsParentItem);
 
 		// We use margins because artifacts are smaller than the memory row's height
 		garbage->setMarginLeft(0.15);

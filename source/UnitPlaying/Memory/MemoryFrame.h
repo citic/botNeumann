@@ -9,7 +9,7 @@
 struct MemoryAllocation;
 class MemoryRow;
 class MemoryTop;
-class Scene;
+class QGraphicsItem;
 
 typedef QLinkedList<MemoryAllocation*> MemoryAllocations;
 
@@ -21,8 +21,8 @@ class MemoryFrame : public LinearLayout
 	Q_DISABLE_COPY(MemoryFrame)
 
   protected:
-	/// To reparent children to this scene
-	Scene* scene;
+	/// To reparent children
+	QGraphicsItem* graphicsParentItem = nullptr;
 	/// The number of memory rows this frame has
 	size_t rowCount;
 	/// The memory address where the first byte of this memory frame starts
@@ -38,7 +38,7 @@ class MemoryFrame : public LinearLayout
 
   public:
 	/// Constructor
-	explicit MemoryFrame(Scene* scene, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage);
+	explicit MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage);
 	/// Destructor
 	~MemoryFrame();
 	/// Get the number of memory rows required by this object

@@ -9,7 +9,7 @@
 struct MemoryAllocation;
 class GraphicVariable;
 class Prop;
-class Scene;
+class QGraphicsItem;
 
 /**
 	@brief A row or line of memory represented as a shelf in botNeumann
@@ -36,7 +36,7 @@ class MemoryRow : public LinearLayout
 	/// This is the size of the memory row
 	VisAddress size;
 	/// To reparent children to this scene
-	Scene* scene;
+	QGraphicsItem* graphicsParentItem = nullptr;
 	/// The type of lables to show under each shelf
 	LabelType labelType;
 	/// The z-index where this memory row is shown
@@ -50,11 +50,11 @@ class MemoryRow : public LinearLayout
 
   public:
 	/// Constructor
-	explicit MemoryRow(VisAddress start, VisAddress size, Scene* scene, qreal zValue, bool withGarbage);
+	explicit MemoryRow(VisAddress start, VisAddress size, QGraphicsItem* graphicsParentItem, qreal zValue, bool withGarbage);
 	/// Destructor
 	~MemoryRow();
 	/// Get access to the scene. Required by GraphicVariables
-	inline Scene* getScene() const { return scene; }
+	inline QGraphicsItem* getGraphicsParentItem() const { return graphicsParentItem; }
 	/// Get access to the z-value where this memory row is. GraphicVariables require this value also
 	/// to be displayed at the same z-value than the memory row
 	inline qreal getZValue() const { return zValue; }
