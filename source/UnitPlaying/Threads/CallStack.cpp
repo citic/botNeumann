@@ -17,9 +17,9 @@ int CallStack::callFunction(const GdbItemTree& tree)
 	Scene* parent = dynamic_cast<Scene*>( parentItem() );
 	Q_ASSERT(parent);
 
-	size_t rowCount = 1;
+	size_t rowCount = 2;
 	size_t startByte = 100;
-	size_t rowSize = 8;
+	size_t rowSize = 16;
 	const QString& functionName = tree.findNodeTextValue("/frame/func") + "()";
 	bool withGarbage = true;
 

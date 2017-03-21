@@ -8,8 +8,6 @@
 #include "Scene.h"
 #include "Unit.h"
 
-#include <QBrush>
-#include <QPen>
 #include <QTextStream>
 
 const qreal zTube =    zUnitPlaying::standardInputOutput + 0.3;
@@ -185,7 +183,5 @@ void StandardInputOutput::buildBuffer(const QString& type, size_t bufferSize, Sc
 	buffer->setMarginLeft( type == "input" ? bufferMarginLeft : bufferMarginRight );
 	buffer->setMarginRight( type == "input" ? bufferMarginRight : bufferMarginLeft );
 	buffer->setMarginBottom( refBufferBottom / refTubeHeight) ;
-	buffer->setPen(Qt::NoPen);
-	buffer->setBrush(Qt::NoBrush);
 	addItem(buffer, 1.0, zBuffer);
 }

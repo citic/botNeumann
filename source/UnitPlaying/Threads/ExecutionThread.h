@@ -96,7 +96,9 @@ class ExecutionThread : public LinearLayout
 	inline CpuCore* getCpuCore() const { return cpuCore; }
 	/// Sets the CPU core where this thread is running. This method is called by the CPU core
 	/// itself when the execution thread is receives CPU time
-	void setCpuCore(CpuCore* cpuCore);
+	inline void setCpuCore(CpuCore* cpuCore) { this->cpuCore = cpuCore; }
+	/// Get access to the call stack
+	inline CallStack* getCallStack() const { return callStack; }
 	/// Called when player solution stopped by a function body breakpoint
 	bool processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
 

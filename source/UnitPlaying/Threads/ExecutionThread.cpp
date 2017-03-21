@@ -121,12 +121,6 @@ qreal ExecutionThread::getActorReferenceWidth() const
 	return robot->boundingRect().width();
 }
 
-void ExecutionThread::setCpuCore(CpuCore* cpuCore)
-{
-	this->cpuCore = cpuCore;
-	cpuCore->addItem(callStack, 1.0);
-}
-
 ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);

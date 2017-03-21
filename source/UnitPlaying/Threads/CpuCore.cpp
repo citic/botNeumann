@@ -1,5 +1,6 @@
 #include "CpuCore.h"
 #include "Actor.h"
+#include "CallStack.h"
 #include "Common.h"
 #include "ExecutionThread.h"
 #include "Prop.h"
@@ -63,8 +64,16 @@ int CpuCore::runThread(ExecutionThread* thread)
 	executionThread = thread;
 	executionThread->setCpuCore(this);
 
-	// Add the execution thread as a child in a higher layer
+	// Add the execution thread (actor) as a child in a higher layer
 	addItem( executionThread, 1.0, zUnitPlaying::executionThread );
+
+	// Add the call stack of the execution thread to the cpu core
+	CallStack* callStack = executionThread->getCallStack();
+	addItem( callStack, 1.0, zUnitPlaying::stackFrame );
+
+	// Set margins for the call stack
+	callStack->setMargins(0.075);
+
 //	executionThread->setVisible(true);
 	updateLayoutItem();
 	return executionThread->animateAppear();
