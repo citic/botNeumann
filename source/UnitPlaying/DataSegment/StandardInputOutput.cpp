@@ -132,31 +132,57 @@ void StandardInputOutput::buildStandardInputOutput(QString type)
 	// A tube has three parts: left, middle, and right
 	Prop* left = new Prop(QString("up_standard_%1_left").arg(type), scene);
 	Prop* middle = new Prop(QString("up_standard_%1_middle").arg(type), scene);
+	Prop* coupling = new Prop(QString("up_standard_input_output_coupling").arg(type), scene);
 	Prop* right = new Prop(QString("up_standard_%1_right").arg(type), scene);
+
+	const qreal refCouplingWidth = 4.970;
+	const qreal refCouplingHeight = 25.776;
+	const qreal refOpeningWidth = 162.979;
+	const qreal refOpeningHeight = 38.799;
+
+	coupling->setMarginBottom(1.0 - refCouplingHeight / refOpeningHeight);
+
+	const qreal couplingStart = (refOpeningWidth - refCouplingWidth) / refOpeningWidth * openingProportion;
+	const qreal couplingPercent = refCouplingWidth / refOpeningWidth * openingProportion;
 
 	// But proportions vary depending on the type of stream
 	if ( type == "input" )
 	{
+		// Opening
 		insertItem(left, 0.0, openingProportion, zOpening);
+
+		// Middle tube
 		const qreal middleProportion = 1.0 - openingProportion - elbowProportion;
 		insertItem(middle, openingProportion, middleProportion, zTube);
+
+		// Coupling: ugly fix (it should be alone, currently it is part of the opening)
+		insertItem(coupling, couplingStart, couplingPercent, zTube);
+
+		// Elbow
 		insertItem(right, openingProportion + middleProportion, elbowProportion, zElbow);
 	}
 	else
 	{
+		// Elbow
 		qreal start = 1.0; // ToDo: fix insert start proportions, this must be 0.0
 		insertItem(left, start, elbowProportion, zElbow);
 		start += elbowProportion;
 
+		// Tester
 		tester = new Prop(QString("up_standard_output_test_inactive"), scene);
 		insertItem(tester, start, elbowProportion, zElbow);
 		start += elbowProportion;
 
+		// Middle tube
 		const qreal middleProportion = 1.0 - openingProportion - 2 * elbowProportion;
 		insertItem(middle, start, middleProportion, zTube);
 		start += middleProportion;
 
+		// Opening
 		insertItem(right, start, openingProportion, zOpening);
+
+		// Coupling: ugly fix (it should be alone, currently it is part of the opening)
+		insertItem(coupling, start, couplingPercent, zTube);
 
 		// Make the middle tube to plug to the tester
 		middle->setMarginLeft(-0.011);
