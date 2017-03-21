@@ -28,6 +28,11 @@ bool TestCaseManager::testPlayerSolution()
 {
 	Q_ASSERT(playerSolution);
 
+	// If there are not test cases, do nothing
+	int testCasesCount = playerSolution->getTestCasesCount();
+	if ( testCasesCount <= 0 )
+		return false;
+
 	// If there are old test cases, remove them
 	clearAnimation();
 
@@ -35,11 +40,6 @@ bool TestCaseManager::testPlayerSolution()
 	Q_ASSERT(testCaseLayout == nullptr);
 	testCaseLayout = new LinearLayout(Qt::Horizontal);
 	addLayout(testCaseLayout, 1.0);
-
-	// If there are not test cases, do nothing
-	int testCasesCount = playerSolution->getTestCasesCount();
-	if ( testCasesCount <= 0 )
-		return false;
 
 	// Estimate the with percent of earch tester maintaining the proportions of graphic design
 	// asumming there are enough space
@@ -98,6 +98,7 @@ void TestCaseManager::clearAnimation()
 	testCaseLayout->removeAllItems(true);
 	removeItem(testCaseLayout, true);
 	testCaseLayout = nullptr;
+	testCaseActors.clear();
 }
 
 void TestCaseManager::setActiveTestCase(int newTestCaseNumber)
