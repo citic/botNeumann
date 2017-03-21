@@ -83,7 +83,14 @@ bool Visualizator::start(bool preparation)
 		watchStandardInputOutput();
 		watchGlobalVariables();
 		// UnitPlayingScene loads standard input after the prepration phase
-		// loadTestCaseInStandardInputOutput();
+		// Animate function call at program's entry point
+		Q_ASSERT(entryPointTree);
+		int maxDuration = 0;
+		processBreakpointHit(*entryPointTree, visExecutionLoop, maxDuration);
+
+		// In maxDuration seconds, the entry point function call will be done and we can enter
+		// in the execution loop
+		// ToDo: enter in execution loop
 	}
 
 	// Visualization started
@@ -596,6 +603,9 @@ bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationCo
 
 	// If breakpoint object has one or more roles:
 	// * If breakpoint is functionBody or programEntryPoint: Do 4.2 Function call.
+	if ( breakpoint->hasRole(DebuggerBreakpoint::functionDefinition) )
+		return processFunctionCall(tree, breakpoint, maxDuration);
+
 	// * If breakpoint is userDefined: Do 4.4 User defined breakpoint.
 	// * Do 4.5 Dynamic memory management breakpoint
 	return false;
@@ -615,12 +625,22 @@ bool Visualizator::processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint
 	this->entryPointTree = new GdbItemTree(tree);
 	qCDebug(logTemporary) << "Program entry point tree saved for later:" << entryPointTree->buildDescription();
 
-	// Add the pogramEntryPoint role to breakpoints[/bkptno].
+	// Add the pogramEntryPoint and functionCall roles to breakpoints[/bkptno].
 	Q_ASSERT(breakpoint);
 	breakpoint->addRole( DebuggerBreakpoint::programEntryPoint );
+	breakpoint->addRole( DebuggerBreakpoint::functionDefinition );
 
 	// Continue the starting process. It will eventually animate a function call
 	return start(false);
+}
+
+bool Visualizator::processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration)
+{
+	// Player solution hit a breakpoint that has the role of functionCall. The breakpoint must be
+	// at the beginning of the body of a function in a file that is part of player solution.
+	Q_UNUSED(maxDuration);
+	qCCritical(logTemporary()) << "FunctionCall:" << tree.buildDescription() << "by breakpoint" << breakpoint->getNumber();
+	return true;
 }
 
 
