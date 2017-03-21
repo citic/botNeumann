@@ -2,22 +2,16 @@
 #define STANDARDINPUTOUTPUT_H
 
 #include "MemorySegment.h"
-#include "AlignedItem.h"
-
-#include <QGraphicsRectItem>
+#include "RectLayoutItem.h"
 
 class GraphicValue;
 class Prop;
 
-class InputOutputBuffer : public QGraphicsRectItem, public LinearLayout, public AlignedItem
+class InputOutputBuffer : public RectLayoutItem
 {
 	Q_DISABLE_COPY(InputOutputBuffer)
 
   protected:
-	/// Pointer to the scene to place the chars (they float by the scene)
-	Scene* scene = nullptr;
-	/// zValue where the characteres will be placed on the scene
-	qreal zValue = 0.0;
 	/// Capacity in bytes of the buffer
 	int capacity = 0;
 	/// Characteres traveling by the tube
@@ -30,11 +24,6 @@ class InputOutputBuffer : public QGraphicsRectItem, public LinearLayout, public 
   public:
 	/// Constructor
 	explicit InputOutputBuffer(Scene* scene, qreal zValue, int capacity);
-	/// Resize this element
-	/// This method is called each time the Stage and Scene has been resized
-	virtual void resize(qreal left, qreal top, qreal width, qreal height) override;
-	/// Sets the Z-index provided by layouts to the QGraphicsItem system
-	virtual void setZ(qreal zValue) override { setZValue(zValue); }
 	/// Set the text to be read (standard input) or printed (standard output)
 	inline void setText(const QString& text) { this->text = text; cursor = 0; }
 	/// Animate buffering (filling) the standard input. It fills all empty spaces with pending

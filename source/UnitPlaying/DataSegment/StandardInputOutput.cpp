@@ -21,23 +21,9 @@ const qreal zOpening = zUnitPlaying::standardInputOutput + 0.0;
 // InputOutputBuffer class ------------------------------------------------------------------------
 
 InputOutputBuffer::InputOutputBuffer(Scene* scene, qreal zValue, int capacity)
-	: QGraphicsRectItem(scene)
-	, LinearLayout(Qt::Horizontal)
-	, scene(scene)
-	, zValue(zValue)
+	: RectLayoutItem(Qt::Horizontal, zValue, scene)
 	, capacity(capacity)
 {
-	setFlag(ItemClipsChildrenToShape);
-}
-
-void InputOutputBuffer::resize(qreal left, qreal top, qreal width, qreal height)
-{
-	// Update the LinearLayout part of this object
-	LinearLayout::resize(left, top, width, height);
-
-	// Update the QGraphicsRectIem part of this object
-	applyMargins(left, top, width, height);
-	setRect(left, top, width, height);
 }
 
 int InputOutputBuffer::animateFill()

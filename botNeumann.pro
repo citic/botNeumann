@@ -49,6 +49,7 @@ HEADERS += \
 	source/Gamee/Layouts/Layout.h \
 	source/Gamee/Layouts/LayoutItem.h \
 	source/Gamee/Layouts/LinearLayout.h \
+	source/Gamee/Layouts/RectLayoutItem.h \
 	source/Gamee/Layouts/Spacer.h \
 	source/Gamee/MultiSvgButton.h \
 	source/Gamee/Player.h \
@@ -133,6 +134,7 @@ SOURCES += \
 	source/Gamee/Layouts/Layout.cpp \
 	source/Gamee/Layouts/LayoutItem.cpp \
 	source/Gamee/Layouts/LinearLayout.cpp \
+	source/Gamee/Layouts/RectLayoutItem.cpp \
 	source/Gamee/Layouts/Spacer.cpp \
 	source/Gamee/MultiSvgButton.cpp \
 	source/Gamee/Player.cpp \

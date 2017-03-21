@@ -44,7 +44,7 @@ void ExecutionThread::buildExecutionThread()
 	// Create the object in charge of managing the function calls for this execution thread
 	// No functions are added to the call stack until the execution thread gets updated form GDB
 	Q_ASSERT(callStack == nullptr);
-	callStack = new CallStack();
+	callStack = new CallStack(zUnitPlaying::stackFrame, scene);
 }
 
 int ExecutionThread::animateAppear()
@@ -54,6 +54,7 @@ int ExecutionThread::animateAppear()
 
 int ExecutionThread::animateDisappear()
 {
+	// ToDo: make callStack appear and disappear also
 	return robot->disappear();
 }
 
@@ -161,6 +162,8 @@ bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
 
 bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration)
 {
+	Q_UNUSED(breakpoint);
+
 	// The ExecutionThread must be active (must have an assigned CPU core)
 	if ( isIdle() )
 	{
@@ -175,13 +178,11 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, DebuggerBreak
 	// For testing only: close the interface after the function is called
 	QTimer::singleShot( maxDuration + 2000, cpuCore, SLOT(closeMemoryInterface()) );
 
-	//Build a memory frame for the new stack frame with the function name (/frame/func) in the roof. By default, memory frames are filled of garbage.
+	// Build a memory frame for the new stack frame with the function name (/frame/func) in the roof. By default, memory frames are filled of garbage.
+	functionName = tree.findNodeTextValue("/frame/func");
 
 	//Raise the memory roof to the CPU core opened door, to make the roof visible only. Arguments and variables will be made visible next.
 
 	//ToDo: If execution thread is idle in visualization (does not have an assigned CPU core), it should be stopped at inferior through GDB, to avoid it generating more responses.
-	Q_UNUSED(maxDuration);
-	Q_UNUSED(breakpoint);
-	qCCritical(logTemporary()) << "FunctionCall:" << tree.buildDescription();
 	return true;
 }

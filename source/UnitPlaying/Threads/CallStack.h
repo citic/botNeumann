@@ -1,7 +1,7 @@
 #ifndef CALLSTACK_H
 #define CALLSTACK_H
 
-#include "LinearLayout.h"
+#include "RectLayoutItem.h"
 
 #include <QStack>
 
@@ -15,7 +15,7 @@ class MemoryFrame;
 	- dive the stack frame (function call) when the function returns,
 	- show a stack frame on top of others temporally when user selects it or during parameter-passing
 */
-class CallStack : public LinearLayout
+class CallStack : public RectLayoutItem
 {
   protected:
 	/// The stack of frames or function calls
@@ -23,7 +23,7 @@ class CallStack : public LinearLayout
 
   public:
 	/// Constructor
-	CallStack();
+	CallStack(qreal zValue, QGraphicsItem* graphicsParentItem);
 };
 
 #endif // CALLSTACK_H
