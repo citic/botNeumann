@@ -7,6 +7,7 @@
 #include <QVector>
 
 class CpuCore;
+class DebuggerBreakpoint;
 class ExecutionThread;
 
 class CpuCores : public GdbResponseListener, public MemorySegment
@@ -38,6 +39,8 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	virtual bool allocate(MemoryAllocation* memoryAllocation) override;
 	/// Deallocate local variables in some thread that is running
 	virtual bool deallocate(MemoryAllocation* memoryAllocation) override;
+	/// Called when player solution stopped by a function body breakpoint
+	bool processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
 
   signals:
 	/// Emitted when an execution thread was updated from GDB
@@ -68,6 +71,8 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	int setupIdleThread(ExecutionThread* thread);
 	/// A Gdb result brought an updated list of threads, refresh them
 	void updateThreads(const GdbTreeNode* threadsNode, int& maxDuration);
+	/// Finds the thread with the given id using linear search
+	ExecutionThread* findThread(int id) const;
 };
 
 #endif // CPUCORES_H

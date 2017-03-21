@@ -1,6 +1,7 @@
 #include "CpuCore.h"
 #include "Common.h"
 #include "CpuCores.h"
+#include "DebuggerBreakpoint.h"
 #include "ExecutionThread.h"
 #include "Scene.h"
 #include "Unit.h"
@@ -179,4 +180,32 @@ void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 			emit executionThreadUpdated(executionThreads[threadId - 1]);
 		}
 	}
+}
+
+bool CpuCores::processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration)
+{
+	// Player solution hit a breakpoint that has the role of functionCall. The breakpoint must be
+	// at the beginning of the body of a function in a file that is part of player solution.
+	// See comment at Visualization::processBreakpointHit() body for a breakpoint-hit example
+
+	// Get the /thread-id="#" from *stopped response
+	bool ok = false;
+	int threadId = tree.findNodeTextValue("/thread-id").toInt(&ok);
+	Q_ASSERT(ok);
+
+	// Get the ExecutionThread object that is identified by that number
+	ExecutionThread* executionThread = findThread(threadId);
+	Q_ASSERT(executionThread);
+
+	// The execution thread will animate the function call
+	return executionThread->processFunctionCall(tree, breakpoint, maxDuration);
+}
+
+ExecutionThread* CpuCores::findThread(int id) const
+{
+	for ( int index = 0; index < executionThreads.count(); ++index )
+		if ( executionThreads[index]->getId() == id )
+			return executionThreads[index];
+
+	return nullptr;
 }

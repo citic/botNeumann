@@ -1,4 +1,5 @@
 #include "Visualizator.h"
+#include "CpuCores.h"
 #include "CtagsCall.h"
 #include "GdbCall.h"
 #include "GuiBreakpoint.h"
@@ -604,7 +605,7 @@ bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationCo
 	// If breakpoint object has one or more roles:
 	// * If breakpoint is functionBody or programEntryPoint: Do 4.2 Function call.
 	if ( breakpoint->hasRole(DebuggerBreakpoint::functionDefinition) )
-		return processFunctionCall(tree, breakpoint, maxDuration);
+		return unitPlayingScene->getCpuCores()->processFunctionCall(tree, breakpoint, maxDuration);
 
 	// * If breakpoint is userDefined: Do 4.4 User defined breakpoint.
 	// * Do 4.5 Dynamic memory management breakpoint
@@ -632,15 +633,6 @@ bool Visualizator::processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint
 
 	// Continue the starting process. It will eventually animate a function call
 	return start(false);
-}
-
-bool Visualizator::processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration)
-{
-	// Player solution hit a breakpoint that has the role of functionCall. The breakpoint must be
-	// at the beginning of the body of a function in a file that is part of player solution.
-	Q_UNUSED(maxDuration);
-	qCCritical(logTemporary()) << "FunctionCall:" << tree.buildDescription() << "by breakpoint" << breakpoint->getNumber();
-	return true;
 }
 
 

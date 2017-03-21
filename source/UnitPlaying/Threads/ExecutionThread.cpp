@@ -5,6 +5,7 @@
 #include "ExecutionThreadActor.h"
 #include "GdbItemTree.h"
 #include "GdbResponseListener.h" // updateMaxDuration()
+#include "LogManager.h"
 #include "Scene.h"
 #include "Spacer.h"
 
@@ -159,6 +160,8 @@ bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
 
 bool ExecutionThread::updateFunctionName(const QString& updatedFunctionName, int& maxDuration)
 {
+	Q_UNUSED(maxDuration);
+
 	if ( functionName == updatedFunctionName )
 		return false;
 
@@ -173,12 +176,32 @@ bool ExecutionThread::updateFunctionName(const QString& updatedFunctionName, int
 	// Update the function name
 //	previousFunctionName = functionName;
 	functionName = updatedFunctionName;
+	return true;
+}
 
+bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration)
+{
+	// The ExecutionThread must be active (must have an assigned CPU core)
+	if ( isIdle() )
+	{
+		qCCritical(logVisualizator) << "ERROR: idle execution thread running a function call. Disable GDB's all-stop mode";
+		return false;
+	}
+
+	// Animate the door opening in its CPU core
 	Q_ASSERT(cpuCore);
 	updateMaxDuration( cpuCore->openMemoryInterface() );
 
 	// For testing only: close the interface after the function is called
 	QTimer::singleShot( maxDuration + 2000, cpuCore, SLOT(closeMemoryInterface()) );
 
+	//Build a memory frame for the new stack frame with the function name (/frame/func) in the roof. By default, memory frames are filled of garbage.
+
+	//Raise the memory roof to the CPU core opened door, to make the roof visible only. Arguments and variables will be made visible next.
+
+	//ToDo: If execution thread is idle in visualization (does not have an assigned CPU core), it should be stopped at inferior through GDB, to avoid it generating more responses.
+	Q_UNUSED(maxDuration);
+	Q_UNUSED(breakpoint);
+	qCCritical(logTemporary()) << "FunctionCall:" << tree.buildDescription();
 	return true;
 }

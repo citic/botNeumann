@@ -4,8 +4,10 @@
 #include "LinearLayout.h"
 
 class CpuCore;
+class DebuggerBreakpoint;
 class ExecutionThreadActor;
 class GdbTreeNode;
+class GdbItemTree;
 class Scene;
 class Spacer;
 class CallStack;
@@ -95,6 +97,8 @@ class ExecutionThread : public LinearLayout
 	/// Sets the CPU core where this thread is running. This method is called by the CPU core
 	/// itself when the execution thread is receives CPU time
 	inline void setCpuCore(CpuCore* cpuCore) { this->cpuCore = cpuCore; }
+	/// Called when player solution stopped by a function body breakpoint
+	bool processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
 
   protected:
 	/// Build the robot
