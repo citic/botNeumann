@@ -9,6 +9,8 @@
 #include "Scene.h"
 #include "Spacer.h"
 
+#include <QTimer>
+
 // Proportion of the callStackSpacer on top of the robot when it is active/busy (non idle)
 const qreal busyCallStackSpacerProportion = 0.9;
 
@@ -57,7 +59,8 @@ int ExecutionThread::animateDisappear()
 
 bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& maxDuration)
 {
-	/* example of Gdb node in Linux:
+	/* example of Gdb node on Linux:
+
 		id="1",
 		target-id="process 20523",
 		name="rand",
@@ -82,16 +85,16 @@ bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& max
 	// Only update the execution thread if it is running code that is part of the player's solution
 	// E.g: if it is running an external library function, it is considered a black-box and it is
 	// not visualized, because it is very likely to have no C/C++ source code (assembler)
-	FilenameUpdateResult result1 = updateFilename( threadNode->findTextValue("frame/file"), maxDuration );
-	if ( result1 == fileNotInPlayerSolution )
+	FilenameUpdateResult filenameUpdateResult = updateFilename( threadNode->findTextValue("frame/file"), maxDuration );
+	if ( filenameUpdateResult == fileNotInPlayerSolution )
 		return false;
 
 	// Let's check if the line number or function call changed
-	bool result2 = updateLineNumber( threadNode->findTextValue("frame/line").toInt(), maxDuration );
-	bool result3 = updateFunctionName( threadNode->findTextValue("frame/func"), maxDuration );
+	bool lineNumberUpdated = updateLineNumber( threadNode->findTextValue("frame/line").toInt(), maxDuration );
+	functionName = threadNode->findTextValue("frame/func");
 
 	// If any (file, line or function) changed, the thread was updated
-	return result1 == newFileInPlayerSolution || result2 || result3;
+	return filenameUpdateResult == newFileInPlayerSolution || lineNumberUpdated;
 }
 
 void ExecutionThread::setIdle(bool idle)
@@ -153,29 +156,6 @@ bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
 	Q_ASSERT(robot);
 	robot->updateLineNumber(lineNumber);
 
-	return true;
-}
-
-#include <QTimer>
-
-bool ExecutionThread::updateFunctionName(const QString& updatedFunctionName, int& maxDuration)
-{
-	Q_UNUSED(maxDuration);
-
-	if ( functionName == updatedFunctionName )
-		return false;
-
-	// If the new function name is the same than the previous name on the stack, it is a return
-	// ToDo: Function name cannot be used to determine if a function was called or returned
-	// e.g. recursive functions. The gdb level and stack depth must be used instead
-//	if ( updatedFunctionName == previousFunctionName )
-//		animateFunctionReturn();
-//	else
-//		animateFunctionCall();
-
-	// Update the function name
-//	previousFunctionName = functionName;
-	functionName = updatedFunctionName;
 	return true;
 }
 

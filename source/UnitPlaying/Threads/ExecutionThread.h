@@ -117,9 +117,6 @@ class ExecutionThread : public LinearLayout
 	/// to highlight that line using the robot color
 	/// @return true if there was change
 	bool updateLineNumber(int updatedLineNumber, int& maxDuration);
-	/// If the function being executed has changed, animates a function call
-	/// @return true if there was change
-	bool updateFunctionName(const QString& updatedFunctionName, int& maxDuration);
 };
 
 #endif // EXECUTIONTHREAD_H
