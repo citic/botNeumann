@@ -40,8 +40,8 @@ int InputOutputBuffer::animateFill()
 		// Characters are slighly inclined, adjust their margins to overlap themselves
 		character->setMargins(0.0, -0.11);
 
-		// To animate them arriving, we place them at the first not visible position
-		qreal finalPercent = getMarginLeft() + 0.015 + qreal(charCounter) / capacity;
+		// To animate them arriving, we place them at the first non visible position
+		qreal finalPercent = qreal(charCounter) / capacity;
 		insertItem(character, finalPercent + 1.0, 1.0 / capacity, zBuffer);
 
 		// The duration of the animation is proportional to the number of spaces that characters
@@ -143,7 +143,7 @@ void StandardInputOutput::buildStandardInputOutput(QString type)
 	else
 	{
 		// Elbow
-		qreal start = 1.0; // ToDo: fix insert start proportions, this must be 0.0
+		qreal start = 0.0;
 		insertItem(left, start, elbowProportion, zElbow);
 		start += elbowProportion;
 

@@ -7,7 +7,7 @@
 
 // The roof requires half memory row
 const double memoryRoofRows = 0.5;
-const double memoryLegsRows = 0.25;
+const double memoryLegsRows = 1.0 / 3.0;
 
 MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs)
 	: LinearLayout(Qt::Vertical)

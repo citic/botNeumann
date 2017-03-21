@@ -25,7 +25,7 @@ void LinearLayout::resize(qreal left, qreal top, qreal width, qreal height)
 			{
 				LayoutItem* item = itr.value()[i];
 				if ( item->getStartProportion() >= 0.0 )
-					left = width * item->getStartProportion();
+					left = reset + width * item->getStartProportion();
 				qreal extend = width * item->getProportion();
 				item->resize(left, top, extend, height);
 				left += extend;
@@ -42,7 +42,7 @@ void LinearLayout::resize(qreal left, qreal top, qreal width, qreal height)
 			{
 				LayoutItem* item = itr.value()[i];
 				if ( item->getStartProportion() >= 0.0 )
-					top = height * item->getStartProportion();
+					top = reset + height * item->getStartProportion();
 				qreal extend = height * item->getProportion();
 				item->resize(left, top, width, extend);
 				top += extend;
