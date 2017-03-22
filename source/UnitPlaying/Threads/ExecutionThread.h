@@ -100,7 +100,7 @@ class ExecutionThread : public LinearLayout
 	inline CpuCore* getCpuCore() const { return cpuCore; }
 	/// Sets the CPU core where this thread is running. This method is called by the CPU core
 	/// itself when the execution thread is receives CPU time
-	inline void setCpuCore(CpuCore* cpuCore) { this->cpuCore = cpuCore; }
+	void setCpuCore(CpuCore* cpuCore);
 	/// Get access to the call stack
 	inline CallStack* getCallStack() const { return callStack; }
 	/// Called when player solution stopped by a function body breakpoint
@@ -109,6 +109,8 @@ class ExecutionThread : public LinearLayout
   protected:
 	/// Build the robot
 	void buildExecutionThread();
+	/// Build an empty call stack
+	void buildCallStack();
 	/// The type of return of @a updateFilename()
 	enum FilenameUpdateResult
 	{

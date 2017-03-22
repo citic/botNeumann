@@ -50,3 +50,40 @@ void LinearLayout::resize(qreal left, qreal top, qreal width, qreal height)
 		}
 	}
 }
+
+// LinearLayoutActor class -----------------------------------------------------------------------
+
+#include "VisualizationSpeed.h"
+#include <QPropertyAnimation>
+
+LinearLayoutActor::LinearLayoutActor(Qt::Orientation orientation)
+	: LinearLayout(orientation)
+{
+}
+
+int LinearLayoutActor::animateMoveTo(qreal endProportion, int duration, int initialDelay)
+{
+	// Adjust animation time
+	initialDelay = VisualizationSpeed::getInstance().adjust(initialDelay);
+	duration = VisualizationSpeed::getInstance().adjust(duration);
+	int totalDuration = initialDelay + duration;
+
+	// Create an animation and set its duration
+	QPropertyAnimation* moveToAnimation = new QPropertyAnimation(this, "startProportion", this);
+	moveToAnimation->setDuration(totalDuration);
+
+	// Do not change initial value on delay
+	moveToAnimation->setKeyValueAt(0.0, this->startProportion);
+	moveToAnimation->setKeyValueAt(qreal(initialDelay) / totalDuration, this->startProportion);
+	moveToAnimation->setKeyValueAt(1.0, endProportion);
+
+	moveToAnimation->start();
+	return totalDuration;
+}
+
+void LinearLayoutActor::updateStartProportion(qreal startProportion)
+{
+	setStartProportion(startProportion);
+	Q_ASSERT(parentLayoutItem);
+	parentLayoutItem->updateLayoutItem();
+}

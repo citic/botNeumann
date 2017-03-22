@@ -16,8 +16,9 @@ typedef QLinkedList<MemoryAllocation*> MemoryAllocations;
 /** A memory frame is graphical object to represent a piece of computer memory sliced into
 	one or more memory rows, covered by a roof row. A label can be placed on the roof.
 **/
-class MemoryFrame : public LinearLayout
+class MemoryFrame : public LinearLayoutActor
 {
+	Q_OBJECT
 	Q_DISABLE_COPY(MemoryFrame)
 
   protected:

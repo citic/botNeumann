@@ -42,11 +42,15 @@ void ExecutionThread::buildExecutionThread()
 	actorLayout->addItem(robot, 1.0 / 3.0, zActor);
 
 	addItem(actorLayout, 1.0, zActor);
+}
 
+void ExecutionThread::buildCallStack()
+{
 	// Create the object in charge of managing the function calls for this execution thread
 	// No functions are added to the call stack until the execution thread gets updated form GDB
 	Q_ASSERT(callStack == nullptr);
-	callStack = new CallStack(startByte, rowSize, zUnitPlaying::stackFrame, scene);
+	Q_ASSERT(cpuCore);
+	callStack = new CallStack(startByte, rowSize, zUnitPlaying::stackFrame, scene, cpuCore->getHeightInRows());
 }
 
 int ExecutionThread::animateAppear()
@@ -123,6 +127,13 @@ qreal ExecutionThread::getActorReferenceWidth() const
 	return robot->boundingRect().width();
 }
 
+void ExecutionThread::setCpuCore(CpuCore* cpuCore)
+{
+	this->cpuCore = cpuCore;
+	if ( callStack == nullptr )
+		buildCallStack();
+}
+
 ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
@@ -171,7 +182,7 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, DebuggerBreak
 	{
 		// ToDo: If execution thread is idle in visualization (does not have an assigned CPU core),
 		// it should be stopped at inferior through GDB, to avoid it generating more responses.
-		qCCritical(logVisualizator) << "ERROR: idle execution thread running a function call. Disable GDB's all-stop mode";
+		qCCritical(logSolutionCrash()) << "ERROR: idle execution thread running a function call. Disable GDB's all-stop mode";
 		return false;
 	}
 

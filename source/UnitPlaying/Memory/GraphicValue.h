@@ -5,8 +5,6 @@
 #include "LinearLayout.h"
 #include "MemoryAllocation.h"
 
-#include <QObject>
-
 class LabelButton;
 class Scene;
 class ScenicElement;
@@ -24,7 +22,7 @@ const qreal zLabelValueOffset = 0.31;
 	attached to a fixed memory address, i.e. to a memory segment. GraphicVariables have name, but
 	GraphicValues do not.
 */
-class GraphicValue : public QObject, public LinearLayout
+class GraphicValue : public LinearLayoutActor
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(GraphicValue)
@@ -46,10 +44,6 @@ class GraphicValue : public QObject, public LinearLayout
 	/// The label represented as a string
 	QString value;
 
-  protected:
-	/// To animate
-	Q_PROPERTY(qreal startProportion READ getStartProportion WRITE updateStartProportion)
-
   public:
 	/// Constructor
 	/// @remarks Client class must call @a buildGraphicValue in order to create the graphics
@@ -61,10 +55,6 @@ class GraphicValue : public QObject, public LinearLayout
 	void setValue(const QString& value);
 	/// Constructs this value according to its data type
 	bool buildGraphicValue();
-	/// Animate this value moving to the position
-	int animateMoveTo(qreal startProportion, int duration);
-	/// Updates this object, and also the parent object in order to reflect the position change
-	void updateStartProportion(qreal startProportion);
 
   protected:
 	/// Create the pod, the value, and the label for a bool or char value

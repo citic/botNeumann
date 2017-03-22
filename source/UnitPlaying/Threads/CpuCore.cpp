@@ -72,7 +72,7 @@ int CpuCore::runThread(ExecutionThread* thread)
 	addItem( callStack, 1.0, zUnitPlaying::stackFrame );
 
 	// Set margins for the call stack
-	callStack->setMargins(0.075);
+	callStack->setMargins(0.06, 0.075);
 
 //	executionThread->setVisible(true);
 	updateLayoutItem();
