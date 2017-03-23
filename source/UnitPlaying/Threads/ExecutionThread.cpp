@@ -3,8 +3,8 @@
 #include "Common.h"
 #include "CpuCore.h"
 #include "ExecutionThreadActor.h"
-#include "GdbItemTree.h"
-#include "GdbResponseListener.h" // updateMaxDuration()
+#include "GdbCall.h"
+#include "GdbResponseListener.h"
 #include "LogManager.h"
 #include "Scene.h"
 #include "Spacer.h"
@@ -173,10 +173,8 @@ bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
 	return true;
 }
 
-bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration)
+bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
 {
-	Q_UNUSED(breakpoint);
-
 	// The ExecutionThread must be active (must have an assigned CPU core)
 	if ( isIdle() )
 	{
@@ -190,6 +188,9 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, DebuggerBreak
 	Q_ASSERT(cpuCore);
 	updateMaxDuration( cpuCore->openMemoryInterface() );
 
+	// Update the stack depth value, reported by debugger
+	updateCallStackDepth(debuggerCall);
+
 	// For testing only: close the interface after the function is called
 	QTimer::singleShot( maxDuration + 2000, cpuCore, SLOT(closeMemoryInterface()) );
 
@@ -198,5 +199,25 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, DebuggerBreak
 	functionName = tree.findNodeTextValue("/frame/func");
 	updateMaxDuration( callStack->callFunction(tree) );
 
+	return true;
+}
+
+bool ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
+{
+	// Get the number of functions currently being executed by this thread
+	GdbItemTree depthResponse;
+	if ( debuggerCall->sendGdbCommand(QString("-stack-info-depth"), visExecutionLoop, &depthResponse) == GDB_ERROR )
+		return false;
+
+	// GDB response seems:
+	//
+	//	^done,depth="2"
+	//	(gdb)
+
+	bool ok = false;
+	callStackDepth = depthResponse.findNodeTextValue("depth").toInt(&ok);
+	Q_ASSERT(ok);
+
+	qCCritical(logTemporary, "ExecutionThread[%d]::callStackDepth=%d", id, callStackDepth);
 	return true;
 }

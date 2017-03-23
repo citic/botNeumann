@@ -605,7 +605,7 @@ bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationCo
 	// If breakpoint object has one or more roles:
 	// * If breakpoint is functionBody or programEntryPoint: Do 4.2 Function call.
 	if ( breakpoint->hasRole(DebuggerBreakpoint::functionDefinition) )
-		return unitPlayingScene->getCpuCores()->processFunctionCall(tree, breakpoint, maxDuration);
+		return unitPlayingScene->getCpuCores()->processFunctionCall(tree, debuggerCall, maxDuration);
 
 	// * If breakpoint is userDefined: Do 4.4 User defined breakpoint.
 	// * Do 4.5 Dynamic memory management breakpoint

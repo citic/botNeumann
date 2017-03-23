@@ -9,6 +9,7 @@
 class CpuCore;
 class DebuggerBreakpoint;
 class ExecutionThread;
+class GdbCall;
 
 class CpuCores : public GdbResponseListener, public MemorySegment
 {
@@ -40,7 +41,7 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// Deallocate local variables in some thread that is running
 	virtual bool deallocate(MemoryAllocation* memoryAllocation) override;
 	/// Called when player solution stopped by a function body breakpoint
-	bool processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
+	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 
   signals:
 	/// Emitted when an execution thread was updated from GDB

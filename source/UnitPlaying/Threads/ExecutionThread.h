@@ -6,8 +6,9 @@
 class CpuCore;
 class DebuggerBreakpoint;
 class ExecutionThreadActor;
-class GdbTreeNode;
+class GdbCall;
 class GdbItemTree;
+class GdbTreeNode;
 class Scene;
 class Spacer;
 class CallStack;
@@ -67,6 +68,9 @@ class ExecutionThread : public LinearLayout
 	/// invisible on the visualization, but not deleted. The call stack gets deleted only when the
 	/// execution thread is finished
 	CallStack* callStack = nullptr;
+	/// Number of stack frames (function calls) currently running on inferior. This number is
+	/// reported by GDB. It is used to detect function calls and returns
+	int callStackDepth = 0;
 
   public:
 	/// Constructor
@@ -104,7 +108,7 @@ class ExecutionThread : public LinearLayout
 	/// Get access to the call stack
 	inline CallStack* getCallStack() const { return callStack; }
 	/// Called when player solution stopped by a function body breakpoint
-	bool processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
+	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 
   protected:
 	/// Build the robot
@@ -125,6 +129,8 @@ class ExecutionThread : public LinearLayout
 	/// to highlight that line using the robot color
 	/// @return true if there was change
 	bool updateLineNumber(int updatedLineNumber, int& maxDuration);
+	/// Updates the callStackDepth integer doing an inquiry to the debugger
+	bool updateCallStackDepth(GdbCall* debuggerCall);
 };
 
 #endif // EXECUTIONTHREAD_H

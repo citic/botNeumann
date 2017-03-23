@@ -196,7 +196,7 @@ void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 	}
 }
 
-bool CpuCores::processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration)
+bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
 {
 	// Player solution hit a breakpoint that has the role of functionCall. The breakpoint must be
 	// at the beginning of the body of a function in a file that is part of player solution.
@@ -212,7 +212,7 @@ bool CpuCores::processFunctionCall(const GdbItemTree& tree, DebuggerBreakpoint* 
 	Q_ASSERT(executionThread);
 
 	// The execution thread will animate the function call
-	return executionThread->processFunctionCall(tree, breakpoint, maxDuration);
+	return executionThread->processFunctionCall(tree, debuggerCall, maxDuration);
 }
 
 ExecutionThread* CpuCores::findThread(int id) const
