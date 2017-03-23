@@ -32,6 +32,8 @@ class LinearLayoutActor : public QObject, public LinearLayout
   protected:
 	/// To animate
 	Q_PROPERTY(qreal startProportion READ getStartProportion WRITE updateStartProportion)
+	/// Saves a copy of the start proportion that can be restored after a moveTo animation
+	qreal savedStartProportion = 0.0;
 
   public:
 	/// Constructor
@@ -40,6 +42,10 @@ class LinearLayoutActor : public QObject, public LinearLayout
 	int animateMoveTo(qreal endProportion, int duration, int initialDelay = 0);
 	/// Updates this object, and also the parent object in order to reflect the position change
 	void updateStartProportion(qreal startProportion);
+	/// Get access to the saved start proportion copy
+	inline qreal getSavedStartProportion() const { return savedStartProportion; }
+	/// Saves a copy of the current start proportion. Useful before start a moveTo animation
+	inline void saveStartProportion() { savedStartProportion = startProportion; }
 };
 
 #endif // LINEARLAYOUT_H

@@ -60,8 +60,8 @@ int ExecutionThread::animateAppear()
 	int duration = robot->appear();
 
 	// If the robot already has a call stack (i.e. it was sleeping), make it appear
-//	if ( callStack )
-//		duration += callStack->animateAppear(duration);
+	if ( callStack )
+		duration += callStack->animateAppear(duration);
 
 	return duration;
 }
@@ -72,8 +72,8 @@ int ExecutionThread::animateDisappear()
 	int duration = 0;
 
 	// Disappear call stack
-//	if ( callStack )
-//		duration = callStack->animateDisappear();
+	if ( callStack )
+		duration = callStack->animateDisappear();
 
 	// Make the robot disappear after the call stack is disappeared
 	duration += robot->disappear(1000, duration);
