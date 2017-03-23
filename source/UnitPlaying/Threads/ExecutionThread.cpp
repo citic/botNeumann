@@ -55,13 +55,30 @@ void ExecutionThread::buildCallStack()
 
 int ExecutionThread::animateAppear()
 {
-	return robot->appear();
+	// The total duration of the animation in milliseconds
+	// We make first the robot appear
+	int duration = robot->appear();
+
+	// If the robot already has a call stack (i.e. it was sleeping), make it appear
+//	if ( callStack )
+//		duration += callStack->animateAppear(duration);
+
+	return duration;
 }
 
 int ExecutionThread::animateDisappear()
 {
-	// ToDo: make callStack appear and disappear also
-	return robot->disappear();
+	// The total duration of the animation in milliseconds
+	int duration = 0;
+
+	// Disappear call stack
+//	if ( callStack )
+//		duration = callStack->animateDisappear();
+
+	// Make the robot disappear after the call stack is disappeared
+	duration += robot->disappear(1000, duration);
+
+	return duration;
 }
 
 bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& maxDuration)

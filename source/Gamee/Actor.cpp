@@ -8,17 +8,25 @@ Actor::Actor(const QString& prefixedSvgElementId, QGraphicsItem* parentItem)
 {
 }
 
-int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity)
+int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity, int initialDelay)
 {
 	updateLayoutItem();
 
-	// Animate the robot while it appears
-	QPropertyAnimation* appearsAnimation = new QPropertyAnimation(this, "opacity", this);
+	// Adjust animation time
+	initialDelay = VisualizationSpeed::getInstance().adjust(initialDelay);
 	duration = VisualizationSpeed::getInstance().adjust(duration);
-	appearsAnimation->setDuration(duration);
-	appearsAnimation->setStartValue(fromOpacity);
-	appearsAnimation->setEndValue(toOpacity);
-	appearsAnimation->start();
+	int totalDuration = initialDelay + duration;
+
+	// Animate the robot while it appears
+	QPropertyAnimation* animation = new QPropertyAnimation(this, "opacity", this);
+	animation->setDuration(duration);
+
+	// Do not change initial value on delay
+	animation->setKeyValueAt(0.0, fromOpacity);
+	animation->setKeyValueAt(initialDelay / totalDuration, fromOpacity);
+	animation->setKeyValueAt(1.0, toOpacity);
+
+	animation->start();
 	return duration;
 }
 
