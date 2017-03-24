@@ -31,6 +31,8 @@ GdbCall::~GdbCall()
 
 	// Delete dynamic allocated objects
 	deleteProcessedTokens();
+	while ( ! responseQueue.isEmpty() )
+		delete responseQueue.takeFirst();
 
 	// Delete any served response, if any
 	delete lastServedResponse;

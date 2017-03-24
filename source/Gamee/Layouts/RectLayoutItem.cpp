@@ -33,6 +33,6 @@ void RectLayoutItem::removeFromScene()
 {
 	Q_ASSERT( parentItem() );
 	Q_ASSERT( parentItem()->scene() );
-	parentItem()->scene()->removeItem( this );
+//	parentItem()->scene()->removeItem( this );
 //	delete this;
 }

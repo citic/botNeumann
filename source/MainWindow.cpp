@@ -38,6 +38,7 @@ MainWindow::~MainWindow()
 {
 	// Store dimensions for next time
 	saveSettings();
+	delete director;
 }
 
 void MainWindow::showInfoDialog(const QString& title, const QString& htmlInfo)

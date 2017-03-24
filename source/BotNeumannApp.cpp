@@ -77,6 +77,9 @@ BotNeumannApp::~BotNeumannApp()
 
 	// Not needed
 	SvgRendererManager::deleteInstance();
+
+	// Release all used fonts
+	QFontDatabase::removeAllApplicationFonts();
 }
 
 QFont BotNeumannApp::getRobotFont()
@@ -110,7 +113,7 @@ QString BotNeumannApp::loadFont(const QString& fileName)
 {
 	// Add the font as an application exclusive font
 	int id = QFontDatabase::addApplicationFont(fileName);
-	Q_ASSERT( id != -1 );
+	Q_ASSERT( id >= 0 );
 
 	// Retrieve its name. If the font has several names, retrieves only the first one
 	const QStringList& list = QFontDatabase::applicationFontFamilies(id);
