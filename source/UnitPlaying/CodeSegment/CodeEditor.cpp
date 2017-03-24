@@ -39,10 +39,7 @@ CodeEditor::CodeEditor(QWidget* parent)
 	, synchronizedWithObjectCode( false )
 {
 	// Set the default monospaced font of the game
-	QFont font = BotNeumannApp::getMonospacedFont();
-  #ifdef Q_OS_LINUX
-	font.setPointSize( font.pointSize() - 2 );
-  #endif
+	const QFont& font = BotNeumannApp::getMonospacedFont();
 	setFont(font);
 
 	// Make tabs the same size than 4 spaces

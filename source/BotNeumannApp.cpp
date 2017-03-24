@@ -14,10 +14,10 @@ QString BotNeumannApp::robotFontName;
 QString BotNeumannApp::monospacedFontName;
 
 // Default font point size
-#ifdef Q_OS_WIN
-const int monospacedFontSize = 10;
-#else
+#ifdef Q_OS_MAC
 const int monospacedFontSize = 11;
+#else
+const int monospacedFontSize = 10;
 #endif
 
 BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
