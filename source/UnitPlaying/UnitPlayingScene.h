@@ -86,7 +86,7 @@ class UnitPlayingScene : public GameScene
 	/// Return the state of the unit playing scene
 	inline UnitPlayingState getState() const { return state; }
 	/// Return true if visualization is stopped and no animations must be done at all
-	inline bool isStopped() const { return state == UnitPlayingState::animating; }
+	inline bool isStopped() const { return state == UnitPlayingState::editing; }
 	/// Give access to the code segment object
 	inline CodeSegment* getCodeSegment() const { return codeSegment; }
 	/// Give access to the heap segment object
