@@ -74,7 +74,8 @@ int LinearLayoutActor::animateMoveTo(qreal endProportion, int duration, int init
 
 	// Do not change initial value on delay
 	moveToAnimation->setKeyValueAt(0.0, this->startProportion);
-	moveToAnimation->setKeyValueAt(qreal(initialDelay) / totalDuration, this->startProportion);
+	if ( totalDuration > 0 )
+		moveToAnimation->setKeyValueAt(qreal(initialDelay) / totalDuration, this->startProportion);
 	moveToAnimation->setKeyValueAt(1.0, endProportion);
 
 	moveToAnimation->start();

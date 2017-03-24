@@ -88,6 +88,7 @@ int CpuCore::removeThread()
 
 	executionThread->setCpuCore(nullptr);
 
+	removeItem( executionThread->getCallStack(), true );
 	removeItem(executionThread, false);
 	executionThread = nullptr;
 

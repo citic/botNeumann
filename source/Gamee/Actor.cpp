@@ -23,7 +23,8 @@ int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity, int initialD
 
 	// Do not change initial value on delay
 	animation->setKeyValueAt(0.0, fromOpacity);
-	animation->setKeyValueAt(initialDelay / totalDuration, fromOpacity);
+	if ( totalDuration > 0 )
+		animation->setKeyValueAt(initialDelay / totalDuration, fromOpacity);
 	animation->setKeyValueAt(1.0, toOpacity);
 
 	animation->start();
