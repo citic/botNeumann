@@ -66,14 +66,20 @@ int ExecutionThread::animateAppear()
 	return duration;
 }
 
-int ExecutionThread::animateDisappear()
+int ExecutionThread::animateDisappear(bool removeCallStack)
 {
 	// The total duration of the animation in milliseconds
 	int duration = 0;
 
 	// Disappear call stack
 	if ( callStack )
-		duration = callStack->animateDisappear();
+	{
+		// If asked to remove the call stack, do it
+		if ( removeCallStack )
+			callStack->removeFromScene();
+		else
+			duration = callStack->animateDisappear();
+	}
 
 	// Make the robot disappear after the call stack is disappeared
 	duration += robot->disappear(1000, duration);

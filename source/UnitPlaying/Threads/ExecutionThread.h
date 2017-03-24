@@ -79,8 +79,10 @@ class ExecutionThread : public LinearLayout
 	/// @return The duration of the animation in milliseconds
 	int animateAppear();
 	/// Animate the vanishing of the robot
+	/// @param removeCallStack Send true to remove the call stack, for example, when a thread
+	/// is killed or animation is stopped
 	/// @return The duration of the animation in milliseconds
-	int animateDisappear();
+	int animateDisappear(bool removeCallStack);
 	/// Updates this execution thread from Gdb information. If execution thread is shown on the
 	/// screen, the visual update is done immediately and the maxDuration may be set
 	/// @return true if there was change

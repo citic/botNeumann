@@ -29,6 +29,8 @@ class RectLayoutItem : public QGraphicsRectItem, public LinearLayout, public Ali
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) override;
 	/// Sets the Z-index provided by layouts to the QGraphicsItem system
 	virtual void setZ(qreal zValue) override { setZValue(zValue); }
+	/// Called on QGraphicItem in order to remove them from the scene
+	virtual void removeFromScene() override;
 };
 
 #endif // RECTLAYOUTITEM_H

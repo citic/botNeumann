@@ -79,16 +79,15 @@ int CpuCore::runThread(ExecutionThread* thread)
 	return executionThread->animateAppear();
 }
 
-int CpuCore::removeThread()
+int CpuCore::removeThread(bool removeThreadCallStack)
 {
 	if ( executionThread == nullptr )
 		return -1;
 
-	int duration = executionThread->animateDisappear();
+	int duration = executionThread->animateDisappear(removeThreadCallStack);
 
 	executionThread->setCpuCore(nullptr);
 
-	removeItem( executionThread->getCallStack(), true );
 	removeItem(executionThread, false);
 	executionThread = nullptr;
 

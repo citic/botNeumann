@@ -43,8 +43,10 @@ class CpuCore : public QObject, public MemorySegment
 	int runThread(ExecutionThread* thread);
 	/// Removes the current execution thread from this CpuCore
 	/// The execution thread object keeps alive
+	/// @param removeThreadCallStack Send true to remove the call stack of current thread being run
+	/// in this cpu core, when a thread is killed or animation is stopped
 	/// @return the duration in milliseconds of the animation, -1 if no thread was being run
-	int removeThread();
+	int removeThread(bool removeThreadCallStack);
 
   public slots:
 	/// Animates the memory interface to open

@@ -1,6 +1,7 @@
 #include "RectLayoutItem.h"
 
 #include <QBrush>
+#include <QGraphicsScene>
 #include <QPen>
 
 RectLayoutItem::RectLayoutItem(Qt::Orientation orientation, qreal zValue, QGraphicsItem* graphicsParentItem, bool clipChildren)
@@ -26,4 +27,12 @@ void RectLayoutItem::resize(qreal left, qreal top, qreal width, qreal height)
 	// Update the QGraphicsRectIem part of this object
 	applyMargins(left, top, width, height);
 	setRect(left, top, width, height);
+}
+
+void RectLayoutItem::removeFromScene()
+{
+	Q_ASSERT( parentItem() );
+	Q_ASSERT( parentItem()->scene() );
+	parentItem()->scene()->removeItem( this );
+//	delete this;
 }

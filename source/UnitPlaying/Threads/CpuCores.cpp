@@ -163,12 +163,12 @@ void CpuCores::clearAnimation()
 {
 	// Remove all execution threads from the cores
 	for ( int index = 0; index < cpuCores.count(); ++index )
-		cpuCores[index]->removeThread();
+		cpuCores[index]->removeThread(true);
 
 	// Remove all execution threads, visible or not
 	for ( int index = 0; index < executionThreads.count(); ++index )
 		if ( executionThreads[index]->isIdle() )
-			executionThreads[index]->animateDisappear();
+			executionThreads[index]->animateDisappear(true);
 
 	// Destroy all threads
 	idleThreadsLayout->removeAllItems(true);
