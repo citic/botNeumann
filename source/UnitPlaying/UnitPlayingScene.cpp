@@ -313,15 +313,15 @@ void UnitPlayingScene::userStopped(bool removeTestCases)
 	Q_ASSERT(visualizator);
 	if ( visualizator->stop() )
 	{
-		// Return to editing state
-		changeState(UnitPlayingState::editing);
-
 		// Tell the segments to remove animation artifacts
 		if (removeTestCases) testCaseManager->clearAnimation();
 		codeSegment->clearAnimation();
 		heapSegment->clearAnimation();
 		cpuCores->clearAnimation();
 		dataSegment->clearAnimation();
+
+		// Return to editing state
+		changeState(UnitPlayingState::editing);
 	}
 }
 

@@ -79,6 +79,9 @@ bool Visualizator::start(bool preparation)
 	}
 	else
 	{
+		// In the second phase, user may stop the visualization
+		if ( unitPlayingScene->isStopped() ) return false;
+
 		// The preparation phase is done, continue with the starting process
 		setDynamicMemoryBreakpoints();
 		watchStandardInputOutput();
@@ -87,6 +90,7 @@ bool Visualizator::start(bool preparation)
 		// Animate function call at program's entry point
 		Q_ASSERT(entryPointTree);
 		int maxDuration = 0;
+		if ( unitPlayingScene->isStopped() ) return false;
 		processBreakpointHit(*entryPointTree, visExecutionLoop, maxDuration);
 
 		// In maxDuration seconds, the entry point function call will be done and we can enter
@@ -325,7 +329,7 @@ bool Visualizator::stop()
 	VisualizationSpeed::getInstance().setSeeking(true);
 
 	// Stop gdb
-	return debuggerCall->sendGdbCommand("-exec-interrupt", visStopping) != GDB_ERROR;
+	return debuggerCall->stop();
 }
 
 bool Visualizator::pause()
@@ -364,6 +368,9 @@ bool Visualizator::step(const QString& gdbCommand, const QString& description)
 
 void Visualizator::processGdbResponse()
 {
+	/// Do not process responses when visualization is stopped
+	if ( unitPlayingScene->isStopped() ) return;
+
 //	static long long callCount = 0;
 //	qCDebug(logVisualizator, "====processGdbResponse(%lld)", ++callCount);
 
@@ -377,6 +384,7 @@ void Visualizator::processGdbResponse()
 //	qCDebug(logVisualizator, "++++processGdbResponse(%lld) animation done", callCount);
 
 	// If animation is paused, do not animate
+	// Needed?
 	if ( unitPlayingScene->getState() == UnitPlayingState::paused && inStep == false )
 		return;
 

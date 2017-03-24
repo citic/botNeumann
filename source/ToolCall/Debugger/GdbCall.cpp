@@ -63,9 +63,18 @@ bool GdbCall::start()
 	return true;
 }
 
+bool GdbCall::stop()
+{
+	bool result = sendGdbCommand("-exec-interrupt", 0) != GDB_ERROR;
+	busy = -100;
+	return result;
+}
+
 GdbResult GdbCall::sendGdbCommand(const QString& command, int userData, GdbItemTree* resultData)
 {
-	Q_ASSERT(busy == 0);
+	if ( busy != 0 )
+		return GDB_ERROR;
+
 	++busy;
 
 	GdbCommand gdbCommand(command, userData);
@@ -99,8 +108,12 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, int userData, GdbItemT
 
 	--busy;
 
-	emit pendingGdbResponses();
-	onReadyReadStandardOutput();
+	// If busy is negative, visualization is stopped
+	if ( busy >= 0 )
+	{
+		emit pendingGdbResponses();
+		onReadyReadStandardOutput();
+	}
 
 	return lastResult;
 }
@@ -117,7 +130,9 @@ void GdbCall::onReadyReadStandardOutput()
 //		Q_ASSERT( pendingCommands.isEmpty() == true );
 	}
 
-	emit pendingGdbResponses();
+	// If busy is negative, visualization is stopped
+	if ( busy >= 0 )
+		emit pendingGdbResponses();
 }
 
 GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutput)
