@@ -1,10 +1,12 @@
 #include "ExecutionThreadActor.h"
 #include "Assets.h"
+#include "BotNeumannApp.h"
 #include "Common.h"
 #include "LabelButton.h"
 #include "LinearLayout.h"
 #include "Scene.h"
 
+#include <QFont>
 
 ExecutionThreadActor::ExecutionThreadActor(int threadId, QGraphicsItem* parentItem)
 	: Actor("", parentItem)
@@ -29,6 +31,7 @@ void ExecutionThreadActor::buildActor()
 
 	// Create the line number
 	lineNumber = new LabelButton("00", this);
+	lineNumber->setFont( QFont(BotNeumannApp::getMonospacedFontName()) );
 	lineNumber->setAlignment(Qt::AlignCenter);
 
 	// Center the line number within the robot's display
