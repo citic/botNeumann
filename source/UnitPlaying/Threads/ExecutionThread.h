@@ -69,7 +69,7 @@ class ExecutionThread : public LinearLayout
 	/// If this thread is idle, this will be its parent
 	LinearLayout* idleThreads = nullptr;
 	/// The robot used to represent the execution thread
-	ExecutionThreadActor* robot = nullptr;
+	ExecutionThreadActor* actor = nullptr;
 	/// The stack of function calls (frames) that this thread has executed
 	/// The call stack is visible if this thread is assigned to a CPU core, otherwise they are
 	/// invisible on the visualization, but not deleted. The call stack gets deleted only when the

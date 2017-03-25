@@ -26,13 +26,13 @@ void ExecutionThread::buildExecutionThread()
 	setMargins(0.05, 0.05, 0.0);
 
 	// Create an actor (robot) for the execution thread with its line number
-	Q_ASSERT(robot == nullptr);
-	robot = new ExecutionThreadActor(id, scene);
-	robot->setVisible(false);
+	Q_ASSERT(actor == nullptr);
+	actor = new ExecutionThreadActor(id, scene);
+	actor->setVisible(false);
 
 	// The actor is in the bottom part of the execution thread, almost under the call stack
 	const qreal zActor = zUnitPlaying::executionThread + 0.2;
-	insertItem(robot, 0.9, 1.0 / 3.0, zActor);
+	insertItem(actor, 0.9, 1.0 / 3.0, zActor);
 
 	// Create the object in charge of managing the function calls for this execution thread
 	// No functions are added to the call stack until the execution thread gets updated form GDB
@@ -67,16 +67,16 @@ int ExecutionThread::run(CpuCore* cpuCore)
 	callStack->setCpuCoreRows( cpuCore->getHeightInRows() );
 
 	// The actor will be at the bottom of the call stack
-	Q_ASSERT(robot);
-	robot->setStartProportion(0.9);
-	duration += robot->appear();
+	Q_ASSERT(actor);
+	actor->setStartProportion(0.9);
+	duration += actor->appear();
 
 	// Add this execution thread (both actor and call stack) to the cpu core
 	cpuCore->addItem( this, 1.0, zUnitPlaying::executionThread );
 	cpuCore->updateLayoutItem();
 
 	// Animate appearing of both, actor and call stack
-	robot->setVisible(true);
+	actor->setVisible(true);
 	callStack->setVisible(true);
 	duration += callStack->animateAppear();
 	return duration;
@@ -101,11 +101,11 @@ int ExecutionThread::sleep(LinearLayout* idleThreads, int idleThreadNumber)
 	idleThreads->insertItem( this, qreal(start) / refWidthScene, proportion, zUnitPlaying::cpuCores + 0.1 );
 
 	// The space that the call stack released on the top, will be used by the robot
-	Q_ASSERT(robot);
-	robot->setStartProportion(0.0);
+	Q_ASSERT(actor);
+	actor->setStartProportion(0.0);
 	idleThreads->updateLayoutItem();
 
-	duration += robot->appear();
+	duration += actor->appear();
 	return duration;
 }
 
@@ -147,7 +147,7 @@ int ExecutionThread::detach()
 
 	// Detach the actor from the cpu or idle zone and
 	// Make it disappear after the call stack has disappeared
-	duration += robot->disappear(1000, duration);
+	duration += actor->disappear(1000, duration);
 
 	// Thread returns to the new state
 	state = threadNew;
@@ -199,14 +199,14 @@ bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& max
 
 const QColor& ExecutionThread::getHighlightColor() const
 {
-	Q_ASSERT(robot);
-	return robot->getHighlightColor();
+	Q_ASSERT(actor);
+	return actor->getHighlightColor();
 }
 
 qreal ExecutionThread::getActorReferenceWidth() const
 {
-	Q_ASSERT(robot);
-	return robot->boundingRect().width();
+	Q_ASSERT(actor);
+	return actor->boundingRect().width();
 }
 
 ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)
@@ -242,8 +242,8 @@ bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
 	lineNumber = updatedLineNumber;
 
 	// Update the line within the robot's display
-	Q_ASSERT(robot);
-	robot->updateLineNumber(lineNumber);
+	Q_ASSERT(actor);
+	actor->updateLineNumber(lineNumber);
 
 	return true;
 }
