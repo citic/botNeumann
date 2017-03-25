@@ -90,6 +90,10 @@ void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, 
 			updateMaxDuration( createThread( tree.findNodeTextValue("/id").toInt() ) );
 			break;
 
+		case AsyncClass::AC_THREAD_EXITED:
+			updateMaxDuration( removeThread( tree.findNodeTextValue("/id").toInt() ) );
+			break;
+
 		default: break;
 	}
 }
@@ -129,6 +133,24 @@ int CpuCores::createThread(int id)
 		: thread->sleep(idleThreadsLayout, ++idleThreadsCount);
 }
 
+int CpuCores::removeThread(int id)
+{
+	// Get a pointer to the thread with the given id and its index
+	int index = -1;
+	ExecutionThread* thread = findThread(id, &index);
+
+	// Remove the thread from scene
+	Q_ASSERT(thread);
+	int duration = thread->terminate();
+
+	// Remove the obsolete thread pointer from the list
+	Q_ASSERT( index >= 0 && index < executionThreads.count() );
+	executionThreads.remove(index);
+
+	// Return duration of animation in milliseconds
+	return duration;
+}
+
 int CpuCores::findFirstIdleCpuCore() const
 {
 	for ( int index = 0; index < cpuCores.count(); ++index )
@@ -136,6 +158,20 @@ int CpuCores::findFirstIdleCpuCore() const
 			return index;
 
 	return -1;
+}
+
+ExecutionThread* CpuCores::findThread(int id, int* threadIndex) const
+{
+	for ( int index = 0; index < executionThreads.count(); ++index )
+	{
+		if ( executionThreads[index]->getId() == id )
+		{
+			if ( threadIndex ) *threadIndex = index;
+			return executionThreads[index];
+		}
+	}
+
+	return nullptr;
 }
 
 void CpuCores::clearAnimation()
@@ -186,13 +222,4 @@ bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCal
 
 	// The execution thread will animate the function call
 	return executionThread->processFunctionCall(tree, debuggerCall, maxDuration);
-}
-
-ExecutionThread* CpuCores::findThread(int id) const
-{
-	for ( int index = 0; index < executionThreads.count(); ++index )
-		if ( executionThreads[index]->getId() == id )
-			return executionThreads[index];
-
-	return nullptr;
 }

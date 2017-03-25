@@ -63,13 +63,18 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// Debugger reports the creation of a new execution thread, show it
 	/// @return the duration in milliseconds of the animation
 	int createThread(int id);
+	/// Debugger reports an execution thread exited, remove it from scene
+	/// @return the duration in milliseconds of the animation
+	int removeThread(int id);
 	/// @return The index of the next available (free) CPU core to execute a thread, -1 if all cores
 	/// are busy executing threads
 	int findFirstIdleCpuCore() const;
 	/// A Gdb result brought an updated list of threads, refresh them
 	void updateThreads(const GdbTreeNode* threadsNode, int& maxDuration);
 	/// Finds the thread with the given id using linear search
-	ExecutionThread* findThread(int id) const;
+	/// @param threadIndex If a pointer is given, the pointed variable will be updated with the
+	/// index where the found thread is located
+	ExecutionThread* findThread(int id, int* threadIndex = nullptr) const;
 };
 
 #endif // CPUCORES_H
