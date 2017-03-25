@@ -125,14 +125,6 @@ class ExecutionThread : public LinearLayout
 	/// Build the robot and the call stack as objects in memory. They are not added to the layout
 	/// system yet, until the @a run() or @a sleep() functions are called
 	void buildExecutionThread();
-	/// Animate the apparition of the robot and call stack
-	/// @return The duration of the animation in milliseconds
-	int animateAppear();
-	/// Animate the vanishing of the robot
-	/// @param removeCallStack Send true to remove the call stack, for example, when a thread
-	/// is killed or animation is stopped
-	/// @return The duration of the animation in milliseconds
-	int animateDisappear(bool removeCallStack);
 	/// Detach the execution thread from the cpu core or idle thread layout. Thread will return to
 	/// to the original "new" state. This method is called when the thread changes its state, before
 	/// assigning it to a new region of the scene

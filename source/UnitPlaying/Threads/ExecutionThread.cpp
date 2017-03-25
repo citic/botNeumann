@@ -69,6 +69,7 @@ int ExecutionThread::run(CpuCore* cpuCore)
 	// The actor will be at the bottom of the call stack
 	Q_ASSERT(robot);
 	robot->setStartProportion(0.9);
+	duration += robot->appear();
 
 	// Add this execution thread (both actor and call stack) to the cpu core
 	cpuCore->addItem( this, 1.0, zUnitPlaying::executionThread );
@@ -77,7 +78,7 @@ int ExecutionThread::run(CpuCore* cpuCore)
 	// Animate appearing of both, actor and call stack
 	robot->setVisible(true);
 	callStack->setVisible(true);
-	duration += animateAppear();
+	duration += callStack->animateAppear();
 	return duration;
 }
 
@@ -113,8 +114,8 @@ int ExecutionThread::terminate()
 	// Detach from the previous area of the scene
 	int duration = detach();
 
-	// ToDo: remove the thread from the scene after the terminate animation is done
-//	this->removeFromScene();
+	// Remove the thread from the scene after the terminate animation is done
+	this->removeAllItems(true);
 
 	return duration;
 }
@@ -144,47 +145,14 @@ int ExecutionThread::detach()
 		idleThreads->removeItem(this, false);
 	}
 
-	// Detach the actor from the cpu or idle zone
-	duration += robot->disappear();
+	// Detach the actor from the cpu or idle zone and
+	// Make it disappear after the call stack has disappeared
+	duration += robot->disappear(1000, duration);
 
 	// Thread returns to the new state
 	state = threadNew;
 	cpuCore = nullptr;
 	idleThreads = nullptr;
-
-	return duration;
-}
-
-int ExecutionThread::animateAppear()
-{
-	// The total duration of the animation in milliseconds
-	// We make first the robot appear
-	int duration = robot->appear();
-
-	// If the robot already has a call stack (i.e. it was sleeping), make it appear
-	if ( callStack )
-		duration += callStack->animateAppear(duration);
-
-	return duration;
-}
-
-int ExecutionThread::animateDisappear(bool removeCallStack)
-{
-	// The total duration of the animation in milliseconds
-	int duration = 0;
-
-	// Disappear call stack
-	if ( callStack )
-	{
-		// If asked to remove the call stack, do it
-		if ( removeCallStack )
-			callStack->removeFromScene();
-		else
-			duration = callStack->animateDisappear();
-	}
-
-	// Make the robot disappear after the call stack is disappeared
-	duration += robot->disappear(1000, duration);
 
 	return duration;
 }
