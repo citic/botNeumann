@@ -266,18 +266,28 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, GdbCall* debu
 
 	// Animate the door opening in its CPU core
 	Q_ASSERT(cpuCore);
-	updateMaxDuration( cpuCore->openMemoryInterface() );
+	int duration = cpuCore->openMemoryInterface();
 
 	// Update the stack depth value, reported by debugger
 	updateCallStackDepth(debuggerCall);
 
-	// For testing only: close the interface after the function is called
-	QTimer::singleShot( maxDuration + 2000, cpuCore, SLOT(closeMemoryInterface()) );
-
 	// Animate the function call
 	Q_ASSERT(callStack);
 	functionName = tree.findNodeTextValue("/frame/func");
-	updateMaxDuration( callStack->callFunction(tree) );
+	duration += callStack->callFunction(tree);
+
+	// Animate parameter passing
+//	duration += callStack->passParameters();
+
+	// Animate creation of local variables
+//	duration += callStack->createLocalVariables();
+
+	// Close the interface after the function is finally called
+	QTimer::singleShot( duration - 750, cpuCore, SLOT(closeMemoryInterface()) );
+
+	// Tell caller the duration of the entire animation
+	if ( duration > maxDuration )
+		maxDuration = duration;
 
 	return true;
 }

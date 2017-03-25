@@ -988,9 +988,10 @@ All threads? or ` --thread 1`
 
 . We are creating an execution thread (context `visCreateExecutionThread`). The `ExecutionThread::callStackDepth` must currently be 0.
 . If `/depth > 1`, there are library functions that were executed before any player solution's function.
-. Call
+. Call `-stack-list-frames` as follows:
 
-	-stack-list-frames
+
+==== -stack-list-frames
 
 . Do <<function-call>> with the result, in order to create a fake call to `<library functions>[/depth]`.
 . [Necessary?] Update the `ExecutionThread::callStackDepth` integer value (init value -1).
