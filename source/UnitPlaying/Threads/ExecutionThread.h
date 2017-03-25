@@ -40,6 +40,9 @@ class ExecutionThread : public LinearLayout
 	int id = -1;
 	/// The source file that generated the code that this thread is executing
 	QString filename;
+	/// The previous source file that this thread was executing before the last update
+	/// It is used by code editors to clear highlighted lines
+	QString previousFilename;
 	/// The line number in that file being executed
 	int lineNumber = -1;
 	/// The previous line number that this thread was executing before the last update
@@ -47,12 +50,17 @@ class ExecutionThread : public LinearLayout
 	int previousLineNumber = -1;
 	/// The function being currently executed by this thread
 	QString functionName;
-	/// The previous source file that this thread was executing before the last update
-	QString previousFilename;
 	/// The memory address of the first byte assigned for stack memory to this execution thread
 	size_t startByte = 0;
 	/// The size in bytes of each memory row of the stack segment
 	size_t rowSize = 0;
+	/// Number of stack frames (function calls) currently running on inferior. This number is
+	/// reported by GDB. It is used to detect function calls and returns
+	int callStackDepth = 0;
+	/// Gdb uses an inverted integer to identify functions called level. The current function being
+	/// executed (innermost call) is level=0. We can inspect other function in the stack chaging
+	/// the level to a higher number. We trace the level being inspected
+	int inspectedLevel = 0;
 
 	/// True if this thread is idle, i.e: there are not enough cores to run this thread
 	/// An idle thread is supposed to be shown in the area for idle threads in the middle of the
@@ -75,11 +83,8 @@ class ExecutionThread : public LinearLayout
 	/// invisible on the visualization, but not deleted. The call stack gets deleted only when the
 	/// execution thread is finished
 	CallStack* callStack = nullptr;
-	/// Number of stack frames (function calls) currently running on inferior. This number is
-	/// reported by GDB. It is used to detect function calls and returns
-	int callStackDepth = 0;
 
-  public:
+  public: // States
 	/// Build an execution thread and adds it to the scene in invisible mode. In order to make it
 	/// visible, call @a run() or @a sleep()
 	explicit ExecutionThread(size_t startByte, size_t rowSize, Scene* scene, int id);
@@ -97,11 +102,7 @@ class ExecutionThread : public LinearLayout
 	/// @return Duration of the appearing animation
 	int terminate();
 
-  public:
-	/// Updates this execution thread from Gdb information. If execution thread is shown on the
-	/// screen, the visual update is done immediately and the maxDuration may be set
-	/// @return true if there was change
-	bool updateFromDebugger(const GdbTreeNode* threadNode, int& maxDuration);
+  public: // Accessors
 	/// Get access to the members
 	inline int getId() const { return id; }
 	inline const QString& getFilename() const { return filename; }
@@ -118,6 +119,15 @@ class ExecutionThread : public LinearLayout
 	inline CallStack* getCallStack() const { return callStack; }
 	/// True if this thread is being executed on some cpu core
 	inline bool isActive() const { return state == threadActive; }
+
+  public:
+	/// Updates this execution thread from Gdb information.
+	/// @return true if there was a location change
+	bool updateFromDebugger(const GdbTreeNode* threadNode);
+	/// Called from code editor when the location change is within the player solution. The line
+	/// number on the actor (robot) is updated and the duration of the animation is returned. Also
+	/// makes a backup of the location (filename and line number)
+	int locationUpdateAccepted();
 	/// Called when player solution stopped by a function body breakpoint
 	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 
@@ -130,20 +140,13 @@ class ExecutionThread : public LinearLayout
 	/// assigning it to a new region of the scene
 	/// @return Duration of the animation
 	int detach();
-	/// The type of return of @a updateFilename()
-	enum FilenameUpdateResult
-	{
-		fileIsTheSame,
-		newFileInPlayerSolution,
-		fileNotInPlayerSolution,
-	};
-	/// If the filename has changed, asks the CodeEditor to show it
-	/// @return true if there was change
-	FilenameUpdateResult updateFilename(const QString& updatedFilename, int& maxDuration);
-	/// If the line number has changed, updates the number on the robot and asks the CodeEditor
-	/// to highlight that line using the robot color
-	/// @return true if there was change
-	bool updateLineNumber(int updatedLineNumber, int& maxDuration);
+	/// Update the location (the source code file and line) that this execution thread is running
+	/// If the line number has changed, updates the number on the robot
+	/// @return true if the new location should be reflected in code editor. Return false if
+	/// the thread has no changed its location
+	/// @remarks The returned value should be used to ask the CodeEditor to highlight the line
+	/// being executed by this tread using its robot color
+	bool updateLocation(const GdbTreeNode* threadNode);
 	/// Updates the callStackDepth integer doing an inquiry to the debugger
 	bool updateCallStackDepth(GdbCall* debuggerCall);
 };

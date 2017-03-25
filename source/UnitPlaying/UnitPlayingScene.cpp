@@ -198,7 +198,7 @@ void UnitPlayingScene::createCodeSegment()
 
 	// When GDB reports a change on some execution thread, update its highlighted line
 	Q_ASSERT(cpuCores);
-	connect( cpuCores, SIGNAL(executionThreadUpdated(const ExecutionThread*)), codeSegment, SLOT(executionThreadUpdated(const ExecutionThread*)) );
+	connect( cpuCores, SIGNAL(executionThreadUpdated(ExecutionThread*,int&)), codeSegment, SLOT(executionThreadUpdated(ExecutionThread*,int&)) );
 }
 
 void UnitPlayingScene::createMessagesArea()

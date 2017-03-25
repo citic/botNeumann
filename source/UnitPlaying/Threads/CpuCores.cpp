@@ -195,12 +195,15 @@ void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 		// Get the id of the thread
 		int threadId = threadChildNode->findTextValue("id").toInt();
 
+		// Find the thread with that id
+		ExecutionThread* thread = findThread(threadId);
+		Q_ASSERT(thread);
+
 		// Update its correspondent execution thread object
-		Q_ASSERT(threadId > 0 && threadId <= executionThreads.count());
-		if ( executionThreads[threadId - 1]->updateFromDebugger(threadChildNode, maxDuration) )
+		if ( thread->updateFromDebugger(threadChildNode) )
 		{
 			// The thread was updated, refresh its highlighted line on the code editor
-			emit executionThreadUpdated(executionThreads[threadId - 1]);
+			emit executionThreadUpdated(thread, maxDuration);
 		}
 	}
 }

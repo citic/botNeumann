@@ -45,7 +45,7 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 
   signals:
 	/// Emitted when an execution thread was updated from GDB
-	void executionThreadUpdated(const ExecutionThread* executionThread);
+	void executionThreadUpdated(ExecutionThread* executionThread, int& maxDuration);
 
   public slots:
 	/// Called when visualization has finished in order to remove execution threads

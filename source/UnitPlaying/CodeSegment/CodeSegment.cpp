@@ -4,6 +4,7 @@
 #include "Compiler.h"
 #include "Diagnostic.h"
 #include "ExecutionThread.h"
+#include "GdbResponseListener.h"
 #include "LogManager.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
@@ -322,7 +323,7 @@ void CodeSegment::clearAnimation()
 	codeEditor->clearHighlights();
 }
 
-void CodeSegment::executionThreadUpdated(const ExecutionThread* executionThread)
+void CodeSegment::executionThreadUpdated(ExecutionThread* executionThread, int& maxDuration)
 {
 	// Get the file index of the execution thread
 	Q_ASSERT(playerSolution);
@@ -342,6 +343,12 @@ void CodeSegment::executionThreadUpdated(const ExecutionThread* executionThread)
 		// Clear the previous highlighted line only if this is the shown file
 		int fileIndex = playerSolution->findFileIndex( executionThread->getFilename() );
 		if ( fileIndex >= 0 && fileIndex == fileSelector->currentIndex() )
+		{
 			codeEditor->addHighlight( executionThread->getLineNumber(), executionThread->getHighlightColor(), true );
+
+			// The update was accepted, we feedback the execution thread in order to update the
+			// line number on the actor (robot) and make a backup of the filename and line number
+			updateMaxDuration( executionThread->locationUpdateAccepted() );
+		}
 	}
 }

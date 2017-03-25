@@ -157,7 +157,7 @@ int ExecutionThread::detach()
 	return duration;
 }
 
-bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& maxDuration)
+bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode)
 {
 	/* example of Gdb node on Linux:
 
@@ -182,19 +182,53 @@ bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& max
 		core="7"
 	*/
 
+	// We keep track of some GDB values
+	inspectedLevel = threadNode->findTextValue("frame/level").toInt();
+	functionName = threadNode->findTextValue("frame/func");
+
+	// If this thread is running a different line of some file that belongs th the player's solution
+	// we return true, in order to update the highlighted line in code editor
+	return /* locationChanged =*/ updateLocation(threadNode);
+}
+
+bool ExecutionThread::updateLocation(const GdbTreeNode* threadNode)
+{
+	bool locationChanged = false;
+
 	// Only update the execution thread if it is running code that is part of the player's solution
 	// E.g: if it is running an external library function, it is considered a black-box and it is
 	// not visualized, because it is very likely to have no C/C++ source code (assembler)
-	FilenameUpdateResult filenameUpdateResult = updateFilename( threadNode->findTextValue("frame/file"), maxDuration );
-	if ( filenameUpdateResult == fileNotInPlayerSolution )
-		return false;
+	const QString& updatedFilename = threadNode->findTextValue("frame/file");
+	if ( filename != updatedFilename )
+	{
+		// Update to the new filename
+		filename = updatedFilename;
+		locationChanged = true;
+	}
 
-	// Let's check if the line number or function call changed
-	bool lineNumberUpdated = updateLineNumber( threadNode->findTextValue("frame/line").toInt(), maxDuration );
-	functionName = threadNode->findTextValue("frame/func");
+	// If the execution thread stays at the same line, do not reflect any change on the GUI
+	int updatedLineNumber = threadNode->findTextValue("frame/line").toInt();
+	if ( lineNumber != updatedLineNumber )
+	{
+		// Update to the new line number
+		lineNumber = updatedLineNumber;
+		locationChanged = true;
+	}
 
-	// If any (file, line or function) changed, the thread was updated
-	return filenameUpdateResult == newFileInPlayerSolution || lineNumberUpdated;
+	// If the location (file or line) changed, the thread was updated
+	return locationChanged;
+}
+
+int ExecutionThread::locationUpdateAccepted()
+{
+	// Backup the accepted location (being displayed in code editor) before a new update overwrites
+	// the location. Code editors need the previous location in order to clear highlited lines
+	previousFilename = filename;
+	previousLineNumber = lineNumber;
+
+	// Update the line within the robot's display
+	Q_ASSERT(actor);
+	return actor->updateLineNumber(lineNumber);
 }
 
 const QColor& ExecutionThread::getHighlightColor() const
@@ -207,45 +241,6 @@ qreal ExecutionThread::getActorReferenceWidth() const
 {
 	Q_ASSERT(actor);
 	return actor->boundingRect().width();
-}
-
-ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)
-{
-	Q_UNUSED(maxDuration);
-	if ( filename == updatedFilename )
-		return fileIsTheSame;
-
-	// ToDo: if the file is not part of the player's solution, do not update
-//	if ( playerSolution.hasFile(updatedFilename) == false )
-//		return fileNotInPlayerSolution;
-
-	// Update to the new filename
-	previousFilename = filename;
-	filename = updatedFilename;
-
-	// Avoid to keep the emtpy filename if execution thead stays on the same file all the time
-	if ( previousFilename.isEmpty() )
-		previousFilename = filename;
-
-	return newFileInPlayerSolution;
-}
-
-bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
-{
-	Q_UNUSED(maxDuration);
-	// If the execution thread stays at the same line, do not reflect any change on the GUI
-	if ( lineNumber == updatedLineNumber )
-		return false;
-
-	// Update to the new line number
-	previousLineNumber = lineNumber;
-	lineNumber = updatedLineNumber;
-
-	// Update the line within the robot's display
-	Q_ASSERT(actor);
-	actor->updateLineNumber(lineNumber);
-
-	return true;
 }
 
 bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
