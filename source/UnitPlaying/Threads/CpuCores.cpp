@@ -139,16 +139,23 @@ int CpuCores::removeThread(int id)
 	int index = -1;
 	ExecutionThread* thread = findThread(id, &index);
 
-	// Remove the thread from scene
+	// Duration of the remove animation
+	int maxDuration = 0;
+
+	// Clear the old highlighted line for this thread in code editor
 	Q_ASSERT(thread);
-	int duration = thread->terminate();
+	thread->clearLocation();
+	emit executionThreadUpdated(thread, maxDuration);
+
+	// Remove the thread from scene
+	updateMaxDuration( thread->terminate() );
 
 	// Remove the obsolete thread pointer from the list
 	Q_ASSERT( index >= 0 && index < executionThreads.count() );
 	executionThreads.remove(index);
 
 	// Return duration of animation in milliseconds
-	return duration;
+	return maxDuration;
 }
 
 int CpuCores::findFirstIdleCpuCore() const

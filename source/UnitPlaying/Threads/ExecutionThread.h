@@ -128,6 +128,9 @@ class ExecutionThread : public LinearLayout
 	/// number on the actor (robot) is updated and the duration of the animation is returned. Also
 	/// makes a backup of the location (filename and line number)
 	int locationUpdateAccepted();
+	/// Reset filename and line number to a non valid location. Called before terminating an
+	/// execution thread in order to remove its highlight from code editro
+	void clearLocation();
 	/// Called when player solution stopped by a function body breakpoint
 	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 

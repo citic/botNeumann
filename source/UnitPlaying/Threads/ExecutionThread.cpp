@@ -231,6 +231,16 @@ int ExecutionThread::locationUpdateAccepted()
 	return actor->updateLineNumber(lineNumber);
 }
 
+void ExecutionThread::clearLocation()
+{
+	// Remove current filename and line number
+	filename.clear();
+	lineNumber = -1;
+
+	// This method is called before an execution thread will be terminated, therefore there is not
+	// need to update the line number to 00 on the robot
+}
+
 const QColor& ExecutionThread::getHighlightColor() const
 {
 	Q_ASSERT(actor);
