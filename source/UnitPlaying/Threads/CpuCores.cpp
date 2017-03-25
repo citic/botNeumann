@@ -121,14 +121,12 @@ int CpuCores::createThread(int id)
 	ExecutionThread* thread = new ExecutionThread(startByte, rowSize, scene, id);
 	executionThreads.append(thread);
 
-	// If there is an idle CPU core, assign the new execution thread to it
+	// If there is an idle CPU core, assign the new execution thread to it. Otherwise the thread
+	// will appeared sleeping in the visualization in the idle layout until a cpu core gets freed
 	int cpuCoreIndex = findFirstIdleCpuCore();
-	if ( cpuCoreIndex >= 0 )
-		return cpuCores[cpuCoreIndex]->runThread(thread);
-
-	// There are not available CPU cores, the thread will be sleeping in the visualization
-	// the idle layout will manage these threads
-	return setupIdleThread(thread);
+	return cpuCoreIndex >= 0
+		? thread->run( cpuCores[cpuCoreIndex] )
+		: thread->sleep(idleThreadsLayout, ++idleThreadsCount);
 }
 
 int CpuCores::findFirstIdleCpuCore() const
@@ -140,38 +138,13 @@ int CpuCores::findFirstIdleCpuCore() const
 	return -1;
 }
 
-int CpuCores::setupIdleThread(ExecutionThread* thread)
-{
-	// The thread is idle, it displays and behaves differently of an active thread
-	thread->setIdle(true);
-
-	// Width of robots is calculated using a 1024px width scene as reference
-	const int refWidthScene = 1024;
-	const int refWidth = thread->getActorReferenceWidth();
-	double proportion = (double)refWidth / (double)refWidthScene;
-
-	// If there are lots of execution threads, distribute them in layers
-	int layer = ++idleThreadsCount * refWidth / refWidthScene;
-	idleThreadsLayout->addItem( thread, proportion, zUnitPlaying::cpuCores + 0.1 + layer / 100.0 );
-
-	// Resize idle threads within the idle layout
-	idleThreadsLayout->updateLayoutItem();
-	return thread->animateAppear();
-}
-
 void CpuCores::clearAnimation()
 {
-	// Remove all execution threads from the cores
-	for ( int index = 0; index < cpuCores.count(); ++index )
-		cpuCores[index]->removeThread(true);
-
 	// Remove all execution threads, visible or not
 	for ( int index = 0; index < executionThreads.count(); ++index )
-		if ( executionThreads[index]->isIdle() )
-			executionThreads[index]->animateDisappear(true);
+		executionThreads[index]->terminate();
 
 	// Destroy all threads
-	idleThreadsLayout->removeAllItems(true);
 	executionThreads.clear();
 }
 

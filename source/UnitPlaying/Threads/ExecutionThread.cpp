@@ -11,16 +11,12 @@
 
 #include <QTimer>
 
-// Proportion of the callStackSpacer on top of the robot when it is active/busy (non idle)
-const qreal busyCallStackSpacerProportion = 0.9;
-
-
 ExecutionThread::ExecutionThread(size_t startByte, size_t rowSize, Scene* scene, int id)
 	: LinearLayout(Qt::Vertical)
-	, scene(scene)
 	, id(id)
 	, startByte(startByte)
 	, rowSize(rowSize)
+	, scene(scene)
 {
 	buildExecutionThread();
 }
@@ -32,25 +28,131 @@ void ExecutionThread::buildExecutionThread()
 	// Create an actor (robot) for the execution thread with its line number
 	Q_ASSERT(robot == nullptr);
 	robot = new ExecutionThreadActor(id, scene);
+	robot->setVisible(false);
 
 	// The actor is in the bottom part of the execution thread, almost under the call stack
-	Q_ASSERT(actorLayout == nullptr);
-	actorLayout = new LinearLayout(Qt::Vertical);
 	const qreal zActor = zUnitPlaying::executionThread + 0.2;
-	callStackSpacer = new Spacer();
-	actorLayout->addItem(callStackSpacer, busyCallStackSpacerProportion, zActor);
-	actorLayout->addItem(robot, 1.0 / 3.0, zActor);
+	insertItem(robot, 0.9, 1.0 / 3.0, zActor);
 
-	addItem(actorLayout, 1.0, zActor);
-}
-
-void ExecutionThread::buildCallStack()
-{
 	// Create the object in charge of managing the function calls for this execution thread
 	// No functions are added to the call stack until the execution thread gets updated form GDB
+	// By default the call stack is invisible, until functions are called
 	Q_ASSERT(callStack == nullptr);
+	callStack = new CallStack(startByte, rowSize, zUnitPlaying::stackFrame, scene);
+	callStack->setMargins(0.06, 0.075);
+
+	// Add the call stack to this thread, but keep it invisible
+	addItem( callStack, 1.0, zUnitPlaying::stackFrame );
+	callStack->setVisible(false);
+}
+
+int ExecutionThread::run(CpuCore* cpuCore)
+{
 	Q_ASSERT(cpuCore);
-	callStack = new CallStack(startByte, rowSize, zUnitPlaying::stackFrame, scene, cpuCore->getHeightInRows());
+	Q_ASSERT(cpuCore->getThread() != this);
+	Q_ASSERT(cpuCore->getThread() == nullptr);
+
+	// Detach from the previous area of the scene
+	int duration = detach();
+
+	// Change to active state running on the given cpu core
+	state = threadActive;
+	this->cpuCore = cpuCore;
+
+	// The cpuCore needs to know it is not idle
+	cpuCore->setThread(this);
+
+	// The call stack needs to know the height of the cpu core to raise function calls
+	Q_ASSERT(callStack);
+	callStack->setCpuCoreRows( cpuCore->getHeightInRows() );
+
+	// The actor will be at the bottom of the call stack
+	Q_ASSERT(robot);
+	robot->setStartProportion(0.9);
+
+	// Add this execution thread (both actor and call stack) to the cpu core
+	cpuCore->addItem( this, 1.0, zUnitPlaying::executionThread );
+	cpuCore->updateLayoutItem();
+
+	// Animate appearing of both, actor and call stack
+	robot->setVisible(true);
+	callStack->setVisible(true);
+	duration += animateAppear();
+	return duration;
+}
+
+int ExecutionThread::sleep(LinearLayout* idleThreads, int idleThreadNumber)
+{
+	// Detach from the previous area of the scene
+	int duration = detach();
+
+	// Change to idle state
+	state = threadIdle;
+	this->idleThreads = idleThreads;
+
+	// Width of robots is calculated using a 1024px width scene as reference
+	const int refWidthScene = 1024;
+	const int refWidth = getActorReferenceWidth();
+	double proportion = (double)refWidth / (double)refWidthScene;
+
+	// If there are lots of execution threads, distribute them in layers
+	qreal start = (idleThreadNumber * refWidth + qrand() % refWidth) % refWidthScene;
+	idleThreads->insertItem( this, qreal(start) / refWidthScene, proportion, zUnitPlaying::cpuCores + 0.1 );
+
+	// The space that the call stack released on the top, will be used by the robot
+	Q_ASSERT(robot);
+	robot->setStartProportion(0.0);
+	idleThreads->updateLayoutItem();
+
+	duration += robot->appear();
+	return duration;
+}
+
+int ExecutionThread::terminate()
+{
+	// Detach from the previous area of the scene
+	int duration = detach();
+
+	// ToDo: remove the thread from the scene after the terminate animation is done
+//	this->removeFromScene();
+
+	return duration;
+}
+
+int ExecutionThread::detach()
+{
+	// If already detached, do nothing
+	if ( state == threadNew || state == threadTerminated )
+		return 0;
+
+	// If thread was active, detach the call stack
+	int duration = 0;
+	if ( state == threadActive )
+	{
+		// Detach the actor and the call stack
+		Q_ASSERT(callStack);
+		duration += callStack->animateDisappear();
+
+		// Release the cpu core
+		Q_ASSERT(cpuCore);
+		cpuCore->removeItem(this, false);
+		cpuCore->setThread(nullptr);
+	}
+	else
+	{
+		Q_ASSERT(idleThreads);
+		idleThreads->removeItem(this, false);
+	}
+
+	// Detach the actor from the cpu or idle zone
+	duration += robot->disappear();
+
+	// Thread returns to the new state
+	state = threadNew;
+	cpuCore = nullptr;
+	idleThreads = nullptr;
+
+	return duration;
 }
 
 int ExecutionThread::animateAppear()
@@ -127,17 +229,6 @@ bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode, int& max
 	return filenameUpdateResult == newFileInPlayerSolution || lineNumberUpdated;
 }
 
-void ExecutionThread::setIdle(bool idle)
-{
-	this->idle = idle;
-
-	Q_ASSERT(robot);
-	callStackSpacer->setProportion( idle ? 0.0 : busyCallStackSpacerProportion );
-
-	// Caller must call updateLayoutItem when this thread is finished to be setup as idle or not
-//	updateLayoutItem();
-}
-
 const QColor& ExecutionThread::getHighlightColor() const
 {
 	Q_ASSERT(robot);
@@ -148,13 +239,6 @@ qreal ExecutionThread::getActorReferenceWidth() const
 {
 	Q_ASSERT(robot);
 	return robot->boundingRect().width();
-}
-
-void ExecutionThread::setCpuCore(CpuCore* cpuCore)
-{
-	this->cpuCore = cpuCore;
-	if ( callStack == nullptr )
-		buildCallStack();
 }
 
 ExecutionThread::FilenameUpdateResult ExecutionThread::updateFilename(const QString& updatedFilename, int& maxDuration)
@@ -199,7 +283,7 @@ bool ExecutionThread::updateLineNumber(int updatedLineNumber, int& maxDuration)
 bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
 {
 	// The ExecutionThread must be active (must have an assigned CPU core)
-	if ( isIdle() )
+	if ( ! isActive() )
 	{
 		// ToDo: If execution thread is idle in visualization (does not have an assigned CPU core),
 		// it should be stopped at inferior through GDB, to avoid it generating more responses.

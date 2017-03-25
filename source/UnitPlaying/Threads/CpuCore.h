@@ -37,16 +37,8 @@ class CpuCore : public QObject, public MemorySegment
 	inline bool isIdle() const { return executionThread == nullptr; }
 	/// Give access to the execution thread running on this CPU core, nullptr if idle
 	inline ExecutionThread* getThread() { return executionThread; }
-	/// Assigns an execution thread to be run on this CPU thread. The execution thread is shown
-	/// on the graphical interface, reprsented as a robot
-	/// @return the duration in milliseconds of the animation
-	int runThread(ExecutionThread* thread);
-	/// Removes the current execution thread from this CpuCore
-	/// The execution thread object keeps alive
-	/// @param removeThreadCallStack Send true to remove the call stack of current thread being run
-	/// in this cpu core, when a thread is killed or animation is stopped
-	/// @return the duration in milliseconds of the animation, -1 if no thread was being run
-	int removeThread(bool removeThreadCallStack);
+	/// Assigns an execution thread to be run on this CPU thread. No graphical effect is shown
+	inline void setThread(ExecutionThread* thread) { this->executionThread = thread; }
 
   public slots:
 	/// Animates the memory interface to open

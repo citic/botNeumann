@@ -4,13 +4,11 @@
 #include "Scene.h"
 #include "VisualizationSpeed.h"
 
-CallStack::CallStack(size_t startByte, size_t rowSize, qreal zValue, QGraphicsItem* graphicsParentItem, qreal cpuCoreRows)
+CallStack::CallStack(size_t startByte, size_t rowSize, qreal zValue, QGraphicsItem* graphicsParentItem)
 	: RectLayoutItem(Qt::Vertical, zValue, graphicsParentItem)
 	, startByte(startByte)
 	, rowSize(rowSize)
-	, cpuCoreRows(cpuCoreRows)
 {
-	Q_ASSERT(cpuCoreRows > 0.0);
 }
 
 int CallStack::callFunction(const GdbItemTree& tree)
@@ -35,6 +33,7 @@ int CallStack::callFunction(const GdbItemTree& tree)
 
 	// Raise the memory roof to the CPU core opened door, to make the roof visible only.
 	// Arguments and variables will be made visible next.
+	Q_ASSERT(cpuCoreRows > 0.0);
 	qreal finalPercent = 1.0 - functionCall->getHeightInRows() / cpuCoreRows;
 	int duration = functionCall->animateMoveTo( finalPercent, /* functionCall->getHeightInRows() * */ 1000, 1000 );
 
