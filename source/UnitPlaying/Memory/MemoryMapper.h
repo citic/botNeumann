@@ -65,10 +65,18 @@ class MemoryMapper : public QObject
 	/// is allocated, a visualization address is assigned and it appears in the visualization
 	/// @return A pointer to the watch object created and added to the hash table, nullptr on error
 	MemoryAllocation* createWatch(const QString& name, const QString& watchName, AllocationSegment segment, bool shouldAllocate);
+	/// Create a local variable mapping for some variable on stack segment. Returns a pointer to
+	/// the mapping. It will be deleted by the MemoryMapper
+	MemoryAllocation* createLocal(const QString& name, const QString& type, const QString& value, const QString& watchName);
 	/// Allocate the given variable in the respective segment
 	/// @return true if the variable was allocated in the segment, false if there is no enough space
 	/// and a segment overflow should be animated
 	bool allocate(MemoryAllocation* memoryAllocation);
+
+  protected:
+	/// Adds a memory mapping. Gets the ramining information from GDB
+	/// @return true on success, false otherwise
+	bool addMapping(MemoryAllocation* watch);
 };
 
 #endif // MEMORYMAPPER_H

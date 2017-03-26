@@ -14,9 +14,12 @@ CallStack::CallStack(size_t startByte, size_t rowSize, qreal zValue, QGraphicsIt
 
 int CallStack::callFunction(const GdbItemTree& tree)
 {
+	// We start the count of watches for a new function call
+	watchCount = 0;
+
 	// Parameters to build a memory frame:
 	QGraphicsItem* parent = this;
-	size_t rowCount = 0;
+	size_t rowCount = 1;
 	const QString& functionName = tree.findNodeTextValue("/frame/func") + "()";
 	bool withGarbage = true;
 	bool withLegs = true;
@@ -137,17 +140,28 @@ int CallStack::createParameters(const GdbItemTree& tree)
 		Q_ASSERT(argumentNode);
 
 		// Get the fields of the argument
-		const QString& argumentName = argumentNode->findTextValue("name");
-		const QString& argumentType = argumentNode->findTextValue("type");
-		const QString& argumentValue = argumentNode->findTextValue("value");
+		const QString& name = argumentNode->findTextValue("name");
+		const QString& type = argumentNode->findTextValue("type");
+		const QString& value = argumentNode->findTextValue("value");
+		qCCritical(logTemporary()) << "CallStack::createParameters() name:" << name << "type:" << type << "value:" << value;
 
 		// Ignore variables that begin with double underscore (__). These variables are introduced
 		// in object code by the programming language standard or compilers. Eg: __PRETTY_FUNCTION__
-		if ( argumentName.startsWith("__") )
+		if ( name.startsWith("__") )
 			continue;
 
+		// Experimental: we set a watch also for local variables
+		int threadId = 1;
+		const QString& watchName = QString("bn_lv_%1_%2_%3").arg(threadId).arg(stackFrames.count()).arg(++watchCount);
+
+		// Create a mapping
 		Q_ASSERT( MemoryMapper::getInstance() );
-		qCCritical(logTemporary()) << "CallStack::createParameters() name:" << argumentName << "type:" << argumentType << "value:" << argumentValue;
+		MemoryAllocation* variable = MemoryMapper::getInstance()->createLocal(name, type, value, watchName);
+
+		// Finally allocate a graphical variable in the stack frame
+		Q_ASSERT(variable);
+		Q_ASSERT(stackFrames.count() > 0);
+		stackFrames[ stackFrames.count() - 1 ]->allocate(variable);
 	}
 
 	return 0;

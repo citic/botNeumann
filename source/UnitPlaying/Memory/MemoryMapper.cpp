@@ -31,31 +31,28 @@ MemoryAllocation* MemoryMapper::createWatch(const QString& name, const QString& 
 	watch->name = name;
 	watch->watchName = watchName;
 
-	// Add the watch to the maps
-	mapNameMemoryAllocation.insert( watch->getId(), watch );
-
-	GdbItemTree resultWatch;
-	const QString& command = QString("-var-create %1 @ %2").arg(watchName).arg(name);
-	if ( debuggerCall->sendGdbCommand(command, visMemoryMapper, &resultWatch) == GDB_ERROR )
-	{
-		qCCritical(logVisualizator).noquote() << "Failed to set watch for" << name;
-		return nullptr;
-	}
-
-	// Update the watch from GDB's tree result
-	if ( ! watch->loadFromGdbVariableObject(resultWatch) )
-	{
-		qCCritical(logApplication) << "Invalid watch result:" << resultWatch.buildDescription();
-		return nullptr;
-	}
-
-	qCDebug(logApplication) << "Watch created:" << watch->getId() << "referring to" << watch->name;
-	if ( watch->updateMissingFields(debuggerCall) == false )
-		return nullptr;
+	// Fill the missing data
+	addMapping(watch);
 
 	// The variable was updated, we can now allocate it in the visualization segments
 	if ( shouldAllocate )
 		allocate(watch);
+
+	// Success
+	return watch;
+}
+
+MemoryAllocation* MemoryMapper::createLocal(const QString& name, const QString& type, const QString& value, const QString& watchName)
+{
+	// Create a memory block for the watch and load it from the tree
+	MemoryAllocation* watch = new MemoryAllocation(AllocationSegment::stack);
+	watch->name = name;
+	watch->watchName = watchName;
+	watch->dataTypeStr = type;
+	watch->value = value;
+
+	// Fill the missing data
+	addMapping(watch);
 
 	// Success
 	return watch;
@@ -94,4 +91,31 @@ bool MemoryMapper::allocate(MemoryAllocation* memoryAllocation)
 	}
 
 	return false;
+}
+
+bool MemoryMapper::addMapping(MemoryAllocation* watch)
+{
+	// Add the watch to the maps
+	mapNameMemoryAllocation.insert( watch->getId(), watch );
+
+	GdbItemTree resultWatch;
+	const QString& command = QString("-var-create %1 @ %2").arg(watch->watchName).arg(watch->name);
+	if ( debuggerCall->sendGdbCommand(command, visMemoryMapper, &resultWatch) == GDB_ERROR )
+	{
+		qCCritical(logVisualizator).noquote() << "Failed to set watch for" << watch->name;
+		return false;
+	}
+
+	// Update the watch from GDB's tree result
+	if ( ! watch->loadFromGdbVariableObject(resultWatch) )
+	{
+		qCCritical(logApplication) << "Invalid watch result:" << resultWatch.buildDescription();
+		return false;
+	}
+
+	qCDebug(logApplication) << "Watch created:" << watch->getId() << "referring to" << watch->name;
+	if ( watch->updateMissingFields(debuggerCall) == false )
+		return false;
+
+	return true;
 }
