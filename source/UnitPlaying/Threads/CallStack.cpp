@@ -140,6 +140,11 @@ int CallStack::createParameters(const GdbItemTree& tree)
 		const QString& argumentType = argumentNode->findTextValue("type");
 		const QString& argumentValue = argumentNode->findTextValue("value");
 
+		// Ignore variables that begin with double underscore (__). These variables are introduced
+		// in object code by the programming language standard or compilers. Eg: __PRETTY_FUNCTION__
+		if ( argumentName.startsWith("__") )
+			continue;
+
 		qCCritical(logTemporary()) << "CallStack::createParameters() name:" << argumentName << "type:" << argumentType << "value:" << argumentValue;
 	}
 
