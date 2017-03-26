@@ -47,6 +47,8 @@ class CallStack : public RectLayoutItem
 	/// Animate the entire fame stack diving into the basement
 	/// @see animateAppear()
 	int animateDisappear(int initialDelay = 0);
+	/// Create parameters in the top-most function call
+	int createParameters(const GdbItemTree& tree);
 };
 
 #endif // CALLSTACK_H

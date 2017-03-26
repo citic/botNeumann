@@ -152,6 +152,8 @@ class ExecutionThread : public LinearLayout
 	bool updateLocation(const GdbTreeNode* threadNode);
 	/// Updates the callStackDepth integer doing an inquiry to the debugger
 	bool updateCallStackDepth(GdbCall* debuggerCall);
+	/// Animate parameter passing to the new function call
+	int passParameters(GdbCall* debuggerCall);
 };
 
 #endif // EXECUTIONTHREAD_H

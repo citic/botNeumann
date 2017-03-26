@@ -89,3 +89,59 @@ int CallStack::animateDisappear(int initialDelay)
 
 	return initialDelay + maxDuration;
 }
+
+#include "LogManager.h"
+int CallStack::createParameters(const GdbItemTree& tree)
+{
+	// Example of GDB response to `-stack-list-arguments 2 0 0`
+	/*
+		^done,
+		stack-args=
+		[
+			frame=
+			{
+				level="0",
+				args=
+				[
+					{
+						name="this",
+						type="InputArgument * const",
+						value="0x60b580 <global_program_name>"
+					},
+					{
+						name="number",
+						type="ull",
+						value="0"
+					},
+					{
+						name="value",
+						type="const char *",
+						value="0x406dc6 \"all_inclusive\""
+					}
+				]
+			}
+		]
+		(gdb)
+	*/
+
+	// Get the array of arguments from the node tree
+	const GdbTreeNode* argumentsNode = tree.findNode("/stack-args/#1/args");
+	Q_ASSERT( argumentsNode );
+
+	// For each argument
+	for ( int argIndex = 0; argIndex < argumentsNode->getChildCount(); ++argIndex )
+	{
+		// Get the argument node
+		const GdbTreeNode* argumentNode = argumentsNode->getChild(argIndex);
+		Q_ASSERT(argumentNode);
+
+		// Get the fields of the argument
+		const QString& argumentName = argumentNode->findTextValue("name");
+		const QString& argumentType = argumentNode->findTextValue("type");
+		const QString& argumentValue = argumentNode->findTextValue("value");
+
+		qCCritical(logTemporary()) << "CallStack::createParameters() name:" << argumentName << "type:" << argumentType << "value:" << argumentValue;
+	}
+
+	return 0;
+}

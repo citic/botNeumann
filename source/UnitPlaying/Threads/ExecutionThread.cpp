@@ -277,10 +277,10 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, GdbCall* debu
 	duration += callStack->callFunction(tree);
 
 	// Animate parameter passing
-//	duration += callStack->passParameters();
+	duration += passParameters(debuggerCall);
 
 	// Animate creation of local variables
-//	duration += callStack->createLocalVariables();
+//	duration += createLocalVariables();
 
 	// Close the interface after the function is finally called
 	QTimer::singleShot( duration - 750, cpuCore, SLOT(closeMemoryInterface()) );
@@ -296,7 +296,7 @@ bool ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
 {
 	// Get the number of functions currently being executed by this thread
 	GdbItemTree depthResponse;
-	if ( debuggerCall->sendGdbCommand(QString("-stack-info-depth"), visExecutionLoop, &depthResponse) == GDB_ERROR )
+	if ( debuggerCall->sendGdbCommand("-stack-info-depth", visExecutionLoop, &depthResponse) == GDB_ERROR )
 		return false;
 
 	// GDB response seems:
@@ -310,4 +310,17 @@ bool ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
 
 	qCCritical(logTemporary, "ExecutionThread[%d]::callStackDepth=%d", id, callStackDepth);
 	return true;
+}
+
+int ExecutionThread::passParameters(GdbCall* debuggerCall)
+{
+	// Get the list of arguments
+	// The "2" argument asks GDB to include name, type and value for each parameter
+	// The "0 0" argument is for selecting top frame only: /frame/level == 0
+	GdbItemTree gdbResponse;
+	if ( debuggerCall->sendGdbCommand("-stack-list-arguments 2 0 0", visExecutionLoop, &gdbResponse) == GDB_ERROR )
+		return -1;
+
+	// Parameter passing is done by the callStack object
+	return callStack->createParameters(gdbResponse);
 }
