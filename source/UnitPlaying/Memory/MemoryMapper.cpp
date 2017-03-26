@@ -6,16 +6,22 @@
 #include "LogManager.h"
 #include "VisualizationContext.h"
 
+/*static*/ MemoryMapper* MemoryMapper::instance = nullptr;
+
 MemoryMapper::MemoryMapper(GdbCall* debuggerCall, QObject* parent)
 	: QObject(parent)
 	, debuggerCall(debuggerCall)
 {
+	Q_ASSERT(instance == nullptr);
+	instance = this;
 }
 
 MemoryMapper::~MemoryMapper()
 {
 	for ( QHash<QString, MemoryAllocation*>::Iterator itr = mapNameMemoryAllocation.begin(); itr != mapNameMemoryAllocation.end(); ++itr )
 		delete itr.value();
+
+	instance = nullptr;
 }
 
 MemoryAllocation* MemoryMapper::createWatch(const QString& name, const QString& watchName, AllocationSegment segment, bool shouldAllocate)
@@ -52,7 +58,7 @@ MemoryAllocation* MemoryMapper::createWatch(const QString& name, const QString& 
 		allocate(watch);
 
 	// Success
-		return watch;
+	return watch;
 }
 
 bool MemoryMapper::allocate(MemoryAllocation* memoryAllocation)

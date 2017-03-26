@@ -26,6 +26,8 @@ class MemoryMapper : public QObject
 //	QHash<size_t, MemoryAllocation*> mapInferiorAddressMemoryAllocation;
 
   protected: // Other objects
+	/// Keep a pointer to the unique instance of this object while it is alive
+	static MemoryMapper* instance;
 	/// Pointer to the GDB communication object. The MemoryMapper requires to access GDB in order
 	/// to get more information about variables and watches
 	GdbCall* debuggerCall = nullptr;
@@ -45,6 +47,8 @@ class MemoryMapper : public QObject
 	explicit MemoryMapper(GdbCall* debuggerCall, QObject* parent = nullptr);
 	/// Destructor
 	~MemoryMapper();
+	/// Get access to the unique instance of this object while it is alive
+	static inline MemoryMapper* getInstance() { return instance; }
 	/// Set the CodeSegment for later use
 	inline void setCodeSegment(CodeSegment* codeSegment) { this->codeSegment = codeSegment; }
 	/// Set the HeapSegment for later use

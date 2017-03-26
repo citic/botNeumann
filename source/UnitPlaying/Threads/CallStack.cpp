@@ -1,6 +1,7 @@
 #include "CallStack.h"
 #include "GdbItemTree.h"
 #include "MemoryFrame.h"
+#include "MemoryMapper.h"
 #include "Scene.h"
 #include "VisualizationSpeed.h"
 
@@ -145,6 +146,7 @@ int CallStack::createParameters(const GdbItemTree& tree)
 		if ( argumentName.startsWith("__") )
 			continue;
 
+		Q_ASSERT( MemoryMapper::getInstance() );
 		qCCritical(logTemporary()) << "CallStack::createParameters() name:" << argumentName << "type:" << argumentType << "value:" << argumentValue;
 	}
 
