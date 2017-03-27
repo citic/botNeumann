@@ -1,5 +1,6 @@
 #include "CallStack.h"
 #include "GdbItemTree.h"
+#include "LogManager.h"
 #include "MemoryFrame.h"
 #include "MemoryMapper.h"
 #include "Scene.h"
@@ -19,7 +20,7 @@ int CallStack::callFunction(const GdbItemTree& tree)
 
 	// Parameters to build a memory frame:
 	QGraphicsItem* parent = this;
-	size_t rowCount = 1;
+	size_t rowCount = 2;
 	const QString& functionName = tree.findNodeTextValue("/frame/func") + "()";
 	bool withGarbage = true;
 	bool withLegs = true;
@@ -94,55 +95,41 @@ int CallStack::animateDisappear(int initialDelay)
 	return initialDelay + maxDuration;
 }
 
-#include "LogManager.h"
-int CallStack::createParameters(const GdbItemTree& tree)
+int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray)
 {
 	// Example of GDB response to `-stack-list-arguments 2 0 0`
 	/*
-		^done,
-		stack-args=
+		args=
 		[
-			frame=
 			{
-				level="0",
-				args=
-				[
-					{
-						name="this",
-						type="InputArgument * const",
-						value="0x60b580 <global_program_name>"
-					},
-					{
-						name="number",
-						type="ull",
-						value="0"
-					},
-					{
-						name="value",
-						type="const char *",
-						value="0x406dc6 \"all_inclusive\""
-					}
-				]
+				name="this",
+				type="InputArgument * const",
+				value="0x60b580 <global_program_name>"
+			},
+			{
+				name="number",
+				type="ull",
+				value="0"
+			},
+			{
+				name="value",
+				type="const char *",
+				value="0x406dc6 \"all_inclusive\""
 			}
 		]
-		(gdb)
 	*/
 
-	// Get the array of arguments from the node tree
-	const GdbTreeNode* argumentsNode = tree.findNode("/stack-args/#1/args");
-	Q_ASSERT( argumentsNode );
-
-	// For each argument
-	for ( int argIndex = 0; argIndex < argumentsNode->getChildCount(); ++argIndex )
+	// For each variable
+	for ( int varIndex = 0; varIndex < gdbVariableArray->getChildCount(); ++varIndex )
 	{
-		// Get the argument node
-		const GdbTreeNode* argumentNode = argumentsNode->getChild(argIndex);
-		Q_ASSERT(argumentNode);
+		// Get the argument or local variable node
+		const GdbTreeNode* variableNode = gdbVariableArray->getChild(varIndex);
+		Q_ASSERT(variableNode);
 
-		// Get the fields of the argument
-		const QString& name = argumentNode->findTextValue("name");
-		const QString& type = argumentNode->findTextValue("type");
-		const QString& value = argumentNode->findTextValue("value");
+		// Get the fields of the variable
+		const QString& name = variableNode->findTextValue("name");
+		const QString& type = variableNode->findTextValue("type");
+		const QString& value = variableNode->findTextValue("value");
 		qCCritical(logTemporary()) << "CallStack::createParameters() name:" << name << "type:" << type << "value:" << value;
 
 		// Ignore variables that begin with double underscore (__). These variables are introduced

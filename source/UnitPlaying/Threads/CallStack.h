@@ -6,6 +6,7 @@
 #include <QStack>
 
 class GdbItemTree;
+class GdbTreeNode;
 class MemoryFrame;
 
 /**
@@ -50,7 +51,7 @@ class CallStack : public RectLayoutItem
 	/// @see animateAppear()
 	int animateDisappear(int initialDelay = 0);
 	/// Create parameters in the top-most function call
-	int createParameters(const GdbItemTree& tree);
+	int createLocalVariables(const GdbTreeNode* gdbVariableArray);
 };
 
 #endif // CALLSTACK_H

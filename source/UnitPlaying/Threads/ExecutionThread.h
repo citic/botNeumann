@@ -153,7 +153,7 @@ class ExecutionThread : public LinearLayout
 	/// Updates the callStackDepth integer doing an inquiry to the debugger
 	bool updateCallStackDepth(GdbCall* debuggerCall);
 	/// Animate parameter passing to the new function call
-	int passParameters(GdbCall* debuggerCall);
+	int createLocalVariables(GdbCall* debuggerCall, const QString& gdbCommand, const QString& gdbRootNodeName);
 };
 
 #endif // EXECUTIONTHREAD_H

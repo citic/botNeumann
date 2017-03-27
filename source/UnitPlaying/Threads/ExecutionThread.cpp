@@ -276,14 +276,14 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, GdbCall* debu
 	functionName = tree.findNodeTextValue("/frame/func");
 	duration += callStack->callFunction(tree);
 
-	// Animate parameter passing
-	duration += passParameters(debuggerCall);
-
-	// Animate creation of local variables
-//	duration += createLocalVariables();
+	// Animate parameter passing and creation of local variables
+	duration += createLocalVariables(debuggerCall, "-stack-list-arguments 2 0 0", "stack-args");
+	duration += createLocalVariables(debuggerCall, "-stack-list-locals 2", "locals");
+	// The two previous gdb calls can be combinated in the following one:
+	// duration += createLocalVariables(debuggerCall, "-stack-list-variables 2", "variables");
 
 	// Close the interface after the function is finally called
-	QTimer::singleShot( duration - 750, cpuCore, SLOT(closeMemoryInterface()) );
+	QTimer::singleShot( duration, cpuCore, SLOT(closeMemoryInterface()) );
 
 	// Tell caller the duration of the entire animation
 	if ( duration > maxDuration )
@@ -312,15 +312,55 @@ bool ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
 	return true;
 }
 
-int ExecutionThread::passParameters(GdbCall* debuggerCall)
+int ExecutionThread::createLocalVariables(GdbCall* debuggerCall, const QString& gdbCommand, const QString& gdbRootNodeName)
 {
+	// Example of GDB response to `-stack-list-arguments 2 0 0`
+	/*
+		^done,
+		stack-args=
+		[
+			frame=
+			{
+				level="0",
+				args=
+				[
+					{
+						name="this",
+						type="InputArgument * const",
+						value="0x60b580 <global_program_name>"
+					},
+					{
+						name="number",
+						type="ull",
+						value="0"
+					},
+					{
+						name="value",
+						type="const char *",
+						value="0x406dc6 \"all_inclusive\""
+					}
+				]
+			}
+		]
+		(gdb)
+	*/
+
 	// Get the list of arguments
 	// The "2" argument asks GDB to include name, type and value for each parameter
 	// The "0 0" argument is for selecting top frame only: /frame/level == 0
-	GdbItemTree gdbResponse;
-	if ( debuggerCall->sendGdbCommand("-stack-list-arguments 2 0 0", visExecutionLoop, &gdbResponse) == GDB_ERROR )
+	GdbItemTree gdbResponseTree;
+	if ( debuggerCall->sendGdbCommand(gdbCommand, visExecutionLoop, &gdbResponseTree) == GDB_ERROR )
 		return -1;
 
+	// Get the array of variables
+	const GdbTreeNode* gdbVariableArray = gdbResponseTree.findNode(gdbRootNodeName);
+	Q_ASSERT(gdbVariableArray);
+
+	// If gdb produced a frame node, the list of variables is inside it
+	const GdbTreeNode* argFrame = gdbVariableArray->findNode("#1/args");
+	if ( argFrame )
+		gdbVariableArray = argFrame;
+
 	// Parameter passing is done by the callStack object
-	return callStack->createParameters(gdbResponse);
+	return callStack->createLocalVariables(gdbVariableArray);
 }
