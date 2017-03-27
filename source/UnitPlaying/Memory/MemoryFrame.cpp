@@ -230,21 +230,35 @@ bool MemoryFrame::grow(int extraRows)
 	rowCount = memoryRows.count();
 
 	// We have added more rows, we have to update the proportions of all rows
-	memoryTop->setProportion( memoryRoofRows / getHeightInRows() );
-	for ( int index = 0; index < memoryRows.count(); ++index )
-		memoryRows[index]->setProportion( 1.0 / getHeightInRows() );
-	if ( legsLayout )
-	{
-		qreal legsProportion = memoryLegsRows / getHeightInRows();
-		//legsLayout->setStartProportion( 1.0 - legsProportion );
-		legsLayout->setProportion( legsProportion );
-	}
-
-
-	this->updateLayoutItem();
+	updateRowProportions();
 
 	// Done
 	return true;
+}
+
+// Utility function to update the start and proportion of one row, and returns the proportion
+qreal updateRowProportion(LayoutItem* item, qreal start, qreal proportion)
+{
+	item->setStartProportion(start);
+	item->setProportion(proportion);
+	return proportion;
+}
+
+void MemoryFrame::updateRowProportions()
+{
+	// Each row is below the previous ones. We accumulate proportion in this variable
+	qreal accProportion = 0.0;
+
+	// Memory top
+	accProportion += updateRowProportion( memoryTop, accProportion, memoryRoofRows / getHeightInRows() );
+
+	// Each memory row
+	for ( int index = 0; index < memoryRows.count(); ++index )
+		accProportion += updateRowProportion( memoryRows[index], accProportion, 1.0 / getHeightInRows() );
+
+	// Legs, if any
+	if ( legsLayout )
+		accProportion += updateRowProportion(legsLayout, accProportion, memoryLegsRows / getHeightInRows() );
 }
 
 void MemoryFrame::printAllocationQueue()

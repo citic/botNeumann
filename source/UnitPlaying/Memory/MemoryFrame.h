@@ -100,6 +100,8 @@ class MemoryFrame : public LinearLayoutActor
 	/// Grow this memory frame in the given amount of rows.
 	/// @return true if the frame grew, false if there is not enough memory
 	bool grow(int extraRows);
+	/// Adjust the proportions of the rows when the amount of rows have changed (grown)
+	void updateRowProportions();
 	/// Remove free fragments from memory
 	void removeMemoryAllocations();
 	/// For debugging purposes
