@@ -22,6 +22,8 @@ class CallStack : public RectLayoutItem
   protected:
 	/// The memory address of the first byte assigned for stack memory to this execution thread
 	size_t startByte = 0;
+	/// The maximum size in bytes that the call stack can grow
+	size_t maxSize = 0;
 	/// The size in bytes of each memory row of the stack segment
 	size_t rowSize = 0;
 	/// The stack of frames or function calls
@@ -33,7 +35,7 @@ class CallStack : public RectLayoutItem
 
   public:
 	/// Constructor
-	CallStack(size_t startByte, size_t rowSize, qreal zValue, QGraphicsItem* graphicsParentItem);
+	CallStack(size_t startByte, size_t rowSize, size_t maxSize, qreal zValue, QGraphicsItem* graphicsParentItem);
 	/// Set the rows of the CPU where this call stack should be displayed
 	inline void setCpuCoreRows(qreal cpuCoreRows) { this->cpuCoreRows = cpuCoreRows; }
 	/// Animate a function call

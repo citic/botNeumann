@@ -120,9 +120,10 @@ int CpuCores::createThread(int id)
 	// ToDo: The unit's memory distribution model assigns memory to cores, not threads
 	size_t startByte = unit.getCoreStartByte( executionThreads.count() );
 	size_t rowSize = unit.getStackSegmentVisibleSize() / unit.getStackSegmentVisibleRows() / 2;
+	size_t maxSize = unit.getCoreEntireSize();
 
 	// Create an execution thread, that is represeted by a robot with racks
-	ExecutionThread* thread = new ExecutionThread(startByte, rowSize, scene, id);
+	ExecutionThread* thread = new ExecutionThread(startByte, rowSize, maxSize, scene, id);
 	executionThreads.append(thread);
 
 	// If there is an idle CPU core, assign the new execution thread to it. Otherwise the thread

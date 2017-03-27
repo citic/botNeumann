@@ -9,21 +9,25 @@
 const double memoryRoofRows = 0.5;
 const double memoryLegsRows = 1.0 / 3.0;
 
-MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs)
+MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs, size_t maxSize)
 	: LinearLayoutActor(Qt::Vertical)
 	, graphicsParentItem(graphicsParentItem)
+	, zValue(zValue)
 	, rowCount(rowCount)
 	, startByte(startByte)
 	, rowSize(rowSize)
+	, maxSize(maxSize)
 	, withLegs(withLegs)
 {
-	// Initially there is just one big fragment of free memory
-	MemoryAllocation* freeFragment = new MemoryAllocation( AllocationSegment::free, getSize(), startByte );
+	// Initially there is just one big fragment of free memory. We select the size for the free
+	// stack space among the real size between the actual size and the allowed max size
+	size_t freeSize = qMax( getSize(), maxSize );
+	MemoryAllocation* freeFragment = new MemoryAllocation( AllocationSegment::free, freeSize, startByte );
 	freeFragment->hasGarbage = withGarbage;
 	memoryAllocations.append(freeFragment);
 
 	// Draw the memory frame in the visualization
-	buildMemoryFrame(topLabel, zValue);
+	buildMemoryFrame(topLabel);
 
 	// Distribute the free fragment to all the memory rows. This is required in order to draw
 	// initial garbage if this segment has it by default
@@ -36,7 +40,7 @@ MemoryFrame::~MemoryFrame()
 	removeMemoryAllocations();
 }
 
-void MemoryFrame::buildMemoryFrame(const QString& topLabel, qreal zValue)
+void MemoryFrame::buildMemoryFrame(const QString& topLabel)
 {
 	// Create the memory roof
 	Q_ASSERT(graphicsParentItem);
@@ -44,25 +48,36 @@ void MemoryFrame::buildMemoryFrame(const QString& topLabel, qreal zValue)
 	memoryTop = new MemoryTop(rowSize, topLabel, graphicsParentItem, zValue);
 	addItem(memoryTop, memoryRoofRows / getHeightInRows(), zValue);
 
-	// Create the memory rows
-	size_t rowStartByte = startByte;
-	for (size_t index = 0; index < rowCount; ++index)
-	{
-		MemoryRow* memoryRow = new MemoryRow(rowStartByte, rowSize, graphicsParentItem, zValue, memoryAllocations.first()->hasGarbage);
-		addItem(memoryRow, 1.0 / getHeightInRows(), zValue);
-		memoryRows.append( memoryRow );
-		rowStartByte += rowSize;
-	}
+	// Create the initial memory rows
+	createRows(rowCount, startByte);
 
 	// If asked, create memory legs
 	if ( withLegs )
 		buildMemoryLegs(zValue);
 }
 
+bool MemoryFrame::createRows(size_t rowCount, size_t fromByte)
+{
+	// The free memory allocation tells us if all rows shall have garbage
+	bool withGarbage = memoryAllocations.first()->hasGarbage;
+
+	// Create each memory row
+	for ( size_t index = 0; index < rowCount; ++index )
+	{
+		MemoryRow* memoryRow = new MemoryRow(fromByte, rowSize, graphicsParentItem, zValue, withGarbage);
+		addItem(memoryRow, 1.0 / getHeightInRows(), zValue);
+		memoryRows.append( memoryRow );
+		fromByte += rowSize;
+	}
+
+	return true;
+}
+
 void MemoryFrame::buildMemoryLegs(qreal zValue)
 {
 	// We need a layout to place the legs vertically
-	LinearLayout* legsLayout = new LinearLayout(Qt::Horizontal);
+	Q_ASSERT(legsLayout == nullptr);
+	legsLayout = new LinearLayout(Qt::Horizontal);
 	Prop* leftLegs = new Prop("up_memory_row_base_left1", graphicsParentItem);
 	Prop* rightLegs = new Prop("up_memory_row_base_right1", graphicsParentItem);
 
@@ -166,9 +181,20 @@ bool MemoryFrame::distributeVariablesIntoMemoryRows()
 		// For convenience
 		MemoryAllocation* variable = *variableIterator;
 
-		// We must allocate a variable, if all rows were filled, we have a segment overflow
+		// We must allocate a variable, if all rows were filled
 		if ( currentRow >= memoryRows.count() )
-			return false;
+		{
+			// All the memory rows are filled, but if the memory frame can grow, create more rows
+			// ToDo: Only a piece of the variable may be needed to allocate, not the entire variable
+			int requiredRows = (qMax(variable->size, 1ll) + (rowSize - 1)) / rowSize;
+
+			// If it is unable to grow more, we have a segment overflow
+			if ( ! grow(requiredRows) )
+				return false;
+
+			// Let's check there is a memory row to continue
+			Q_ASSERT( currentRow < memoryRows.count() );
+		}
 
 		// If the current row did not accept the variable, or accepted it partially
 		if ( memoryRows[currentRow]->allocate(variable) == false )
@@ -183,6 +209,41 @@ bool MemoryFrame::distributeVariablesIntoMemoryRows()
 	}
 
 	// All variables were distributed in the available rows
+	return true;
+}
+
+bool MemoryFrame::grow(int extraRows)
+{
+	// If there is enough memory
+	Q_ASSERT(extraRows > 0);
+	if ( getSize() + extraRows * rowSize > maxSize )
+		return false;
+
+	// The new memory rows will start after the last memory row or the beginning there isn't any
+	size_t fromByte = memoryRows.count() > 0 ? memoryRows[memoryRows.count() - 1]->getLastByte() : startByte;
+
+	// There is enough memory, create the rows
+	if ( ! createRows(extraRows, fromByte) )
+		return false;
+
+	// The number of rows grew
+	rowCount = memoryRows.count();
+
+	// We have added more rows, we have to update the proportions of all rows
+	memoryTop->setProportion( memoryRoofRows / getHeightInRows() );
+	for ( int index = 0; index < memoryRows.count(); ++index )
+		memoryRows[index]->setProportion( 1.0 / getHeightInRows() );
+	if ( legsLayout )
+	{
+		qreal legsProportion = memoryLegsRows / getHeightInRows();
+		//legsLayout->setStartProportion( 1.0 - legsProportion );
+		legsLayout->setProportion( legsProportion );
+	}
+
+
+	this->updateLayoutItem();
+
+	// Done
 	return true;
 }
 

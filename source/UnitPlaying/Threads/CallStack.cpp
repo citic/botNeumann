@@ -6,9 +6,10 @@
 #include "Scene.h"
 #include "VisualizationSpeed.h"
 
-CallStack::CallStack(size_t startByte, size_t rowSize, qreal zValue, QGraphicsItem* graphicsParentItem)
+CallStack::CallStack(size_t startByte, size_t rowSize, size_t maxSize, qreal zValue, QGraphicsItem* graphicsParentItem)
 	: RectLayoutItem(Qt::Vertical, zValue, graphicsParentItem)
 	, startByte(startByte)
+	, maxSize(maxSize)
 	, rowSize(rowSize)
 {
 }
@@ -20,14 +21,14 @@ int CallStack::callFunction(const GdbItemTree& tree)
 
 	// Parameters to build a memory frame:
 	QGraphicsItem* parent = this;
-	size_t rowCount = 2;
+	size_t rowCount = 0;
 	const QString& functionName = tree.findNodeTextValue("/frame/func") + "()";
 	bool withGarbage = true;
 	bool withLegs = true;
 
 	// Build a memory frame for the new stack frame with the function name (/frame/func) in the roof
 	// By default, memory frames are filled of garbage.
-	MemoryFrame* functionCall = new MemoryFrame(parent, rowCount, startByte, rowSize, functionName, zValue, withGarbage, withLegs);
+	MemoryFrame* functionCall = new MemoryFrame(parent, rowCount, startByte, rowSize, functionName, zValue, withGarbage, withLegs, maxSize);
 
 	// Add the functionCall to the list
 	stackFrames.append(functionCall);

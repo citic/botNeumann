@@ -54,6 +54,8 @@ class ExecutionThread : public LinearLayout
 	size_t startByte = 0;
 	/// The size in bytes of each memory row of the stack segment
 	size_t rowSize = 0;
+	/// The maximum size allowed to stack to grow
+	size_t maxSize = 0;
 	/// Number of stack frames (function calls) currently running on inferior. This number is
 	/// reported by GDB. It is used to detect function calls and returns
 	int callStackDepth = 0;
@@ -87,7 +89,7 @@ class ExecutionThread : public LinearLayout
   public: // States
 	/// Build an execution thread and adds it to the scene in invisible mode. In order to make it
 	/// visible, call @a run() or @a sleep()
-	explicit ExecutionThread(size_t startByte, size_t rowSize, Scene* scene, int id);
+	explicit ExecutionThread(size_t startByte, size_t rowSize, size_t maxSize, Scene* scene, int id);
 	/// Makes this thread to run in the given CPU core
 	/// Both actor and call stack will be displayed on the CPU core
 	/// @remarks Detaches the thread from any previous zone of the scene

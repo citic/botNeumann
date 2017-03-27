@@ -15,6 +15,17 @@ typedef QLinkedList<MemoryAllocation*> MemoryAllocations;
 
 /** A memory frame is graphical object to represent a piece of computer memory sliced into
 	one or more memory rows, covered by a roof row. A label can be placed on the roof.
+
+	The maximum size allowed to grow. There are two types of frames. Fixed-size frames have a
+	fixed @a rowCount, usually 1 or higher. For example: memory segments. Dynamic-sized frames
+	can grow when local variables are declared. These have @a maxSize value higher than 0. For
+	example, function calls. The behavior between these two variables is shown in this table:
+
+	   rowCount    maxSize   Behavior
+			  0          0   Empty frame. Eg: a library function call
+			 1+          0   Fixed-size frame. Eg: data segment
+			  0        2^p   Dynamic-sized frame. Eg: function call
+			 1+        2^p   Dynamic-sized frame with a known initial size
 **/
 class MemoryFrame : public LinearLayoutActor
 {
@@ -24,16 +35,22 @@ class MemoryFrame : public LinearLayoutActor
   protected:
 	/// To reparent children
 	QGraphicsItem* graphicsParentItem = nullptr;
+	/// For the memory rows
+	qreal zValue = 0.0;
 	/// The number of memory rows this frame has
 	size_t rowCount;
 	/// The memory address where the first byte of this memory frame starts
 	size_t startByte;
 	/// The size in bytes of each memory row
 	size_t rowSize;
+	/// The maximum size allowed to grow. @see class details
+	size_t maxSize;
 	/// The top row of the memory frame, that can contain a name for the frame
 	MemoryTop* memoryTop = nullptr;
 	/// The list of memory rows to show in this frame
 	QList<MemoryRow*> memoryRows;
+	/// If @a withLegs is true, this points to the legs graphical object
+	LinearLayout* legsLayout = nullptr;
 	/// The list of variables assigned in this memory frame, some of the may be free space
 	MemoryAllocations memoryAllocations;
 	/// True if this memory fame has legs at the bottom
@@ -41,7 +58,7 @@ class MemoryFrame : public LinearLayoutActor
 
   public:
 	/// Constructor
-	explicit MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs);
+	explicit MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs, size_t maxSize = 0);
 	/// Destructor
 	~MemoryFrame();
 	/// Get the number of memory rows required by this object
@@ -67,7 +84,9 @@ class MemoryFrame : public LinearLayoutActor
 
   protected:
 	/// Create the memory rows and place them into the scene
-	void buildMemoryFrame(const QString& topLabel, qreal zValue);
+	void buildMemoryFrame(const QString& topLabel);
+	/// Create the given amount of memory rows and add them to the scene
+	bool createRows(size_t rowCount, size_t fromByte);
 	/// Create the memory legs, if asked
 	void buildMemoryLegs(qreal zValue);
 	/// Finds the smallest free fragment to allocate a variable
@@ -78,6 +97,9 @@ class MemoryFrame : public LinearLayoutActor
 	/// Distribute the variables allocated in this memory frame to the respective memory rows
 	/// @return true if all variables were set, false if there is a segment overflow
 	bool distributeVariablesIntoMemoryRows();
+	/// Grow this memory frame in the given amount of rows.
+	/// @return true if the frame grew, false if there is not enough memory
+	bool grow(int extraRows);
 	/// Remove free fragments from memory
 	void removeMemoryAllocations();
 	/// For debugging purposes

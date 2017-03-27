@@ -58,6 +58,8 @@ class MemoryRow : public LinearLayout
 	/// Get access to the z-value where this memory row is. GraphicVariables require this value also
 	/// to be displayed at the same z-value than the memory row
 	inline qreal getZValue() const { return zValue; }
+	/// Return the first byte after the last used by this row
+	inline size_t getLastByte() const { return start + size; }
 	/// Display memory addresses on labels
 	void displayMemoryAddresses();
 	/// Display variable names on labels
