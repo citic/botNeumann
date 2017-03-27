@@ -51,7 +51,9 @@ class CallStack : public RectLayoutItem
 	/// @see animateAppear()
 	int animateDisappear(int initialDelay = 0);
 	/// Create parameters in the top-most function call
-	int createLocalVariables(const GdbTreeNode* gdbVariableArray);
+	/// @param gdbVariableArray Gdb node result that lists the local variables to be shown
+	/// @param threadId We require the thread id to create watches
+	int createLocalVariables(const GdbTreeNode* gdbVariableArray, int threadId);
 };
 
 #endif // CALLSTACK_H

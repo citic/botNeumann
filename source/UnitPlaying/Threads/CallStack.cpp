@@ -95,7 +95,7 @@ int CallStack::animateDisappear(int initialDelay)
 	return initialDelay + maxDuration;
 }
 
-int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray)
+int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int threadId)
 {
 	// Example of GDB response to `-stack-list-arguments 2 0 0`
 	/*
@@ -138,7 +138,6 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray)
 			continue;
 
 		// Experimental: we set a watch also for local variables
-		int threadId = 1;
 		const QString& watchName = QString("bn_lv_%1_%2_%3").arg(threadId).arg(stackFrames.count()).arg(++watchCount);
 
 		// Create a mapping

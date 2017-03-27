@@ -362,5 +362,5 @@ int ExecutionThread::createLocalVariables(GdbCall* debuggerCall, const QString& 
 		gdbVariableArray = argFrame;
 
 	// Parameter passing is done by the callStack object
-	return callStack->createLocalVariables(gdbVariableArray);
+	return callStack->createLocalVariables(gdbVariableArray, this->id);
 }
