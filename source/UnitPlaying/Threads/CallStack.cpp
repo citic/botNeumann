@@ -119,6 +119,17 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int thr
 			}
 		]
 	*/
+	// Do nothing if no local variables are to be created
+	int duration = 0;
+	if ( gdbVariableArray->getChildCount() <= 0 )
+		return duration;
+
+	// The function call where local variabels will be defined is the topmost one
+	Q_ASSERT(stackFrames.count() > 0);
+	MemoryFrame* functionCall = stackFrames[ stackFrames.count() - 1 ];
+
+	// In order to know if the stack frame grew
+	size_t frameRows = functionCall->getRowCount();
 
 	// For each variable
 	for ( int varIndex = 0; varIndex < gdbVariableArray->getChildCount(); ++varIndex )
@@ -147,9 +158,19 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int thr
 
 		// Finally allocate a graphical variable in the stack frame
 		Q_ASSERT(variable);
-		Q_ASSERT(stackFrames.count() > 0);
-		stackFrames[ stackFrames.count() - 1 ]->allocate(variable);
+		functionCall->allocate(variable);
 	}
 
-	return 0;
+	// The stack frame may have grown, update its proportion
+	if ( functionCall->getRowCount() != frameRows )
+	{
+		// Raise the memory rows and make them visible
+		// ToDo: re-open the memory interface on cpu core
+		Q_ASSERT(cpuCoreRows > 0.0);
+		qreal finalPercent = 1.0 - functionCall->getHeightInRows() / cpuCoreRows;
+		functionCall->setProportion( functionCall->getHeightInRows() / cpuCoreRows );
+		duration += functionCall->animateMoveTo( finalPercent, functionCall->getHeightInRows() * 1000, 0 );
+	}
+
+	return duration;
 }

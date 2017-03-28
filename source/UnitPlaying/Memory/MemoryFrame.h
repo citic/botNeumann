@@ -66,6 +66,8 @@ class MemoryFrame : public LinearLayoutActor
 	virtual double getHeightInRows() const;
 	/// Calculates the size in bytes of this MemoryFrame
 	inline size_t getSize() const { return rowSize * rowCount; }
+	/// Get the number of rows required by this frame
+	inline size_t getRowCount() const { return rowCount; }
 	/// Allocate the given piece of memory (usually a variable) in this memory frame. If there is
 	/// enough memory the variable will appear in some memory rows in the visualization. The
 	/// the visualizationAddress will be updated in the @a memoryAllocation object.
