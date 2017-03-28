@@ -14,7 +14,7 @@ CallStack::CallStack(size_t startByte, size_t rowSize, size_t maxSize, qreal zVa
 {
 }
 
-int CallStack::callFunction(const GdbItemTree& tree)
+int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 {
 	// We start the count of watches for a new function call
 	watchCount = 0;
@@ -41,9 +41,9 @@ int CallStack::callFunction(const GdbItemTree& tree)
 	// Arguments and variables will be made visible next.
 	Q_ASSERT(cpuCoreRows > 0.0);
 	qreal finalPercent = 1.0 - functionCall->getHeightInRows() / cpuCoreRows;
-	int duration = functionCall->animateMoveTo( finalPercent, /* functionCall->getHeightInRows() * */ 1000, 1000 );
+	int duration = functionCall->animateMoveTo( finalPercent, functionCall->getHeightInRows() * 1000, initialDelay );
 
-	// ToDo: create parameters and local variables
+	// Parameters and local variables will be created later
 	return duration;
 }
 

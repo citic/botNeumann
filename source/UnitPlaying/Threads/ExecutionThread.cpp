@@ -275,7 +275,7 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, GdbCall* debu
 	// Animate the function call
 	Q_ASSERT(callStack);
 	functionName = tree.findNodeTextValue("/frame/func");
-	duration += callStack->callFunction(tree);
+	duration += callStack->callFunction(tree, duration);
 
 	// Animate parameter passing and creation of local variables
 	duration += createLocalVariables(debuggerCall, "-stack-list-arguments 2 0 0", "stack-args");

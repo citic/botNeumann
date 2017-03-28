@@ -184,9 +184,18 @@ bool MemoryFrame::distributeVariablesIntoMemoryRows()
 		// We must allocate a variable, if all rows were filled
 		if ( currentRow >= memoryRows.count() )
 		{
+			// We do not need to grow the frame for free memory
+			if ( variable->isFreeFragment() )
+			{
+				// Skip to next variable
+				++variableIterator;
+				continue;
+			}
+
 			// All the memory rows are filled, but if the memory frame can grow, create more rows
 			// ToDo: Only a piece of the variable may be needed to allocate, not the entire variable
 			int requiredRows = (qMax(variable->size, 1ll) + (rowSize - 1)) / rowSize;
+			qCCritical(logTemporary(), "Growing %d rows for %s of %lld bytes", requiredRows, qPrintable(variable->name), variable->size);
 
 			// If it is unable to grow more, we have a segment overflow
 			if ( ! grow(requiredRows) )
