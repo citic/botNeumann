@@ -35,16 +35,15 @@ int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 
 	// Add the function call frame to the scene
 	insertItem(functionCall, 1.0, functionCall->getHeightInRows() / cpuCoreRows, zValue + 0.01 * stackFrames.count());
-	updateLayoutItem();
 
 	// Raise the memory roof to the CPU core opened door, to make the roof visible only.
-	// Arguments and variables will be made visible next.
+	// The final position is calculated as the empty space on top of the memory frame
 	Q_ASSERT(cpuCoreRows > 0.0);
 	qreal finalPercent = 1.0 - functionCall->getHeightInRows() / cpuCoreRows;
-	int duration = functionCall->animateMoveTo( finalPercent, functionCall->getHeightInRows() * 1000, initialDelay );
 
-	// Parameters and local variables will be created later
-	return duration;
+	// Do the raise up animation of the empty memory frame with its roof and legs only
+	// Parameters and local variables will be created and animated later
+	return functionCall->animateMoveTo( finalPercent, functionCall->getHeightInRows() * 500, initialDelay );
 }
 
 int CallStack::animateAppear(int initialDelay)

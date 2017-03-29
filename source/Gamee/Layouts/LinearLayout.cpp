@@ -1,4 +1,5 @@
 #include "LinearLayout.h"
+#include "Actor.h"
 
 LinearLayout::LinearLayout(Qt::Orientation orientation)
 	: orientation(orientation)
@@ -61,13 +62,25 @@ LinearLayoutActor::LinearLayoutActor(Qt::Orientation orientation)
 {
 }
 
-int LinearLayoutActor::animateAppear(int duration, int initialDelay)
+int LinearLayoutActor::animateAppear(int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
 {
-	// ToDo: All ScenicElements must be able to animate
-	Q_UNUSED(duration);
-	Q_UNUSED(initialDelay);
+	// The duration of the animation is the max duration of children
+	int maxDuration = 0;
 
-	return 0;
+	// Animate all children appearing at the same time (concurrently)
+	for (ItemsType::iterator itr = items.begin(); itr != items.end(); ++itr )
+		for ( int index = 0; index < itr.value().size(); ++index )
+		{
+			Actor* actor = dynamic_cast<Actor*>(itr.value()[index]);
+			if ( actor )
+			{
+				int actorDuration = actor->appear(duration, fromOpacity, toOpacity, initialDelay);
+				if ( actorDuration > maxDuration )
+					maxDuration = actorDuration;
+			}
+		}
+
+	return maxDuration;
 }
 
 int LinearLayoutActor::animateMoveTo(qreal endProportion, int duration, int initialDelay)
