@@ -80,7 +80,7 @@ int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity, int initialD
 
 	// Animate the robot while it appears
 	QPropertyAnimation* animation = new QPropertyAnimation(this, "opacity", this);
-	animation->setDuration(duration);
+	animation->setDuration(totalDuration);
 
 	// Do not change initial value on delay
 	animation->setKeyValueAt(0.0, fromOpacity);

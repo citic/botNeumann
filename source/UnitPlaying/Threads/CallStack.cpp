@@ -150,7 +150,7 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int thr
 		Q_ASSERT(cpuCoreRows > 0.0);
 		qreal finalPercent = 1.0 - functionCall->getHeightInRows() / cpuCoreRows;
 		functionCall->setProportion( functionCall->getHeightInRows() / cpuCoreRows );
-		duration += functionCall->animateMoveTo( finalPercent, functionCall->getHeightInRows() * 1000, 0 );
+		duration += functionCall->animateMoveTo( finalPercent, functionCall->getHeightInRows() * 1000, /*initialDelay*/ 0 );
 	}
 
 	return duration;

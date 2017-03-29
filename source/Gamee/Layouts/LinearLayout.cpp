@@ -91,7 +91,7 @@ int LinearLayoutActor::animateMoveTo(qreal endProportion, int duration, int init
 
 	// Create an animation and set its duration
 	QPropertyAnimation* moveToAnimation = new QPropertyAnimation(this, "startProportion", this);
-	moveToAnimation->setDuration(duration);
+	moveToAnimation->setDuration(totalDuration);
 
 	// Do not change initial value on delay
 	moveToAnimation->setKeyValueAt(0.0, this->startProportion);

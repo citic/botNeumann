@@ -124,20 +124,21 @@ int MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visib
 
 	// The duration of the animation
 	int duration = 0;
+	const int defaultDuration = 333;
+	int garbageDuration = 0;
 
 	// Make the garbage visible or hidden
 	for ( ; firstByte <= lastByte; ++firstByte )
 	{
 		// Make the garbage appear or disappear
 		garbage[firstByte]->setVisible(visible);
-		int garbageDuration = visible
-			? garbage[firstByte]->appear(150, 0.0, 1.0, initialDelay)
-			: garbage[firstByte]->disappear(150, initialDelay);
-
-		// Update durations
-		duration += garbageDuration;
-		initialDelay += garbageDuration;
+		garbageDuration = visible
+			? garbage[firstByte]->appear(defaultDuration, 0.0, 1.0, initialDelay)
+			: garbage[firstByte]->disappear(defaultDuration, initialDelay);
 	}
+
+	// Update durations
+	duration += garbageDuration;
 
 	// Success
 	entirelyAllocated = lastByte < garbage.count();
