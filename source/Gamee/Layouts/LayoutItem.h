@@ -37,7 +37,7 @@ class LayoutItem
 	/// Destructor
 	virtual ~LayoutItem();
 	/// Used to differentiate between pure-layout items and scenic elements
-	virtual bool isScenicElement() const { return false; }
+	virtual bool isActor() const { return false; }
 	/// Called on QGraphicItem in order to remove them from the scene
 	virtual void removeFromScene() { }
 	/// Resize this item and all its child items

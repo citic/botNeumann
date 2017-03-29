@@ -7,7 +7,7 @@
 
 class LabelButton;
 class Scene;
-class ScenicElement;
+class Actor;
 class QGraphicsItem;
 
 // Extra z-values for the parts of the graphic variable
@@ -36,9 +36,9 @@ class GraphicValue : public LinearLayoutActor
 	/// Z Index where the value should be placed
 	qreal zValue = 0.0;
 	/// For pointers, the left part of the pod, may be changed for valid or invalid
-	ScenicElement* podLeft = nullptr;
-	ScenicElement* podMiddle = nullptr;
-	ScenicElement* podRight = nullptr;
+	Actor* podLeft = nullptr;
+	Actor* podMiddle = nullptr;
+	Actor* podRight = nullptr;
 	/// A label to show the value of the variable
 	LabelButton* valueLabel = nullptr;
 	/// The label represented as a string

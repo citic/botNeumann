@@ -143,16 +143,16 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 	if ( buildLeftPod )
 	{
 		podLeft = asset.startsWith("up_")
-				? new ScenicElement(asset + "_left", graphicsParent)
-				: new ScenicElement(svgFileBase + "_left.svg", graphicsParent, true);
+				? new Actor(asset + "_left", graphicsParent)
+				: new Actor(svgFileBase + "_left.svg", graphicsParent, true);
 
 		addItem(podLeft, 1.0 / size, zPod);
 	}
 
 	// Pod: middle
 	podMiddle = asset.startsWith("up_")
-			? new ScenicElement(asset + "_middle", graphicsParent)
-			: new ScenicElement(svgFileBase + "_middle.svg", graphicsParent, true);
+			? new Actor(asset + "_middle", graphicsParent)
+			: new Actor(svgFileBase + "_middle.svg", graphicsParent, true);
 	qreal middleSize = size - (VisAddress)buildLeftPod - (VisAddress)buildRightPod;
 	addItem(podMiddle, middleSize / size, zPod);
 
@@ -160,8 +160,8 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 	if ( buildRightPod )
 	{
 		podRight = asset.startsWith("up_")
-				? new ScenicElement(asset + "_right", graphicsParent)
-				: new ScenicElement(svgFileBase + "_right.svg", graphicsParent, true);
+				? new Actor(asset + "_right", graphicsParent)
+				: new Actor(svgFileBase + "_right.svg", graphicsParent, true);
 		addItem(podRight, 1.0 / size, zPod);
 	}
 

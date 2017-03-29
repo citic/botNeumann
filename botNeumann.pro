@@ -56,7 +56,6 @@ HEADERS += \
 	source/Gamee/PlayerManager.h \
 	source/Gamee/Prop.h \
 	source/Gamee/Scene.h \
-	source/Gamee/ScenicElement.h \
 	source/Gamee/Stage.h \
 	source/Gamee/SvgButton.h \
 	source/Gamee/SvgRendererManager.h \
@@ -141,7 +140,6 @@ SOURCES += \
 	source/Gamee/PlayerManager.cpp \
 	source/Gamee/Prop.cpp \
 	source/Gamee/Scene.cpp \
-	source/Gamee/ScenicElement.cpp \
 	source/Gamee/Stage.cpp \
 	source/Gamee/SvgButton.cpp \
 	source/Gamee/SvgRendererManager.cpp \

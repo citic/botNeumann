@@ -7,7 +7,7 @@
 
 
 SvgButton::SvgButton(const QString& prefixedSvgElementId, QGraphicsItem* parentItem, const QString& text)
-	: ScenicElement(prefixedSvgElementId, parentItem)
+	: Actor(prefixedSvgElementId, parentItem)
 {
 	buildLabel(text);
 	setFlag( QGraphicsItem::ItemIsSelectable );

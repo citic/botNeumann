@@ -22,7 +22,7 @@ class Scene : public QObject, public QGraphicsRectItem
 	/// Each scene has a unique name, eg: "game_menu", "unit_selection", "unit_playing"...
 	QString sceneName;
 	/// Background image for this scene
-	/// ToDo: Make scenes inherit ScenicElement, therefore, background is their image
+	/// ToDo: Make scenes inherit Actor, therefore, background is their image
 	Prop* background = nullptr;
 	/// The unique stage where the game is supposed to run (at least at this version)
 	Stage* stage = nullptr;

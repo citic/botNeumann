@@ -1,6 +1,6 @@
 #include "Layout.h"
 #include "Spacer.h"
-#include "ScenicElement.h"
+#include "Actor.h"
 
 Layout::Layout()
 {
@@ -49,7 +49,7 @@ void Layout::removeAllItems(bool removeItemsFromScene)
 	{
 		for ( int index = 0; index < itr.value().size(); ++index )
 		{
-			if ( itr.value()[index]->isScenicElement() )
+			if ( itr.value()[index]->isActor() )
 			{
 				if ( removeItemsFromScene )
 					itr.value()[index]->removeFromScene();

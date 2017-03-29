@@ -1,12 +1,74 @@
 #include "Actor.h"
+#include "Layout.h"
+#include "SvgRendererManager.h"
 #include "VisualizationSpeed.h"
 
+#include <QGraphicsScene>
 #include <QPropertyAnimation>
 
+// Construction -----------------------------------------------------------------------------------
+
 Actor::Actor(const QString& prefixedSvgElementId, QGraphicsItem* parentItem)
-	: ScenicElement(prefixedSvgElementId, parentItem)
+	: QGraphicsSvgItem(parentItem)
 {
+	if ( ! prefixedSvgElementId.isEmpty() )
+	{
+		setRenderer( mapSceneIdFromPrefix(prefixedSvgElementId) );
+		setElementId(prefixedSvgElementId);
+	}
 }
+
+Actor::Actor(const QString& svgFilename, QGraphicsItem* parentItem, bool loadFile)
+	: QGraphicsSvgItem(svgFilename, parentItem)
+{
+	Q_UNUSED(loadFile);
+}
+
+Actor::~Actor()
+{
+	delete layout;
+}
+
+
+// Layout and graphic item ------------------------------------------------------------------------
+
+void Actor::removeFromScene()
+{
+	scene()->removeItem(this);
+	this->deleteLater();
+}
+
+void Actor::setRenderer(SceneId sceneId)
+{
+	setSharedRenderer( SvgRendererManager::findRenderer(sceneId) );
+}
+
+SceneId Actor::mapSceneIdFromPrefix(const QString& prefixedText)
+{
+	if ( prefixedText.startsWith("up_") ) return sceneUnitPlaying;
+	if ( prefixedText.startsWith("ge_") ) return sceneGeneral;
+	if ( prefixedText.startsWith("gm_") ) return sceneGameMenu;
+	if ( prefixedText.startsWith("us_") ) return sceneUnitSelection;
+
+	return sceneGeneral;
+}
+
+
+void Actor::resize(qreal left, qreal top, qreal width, qreal height)
+{
+	// Resize children before changing the values (left, top, width, height)
+	if ( layout ) layout->resize(left, top, width, height);
+
+	// Update the LayoutItem part of this object
+	LayoutItem::resize(left, top, width, height);
+	applyMargins(left, top, width, height);
+
+	// Resize the QGraphicaItem part of this object
+	resizeItem(this, left, top, width, height);
+}
+
+
+// Animations ------------------------------------------------------------------------------------
 
 int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity, int initialDelay)
 {

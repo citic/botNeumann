@@ -1,7 +1,7 @@
 #ifndef SVGBUTTON_H
 #define SVGBUTTON_H
 
-#include "ScenicElement.h"
+#include "Actor.h"
 
 class QGraphicsSimpleTextItem;
 
@@ -22,7 +22,7 @@ class QGraphicsSimpleTextItem;
 
 	If you need only a label, @see LabelButton class.
  */
-class SvgButton : public ScenicElement
+class SvgButton : public Actor
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(SvgButton)
@@ -35,7 +35,7 @@ class SvgButton : public ScenicElement
 	/// Constructor: creates a graphical button
 	/// @param parentItem Mandatory graphic item where this button will be shown
 	/// @param text An optional text to be drawn on top of the image (i.e., background image)
-	/// @see ScenicElement::ScenicElement()
+	/// @see Actor::Actor()
 	explicit SvgButton(const QString& prefixedSvgElementId, QGraphicsItem* parentItem, const QString& text = "");
 	/// Destructor
 	virtual ~SvgButton();
