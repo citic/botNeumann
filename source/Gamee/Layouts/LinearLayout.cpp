@@ -86,13 +86,12 @@ int LinearLayoutActor::animateAppear(int duration, int initialDelay, qreal fromO
 int LinearLayoutActor::animateMoveTo(qreal endProportion, int duration, int initialDelay)
 {
 	// Adjust animation time
-	initialDelay = VisualizationSpeed::getInstance().adjust(initialDelay);
 	duration = VisualizationSpeed::getInstance().adjust(duration);
 	int totalDuration = initialDelay + duration;
 
 	// Create an animation and set its duration
 	QPropertyAnimation* moveToAnimation = new QPropertyAnimation(this, "startProportion", this);
-	moveToAnimation->setDuration(totalDuration);
+	moveToAnimation->setDuration(duration);
 
 	// Do not change initial value on delay
 	moveToAnimation->setKeyValueAt(0.0, this->startProportion);
@@ -101,7 +100,7 @@ int LinearLayoutActor::animateMoveTo(qreal endProportion, int duration, int init
 	moveToAnimation->setKeyValueAt(1.0, endProportion);
 
 	moveToAnimation->start();
-	return totalDuration;
+	return duration;
 }
 
 void LinearLayoutActor::updateStartProportion(qreal startProportion)

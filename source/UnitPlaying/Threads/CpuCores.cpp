@@ -232,5 +232,5 @@ bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCal
 	Q_ASSERT(executionThread);
 
 	// The execution thread will animate the function call
-	return executionThread->processFunctionCall(tree, debuggerCall, maxDuration);
+	return executionThread->callFunction(tree, debuggerCall, maxDuration);
 }

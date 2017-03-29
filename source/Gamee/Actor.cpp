@@ -75,7 +75,6 @@ int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity, int initialD
 	updateLayoutItem();
 
 	// Adjust animation time
-	initialDelay = VisualizationSpeed::getInstance().adjust(initialDelay);
 	duration = VisualizationSpeed::getInstance().adjust(duration);
 	int totalDuration = initialDelay + duration;
 

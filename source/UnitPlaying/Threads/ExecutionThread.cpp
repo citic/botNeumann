@@ -252,7 +252,7 @@ qreal ExecutionThread::getActorReferenceWidth() const
 	return actor->boundingRect().width();
 }
 
-bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
+bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
 {
 	// The ExecutionThread must be active (must have an assigned CPU core)
 	if ( ! isActive() )

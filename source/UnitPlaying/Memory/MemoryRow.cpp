@@ -107,7 +107,7 @@ void MemoryRow::buildGarbage()
 	}
 }
 
-int MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible, int initialDelay)
+int MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible, int initialDelay, int& entirelyAllocated)
 {
 	// Map addresses to array indexes
 	firstByte -= start;
@@ -115,11 +115,11 @@ int MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visib
 
 	// Check index out of bounds
 	qCCritical(logTemporary(), "Garbage first=%lld last=%lld, row=[%lld,+%lld] garbage.count=%d", firstByte, lastByte, start, size, garbage.count());
-	if ( firstByte < 0 || firstByte >= garbage.count() ) return 0;
-	if ( lastByte  < 0 ) return 0;
+	if ( firstByte < 0 || lastByte  < 0 || firstByte >= garbage.count() )
+		return entirelyAllocated = -1;
 
 	// Free memory can be larger than frames when they are able to grow
-	if ( lastByte  >= garbage.count() )
+	if ( lastByte >= garbage.count() )
 		lastByte = garbage.count() - 1;
 
 	// The duration of the animation
@@ -140,6 +140,7 @@ int MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visib
 	}
 
 	// Success
+	entirelyAllocated = lastByte < garbage.count();
 	return duration;
 }
 
@@ -161,7 +162,7 @@ int MemoryRow::allocate(MemoryAllocation* variable, int& entirelyAllocated, int 
 
 	// If variable is free space, we do not need to allocate values in its bytes, just garbage
 	if ( variable->isFreeFragment() )
-		return showGarbage(firstByte, lastByte, true, initialDelay);
+		return showGarbage(firstByte, lastByte, true, initialDelay, entirelyAllocated);
 
 	// There is some intersection. We place a part of the variable (intersection) in this memory row
 	// We ask the variable to create a graphical variable to draw only this intersection
@@ -189,7 +190,7 @@ int MemoryRow::allocate(MemoryAllocation* variable, int& entirelyAllocated, int 
 
 	// Set true to the param if the variable was entirely allocated in this memory row
 	qCCritical(logTemporary, "Memory row: allocating %s in [%lld, %lld]", qPrintable(variable->name), firstByte, lastByte);
-	entirelyAllocated = lastByte >= variable->visualizationAddress + variable->size - 1;
+	entirelyAllocated = variable->visualizationAddress + variable->size - 1 <= lastByte;
 
 	// Done
 	return duration;

@@ -134,7 +134,7 @@ class ExecutionThread : public LinearLayout
 	/// execution thread in order to remove its highlight from code editro
 	void clearLocation();
 	/// Called when player solution stopped by a function body breakpoint
-	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
+	bool callFunction(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 
   protected:
 	/// Build the robot and the call stack as objects in memory. They are not added to the layout

@@ -80,7 +80,7 @@ class MemoryRow : public LinearLayout
 	/// @return The duration in milliseconds of the animation (showing or hiding garbabe).
 	/// Return 0 if this row does not have gabage. A negative integer if the given range is not
 	/// valid for this memory row
-	int showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible, int initialDelay);
+	int showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible, int initialDelay, int& entirelyAllocated);
 	/// Deallocate all variable fragmets in this memory row. They may be replaced by garbage if
 	/// this is a part of a memory segment that is not initiallized
 	bool deallocateAll();

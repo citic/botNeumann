@@ -203,7 +203,7 @@ int MemoryFrame::distributeVariablesIntoMemoryRows(int initialDelay)
 			if ( growDuration < 0 )
 				return growDuration;
 
-			// Add this duration to the proccess and for the remaining animations
+			// Add this duration to the proccess and the remaining animations
 			duration += growDuration;
 			initialDelay += growDuration;
 
