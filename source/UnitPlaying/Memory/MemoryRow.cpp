@@ -1,4 +1,5 @@
 #include "BotNeumannApp.h"
+#include "Actor.h"
 #include "Assets.h"
 #include "GraphicVariable.h"
 #include "LabelButton.h"
@@ -92,7 +93,7 @@ void MemoryRow::buildGarbage()
 		const QString& resource = QString("up_uninitialized_%1").arg( garbageNum );
 
 		// Create the garbage artifact and place it in its byte within the memory row
-		Prop* garbage = new Prop(resource, graphicsParentItem);
+		Actor* garbage = new Actor(resource, graphicsParentItem);
 
 		// We use margins because artifacts are smaller than the memory row's height
 		garbage->setMarginLeft(0.15);
@@ -107,7 +108,7 @@ void MemoryRow::buildGarbage()
 	}
 }
 
-bool MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible)
+int MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible, int initialDelay)
 {
 	// Map addresses to array indexes
 	firstByte -= start;
@@ -115,24 +116,40 @@ bool MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visi
 
 	// Check index out of bounds
 	qCCritical(logTemporary(), "Garbage first=%lld last=%lld, row=[%lld,+%lld] garbage.count=%d", firstByte, lastByte, start, size, garbage.count());
-	if ( firstByte < 0 || firstByte >= garbage.count() ) return false;
-	if ( lastByte  < 0 ) return false;
+	if ( firstByte < 0 || firstByte >= garbage.count() ) return 0;
+	if ( lastByte  < 0 ) return 0;
 
 	// Free memory can be larger than frames when they are able to grow
 	if ( lastByte  >= garbage.count() )
 		lastByte = garbage.count() - 1;
 
+	// The duration of the animation
+	int duration = 0;
+
 	// Make the garbage visible or hidden
-	while ( firstByte <= lastByte )
-		garbage[firstByte++]->setVisible(visible);
+	for ( ; firstByte <= lastByte; ++firstByte )
+	{
+		// Make the garbage appear or disappear
+		garbage[firstByte]->setVisible(visible);
+		int garbageDuration = visible
+			? garbage[firstByte]->appear(150, 0.0, 1.0, initialDelay)
+			: garbage[firstByte]->disappear(150, initialDelay);
+
+		// Update durations
+		duration += garbageDuration;
+		initialDelay += garbageDuration;
+	}
 
 	// Success
-	return true;
+	return duration;
 }
 
-bool MemoryRow::allocate(MemoryAllocation* variable)
+int MemoryRow::allocate(MemoryAllocation* variable, int& entirelyAllocated, int initialDelay)
 {
 	Q_ASSERT(variable);
+
+	// The duration of the allocation of this variable animation
+	int duration = 0;
 
 	// If the variable should be entirely or partially allocated, the intersection with the
 	// addresses of this memory rows is not empty
@@ -141,11 +158,11 @@ bool MemoryRow::allocate(MemoryAllocation* variable)
 
 	// If intersection of the variable with this row is empty, we do not allocate it here
 	if ( ! calculateIntersection(variable, firstByte, lastByte) )
-		return false;
+		return entirelyAllocated = -1;
 
 	// If variable is free space, we do not need to allocate values in its bytes, just garbage
 	if ( variable->isFreeFragment() )
-		return showGarbage(firstByte, lastByte);
+		return showGarbage(firstByte, lastByte, true, initialDelay);
 
 	// There is some intersection. We place a part of the variable (intersection) in this memory row
 	// We ask the variable to create a graphical variable to draw only this intersection
@@ -156,7 +173,7 @@ bool MemoryRow::allocate(MemoryAllocation* variable)
 	const qreal byteProportion = getByteProportion();
 	const qreal zVariable = this->zValue + 0.3;
 
-	// If the variable is already allocated, we just update it
+	// If the variable is already allocated, we skip it
 	if ( graphicVariables.contains(graphicVariable) == false )
 	{
 		// Add the graphical variable to the list of variables allocated in this memory row
@@ -165,12 +182,18 @@ bool MemoryRow::allocate(MemoryAllocation* variable)
 		// We add the variable to an absolute position in layout, +1 for memory legs at the left
 		insertItem( graphicVariable, (firstByte - start + 1) * byteProportion, (lastByte - firstByte + 1) * byteProportion, zVariable );
 		qCCritical(logTemporary, "MemRow: %s proportion %lf", qPrintable(variable->name), (lastByte - firstByte + 1) * byteProportion);
+
+		// Make the variable appear
+		duration += graphicVariable->animateAppear(1000, initialDelay);
 		this->updateLayoutItem();
 	}
 
-	// Return true if the variable was entirely allocated in this memory row
+	// Set true to the param if the variable was entirely allocated in this memory row
 	qCCritical(logTemporary, "Memory row: allocating %s in [%lld, %lld]", qPrintable(variable->name), firstByte, lastByte);
-	return lastByte >= variable->visualizationAddress + variable->size - 1;
+	entirelyAllocated = lastByte >= variable->visualizationAddress + variable->size - 1;
+
+	// Done
+	return duration;
 }
 
 bool MemoryRow::calculateIntersection(const MemoryAllocation* variable, VisAddress& firstByte, VisAddress& lastByte)

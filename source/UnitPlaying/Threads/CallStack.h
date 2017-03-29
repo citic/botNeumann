@@ -52,10 +52,12 @@ class CallStack : public RectLayoutItem
 	/// Animate the entire fame stack diving into the basement
 	/// @see animateAppear()
 	int animateDisappear(int initialDelay = 0);
-	/// Create parameters in the top-most function call
+	/// Create parameters and local variable in the top-most function call
 	/// @param gdbVariableArray Gdb node result that lists the local variables to be shown
 	/// @param threadId We require the thread id to create watches
-	int createLocalVariables(const GdbTreeNode* gdbVariableArray, int threadId);
+	int createLocalVariables(const GdbTreeNode* gdbVariableArray, int threadId, int initialDelay);
+	/// Create one variable in the stack of the top-most function call
+	int createLocalVariable(const GdbTreeNode* variableNode, int threadId, MemoryFrame* functionCall, int initialDelay);
 };
 
 #endif // CALLSTACK_H

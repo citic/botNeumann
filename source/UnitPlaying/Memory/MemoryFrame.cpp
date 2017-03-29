@@ -33,7 +33,7 @@ MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, siz
 	// Distribute the free fragment to all the memory rows. This is required in order to draw
 	// initial garbage if this segment has it by default
 	printAllocationQueue();
-	distributeVariablesIntoMemoryRows();
+	distributeVariablesIntoMemoryRows(0);
 }
 
 MemoryFrame::~MemoryFrame()
@@ -105,7 +105,7 @@ double MemoryFrame::getHeightInRows() const
 	return rowCount + memoryRoofRows + withLegs * memoryLegsRows;
 }
 
-bool MemoryFrame::allocate(MemoryAllocation* memoryAllocation)
+int MemoryFrame::allocate(MemoryAllocation* memoryAllocation, int initialDelay)
 {
 	// Find free space to allocate the variable
 	MemoryAllocations::iterator freeFragment = memoryAllocations.end();
@@ -117,7 +117,7 @@ bool MemoryFrame::allocate(MemoryAllocation* memoryAllocation)
 	{
 		// There is not space to allocate the variable in visualization, animate segment overflow
 		qCDebug(logTemporary) << "Memory Frame: no space to allocate" << memoryAllocation->name << "of" << memoryAllocation->size << "bytes";
-		return false;
+		return -1;
 	}
 
 	// We found empty space, the iterator points to it
@@ -135,7 +135,7 @@ bool MemoryFrame::allocate(MemoryAllocation* memoryAllocation)
 	printAllocationQueue();
 
 	// The variable must be placed in one or more memory rows, distribute it
-	return distributeVariablesIntoMemoryRows();
+	return distributeVariablesIntoMemoryRows(initialDelay);
 }
 
 bool MemoryFrame::findSmallestFreeFragmentToAllocate(const MemoryAllocation* variable, MemoryAllocations::iterator& smallestFragment, VisAddress& offset)
@@ -167,8 +167,11 @@ bool MemoryFrame::findSmallestFreeFragmentToAllocate(const MemoryAllocation* var
 	return smallestFragment != memoryAllocations.end();
 }
 
-bool MemoryFrame::distributeVariablesIntoMemoryRows()
+int MemoryFrame::distributeVariablesIntoMemoryRows(int initialDelay)
 {
+	// The duration of this animation
+	int duration = 0;
+
 	// We iterate for all variables assigned to this frame, distributing them to its memory rows
 	MemoryAllocations::iterator variableIterator = memoryAllocations.begin();
 	int currentRow = 0;
@@ -196,15 +199,28 @@ bool MemoryFrame::distributeVariablesIntoMemoryRows()
 			qCCritical(logTemporary(), "Growing %d rows for %s of %lld bytes", requiredRows, qPrintable(variable->name), variable->size);
 
 			// If it is unable to grow more, we have a segment overflow
-			if ( ! grow(requiredRows) )
-				return false;
+			int growDuration = grow(requiredRows, initialDelay);
+			if ( growDuration < 0 )
+				return growDuration;
 
-			// Let's check there is a memory row to continue
+			// Add this duration to the proccess and for the remaining animations
+			duration += growDuration;
+			initialDelay += growDuration;
+
+			// Be sure there is a memory row to continue
 			Q_ASSERT( currentRow < memoryRows.count() );
 		}
 
-		// If the current row did not accept the variable, or accepted it partially
-		if ( memoryRows[currentRow]->allocate(variable) == false )
+		// Try to allocate this variable in the current row
+		int entirelyAllocated = false;
+		int rowAllocation = memoryRows[currentRow]->allocate(variable, entirelyAllocated, initialDelay);
+
+		// Update the durations of animation
+		duration += rowAllocation;
+		initialDelay += rowAllocation;
+
+		// If the variable was partially allocated or not allocated at all
+		if ( entirelyAllocated <= 0 )
 		{
 			// Try to allocate the variable in the next row
 			++currentRow;
@@ -216,15 +232,15 @@ bool MemoryFrame::distributeVariablesIntoMemoryRows()
 	}
 
 	// All variables were distributed in the available rows
-	return true;
+	return duration;
 }
 
-bool MemoryFrame::grow(int extraRows)
+int MemoryFrame::grow(int extraRows, int initialDelay)
 {
 	// If there is enough memory
 	Q_ASSERT(extraRows > 0);
 	if ( getSize() + extraRows * rowSize > maxSize )
-		return false;
+		return -1;
 
 	// The new memory rows will start after the last memory row or the beginning there isn't any
 	size_t fromByte = memoryRows.count() > 0 ? memoryRows[memoryRows.count() - 1]->getLastByte() : startByte;
@@ -239,8 +255,9 @@ bool MemoryFrame::grow(int extraRows)
 	// We have added more rows, we have to update the proportions of all rows
 	updateRowProportions();
 
-	// Done
-	return true;
+	// ToDo: Animate the new rows raising up from the memory interface of the cpu core
+	Q_UNUSED(initialDelay);
+	return 0;
 }
 
 // Utility function to update the start and proportion of one row, and returns the proportion

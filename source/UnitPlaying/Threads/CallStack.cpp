@@ -96,7 +96,7 @@ int CallStack::animateDisappear(int initialDelay)
 	return initialDelay + maxDuration;
 }
 
-int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int threadId)
+int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int threadId, int initialDelay)
 {
 	// Example of GDB response to `-stack-list-arguments 2 0 0`
 	/*
@@ -134,31 +134,13 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int thr
 	// For each variable
 	for ( int varIndex = 0; varIndex < gdbVariableArray->getChildCount(); ++varIndex )
 	{
-		// Get the argument or local variable node
+		// Create the variable on the stack
 		const GdbTreeNode* variableNode = gdbVariableArray->getChild(varIndex);
-		Q_ASSERT(variableNode);
+		int variableDuration = createLocalVariable(variableNode, threadId, functionCall, initialDelay);
 
-		// Get the fields of the variable
-		const QString& name = variableNode->findTextValue("name");
-		const QString& type = variableNode->findTextValue("type");
-		const QString& value = variableNode->findTextValue("value");
-		qCCritical(logTemporary()) << "CallStack::createParameters() name:" << name << "type:" << type << "value:" << value;
-
-		// Ignore variables that begin with double underscore (__). These variables are introduced
-		// in object code by the programming language standard or compilers. Eg: __PRETTY_FUNCTION__
-		if ( name.startsWith("__") )
-			continue;
-
-		// Experimental: we set a watch also for local variables
-		const QString& watchName = QString("bn_lv_%1_%2_%3").arg(threadId).arg(stackFrames.count()).arg(++watchCount);
-
-		// Create a mapping
-		Q_ASSERT( MemoryMapper::getInstance() );
-		MemoryAllocation* variable = MemoryMapper::getInstance()->createLocal(name, type, value, watchName);
-
-		// Finally allocate a graphical variable in the stack frame
-		Q_ASSERT(variable);
-		functionCall->allocate(variable);
+		// Adjust duration and the delay for the next variable
+		duration += variableDuration;
+		initialDelay += variableDuration;
 	}
 
 	// The stack frame may have grown, update its proportion
@@ -173,4 +155,32 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int thr
 	}
 
 	return duration;
+}
+
+int CallStack::createLocalVariable(const GdbTreeNode* variableNode, int threadId, MemoryFrame* functionCall, int initialDelay)
+{
+	Q_ASSERT(variableNode);
+	Q_ASSERT(functionCall);
+
+	// Get the fields of the variable
+	const QString& name = variableNode->findTextValue("name");
+	const QString& type = variableNode->findTextValue("type");
+	const QString& value = variableNode->findTextValue("value");
+	qCCritical(logTemporary()) << "CallStack::createParameters() name:" << name << "type:" << type << "value:" << value;
+
+	// Ignore variables that begin with double underscore (__). These variables are introduced
+	// in object code by the programming language standard or compilers. Eg: __PRETTY_FUNCTION__
+	if ( name.startsWith("__") )
+		return 0;
+
+	// Experimental: we set a watch also for local variables
+	const QString& watchName = QString("bn_lv_%1_%2_%3").arg(threadId).arg(stackFrames.count()).arg(++watchCount);
+
+	// Create a mapping
+	Q_ASSERT( MemoryMapper::getInstance() );
+	MemoryAllocation* variable = MemoryMapper::getInstance()->createLocal(name, type, value, watchName);
+
+	// Finally allocate a graphical variable in the stack frame
+	Q_ASSERT(variable);
+	return functionCall->allocate(variable, initialDelay);
 }

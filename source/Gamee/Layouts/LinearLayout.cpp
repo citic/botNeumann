@@ -61,6 +61,15 @@ LinearLayoutActor::LinearLayoutActor(Qt::Orientation orientation)
 {
 }
 
+int LinearLayoutActor::animateAppear(int duration, int initialDelay)
+{
+	// ToDo: All ScenicElements must be able to animate
+	Q_UNUSED(duration);
+	Q_UNUSED(initialDelay);
+
+	return 0;
+}
+
 int LinearLayoutActor::animateMoveTo(qreal endProportion, int duration, int initialDelay)
 {
 	// Adjust animation time

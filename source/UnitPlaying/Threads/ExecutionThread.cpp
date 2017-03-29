@@ -278,8 +278,8 @@ bool ExecutionThread::processFunctionCall(const GdbItemTree& tree, GdbCall* debu
 	duration += callStack->callFunction(tree, duration);
 
 	// Animate parameter passing and creation of local variables
-	duration += createLocalVariables(debuggerCall, "-stack-list-arguments 2 0 0", "stack-args");
-	duration += createLocalVariables(debuggerCall, "-stack-list-locals 2", "locals");
+	duration += createLocalVariables(debuggerCall, "-stack-list-arguments 2 0 0", "stack-args", duration);
+	duration += createLocalVariables(debuggerCall, "-stack-list-locals 2", "locals", duration);
 	// The two previous gdb calls can be combinated in the following one:
 	// duration += createLocalVariables(debuggerCall, "-stack-list-variables 2", "variables");
 
@@ -313,7 +313,7 @@ bool ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
 	return true;
 }
 
-int ExecutionThread::createLocalVariables(GdbCall* debuggerCall, const QString& gdbCommand, const QString& gdbRootNodeName)
+int ExecutionThread::createLocalVariables(GdbCall* debuggerCall, const QString& gdbCommand, const QString& gdbRootNodeName, int initialDelay)
 {
 	// Example of GDB response to `-stack-list-arguments 2 0 0`
 	/*
@@ -363,5 +363,5 @@ int ExecutionThread::createLocalVariables(GdbCall* debuggerCall, const QString& 
 		gdbVariableArray = argFrame;
 
 	// Parameter passing is done by the callStack object
-	return callStack->createLocalVariables(gdbVariableArray, this->id);
+	return callStack->createLocalVariables(gdbVariableArray, this->id, initialDelay);
 }

@@ -73,11 +73,12 @@ class MemoryFrame : public LinearLayoutActor
 	/// Allocate the given piece of memory (usually a variable) in this memory frame. If there is
 	/// enough memory the variable will appear in some memory rows in the visualization. The
 	/// the visualizationAddress will be updated in the @a memoryAllocation object.
-	/// @return true, if the allocation was done successfully, false if there is not enough space
-	/// to allocate the piece of memory (eg: frame is full, or there is free fragments but none is
-	/// larger than memoryAllocation.size). In that case, the caller should animate a segment
-	/// overflow and stop the animation
-	bool allocate(MemoryAllocation* memoryAllocation);
+	/// @return duration in milliseconds of the variable-creation animation if the allocation was
+	/// done successfully. A negative integer if there is not enough space to allocate the piece of
+	/// memory (eg: frame is full, or there is free fragments but none is larger than
+	/// memoryAllocation.size). In that case, the caller should animate a segment overflow and stop
+	/// the animation
+	int allocate(MemoryAllocation* memoryAllocation, int initialDelay);
 	/// Deallocate the given piece of memory (usually a variable). The memoryAllocation object
 	/// will be removed from the scene, but not deleted from memory. The memoryMapper should do
 	/// the deletion of the object
@@ -99,11 +100,13 @@ class MemoryFrame : public LinearLayoutActor
 	/// and the parameters are set to invalid iterators and a negative offset
 	bool findSmallestFreeFragmentToAllocate(const MemoryAllocation* variable, MemoryAllocations::iterator& smallestFragment, VisAddress& offset);
 	/// Distribute the variables allocated in this memory frame to the respective memory rows
-	/// @return true if all variables were set, false if there is a segment overflow
-	bool distributeVariablesIntoMemoryRows();
+	/// @return the duration of the animation if all variables were set. A negative integer if there
+	/// is a segment overflow
+	int distributeVariablesIntoMemoryRows(int initialDelay);
 	/// Grow this memory frame in the given amount of rows.
-	/// @return true if the frame grew, false if there is not enough memory
-	bool grow(int extraRows);
+	/// @return The duration in milliseconds if the frame grew. A negative integer (-1) if there is
+	/// not enough memory to grow
+	int grow(int extraRows, int initialDelay);
 	/// Adjust the proportions of the rows when the amount of rows have changed (grown)
 	void updateRowProportions();
 	/// Remove free fragments from memory

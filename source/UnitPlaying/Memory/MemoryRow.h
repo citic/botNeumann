@@ -7,8 +7,8 @@
 #include <QList>
 
 struct MemoryAllocation;
+class Actor;
 class GraphicVariable;
-class Prop;
 class QGraphicsItem;
 
 /**
@@ -44,7 +44,7 @@ class MemoryRow : public LinearLayout
 	/// If this memory row can have uninitiallized variables, we create random artifacts (garbage),
 	/// one for each byte. These garbage can be shown or hidden later, according to the variables
 	/// allocated, deallocated, or the free space changes.
-	QList<Prop*> garbage;
+	QList<Actor*> garbage;
 	/// The list of variables that are allocated in this memory row
 	QList<GraphicVariable*> graphicVariables;
 
@@ -70,16 +70,17 @@ class MemoryRow : public LinearLayout
 	void cycleLabelType();
 	/// Allocate the given variable in this memory row if the variable is within the range of this
 	/// memory row.
-	/// @return true if the variable is entirely allocated, false if the variable is not
-	/// allocated at all or there is pending bytes of the variable to be allocated in the next
-	/// memory row
-	bool allocate(MemoryAllocation* variable);
+	/// @param entirelyAllocated This param will be set 1 if the variable was entirely allocated,
+	/// 0 if it was partially allocated, and -1 if the variable was not allocated at all. In cases
+	/// 0 or negative, a new memory row should be used to allocated the remaining of the variable
+	/// @return The duration of the animation in milliseconds if the variable is allocated, or
+	/// a negative integer if the variable was not allocated at all
+	int allocate(MemoryAllocation* variable, int& entirelyAllocated, int initialDelay);
 	/// Shows garbage in the given range of bytes
-	/// @return true on success, false if the range is not valid for this memory row
-	bool showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible = true);
-	/// Convenience function to hide a range of garbage artifacts
-	inline bool hideGarbage(VisAddress firstByte, VisAddress lastByte)
-		{ return showGarbage(firstByte, lastByte, false); }
+	/// @return The duration in milliseconds of the animation (showing or hiding garbabe).
+	/// Return 0 if this row does not have gabage. A negative integer if the given range is not
+	/// valid for this memory row
+	int showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible, int initialDelay);
 	/// Deallocate all variable fragmets in this memory row. They may be replaced by garbage if
 	/// this is a part of a memory segment that is not initiallized
 	bool deallocateAll();

@@ -28,7 +28,7 @@ double DataSegment::getHeightInRows() const
 
 bool DataSegment::allocate(MemoryAllocation* memoryAllocation)
 {
-	return memoryFrame->allocate(memoryAllocation);
+	return memoryFrame->allocate(memoryAllocation, 0) >= 0;
 }
 
 bool DataSegment::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution)
