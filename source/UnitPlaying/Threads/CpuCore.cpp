@@ -33,7 +33,7 @@ void CpuCore::buildCpuCore()
 	addItem(workstation, 1.0, zUnitPlaying::cpuCore + 0.0);
 
 	memoryInterface = new Actor("up_stack_segment_allocator_closed", scene);
-	memoryInterface->setMargins(0.85, 0.075, 0.0);
+	memoryInterface->setMargins(0.85, 0.05, 0.0);
 	addItem(memoryInterface, 1.0, zUnitPlaying::cpuCore + 0.1);
 
 	QStringList memoryInterfaceFaces;

@@ -24,8 +24,6 @@ ExecutionThread::ExecutionThread(size_t startByte, size_t rowSize, size_t maxSiz
 
 void ExecutionThread::buildExecutionThread()
 {
-	setMargins(0.05, 0.05, 0.0);
-
 	// Create an actor (robot) for the execution thread with its line number
 	Q_ASSERT(actor == nullptr);
 	actor = new ExecutionThreadActor(id, scene);
