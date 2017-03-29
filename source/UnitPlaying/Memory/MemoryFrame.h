@@ -53,6 +53,8 @@ class MemoryFrame : public LinearLayoutActor
 	LinearLayout* legsLayout = nullptr;
 	/// The list of variables assigned in this memory frame, some of the may be free space
 	MemoryAllocations memoryAllocations;
+	/// True if this memory frame contains garbage for uninitiallized variables
+	bool withGarbage = false;
 	/// True if this memory fame has legs at the bottom
 	bool withLegs = false;
 

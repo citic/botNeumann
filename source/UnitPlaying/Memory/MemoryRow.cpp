@@ -110,12 +110,17 @@ void MemoryRow::buildGarbage()
 bool MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visible)
 {
 	// Map addresses to array indexes
-	lastByte  -= start;
 	firstByte -= start;
+	lastByte  -= start;
 
 	// Check index out of bounds
+	qCCritical(logTemporary(), "Garbage first=%lld last=%lld, row=[%lld,+%lld] garbage.count=%d", firstByte, lastByte, start, size, garbage.count());
 	if ( firstByte < 0 || firstByte >= garbage.count() ) return false;
-	if ( lastByte  < 0 || lastByte  >= garbage.count() ) return false;
+	if ( lastByte  < 0 ) return false;
+
+	// Free memory can be larger than frames when they are able to grow
+	if ( lastByte  >= garbage.count() )
+		lastByte = garbage.count() - 1;
 
 	// Make the garbage visible or hidden
 	while ( firstByte <= lastByte )

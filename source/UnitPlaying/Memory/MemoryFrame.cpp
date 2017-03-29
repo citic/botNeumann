@@ -17,6 +17,7 @@ MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, siz
 	, startByte(startByte)
 	, rowSize(rowSize)
 	, maxSize(maxSize)
+	, withGarbage(withGarbage)
 	, withLegs(withLegs)
 {
 	// Initially there is just one big fragment of free memory. We select the size for the free
@@ -58,9 +59,6 @@ void MemoryFrame::buildMemoryFrame(const QString& topLabel)
 
 bool MemoryFrame::createRows(size_t rowCount, size_t fromByte)
 {
-	// The free memory allocation tells us if all rows shall have garbage
-	bool withGarbage = memoryAllocations.first()->hasGarbage;
-
 	// Create each memory row
 	for ( size_t index = 0; index < rowCount; ++index )
 	{
