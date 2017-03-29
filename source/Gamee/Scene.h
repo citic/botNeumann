@@ -5,7 +5,7 @@
 #include <QObject>
 
 class Layout;
-class Prop;
+class Actor;
 class QGraphicsSvgItem;
 class Stage;
 
@@ -23,7 +23,7 @@ class Scene : public QObject, public QGraphicsRectItem
 	QString sceneName;
 	/// Background image for this scene
 	/// ToDo: Make scenes inherit Actor, therefore, background is their image
-	Prop* background = nullptr;
+	Actor* background = nullptr;
 	/// The unique stage where the game is supposed to run (at least at this version)
 	Stage* stage = nullptr;
 	/// Layout in charge of placing and resize elements when the window is resized

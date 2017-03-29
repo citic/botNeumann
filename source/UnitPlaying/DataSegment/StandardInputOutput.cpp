@@ -1,10 +1,10 @@
 #include "StandardInputOutput.h"
+#include "Actor.h"
 #include "Assets.h"
 #include "Common.h"
 #include "GraphicValue.h"
 #include "LinearLayout.h"
 #include "LogManager.h"
-#include "Prop.h"
 #include "Scene.h"
 #include "Unit.h"
 
@@ -114,10 +114,10 @@ void StandardInputOutput::buildStandardInputOutput(QString type)
 	double elbowProportion = 2.0 * byteWidth;
 
 	// A tube has three parts: left, middle, and right
-	Prop* left = new Prop(QString("up_standard_%1_left").arg(type), scene);
-	Prop* middle = new Prop(QString("up_standard_%1_middle").arg(type), scene);
-	Prop* coupling = new Prop(QString("up_standard_input_output_coupling").arg(type), scene);
-	Prop* right = new Prop(QString("up_standard_%1_right").arg(type), scene);
+	Actor* left = new Actor(QString("up_standard_%1_left").arg(type), scene);
+	Actor* middle = new Actor(QString("up_standard_%1_middle").arg(type), scene);
+	Actor* coupling = new Actor(QString("up_standard_input_output_coupling").arg(type), scene);
+	Actor* right = new Actor(QString("up_standard_%1_right").arg(type), scene);
 
 	// Ugly fix: the coupling is part of the opening, but it must be placed in a higher layer
 	const qreal couplingStart = (refOpeningWidth - refCouplingWidth) / refOpeningWidth * openingProportion;
@@ -148,7 +148,7 @@ void StandardInputOutput::buildStandardInputOutput(QString type)
 		start += elbowProportion;
 
 		// Tester
-		tester = new Prop(QString("up_standard_output_test_inactive"), scene);
+		tester = new Actor(QString("up_standard_output_test_inactive"), scene);
 		insertItem(tester, start, elbowProportion, zElbow);
 		start += elbowProportion;
 

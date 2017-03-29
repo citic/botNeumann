@@ -1,10 +1,10 @@
 #include "GraphicVariable.h"
+#include "Actor.h"
 #include "Assets.h"
 #include "BotNeumannApp.h"
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
 #include "MultiSvgButton.h"
-#include "Prop.h"
 
 #include <QBrush>
 #include <QFont>

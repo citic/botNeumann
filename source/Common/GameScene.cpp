@@ -1,10 +1,10 @@
 #include "CodeSegment.h"
+#include "Actor.h"
 #include "GameScene.h"
 #include "LabelButton.h"
 #include "LinearLayout.h"
 #include "LogManager.h"
 #include "MainWindow.h"
-#include "Prop.h"
 #include "Stage.h"
 #include "SvgButton.h"
 
@@ -35,7 +35,7 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 	connect(backButton, SIGNAL(pressed()), this, SLOT(backButtonPressed()));
 
 	// Game title
-	this->gameTitle = new Prop("ge_game_title", this);
+	this->gameTitle = new Actor("ge_game_title", this);
 	this->gameTitle->setMargins(0.1, 0.0);
 	this->gameTitle->alignLeft();
 	menuLayout->addItem(gameTitle, 0.32);

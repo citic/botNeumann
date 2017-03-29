@@ -6,7 +6,6 @@
 #include "LogManager.h"
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
-#include "Prop.h"
 #include "Spacer.h"
 
 #include <QBrush>
@@ -37,9 +36,9 @@ void MemoryRow::buildMemoryRow(bool withGarbage)
 	const double middleProportion = size / (size + 2.0);
 
 	// Create the images
-	Prop* leftShelf = new Prop("up_memory_row_left", graphicsParentItem);
-	Prop* middleShelf = new Prop("up_memory_row_middle", graphicsParentItem);
-	Prop* rightShelf = new Prop("up_memory_row_right", graphicsParentItem);
+	Actor* leftShelf = new Actor("up_memory_row_left", graphicsParentItem);
+	Actor* middleShelf = new Actor("up_memory_row_middle", graphicsParentItem);
+	Actor* rightShelf = new Actor("up_memory_row_right", graphicsParentItem);
 
 	// Add them to the layout
 	addItem(leftShelf, leftRightProportion, zValue);
@@ -88,7 +87,7 @@ void MemoryRow::buildGarbage()
 	// Create a garbage artifact for each byte
 	for ( VisAddress index = 0; index < size; ++index )
 	{
-		// We selected the garbage prop for this byte randomly
+		// We selected the garbage actor for this byte randomly
 		int garbageNum = qrand() % 3 + 1;
 		const QString& resource = QString("up_uninitialized_%1").arg( garbageNum );
 

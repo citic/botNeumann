@@ -1,11 +1,11 @@
-#include "BotNeumannApp.h"
 #include "GameMenuScene.h"
+#include "Actor.h"
+#include "BotNeumannApp.h"
 #include "LinearLayout.h"
 #include "LogManager.h"
 #include "PlayerManager.h"
 #include "PlayerManagerDialog.h"
 #include "PlayerStatus.h"
-#include "Prop.h"
 #include "Stage.h"
 #include "SvgButton.h"
 
@@ -21,13 +21,13 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	setBackground("gm_background");
 
 	LinearLayout* leftLayout = new LinearLayout(Qt::Vertical);
-	Prop* gameTitle = new Prop("ge_game_title", this);
+	Actor* gameTitle = new Actor("ge_game_title", this);
 	gameTitle->setMargins(0.1);
 	leftLayout->addItem(gameTitle, 0.2);
 
 	LinearLayout* centralLayout = new LinearLayout(Qt::Horizontal);
 	leftLayout->addLayout(centralLayout, 0.8);
-	Prop* robot = new Prop("ge_robot", this);
+	Actor* robot = new Actor("ge_robot", this);
 	robot->setMargins(0.2);
 	centralLayout->addItem(robot, 0.5);
 	robot->alignCenter();

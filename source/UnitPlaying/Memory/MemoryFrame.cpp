@@ -1,9 +1,9 @@
 #include "MemoryFrame.h"
+#include "Actor.h"
 #include "LogManager.h"
 #include "MemoryAllocation.h"
 #include "MemoryRow.h"
 #include "MemoryTop.h"
-#include "Prop.h"
 
 // The roof requires half memory row
 const double memoryRoofRows = 0.5;
@@ -76,8 +76,8 @@ void MemoryFrame::buildMemoryLegs(qreal zValue)
 	// We need a layout to place the legs vertically
 	Q_ASSERT(legsLayout == nullptr);
 	legsLayout = new LinearLayout(Qt::Horizontal);
-	Prop* leftLegs = new Prop("up_memory_row_base_left1", graphicsParentItem);
-	Prop* rightLegs = new Prop("up_memory_row_base_right1", graphicsParentItem);
+	Actor* leftLegs = new Actor("up_memory_row_base_left1", graphicsParentItem);
+	Actor* rightLegs = new Actor("up_memory_row_base_right1", graphicsParentItem);
 
 	// We use the same byte proportion than any memory row
 	qreal byteProportion = 1.0 / (rowSize + 2.0);

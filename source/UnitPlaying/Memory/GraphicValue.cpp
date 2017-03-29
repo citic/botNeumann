@@ -1,8 +1,8 @@
 #include "GraphicValue.h"
+#include "Actor.h"
 #include "Assets.h"
 #include "BotNeumannApp.h"
 #include "LabelButton.h"
-#include "Prop.h"
 #include "Scene.h"
 
 #include <QBrush>
@@ -93,8 +93,8 @@ bool GraphicValue::buildSingleByteVariable(const QString& asset, const qreal ref
 	applyDataTypeMargins(refDataMargins);
 
 	// Pod:
-	// A single-byte variable requires just a prop
-	Prop* pod = new Prop(asset, graphicsParent);
+	// A single-byte variable requires just one graphic
+	Actor* pod = new Actor(asset, graphicsParent);
 	addItem(pod, 1.0, zValue + zPodOffset );
 
 	// Characters can contain a single value

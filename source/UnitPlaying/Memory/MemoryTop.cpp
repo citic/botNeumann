@@ -1,7 +1,7 @@
 #include "MemoryTop.h"
+#include "Actor.h"
 #include "BotNeumannApp.h"
 #include "MultiSvgButton.h"
-#include "Prop.h"
 
 #include <QBrush>
 #include <QFont>
@@ -26,9 +26,9 @@ void MemoryTop::buildMemoryTop()
 	const double middleProportion = size / (size + 2.0);
 
 	// Create the images
-	Prop* leftRoof = new Prop("up_memory_top_left", graphicsParentItem);
-	Prop* middleRoof = new Prop("up_memory_top_middle", graphicsParentItem);
-	Prop* rightRoof = new Prop("up_memory_top_right", graphicsParentItem);
+	Actor* leftRoof = new Actor("up_memory_top_left", graphicsParentItem);
+	Actor* middleRoof = new Actor("up_memory_top_middle", graphicsParentItem);
+	Actor* rightRoof = new Actor("up_memory_top_right", graphicsParentItem);
 
 	// Add them to the layout
 	addItem(leftRoof, leftRightProportion, zValue);

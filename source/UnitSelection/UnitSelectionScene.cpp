@@ -1,7 +1,7 @@
 #include "BotNeumannApp.h"
+#include "Actor.h"
 #include "LinearLayout.h"
 #include "Player.h"
-#include "Prop.h"
 #include "SvgButton.h"
 #include "UnitSelectionScene.h"
 
@@ -94,7 +94,7 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 	bool playerCompletedUnit = BotNeumannApp::getInstance()->getCurrentPlayer()->hasCompletedUnit(unitId);
 
 	// Add a pneumatic tube
-	Prop* pneumaticTube = new Prop("us_air_tube_short", this);
+	Actor* pneumaticTube = new Actor("us_air_tube_short", this);
 	pneumaticTube->setMargins(0.3, 0.0, 0.3);
 	levelLayout->addItem(pneumaticTube, tubeWidthPercent * averageUnitWidth);
 	if ( ! currentUnitEnabled ) pneumaticTube->setOpacity(defaultDisabledOpacity);

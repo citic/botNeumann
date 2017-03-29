@@ -1,6 +1,6 @@
 #include "Layout.h"
-#include "Spacer.h"
 #include "Actor.h"
+#include "Spacer.h"
 
 Layout::Layout()
 {

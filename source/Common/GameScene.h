@@ -6,7 +6,7 @@
 
 class LabelButton;
 class LinearLayout;
-class Prop;
+class Actor;
 class SvgButton;
 
 /// The standard menu will require this percent of vertical space on the scene
@@ -21,7 +21,7 @@ class GameScene : public Scene
 	/// Button to return to the previous screen
 	SvgButton* backButton = nullptr;
 	/// Sprite containing the name of the scene
-	Prop* gameTitle = nullptr;
+	Actor* gameTitle = nullptr;
 	/// Button to show info about this scene, e.g: the task description on unit playing scene
 	SvgButton* infoButton = nullptr;
 	/// A label showing the title of the scene, e.g: "Training" or "Challenges"

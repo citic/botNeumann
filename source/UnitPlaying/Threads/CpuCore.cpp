@@ -3,7 +3,6 @@
 #include "CallStack.h"
 #include "Common.h"
 #include "ExecutionThread.h"
-#include "Prop.h"
 #include "Scene.h"
 #include "Unit.h"
 
@@ -30,7 +29,7 @@ double CpuCore::getHeightInRows() const
 void CpuCore::buildCpuCore()
 {
 	Q_ASSERT(scene);
-	workstation = new Prop("up_cpu_core", scene);
+	workstation = new Actor("up_cpu_core", scene);
 	addItem(workstation, 1.0, zUnitPlaying::cpuCore + 0.0);
 
 	memoryInterface = new Actor("up_stack_segment_allocator_closed", scene);

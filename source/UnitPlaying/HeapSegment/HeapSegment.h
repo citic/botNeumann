@@ -5,7 +5,7 @@
 #include "MemorySegment.h"
 
 class MemoryFrame;
-class Prop;
+class Actor;
 
 class HeapSegment : public GdbResponseListener, public MemorySegment
 {
@@ -16,7 +16,7 @@ class HeapSegment : public GdbResponseListener, public MemorySegment
 	/// Manages the rows of memory for the heap segment
 	MemoryFrame* memoryFrame = nullptr;
 	/// The interface to access the dynamic memory segment
-	Prop* heapInterface = nullptr;
+	Actor* heapInterface = nullptr;
 
   public:
 	/// Constructor

@@ -5,7 +5,7 @@
 #include "RectLayoutItem.h"
 
 class GraphicValue;
-class Prop;
+class Actor;
 
 class InputOutputBuffer : public RectLayoutItem
 {
@@ -51,7 +51,7 @@ class StandardInputOutput : public MemorySegment
 
   protected:
 	/// Tester placed in standard output
-	Prop* tester = nullptr;
+	Actor* tester = nullptr;
 	/// An area to show the characters moving through the tube
 	InputOutputBuffer* buffer = nullptr;
 

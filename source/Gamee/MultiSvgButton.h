@@ -6,7 +6,7 @@
 #include <QStringList>
 
 class LabelButton;
-class Prop;
+class Actor;
 class QGraphicsItem;
 
 /**
@@ -21,7 +21,7 @@ class MultiSvgButton : public LinearLayout
 
   protected:
 	/// The background can be made of one or several graphics
-	QList<Prop*> background;
+	QList<Actor*> background;
 	/// The text of the button
 	LabelButton* label = nullptr;
 

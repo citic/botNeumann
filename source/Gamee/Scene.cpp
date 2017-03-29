@@ -1,6 +1,6 @@
-#include "Layout.h"
-#include "Prop.h"
 #include "Scene.h"
+#include "Actor.h"
+#include "Layout.h"
 #include "Stage.h"
 
 #include <QGraphicsRectItem>
@@ -22,7 +22,7 @@ Scene::~Scene()
 
 void Scene::setBackground(const QString& svgElementId)
 {
-	background = new Prop(svgElementId, this);
+	background = new Actor(svgElementId, this);
 }
 
 void Scene::setLayout(Layout* layout)

@@ -1,7 +1,7 @@
 #include "MultiSvgButton.h"
+#include "Actor.h"
 #include "BotNeumannApp.h"
 #include "LabelButton.h"
-#include "Prop.h"
 #include "MultiSvgButton.h"
 
 #include <QBrush>
@@ -15,7 +15,7 @@ MultiSvgButton::MultiSvgButton(const QStringList& prefixedSvgElementIds, const Q
 	background.reserve( prefixedSvgElementIds.count() );
 	for ( int index = 0; index < prefixedSvgElementIds.count(); ++index )
 	{
-		Prop* back = new Prop(prefixedSvgElementIds[index], parentItem);
+		Actor* back = new Actor(prefixedSvgElementIds[index], parentItem);
 		addItem(back, proportions[index], zValue);
 		background.append(back);
 	}
@@ -41,7 +41,7 @@ void MultiSvgButton::setBrush(const QBrush& brush)
 
 void MultiSvgButton::setShear(qreal shearX, qreal shearY)
 {
-	foreach ( Prop* back, background )
+	foreach ( Actor* back, background )
 		back->setShearX(shearX, shearY);
 
 	if ( label )
