@@ -7,7 +7,7 @@
 	 height="25.84px" viewBox="0 0 25.838 25.84" enable-background="new 0 0 25.838 25.84" xml:space="preserve">
 <g id="g2796">
 	<g id="g2798">
-		
+
 			<radialGradient id="path2805_1_" cx="979.2793" cy="848.6035" r="16.3647" gradientTransform="matrix(0.8 0 0 0.8 -770.5045 -656.8489)" gradientUnits="userSpaceOnUse">
 			<stop  offset="0" style="stop-color:#E7ECEF"/>
 			<stop  offset="1" style="stop-color:#BFC8CD"/>
@@ -21,7 +21,7 @@
 		</g>
 	</g>
 	<g id="g2811" opacity="0.8">
-		
+
 			<linearGradient id="path2818_1_" gradientUnits="userSpaceOnUse" x1="978.8213" y1="831.5352" x2="987.188" y2="863.6002" gradientTransform="matrix(0.8 0 0 0.8 -770.5045 -656.8489)">
 			<stop  offset="0" style="stop-color:#FFFFFF"/>
 			<stop  offset="1" style="stop-color:#B7C6CE"/>
@@ -30,20 +30,8 @@
 			c0,6.901-5.614,12.517-12.517,12.517c-3.351,0-6.391-1.324-8.642-3.474c2.282,2.388,5.49,3.877,9.046,3.877
 			c6.901,0,12.517-5.613,12.517-12.517C25.437,9.367,23.944,6.158,21.56,3.877z"/>
 	</g>
-	<g id="g2820">
-		<g id="g2822">
-			
-				<linearGradient id="path2829_1_" gradientUnits="userSpaceOnUse" x1="975.0088" y1="821.6719" x2="980.7821" y2="842.6761" gradientTransform="matrix(0.8 0 0 0.8 -770.5045 -656.8489)">
-				<stop  offset="0" style="stop-color:#FFFBD4"/>
-				<stop  offset="1" style="stop-color:#000000"/>
-			</linearGradient>
-			<path id="path2829" fill="url(#path2829_1_)" d="M9.833,15.223c4.391-3.779,10.074-7.306,14.971-4.646
-				c-1.095-5.561-6.007-9.77-11.883-9.77c-6.682,0-12.115,5.435-12.115,12.115c0,1.618,0.32,3.162,0.9,4.574
-				C3.628,17.979,6.616,17.994,9.833,15.223z"/>
-		</g>
-	</g>
 	<g id="g2831">
-		
+
 			<linearGradient id="path2838_1_" gradientUnits="userSpaceOnUse" x1="972.2988" y1="818.8652" x2="983.0428" y2="850.0219" gradientTransform="matrix(0.8 0 0 0.8 -770.5045 -656.8489)">
 			<stop  offset="0" style="stop-color:#FFFFFF"/>
 			<stop  offset="1" style="stop-color:#000000"/>
