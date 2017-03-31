@@ -124,6 +124,9 @@ class Visualizator : public GdbResponseListener
 	/// (line number), stack, data segment, and standard input/output.
 	/// @return true on success, false on error
 	bool stepForward();
+	/// Schedule a next forward call in the given amount of milliseconds if the visualization is
+	/// in animating state
+	bool scheduleStepForward(int time);
 
   protected:
 	/// Build a string with the arguments to call inferior (player solution) under GDB. It contains
