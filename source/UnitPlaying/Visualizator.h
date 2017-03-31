@@ -206,6 +206,8 @@ class Visualizator : public GdbResponseListener
 	bool processUserDefinedBreakpoint();
 	/// Called when a next-step comand finished in the next source code line
 	bool processEndSteppingRange(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
+	/// A signal was received by the inferior, for example an assert() failed on inferior
+	bool processSignalReceived(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 };
 
 #endif // VISUALIZATOR_H

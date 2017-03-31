@@ -41,7 +41,8 @@ enum class UnitPlayingState
 	building,    // compiling and linking
 	starting,    // setting debugger and visualization
 	animating,   // visualization is in progress at normal speed or seeking
-	paused,      // user paused visualization
+	paused,      // user paused visualization and can run any step at time
+	finished,    // player solution finished, and cannot resume or step
 };
 
 enum zUnitPlaying

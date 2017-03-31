@@ -279,7 +279,10 @@ void CodeSegment::onStateChanged(UnitPlayingState currentState)
 	bool resume   = currentState == UnitPlayingState::paused;
 	bool pause    = currentState == UnitPlayingState::animating;
 	bool step     = currentState == UnitPlayingState::paused;
-	bool stop     = currentState == UnitPlayingState::animating || currentState == UnitPlayingState::paused;
+
+	bool stop     = currentState == UnitPlayingState::animating
+				 || currentState == UnitPlayingState::paused
+				 || currentState == UnitPlayingState::finished;
 
 	// Enable actions according to the current state
 	stepForwardAction->setEnabled(step);

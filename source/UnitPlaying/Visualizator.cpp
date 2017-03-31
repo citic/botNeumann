@@ -11,6 +11,8 @@
 #include "MemoryMapper.h"
 #include "VisualizationSpeed.h"
 
+#include <QMessageBox>
+
 #ifdef Q_OS_LINUX
 const char* const nameForMalloc  = "__libc_malloc";
 const char* const nameForCalloc  = "__libc_calloc";
@@ -539,40 +541,56 @@ bool Visualizator::processPlayerSolutionStopped(const GdbItemTree& tree, Visuali
 	if ( reason == "breakpoint-hit" )
 		processBreakpointHit(tree, context, maxDuration);
 	// A watchpoint was triggered.
-	//if ( reason == "watchpoint-trigger" ) return processWatchpointTrigger(tree, context, maxDuration);
+	//else if ( reason == "watchpoint-trigger" )
+	//	processWatchpointTrigger(tree, context, maxDuration);
 	// A read watchpoint was triggered.
-	//if ( reason == "read-watchpoint-trigger" ) return processReadWatchpointTrigger(tree, context, maxDuration);
+	//else if ( reason == "read-watchpoint-trigger" )
+	//	processReadWatchpointTrigger(tree, context, maxDuration);
 	// An access watchpoint was triggered.
-	//if ( reason == "access-watchpoint-trigger" ) return processAccessWatchpointTrigger(tree, context, maxDuration);
+	//else if ( reason == "access-watchpoint-trigger" )
+	//	processAccessWatchpointTrigger(tree, context, maxDuration);
 	// An -exec-finish or similar CLI command was accomplished.
-	//if ( reason == "function-finished" ) return processFunctionFinished(tree, context, maxDuration);
+	//else if ( reason == "function-finished" )
+	//	processFunctionFinished(tree, context, maxDuration);
 	// An -exec-until or similar CLI command was accomplished.
-	//if ( reason == "location-reached" ) return processLocationReached(tree, context, maxDuration);
+	//else if ( reason == "location-reached" )
+	//	processLocationReached(tree, context, maxDuration);
 	// A watchpoint has gone out of scope.
-	//if ( reason == "watchpoint-scope" ) return processWatchpointScope(tree, context, maxDuration);
+	//else if ( reason == "watchpoint-scope" )
+	//	processWatchpointScope(tree, context, maxDuration);
 	// -exec-next/-exec-next-instruction/-exec-step/-exec-step-instruction was acc
 	else if ( reason == "end-stepping-range" )
 		processEndSteppingRange(tree, context, maxDuration);
 	// The inferior exited because of a signal.
-	//if ( reason == "exited-signalled" ) return processExitedSignalled(tree, context, maxDuration);
+	//else if ( reason == "exited-signalled" )
+	//	processExitedSignalled(tree, context, maxDuration);
 	// The inferior exited.
-	//if ( reason == "exited" ) return processExited(tree, context, maxDuration);
+	//else if ( reason == "exited" )
+	//	processExited(tree, context, maxDuration);
 	// The inferior exited normally.
-	//if ( reason == "exited-normally" ) return processExitedNormally(tree, context, maxDuration);
+	//else if ( reason == "exited-normally" )
+	//	processExitedNormally(tree, context, maxDuration);
 	// A signal was received by the inferior.
-	//if ( reason == "signal-received" ) return processSignalReceived(tree, context, maxDuration);
+	else if ( reason == "signal-received" )
+		processSignalReceived(tree, context, maxDuration);
 	// Inferior stopped due to a library being loaded or unloaded (catch un/load).
-	//if ( reason == "solib-event" ) return processSolibEvent(tree, context, maxDuration);
+	//else if ( reason == "solib-event" )
+	//	processSolibEvent(tree, context, maxDuration);
 	// The inferior has forked and a fork catchpoint was triggered
-	//if ( reason == "fork" ) return processFork(tree, context, maxDuration);
+	//else if ( reason == "fork" )
+	//	processFork(tree, context, maxDuration);
 	// The inferior has vforked and a catchpoint was used.
-	//if ( reason == "vfork" ) return processVfork(tree, context, maxDuration);
+	//else if ( reason == "vfork" )
+	//	processVfork(tree, context, maxDuration);
 	// The inferior entered a system call and a catchpoint was used.
-	//if ( reason == "syscall-entry" ) return processSyscallEntry(tree, context, maxDuration);
+	//else if ( reason == "syscall-entry" )
+	//	processSyscallEntry(tree, context, maxDuration);
 	// The inferior returned from a system call and a catchpoint was used.
-	//if ( reason == "syscall-return" ) return processSyscallReturn(tree, context, maxDuration);
+	//else if ( reason == "syscall-return" )
+	//	processSyscallReturn(tree, context, maxDuration);
 	// The inferior called exec and a catchpoint was used.
-	//if ( reason == "exec" ) return processExec(tree, context, maxDuration);
+	//else if ( reason == "exec" )
+	//	processExec(tree, context, maxDuration);
 
 	// Gede gets pid asking the list of threads, we got pid from AC_THREAD_GROUP_STARTED
 	// if (inferiorProcessId == 0) debuggerCall->sendGdbCommand("-list-thread-groups");
@@ -729,6 +747,32 @@ bool Visualizator::processEndSteppingRange(const GdbItemTree& tree, Visualizatio
 
 	// Done
 	return true;
+}
+
+bool Visualizator::processSignalReceived(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
+{
+	Q_UNUSED(context);
+	Q_UNUSED(maxDuration);
+	/*
+		*stopped,
+		reason="signal-received",
+		signal-name="SIGABRT",
+		signal-meaning="Aborted",
+		frame=
+		{
+			addr="0x00007fff88e77866",
+			func="??",
+			args=
+			[
+
+			],from="/usr/lib/system/libsystem_kernel.dylib"
+		},thread-id="1",
+		stopped-threads="all"
+	*/
+	const QString& message = QString("Your solution received signal %1 (%2)").arg( tree.findNodeTextValue("signal-name") ).arg( tree.findNodeTextValue("signal-meaning") );
+	unitPlayingScene->changeState(UnitPlayingState::finished);
+	QMessageBox::warning(nullptr, tr("Program finished"), message, QMessageBox::Ok, QMessageBox::NoButton);
+	return false;
 }
 
 
