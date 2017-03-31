@@ -328,8 +328,8 @@ bool Visualizator::stop()
 	// Removing elements from the scene must be done at-once
 	VisualizationSpeed::getInstance().setSeeking(true);
 
-	// ToDo: this should be the final step
-	memoryMapper->deleteLater();
+	// ToDo: this should be done after the UnitPlayingScene has cleared all segments
+	delete memoryMapper;
 	memoryMapper = nullptr;
 
 	// Stop gdb
