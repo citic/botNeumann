@@ -96,7 +96,8 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	// Reduce bloated output by long user player directory paths
 	QString reducedMessage = message;
   #ifndef Q_OS_WIN
-	reducedMessage.replace( player->getLocalDataPath(), player->getShortcutPath() );
+	if ( player )
+		reducedMessage.replace( player->getLocalDataPath(), player->getShortcutPath() );
   #endif
 
 	// Avoid two or more threads writing on the log file symultaneously

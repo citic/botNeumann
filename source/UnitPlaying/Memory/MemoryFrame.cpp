@@ -282,7 +282,7 @@ void MemoryFrame::updateRowProportions()
 
 	// Legs, if any
 	if ( legsLayout )
-		accProportion += updateRowProportion(legsLayout, accProportion, memoryLegsRows / getHeightInRows() );
+		updateRowProportion(legsLayout, accProportion, memoryLegsRows / getHeightInRows() );
 }
 
 void MemoryFrame::printAllocationQueue()

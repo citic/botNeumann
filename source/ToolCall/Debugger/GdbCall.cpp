@@ -413,9 +413,10 @@ void GdbCall::parseGdbOutputLine(const QString& line)
 GdbResponse* GdbCall::parseAsyncRecord(GdbToken::Type tokenType, GdbResponse::Type outputType)
 {
 	// If there is a variable token, discard it. Why?
-	GdbToken* token = checkAndPopToken(GdbToken::VAR);
+	checkAndPopToken(GdbToken::VAR);
 
 	// If there is a token of the given type, pop it
+	GdbToken* token = nullptr;
 	if ( ( token = checkAndPopToken(tokenType) ) )
 	{
 		// A response is a collection of tokens that answers a command
