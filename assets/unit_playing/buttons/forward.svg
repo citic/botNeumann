@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" sodipodi:docname="run.svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" viewBox="0 0 32.298 32.300001" height="9.1158mm" width="9.1152mm" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" inkscape:version="0.91 r13725" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" sodipodi:docname="forward.svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" viewBox="0 0 32.298 32.300001" height="9.1158mm" width="9.1152mm" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" inkscape:version="0.91 r13725" xmlns:dc="http://purl.org/dc/elements/1.1/">
 	<sodipodi:namedview bordercolor="#666666" inkscape:pageshadow="2" guidetolerance="10" pagecolor="#ffffff" gridtolerance="10" inkscape:window-maximized="1" inkscape:zoom="7.3065014" objecttolerance="10" borderopacity="1" inkscape:current-layer="svg5763" inkscape:cx="-0.069432436" inkscape:cy="16.15" inkscape:window-y="0" inkscape:window-x="0" inkscape:window-width="1680" showgrid="false" inkscape:pageopacity="0" inkscape:window-height="997"/>
 	<defs>
 		<radialGradient id="radialGradient9504" gradientUnits="userSpaceOnUse" cy="117.15" cx="787.99" gradientTransform="translate(0,-23)" r="16.365">
@@ -14,7 +14,8 @@
 			<stop stop-color="#fff" offset="0"/>
 			<stop offset="1"/>
 		</linearGradient>
-		<linearGradient id="linearGradient9512" y2="99.103" gradientUnits="userSpaceOnUse" y1="113.29" gradientTransform="translate(0,-23)" x2="790.72" x1="790.72">
+		<linearGradient id="linearGradient9512" y2="99.103" xlink:href="#SVGID_12_" gradientUnits="userSpaceOnUse" y1="113.29" gradientTransform="translate(0,-23)" x2="790.72" x1="790.72"/>
+		<linearGradient id="SVGID_12_" y2="99.103" gradientUnits="userSpaceOnUse" x2="790.72" gradientTransform="translate(0,-23)" y1="113.29" x1="790.72">
 			<stop stop-color="#fff" offset="0"/>
 			<stop stop-color="#B7C6CE" offset="1"/>
 		</linearGradient>
@@ -27,9 +28,14 @@
 		</g>
 		<path inkscape:connector-curvature="0" fill="url(#linearGradient9510)" d="m773.86 83.773c0-8.349 6.792-15.143 15.142-15.143 3.917 0 7.492 1.497 10.185 3.947-2.771-3.044-6.766-4.958-11.193-4.958-8.352 0-15.143 6.794-15.143 15.143 0 4.431 1.913 8.423 4.957 11.195-2.451-2.691-3.948-6.266-3.948-10.184z"/>
 	</g>
-	<g transform="translate(2.942 2.758)">
-		<polygon opacity=".8" transform="matrix(1.4115 0 0 1.4115 -1099.8 -103.78)" points="796.98 83.267 784.46 76.201 784.46 90.332" enable-background="new    " fill="url(#linearGradient9512)"/>
-		<polygon points="796.47 82.762 783.95 75.696 783.95 89.828" fill="#008000" transform="matrix(1.4115 0 0 1.4115 -1099.8 -103.78)"/>
-	</g>
 	<polygon transform="translate(-771.84,-66.611)" points="804.14 98.912 771.84 98.912 771.84 66.611 804.14 66.611" display="none" fill="none"/>
+	<g transform="matrix(.75749 0 0 .92050 1.1582 4.6439)">
+		<polygon opacity=".8" transform="matrix(1.4115 0 0 1.4115 -1099.8 -103.78)" points="784.46 90.332 796.98 83.267 784.46 76.201" enable-background="new    " fill="url(#linearGradient9512)"/>
+		<polygon points="783.95 89.828 796.47 82.762 783.95 75.696" fill="#000080" transform="matrix(1.4115 0 0 1.4115 -1099.8 -103.78)"/>
+	</g>
+	<g transform="matrix(.75749 0 0 .92050 9.0374 4.6439)">
+		<polygon opacity=".8" transform="matrix(1.4115 0 0 1.4115 -1099.8 -103.78)" points="784.46 76.201 784.46 90.332 796.98 83.267" enable-background="new    " fill="url(#linearGradient9512)"/>
+		<polygon points="783.95 75.696 783.95 89.828 796.47 82.762" fill="#000080" transform="matrix(1.4115 0 0 1.4115 -1099.8 -103.78)"/>
+	</g>
+	<rect height="17.65" width="2.8111" y="7.3247" x="24.735" fill="#000080"/>
 </svg>

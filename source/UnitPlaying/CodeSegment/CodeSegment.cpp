@@ -126,29 +126,13 @@ void CodeSegment::setupRunToolbar()
 	connect(runOrPauseAction, SIGNAL(triggered()), this, SIGNAL(userRunOrPaused()));
 	toolBar->addAction(runOrPauseAction);
 
-	// Create step over action
-	stepOverAction = new QAction(QIcon(":/unit_playing/buttons/step_over.svg"), tr("Step over (&Next)"), this);
-	stepOverAction->setShortcut(QKeySequence("Ctrl+U"));
-	stepOverAction->setToolTip(tr("Step over: run next statement in current function (Ctrl+U)"));
-	stepOverAction->setEnabled(false);
-	connect(stepOverAction, SIGNAL(triggered()), this, SIGNAL(userSteppedOver()));
-	toolBar->addAction(stepOverAction);
-
-	// Create the step into button
-	stepIntoAction = new QAction(QIcon(":/unit_playing/buttons/step_into.svg"), tr("Step &into"), this);
-	stepIntoAction->setShortcut(QKeySequence("Ctrl+I"));
-	stepIntoAction->setToolTip(tr("Step into: run next statement entering in functions (Ctrl+I)"));
-	stepIntoAction->setEnabled(false);
-	connect(stepIntoAction, SIGNAL(triggered()), this, SIGNAL(userSteppedInto()));
-	toolBar->addAction(stepIntoAction);
-
-	// Create the step out button
-	stepOutAction = new QAction(QIcon(":/unit_playing/buttons/step_out.svg"), tr("Step &out"), this);
-	stepOutAction->setShortcut(QKeySequence("Ctrl+O"));
-	stepOutAction->setToolTip(tr("Step out: exit from current function (Ctrl+O)"));
-	stepOutAction->setEnabled(false);
-	connect(stepOutAction, SIGNAL(triggered()), this, SIGNAL(userSteppedOut()));
-	toolBar->addAction(stepOutAction);
+	// Create step forward action
+	stepForwardAction = new QAction(QIcon(":/unit_playing/buttons/forward.svg"), tr("Step forward (&Next)"), this);
+	stepForwardAction->setShortcut(QKeySequence("Ctrl+U"));
+	stepForwardAction->setToolTip(tr("Step forward: run next statement (Ctrl+U)"));
+	stepForwardAction->setEnabled(false);
+	connect(stepForwardAction, SIGNAL(triggered()), this, SIGNAL(userSteppedForward()));
+	toolBar->addAction(stepForwardAction);
 
 	// Create the stop button
 	stopAction = new QAction(QIcon(":/unit_playing/buttons/stop.svg"), tr("S&top"), this);
@@ -295,14 +279,10 @@ void CodeSegment::onStateChanged(UnitPlayingState currentState)
 	bool resume   = currentState == UnitPlayingState::paused;
 	bool pause    = currentState == UnitPlayingState::animating;
 	bool stepOver = currentState == UnitPlayingState::paused;
-	bool stepInto = currentState == UnitPlayingState::paused;
-	bool stepOut  = currentState == UnitPlayingState::paused;
 	bool stop     = currentState == UnitPlayingState::animating || currentState == UnitPlayingState::paused;
 
 	// Enable actions according to the current state
-	stepOverAction->setEnabled(stepOver);
-	stepIntoAction->setEnabled(stepInto);
-	stepOutAction->setEnabled(stepOut);
+	stepForwardAction->setEnabled(stepOver);
 	stopAction->setEnabled(stop);
 
 	// Run or pause share the same action

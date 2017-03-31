@@ -62,12 +62,7 @@ class CodeSegment : public QDockWidget
 	/// Executes and animates the code or pauses it if already running
 	QAction* runOrPauseAction;
 	/// If visualisation is paused, executes the next code statement in the current function
-	QAction* stepOverAction;
-	/// If visualisation is paused, executes the next code statement entering in functions if they
-	/// are defined by user
-	QAction* stepIntoAction;
-	/// If visualisation is paused, executes the exits from the current function
-	QAction* stepOutAction;
+	QAction* stepForwardAction;
 	/// Stops the visualisation of the code, if it is running
 	QAction* stopAction;
 	/// Allows user to set the speed of the visualization
@@ -103,12 +98,8 @@ class CodeSegment : public QDockWidget
   signals:
 	/// Emitted when user presses the Run/Pause button
 	void userRunOrPaused();
-	/// Called when the step into button is pressed
-	void userSteppedInto();
 	/// Called when the step over button is pressed
-	void userSteppedOver();
-	/// Called when the step out button is pressed
-	void userSteppedOut();
+	void userSteppedForward();
 	/// Emitted when the stop button is pressed
 	void userStopped();
 	/// Emited when user presses over a breakpoint symbol in any code editor window in order to

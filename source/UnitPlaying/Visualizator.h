@@ -112,13 +112,6 @@ class Visualizator : public GdbResponseListener
 	/// debugger when visualization is running. Internally the GuiBreakpoint object carries
 	/// an action atribute that tells if the breakpoint was created or removed
 	void breakpointAction(GuiBreakpoint* guiBreakpoint);
-	/// Called when user asks to step into, i.e: execute the next instruction and if it is a
-	/// function call, enter into the function body
-	/// @return true on success, false on error
-	inline bool stepInto() { return step("-exec-step", "Step into"); }
-	/// Called when user wants to exit from current function call and return to caller
-	/// @return true on success, false on error
-	inline bool stepOut() { return step("-exec-finish", "Step out"); }
 	/// Called when user asks to step over, i.e: execute the next instruction but not entering
 	/// in function calls
 	/// @return true on success, false on error
