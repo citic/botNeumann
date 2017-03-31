@@ -34,9 +34,7 @@
 		<file alias="pause.svg">unit_playing/buttons/pause.svg</file>
 		<file alias="redo.svg">unit_playing/buttons/redo.svg</file>
 		<file alias="run.svg">unit_playing/buttons/run.svg</file>
-		<file alias="step_into.svg">unit_playing/buttons/step_into.svg</file>
-		<file alias="step_out.svg">unit_playing/buttons/step_out.svg</file>
-		<file alias="step_over.svg">unit_playing/buttons/step_over.svg</file>
+		<file alias="step_forward.svg">unit_playing/buttons/step_forward.svg</file>
 		<file alias="stop.svg">unit_playing/buttons/stop.svg</file>
 		<file alias="undo.svg">unit_playing/buttons/undo.svg</file>
 		<file alias="warning.svg">unit_playing/buttons/warning.svg</file>

@@ -127,7 +127,7 @@ void CodeSegment::setupRunToolbar()
 	toolBar->addAction(runOrPauseAction);
 
 	// Create step forward action
-	stepForwardAction = new QAction(QIcon(":/unit_playing/buttons/forward.svg"), tr("Step forward (&Next)"), this);
+	stepForwardAction = new QAction(QIcon(":/unit_playing/buttons/step_forward.svg"), tr("Step forward (&Next)"), this);
 	stepForwardAction->setShortcut(QKeySequence("Ctrl+U"));
 	stepForwardAction->setToolTip(tr("Step forward: run next statement (Ctrl+U)"));
 	stepForwardAction->setEnabled(false);
