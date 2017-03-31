@@ -99,6 +99,8 @@ class UnitPlayingScene : public GameScene
 	inline MessagesArea* getMessagesArea() const { return messagesArea; }
 	/// Get access to the breakpoints list set by the user
 	QList<GuiBreakpoint*> retrieveBreakpoints();
+	/// Change the state of the visualization and emit the @a stateChanged signal
+	void changeState(UnitPlayingState newState);
 
   signals:
 	/// Emitted when a game mode button is pressed
@@ -140,8 +142,6 @@ class UnitPlayingScene : public GameScene
 	void createCodeSegment();
 	/// Create a dock widget that show information about the unit, messages from compilers...
 	void createMessagesArea();
-	/// Change the state of the visualization and emit the @a stateChanged signal
-	void changeState(UnitPlayingState newState);
 	/// Start a new visualization with the given test case number
 	void startVisualization(int testCaseNumber);
 };

@@ -328,6 +328,10 @@ bool Visualizator::stop()
 	// Removing elements from the scene must be done at-once
 	VisualizationSpeed::getInstance().setSeeking(true);
 
+	// ToDo: this should be the final step
+	memoryMapper->deleteLater();
+	memoryMapper = nullptr;
+
 	// Stop gdb
 	return debuggerCall->stop();
 }
@@ -610,12 +614,15 @@ bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationCo
 	if ( context == visStarting )
 		return processEntryPoint(tree, breakpoint, maxDuration);
 
+	// * If breakpoint is userDefined: Do 4.4 User defined breakpoint.
+	if ( breakpoint->hasRole(DebuggerBreakpoint::userDefined) )
+		processUserDefinedBreakpoint();
+
 	// If breakpoint object has one or more roles:
 	// * If breakpoint is functionBody or programEntryPoint: Do 4.2 Function call.
 	if ( breakpoint->hasRole(DebuggerBreakpoint::functionDefinition) )
 		return unitPlayingScene->getCpuCores()->processFunctionCall(tree, debuggerCall, maxDuration);
 
-	// * If breakpoint is userDefined: Do 4.4 User defined breakpoint.
 	// * Do 4.5 Dynamic memory management breakpoint
 	return false;
 }
@@ -641,6 +648,19 @@ bool Visualizator::processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint
 
 	// Continue the starting process. It will eventually animate a function call
 	return start(false);
+}
+
+bool Visualizator::processUserDefinedBreakpoint()
+{
+	// Change visualization state to paused.
+	unitPlayingScene->changeState(UnitPlayingState::paused);
+
+	// Set VisualizationSpeed::seeking to false
+	VisualizationSpeed::getInstance().setSeeking(false);
+
+	// When debugger enters in idle state, no more exec-next commands will be automatically sent.
+	// Execution will continue when user presses the resume button or the step button.
+	return true;
 }
 
 
