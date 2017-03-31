@@ -95,7 +95,7 @@ bool Visualizator::start(bool preparation)
 
 		// In maxDuration seconds, the entry point function call will be done and we can enter
 		// in the execution loop
-		// ToDo: enter in execution loop
+		QTimer::singleShot( maxDuration, this, SLOT(stepForward()) );
 	}
 
 	// Visualization started
@@ -351,13 +351,12 @@ bool Visualizator::resume()
 	return true;
 }
 
-bool Visualizator::step(const QString& gdbCommand, const QString& description)
+bool Visualizator::stepForward()
 {
 	Q_ASSERT(debuggerCall);
-	qCInfo(logPlayer) << description;
-	if ( debuggerCall->sendGdbCommand(gdbCommand, visExecutionLoop) == GDB_ERROR )
+	if ( debuggerCall->sendGdbCommand("-exec-next", visExecutionLoop) == GDB_ERROR )
 	{
-		qCCritical(logVisualizator) << "Error sending" << description << "command";
+		qCCritical(logVisualizator) << "Error sending -exec-next command";
 		return false;
 	}
 
@@ -532,7 +531,7 @@ bool Visualizator::processPlayerSolutionStopped(const GdbItemTree& tree, Visuali
 	// A watchpoint has gone out of scope.
 	//if ( reason == "watchpoint-scope" ) return processWatchpointScope(tree, context, maxDuration);
 	// -exec-next/-exec-next-instruction/-exec-step/-exec-step-instruction was acc
-	//if ( reason == "end-stepping-range" ) return processEndSteppingRange(tree, context, maxDuration);
+	if ( reason == "end-stepping-range" ) return processEndSteppingRange(tree, context, maxDuration);
 	// The inferior exited because of a signal.
 	//if ( reason == "exited-signalled" ) return processExitedSignalled(tree, context, maxDuration);
 	// The inferior exited.
@@ -660,6 +659,54 @@ bool Visualizator::processUserDefinedBreakpoint()
 
 	// When debugger enters in idle state, no more exec-next commands will be automatically sent.
 	// Execution will continue when user presses the resume button or the step button.
+	return true;
+}
+
+bool Visualizator::processEndSteppingRange(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
+{
+	Q_UNUSED(context);
+	// The visualization step finished executing the next instruction
+	/*
+		^running
+		*running,
+		thread-id="all"
+		(gdb)
+
+		*stopped,
+		reason="end-stepping-range",
+		frame=
+		{
+			addr="0x00000000004027d2",
+			func="InputArgument::InputArgument",
+			args=
+			[
+				{
+					name="this",
+					value="0x60b580 <global_program_name>"
+				},
+				{
+					name="number",
+					value="0"
+				},
+				{
+					name="value",
+					value="0x406dc6 \"all_inclusive\""
+				}
+			],
+			file="alli.cpp",
+			fullname="/tmp/alli/alli.cpp",
+			line="66"
+		},
+		thread-id="1",
+		stopped-threads="all",
+		core="6"
+		(gdb)
+	*/
+
+	// Update ExecutionThread /thread-id with line number /frame/line
+	unitPlayingScene->getCpuCores()->updateThreadFrame(tree, maxDuration);
+
+	// Done
 	return true;
 }
 

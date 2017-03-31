@@ -216,6 +216,28 @@ void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 	}
 }
 
+void CpuCores::updateThreadFrame(const GdbItemTree& tree, int& maxDuration)
+{
+	// Player solution stopped by reason="end-stepping-range", and it includes a frame of the
+	// execution thread that stopped, update it
+	int threadId = 0;
+	bool ok = false;
+	threadId = tree.findNodeTextValue("/thread-id").toInt(&ok);
+	Q_ASSERT(ok);
+
+	// Get the ExecutionThread object that is identified by the given id
+	ExecutionThread* executionThread = findThread(threadId);
+	Q_ASSERT(threadId > 0);
+	Q_ASSERT(executionThread);
+
+	// The execution thread will animate the function call
+	if ( executionThread->updateLocation( tree.getRoot() ) )
+	{
+		// The thread was updated, refresh its highlighted line on the code editor
+		emit executionThreadUpdated(executionThread, maxDuration);
+	}
+}
+
 bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
 {
 	// Player solution hit a breakpoint that has the role of functionCall. The breakpoint must be

@@ -112,10 +112,18 @@ class Visualizator : public GdbResponseListener
 	/// debugger when visualization is running. Internally the GuiBreakpoint object carries
 	/// an action atribute that tells if the breakpoint was created or removed
 	void breakpointAction(GuiBreakpoint* guiBreakpoint);
-	/// Called when user asks to step over, i.e: execute the next instruction but not entering
-	/// in function calls
+	/// Called when user asks to step forward, i.e: execute the next step of the visualization.
+	/// Execution loop. Each step of this loop is considered a step of the visualization. When
+	/// visualization is paused and player presses the Step button, one visualization step is done
+	/// (animated). When visualization is in seeking state, a visualization step is issued each time
+	/// there is no pending commands to be sent to GDB.
+	/// A visualization step moves around the -exec-next instruction. Each time this command is
+	/// sent, some events may happen: a variable is changed, a function is called, a function is
+	/// returned...​ The breakpoint system will catch the function calls and dynamic memory changes.
+	/// In each visualization step we have to update the remaining elements: execution threads
+	/// (line number), stack, data segment, and standard input/output.
 	/// @return true on success, false on error
-	inline bool stepOver() { return step("-exec-next", "Step over"); }
+	bool stepForward();
 
   protected:
 	/// Build a string with the arguments to call inferior (player solution) under GDB. It contains
@@ -134,11 +142,6 @@ class Visualizator : public GdbResponseListener
 	/// @remark Search is made sequential, therefore O(n) where n is the number of debugger
 	/// breakpoints stored in the vector
 	int findDebuggerBreakpointIndex(const GuiBreakpoint& guiBreakpoint) const;
-	/// Called when any of the step commands is called: stepInto, stepOut, or stepOver
-	/// @param gdbCommand The GDB command that will be sent, e.g: "-exec-step"
-	/// @param description The action to be logged, e.g: "Step into"
-	/// @return true on success, false on error
-	bool step(const QString& gdbCommand, const QString& description);
 
   protected:
 	///	Notifications that begin with '*', example: *running,thread-id="thread"
@@ -198,6 +201,8 @@ class Visualizator : public GdbResponseListener
 	bool processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
 	/// Called when player solution stopped on some user-defined breakpoint. Visualization pauses
 	bool processUserDefinedBreakpoint();
+	/// Called when a next-step comand finished in the next source code line
+	bool processEndSteppingRange(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 };
 
 #endif // VISUALIZATOR_H

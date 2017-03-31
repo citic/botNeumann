@@ -126,6 +126,13 @@ class ExecutionThread : public LinearLayout
 	/// Updates this execution thread from Gdb information.
 	/// @return true if there was a location change
 	bool updateFromDebugger(const GdbTreeNode* threadNode);
+	/// Update the location (the source code file and line) that this execution thread is running
+	/// If the line number has changed, updates the number on the robot
+	/// @return true if the new location should be reflected in code editor. Return false if
+	/// the thread has no changed its location
+	/// @remarks The returned value should be used to ask the CodeEditor to highlight the line
+	/// being executed by this tread using its robot color
+	bool updateLocation(const GdbTreeNode* threadNode);
 	/// Called from code editor when the location change is within the player solution. The line
 	/// number on the actor (robot) is updated and the duration of the animation is returned. Also
 	/// makes a backup of the location (filename and line number)
@@ -145,13 +152,6 @@ class ExecutionThread : public LinearLayout
 	/// assigning it to a new region of the scene
 	/// @return Duration of the animation
 	int detach();
-	/// Update the location (the source code file and line) that this execution thread is running
-	/// If the line number has changed, updates the number on the robot
-	/// @return true if the new location should be reflected in code editor. Return false if
-	/// the thread has no changed its location
-	/// @remarks The returned value should be used to ask the CodeEditor to highlight the line
-	/// being executed by this tread using its robot color
-	bool updateLocation(const GdbTreeNode* threadNode);
 	/// Updates the callStackDepth integer doing an inquiry to the debugger
 	bool updateCallStackDepth(GdbCall* debuggerCall);
 	/// Animate parameter passing to the new function call

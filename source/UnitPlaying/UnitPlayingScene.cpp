@@ -293,7 +293,7 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
 	// When user asks to step forward
-	connect( codeSegment, SIGNAL(userSteppedForward()), visualizator, SLOT(stepOver()) );
+	connect( codeSegment, SIGNAL(userSteppedForward()), visualizator, SLOT(stepForward()) );
 
 	// Start the animation, if it started change the state to animating, otherwise return to editing
 	if ( ! visualizator->start() )

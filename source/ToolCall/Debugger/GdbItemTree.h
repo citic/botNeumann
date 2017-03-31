@@ -100,6 +100,7 @@ class GdbItemTree
 	~GdbItemTree() { }
 	/// Get access to the root element
 	inline GdbTreeNode* getRoot() { return &this->root; }
+	inline const GdbTreeNode* getRoot() const { return &this->root; }
 	/// Traverses the item tree and produces a string represeting all the items
 	inline QString buildDescription() const { return root.buildDescription(true); }
 	/// Returns a pointer o the node whose path is given
