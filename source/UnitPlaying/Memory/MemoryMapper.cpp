@@ -32,7 +32,11 @@ MemoryAllocation* MemoryMapper::createWatch(const QString& name, const QString& 
 	watch->watchName = watchName;
 
 	// Fill the missing data
-	addMapping(watch);
+	if ( ! addMapping(watch) )
+	{
+		delete watch;
+		return nullptr;
+	}
 
 	// The variable was updated, we can now allocate it in the visualization segments
 	if ( shouldAllocate )
@@ -95,9 +99,7 @@ bool MemoryMapper::allocate(MemoryAllocation* memoryAllocation)
 
 bool MemoryMapper::addMapping(MemoryAllocation* watch)
 {
-	// Add the watch to the maps
-	mapNameMemoryAllocation.insert( watch->getId(), watch );
-
+	// Create a gdb's watch
 	GdbItemTree resultWatch;
 	const QString& command = QString("-var-create %1 @ %2").arg(watch->watchName).arg(watch->name);
 	if ( debuggerCall->sendGdbCommand(command, visMemoryMapper, &resultWatch) == GDB_ERROR )
@@ -117,5 +119,7 @@ bool MemoryMapper::addMapping(MemoryAllocation* watch)
 	if ( watch->updateMissingFields(debuggerCall) == false )
 		return false;
 
+	// That watch is valid. Add it the watch to the maps
+	mapNameMemoryAllocation.insert( watch->getId(), watch );
 	return true;
 }
