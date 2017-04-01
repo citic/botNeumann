@@ -70,7 +70,7 @@ void Actor::resize(qreal left, qreal top, qreal width, qreal height)
 
 // Animations ------------------------------------------------------------------------------------
 
-int Actor::appear(int duration, qreal fromOpacity, qreal toOpacity, int initialDelay)
+int Actor::animateAppear(int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
 {
 	updateLayoutItem();
 

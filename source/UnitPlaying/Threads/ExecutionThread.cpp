@@ -68,7 +68,7 @@ int ExecutionThread::run(CpuCore* cpuCore)
 	// The actor will be at the bottom of the call stack
 	Q_ASSERT(actor);
 	actor->setStartProportion(0.9);
-	duration += actor->appear();
+	duration += actor->animateAppear();
 
 	// Add this execution thread (both actor and call stack) to the cpu core
 	cpuCore->addItem( this, 1.0, zUnitPlaying::executionThread );
@@ -104,7 +104,7 @@ int ExecutionThread::sleep(LinearLayout* idleThreads, int idleThreadNumber)
 	actor->setStartProportion(0.0);
 	idleThreads->updateLayoutItem();
 
-	duration += actor->appear();
+	duration += actor->animateAppear();
 	return duration;
 }
 
@@ -146,7 +146,7 @@ int ExecutionThread::detach()
 
 	// Detach the actor from the cpu or idle zone and
 	// Make it disappear after the call stack has disappeared
-	duration += actor->disappear(1000, duration);
+	duration += actor->animateDisappear(1000, duration);
 
 	// Thread returns to the new state
 	state = threadNew;

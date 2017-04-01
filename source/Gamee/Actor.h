@@ -74,9 +74,9 @@ class Actor : public QGraphicsSvgItem, public LayoutItem, public AlignedItem
 	/// Animates this actor appearing or disappearing from the scene
 	/// @return the actual duration of the animation in milliseconds after ajusting to the user
 	/// preference in visualization speed slider
-	int appear(int duration = 1000, qreal fromOpacity = 0.0, qreal toOpacity = 1.0, int initialDelay = 0);
+	int animateAppear(int duration = 1000, int initialDelay = 0, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
 	/// Convenience method to disappear an actor
-	inline int disappear(int duration = 1000, int initialDelay = 0) { return appear(duration, 1.0, 0.0, initialDelay); }
+	inline int animateDisappear(int duration = 1000, int initialDelay = 0) { return animateAppear(duration, initialDelay, 1.0, 0.0); }
 	/// Set the faces that this actor may show during a transition
 	/// @param faces An array of element ids, eg: { "robot1_back", "robot1_side", "robot1_front" }
 	inline void setFaces(const QStringList& faces) { this->faces = faces; }

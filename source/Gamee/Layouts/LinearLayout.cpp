@@ -74,7 +74,7 @@ int LinearLayoutActor::animateAppear(int duration, int initialDelay, qreal fromO
 			Actor* actor = dynamic_cast<Actor*>(itr.value()[index]);
 			if ( actor )
 			{
-				int actorDuration = actor->appear(duration, fromOpacity, toOpacity, initialDelay);
+				int actorDuration = actor->animateAppear(duration, initialDelay, fromOpacity, toOpacity);
 				if ( actorDuration > maxDuration )
 					maxDuration = actorDuration;
 			}

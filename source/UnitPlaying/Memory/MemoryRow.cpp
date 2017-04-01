@@ -133,8 +133,8 @@ int MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visib
 		// Make the garbage appear or disappear
 		garbage[firstByte]->setVisible(visible);
 		garbageDuration = visible
-			? garbage[firstByte]->appear(defaultDuration, 0.0, 1.0, initialDelay)
-			: garbage[firstByte]->disappear(defaultDuration, initialDelay);
+			? garbage[firstByte]->animateAppear(defaultDuration, initialDelay)
+			: garbage[firstByte]->animateDisappear(defaultDuration, initialDelay);
 	}
 
 	// Update durations
