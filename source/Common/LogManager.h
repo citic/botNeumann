@@ -26,6 +26,9 @@ Q_DECLARE_LOGGING_CATEGORY(logTemporary)
 Q_DECLARE_LOGGING_CATEGORY(logVisualizator)
 /// Logs events related to user program crash (stack overflow, segmentation fault, thread overflow)
 Q_DECLARE_LOGGING_CATEGORY(logSolutionCrash)
+/// Adds a non formatted line to the log, e.g: an empty line
+Q_DECLARE_LOGGING_CATEGORY(logUnformatted)
+
 
 // A kind of delegate
 class MessagesArea;

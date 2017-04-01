@@ -29,6 +29,7 @@ Q_LOGGING_CATEGORY(logPlayer,           "P---")
 Q_LOGGING_CATEGORY(logSolutionCrash,    "PCrs")
 Q_LOGGING_CATEGORY(logBuild,            "PBld")
 Q_LOGGING_CATEGORY(logTemporary,        "!!!!")
+Q_LOGGING_CATEGORY(logUnformatted,      "U---")
 
 QFile LogManager::logFile;
 MessagesArea* LogManager::messagesArea = nullptr;
@@ -118,7 +119,10 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 	if ( shouldLogToStdErr(type, category) )
 	{
 		QTextStream stderrStream(stderr);
-		stderrStream << '[' << typeStr[0] << context.category << "] [" << reducedMessage << "]\n";
+		if ( category == "U---" )
+			stderrStream << reducedMessage;
+		else
+			stderrStream << '[' << typeStr[0] << context.category << "] [" << reducedMessage << "]\n";
 		stderrStream.flush();
 	}
 

@@ -88,6 +88,7 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, int userData, GdbItemT
 		qCDebug(logTemporary).nospace() << "Enforcing cmd=" << lastCommandNumberReceived << " usr=" << lastUserData;
 	}
 
+	qCInfo(logUnformatted()) << '\n';
 	qCInfo(logDebuggerRequest).noquote().nospace() << gdbCommand.getText() << " | usr=" << userData;
 	process->write( qPrintable( gdbCommand.getCommand() ) );
 
@@ -172,7 +173,7 @@ GdbResult GdbCall::readFromGdb(GdbItemTree* resultData, bool waitUntilGdbHasOutp
 			}
 			response->setUserData( lastUserData );
 
-			qCDebug(logTemporary) << "readFromGdb2:" << response->buildDescription(true);
+			//qCDebug(logTemporary) << "readFromGdb2:" << response->buildDescription(true);
 			// Each command sent to gdb will generate at least one response. We store them
 			// for inform the call later about the result
 			responseQueue.append(response);
