@@ -71,6 +71,10 @@ class Actor : public QGraphicsSvgItem, public LayoutItem, public AlignedItem
 	virtual void resize(qreal left, qreal top, qreal width, qreal height) override;
 
   public:
+	/// Animates an actor appearing or disappearing from the scene
+	/// @return the actual duration of the animation in milliseconds after ajusting to the user
+	/// preference in visualization speed slider
+	static int animateAppear(QObject* object, int duration = 1000, int initialDelay = 0, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
 	/// Animates this actor appearing or disappearing from the scene
 	/// @return the actual duration of the animation in milliseconds after ajusting to the user
 	/// preference in visualization speed slider

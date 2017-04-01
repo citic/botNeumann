@@ -3,8 +3,6 @@
 
 #include <QGraphicsItem>
 
-class QObject;
-
 /// Abstract interface to provide alignment to any QGraphicsItem
 class AlignedItem
 {
@@ -27,12 +25,6 @@ class AlignedItem
 	inline void setShearX(qreal shearX, qreal shearY) { this->shearX = shearX; this->shearY = shearY; }
 	/// Resizes the graphic part of the given element and applies the alignment
 	void resizeItem(QGraphicsItem* item, qreal& left, qreal& top, qreal width, qreal height, bool mapToParent = true);
-
-  public:
-	/// Animates an actor appearing or disappearing from the scene
-	/// @return the actual duration of the animation in milliseconds after ajusting to the user
-	/// preference in visualization speed slider
-	static int animateAppear(QObject* object, int duration = 1000, int initialDelay = 0, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
 
   protected:
 	/// Applies alignment when resizing this element

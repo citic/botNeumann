@@ -70,10 +70,33 @@ void Actor::resize(qreal left, qreal top, qreal width, qreal height)
 
 // Animations ------------------------------------------------------------------------------------
 
+// static
+int Actor::animateAppear(QObject* object, int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
+{
+	Q_ASSERT(object);
+
+	// Adjust animation time
+	duration = VisualizationSpeed::getInstance().adjust(duration);
+	int totalDuration = initialDelay + duration;
+
+	// Animate the robot while it appears
+	QPropertyAnimation* animation = new QPropertyAnimation(object, "opacity", object);
+	animation->setDuration(totalDuration);
+
+	// Do not change initial value on delay
+	animation->setKeyValueAt(0.0, fromOpacity);
+	if ( totalDuration > 0 )
+		animation->setKeyValueAt(initialDelay / totalDuration, fromOpacity);
+	animation->setKeyValueAt(1.0, toOpacity);
+
+	animation->start();
+	return duration;
+}
+
 int Actor::animateAppear(int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
 {
 	updateLayoutItem();
-	return AlignedItem::animateAppear(this, duration, initialDelay, fromOpacity, toOpacity);
+	return animateAppear(this, duration, initialDelay, fromOpacity, toOpacity);
 }
 
 int Actor::transitionFaces(const QStringList& faces, QTimeLine::Direction direction, int duration)

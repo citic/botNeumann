@@ -1,4 +1,5 @@
 #include "LabelButton.h"
+#include "Actor.h"
 #include "BotNeumannApp.h"
 
 #include <QBrush>
@@ -32,7 +33,7 @@ void LabelButton::setText(const QString& text, bool updateLayout)
 
 int LabelButton::animateAppear(int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
 {
-	return AlignedItem::animateAppear(this, duration, initialDelay, fromOpacity, toOpacity);
+	return Actor::animateAppear(this, duration, initialDelay, fromOpacity, toOpacity);
 }
 
 void LabelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)

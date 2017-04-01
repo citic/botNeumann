@@ -1,9 +1,6 @@
 #include "AlignedItem.h"
 #include "VisualizationSpeed.h"
 
-#include <QObject>
-#include <QPropertyAnimation>
-
 void AlignedItem::applyAlignment(QGraphicsItem* item, qreal& left, qreal& top, qreal width, qreal height, qreal& scaleWidth, qreal& scaleHeight)
 {
 	Q_ASSERT(item);
@@ -46,26 +43,4 @@ void AlignedItem::resizeItem(QGraphicsItem* item, qreal& left, qreal& top, qreal
 	if ( mapToParent && parent )
 		posChild = parent->mapFromScene(posChild);
 	item->setPos(posChild);
-}
-
-int AlignedItem::animateAppear(QObject* object, int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
-{
-	Q_ASSERT(object);
-
-	// Adjust animation time
-	duration = VisualizationSpeed::getInstance().adjust(duration);
-	int totalDuration = initialDelay + duration;
-
-	// Animate the robot while it appears
-	QPropertyAnimation* animation = new QPropertyAnimation(object, "opacity", object);
-	animation->setDuration(totalDuration);
-
-	// Do not change initial value on delay
-	animation->setKeyValueAt(0.0, fromOpacity);
-	if ( totalDuration > 0 )
-		animation->setKeyValueAt(initialDelay / totalDuration, fromOpacity);
-	animation->setKeyValueAt(1.0, toOpacity);
-
-	animation->start();
-	return duration;
 }
