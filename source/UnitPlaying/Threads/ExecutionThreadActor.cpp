@@ -43,9 +43,15 @@ void ExecutionThreadActor::buildActor()
 int ExecutionThreadActor::updateLineNumber(int updatedLineNumber)
 {
 	Q_ASSERT(lineNumber);
+
+	// Disappear the old line number
+	int duration = lineNumber->animateDisappear(500);
+
+	// Change to the new line number (invisible)
 	lineNumber->setText( QString::number(updatedLineNumber), false );
-	// ToDo: animate the line change
-	return 0;
+
+	// Make the new line number appear
+	return duration + lineNumber->animateAppear(500);
 }
 
 const QColor& ExecutionThreadActor::getHighlightColor() const

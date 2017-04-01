@@ -12,6 +12,9 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	Q_OBJECT
 	Q_DISABLE_COPY(LabelButton)
 
+	/// To animate appear and disappear
+	Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity)
+
   public:
 	/// Creates an actor with the given svg filename
 	explicit LabelButton(const QString& label, QGraphicsItem* parentItem);
@@ -29,6 +32,12 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	void setText(const QString &text, bool updateLayout);
 	/// Sets the Z-index provided by layouts to the QGraphicsItem system
 	virtual void setZ(qreal zValue) override { setZValue(zValue); }
+	/// Animates this actor appearing or disappearing from the scene
+	/// @return the actual duration of the animation in milliseconds after ajusting to the user
+	/// preference in visualization speed slider
+	int animateAppear(int duration = 1000, int initialDelay = 0, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
+	/// Convenience method to disappear an actor
+	inline int animateDisappear(int duration = 1000, int initialDelay = 0) { return animateAppear(duration, initialDelay, 1.0, 0.0); }
 
   signals:
 	/// Emitted when this button is pressed

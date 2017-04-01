@@ -30,6 +30,11 @@ void LabelButton::setText(const QString& text, bool updateLayout)
 		updateLayoutItem();
 }
 
+int LabelButton::animateAppear(int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
+{
+	return AlignedItem::animateAppear(this, duration, initialDelay, fromOpacity, toOpacity);
+}
+
 void LabelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
 	emit pressed();
