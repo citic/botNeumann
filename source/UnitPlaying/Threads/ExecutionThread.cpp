@@ -293,6 +293,52 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 	return true;
 }
 
+bool ExecutionThread::checkForFunctionReturn(GdbCall* debuggerCall, int& maxDuration)
+{
+	// If we are running on the same function, do not animate a function return
+	// ToDo: it may have return several functions
+	int depthChange = updateCallStackDepth(debuggerCall);
+	if ( depthChange > INT_MAX && depthChange < 0 )
+		return returnFunction(debuggerCall, maxDuration);
+
+	// We do not need to aniamte a function call, probably we are at the same function
+	return false;
+}
+
+bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)
+{
+	// Animate the door opening in its CPU core
+	Q_ASSERT(cpuCore);
+	int duration = cpuCore->openMemoryInterface();
+
+	// Animate stack frame being dropped through the CPU core’s memory interface
+	Q_ASSERT(callStack);
+	duration += callStack->returnFunction(duration);
+
+	// ToDo: If using pointed data variable objects bn_pd_th_fc, remove all of the for function call
+	// fc index running by execution thread th. Example:
+
+	// -var-delete bn_pd_1_2
+	// ^done,ndeleted="1"
+	// (gdb)
+
+	// If there are remaining function calls, make them to move a step towards the robot, and
+	// return to the 5. Execution loop
+
+	// If there are no remaining function calls, execute -exec-continue:
+	// ...
+	Q_UNUSED(debuggerCall);
+
+	// Close the interface after the function is finally called
+	QTimer::singleShot( duration, cpuCore, SLOT(closeMemoryInterface()) );
+
+	// Tell caller the duration of the entire animation
+	if ( duration > maxDuration )
+		maxDuration = duration;
+
+	return true;
+}
+
 int ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
 {
 	// Get the number of functions currently being executed by this thread

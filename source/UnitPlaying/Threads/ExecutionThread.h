@@ -142,6 +142,11 @@ class ExecutionThread : public LinearLayout
 	void clearLocation();
 	/// Called when player solution stopped by a function body breakpoint
 	bool callFunction(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
+	/// Called in execution loop in order to know if there is a function return, and animates it
+	bool checkForFunctionReturn(GdbCall* debuggerCall, int& maxDuration);
+	/// Animates a function return, diving the current stack frame into the memory interface of the
+	/// CPU core. It also remove watches to local variable from memory mapper
+	bool returnFunction(GdbCall* debuggerCall, int& maxDuration);
 
   protected:
 	/// Build the robot and the call stack as objects in memory. They are not added to the layout

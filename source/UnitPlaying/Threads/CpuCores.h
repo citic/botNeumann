@@ -44,7 +44,7 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 	/// Player solution stopped by reason="end-stepping-range", and the tree tells the new line
 	/// being executed by the thread that stopped. We update it
-	void updateThreadFrame(const GdbItemTree& tree, int& maxDuration);
+	void updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 
   signals:
 	/// Emitted when an execution thread was updated from GDB

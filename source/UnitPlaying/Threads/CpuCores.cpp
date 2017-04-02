@@ -216,7 +216,7 @@ void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 	}
 }
 
-void CpuCores::updateThreadFrame(const GdbItemTree& tree, int& maxDuration)
+void CpuCores::updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
 {
 	// Player solution stopped by reason="end-stepping-range", and it includes a frame of the
 	// execution thread that stopped, update it
@@ -236,6 +236,9 @@ void CpuCores::updateThreadFrame(const GdbItemTree& tree, int& maxDuration)
 		// The thread was updated, refresh its highlighted line on the code editor
 		emit executionThreadUpdated(executionThread, maxDuration);
 	}
+
+	// Check if we are running on the same function
+	executionThread->checkForFunctionReturn(debuggerCall, maxDuration);
 }
 
 bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)

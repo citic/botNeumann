@@ -183,3 +183,18 @@ int CallStack::createLocalVariable(const GdbTreeNode* variableNode, int threadId
 	Q_ASSERT(variable);
 	return functionCall->allocate(variable, initialDelay);
 }
+
+int CallStack::returnFunction(int initialDelay)
+{
+	// The function call to be returned
+	Q_ASSERT( stackFrames.count() > 0 );
+	MemoryFrame* functionCall = stackFrames[ stackFrames.count() - 1 ];
+	Q_ASSERT( functionCall );
+
+	// Aniate it moving into the memory interface of the cpu core
+	int duration = functionCall->animateMoveTo( 1.0, functionCall->getHeightInRows() * 500, initialDelay );
+
+	// Remove local variables from MemoryMapper
+//	removeLocalVariables();
+	return duration;
+}

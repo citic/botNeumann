@@ -659,7 +659,7 @@ bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationCo
 
 	// * If breakpoint is functionBody or programEntryPoint: Do 4.2 Function call.
 	if ( breakpoint->hasRole(DebuggerBreakpoint::functionDefinition) )
-		unitPlayingScene->getCpuCores()->processFunctionCall(tree, debuggerCall, maxDuration);
+		return unitPlayingScene->getCpuCores()->processFunctionCall(tree, debuggerCall, maxDuration);
 
 	// * Do 4.5 Dynamic memory management breakpoint
 	return false;
@@ -704,7 +704,7 @@ bool Visualizator::processUserDefinedBreakpoint()
 bool Visualizator::processEndSteppingRange(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(context);
-	// The visualization step finished executing the next instruction
+
 	/*
 		^running
 		*running,
@@ -742,9 +742,12 @@ bool Visualizator::processEndSteppingRange(const GdbItemTree& tree, Visualizatio
 		(gdb)
 	*/
 
-	// Update ExecutionThread /thread-id with line number /frame/line
-	unitPlayingScene->getCpuCores()->updateThreadFrame(tree, maxDuration);
+	// The last exec-next generated the response *stopped,reason="end-stepping-range",
+	// one line of current function was executed, and no a new function was called.
+	// Update ExecutionThread /thread-id line number from the response /frame/line
+	unitPlayingScene->getCpuCores()->updateThreadFrame(tree, debuggerCall, maxDuration);
 
+	// Update potential changes in local variables of the current function:
 	// Done
 	return true;
 }

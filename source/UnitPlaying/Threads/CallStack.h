@@ -58,6 +58,9 @@ class CallStack : public RectLayoutItem
 	int createLocalVariables(const GdbTreeNode* gdbVariableArray, int threadId, int initialDelay);
 	/// Create one variable in the stack of the top-most function call
 	int createLocalVariable(const GdbTreeNode* variableNode, int threadId, MemoryFrame* functionCall, int initialDelay);
+	/// Animate a function return
+	/// @return The milliseconds required by the animation
+	int returnFunction(int initialDelay = 0);
 };
 
 #endif // CALLSTACK_H
