@@ -153,7 +153,14 @@ class ExecutionThread : public LinearLayout
 	/// @return Duration of the animation
 	int detach();
 	/// Updates the callStackDepth integer doing an inquiry to the debugger
-	bool updateCallStackDepth(GdbCall* debuggerCall);
+	/// Gdb may change function definition breakpoints to the first instruction of a function body.
+	/// If the instruction is a loop, it may execute several times and generate multiple breakpoint
+	/// hits. We avoid to call several times the same function if the call stack depth remains
+	/// equals (when this fuction returns 0).
+	/// @return The difference between the previous depth known by botNeumann and the actual depth
+	/// reported by GDB. This value can be: -INT_MAX on gdb errors, <0 if there were function
+	/// returns, 0 if we remain at the same function call, and >0 on a new function call
+	int updateCallStackDepth(GdbCall* debuggerCall);
 	/// Animate parameter passing to the new function call
 	int createLocalVariables(GdbCall* debuggerCall, const QString& gdbCommand, const QString& gdbRootNodeName, int initialDelay);
 };

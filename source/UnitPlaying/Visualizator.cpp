@@ -652,11 +652,11 @@ bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationCo
 	if ( context == visStarting )
 		return processEntryPoint(tree, breakpoint, maxDuration);
 
+	// If breakpoint object has one or more roles:
 	// * If breakpoint is userDefined: Do 4.4 User defined breakpoint.
 	if ( breakpoint->hasRole(DebuggerBreakpoint::userDefined) )
 		processUserDefinedBreakpoint();
 
-	// If breakpoint object has one or more roles:
 	// * If breakpoint is functionBody or programEntryPoint: Do 4.2 Function call.
 	if ( breakpoint->hasRole(DebuggerBreakpoint::functionDefinition) )
 		unitPlayingScene->getCpuCores()->processFunctionCall(tree, debuggerCall, maxDuration);
@@ -769,8 +769,10 @@ bool Visualizator::processSignalReceived(const GdbItemTree& tree, VisualizationC
 		},thread-id="1",
 		stopped-threads="all"
 	*/
-	const QString& message = QString("Your solution received signal %1 (%2)").arg( tree.findNodeTextValue("signal-name") ).arg( tree.findNodeTextValue("signal-meaning") );
 	unitPlayingScene->changeState(UnitPlayingState::finished);
+
+	// ToDo: Animate robot crashing
+	const QString& message = QString("Your solution received signal %1 (%2)").arg( tree.findNodeTextValue("signal-name") ).arg( tree.findNodeTextValue("signal-meaning") );
 	QMessageBox::warning(nullptr, tr("Program finished"), message, QMessageBox::Ok, QMessageBox::NoButton);
 	return false;
 }

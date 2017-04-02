@@ -9,6 +9,7 @@
 #include "Scene.h"
 #include "Spacer.h"
 
+#include <climits>
 #include <QTimer>
 
 ExecutionThread::ExecutionThread(size_t startByte, size_t rowSize, size_t maxSize, Scene* scene, int id)
@@ -263,12 +264,13 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 		return false;
 	}
 
+	// Update the stack depth value, reported by debugger
+	if ( updateCallStackDepth(debuggerCall) == 0 )
+		return false;
+
 	// Animate the door opening in its CPU core
 	Q_ASSERT(cpuCore);
 	int duration = cpuCore->openMemoryInterface();
-
-	// Update the stack depth value, reported by debugger
-	updateCallStackDepth(debuggerCall);
 
 	// Animate the function call
 	Q_ASSERT(callStack);
@@ -291,12 +293,12 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 	return true;
 }
 
-bool ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
+int ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
 {
 	// Get the number of functions currently being executed by this thread
 	GdbItemTree depthResponse;
 	if ( debuggerCall->sendGdbCommand("-stack-info-depth", visExecutionLoop, &depthResponse) == GDB_ERROR )
-		return false;
+		return -INT_MAX;
 
 	// GDB response seems:
 	//
@@ -304,11 +306,15 @@ bool ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
 	//	(gdb)
 
 	bool ok = false;
-	callStackDepth = depthResponse.findNodeTextValue("depth").toInt(&ok);
+	int newCallStackDepth = depthResponse.findNodeTextValue("depth").toInt(&ok);
 	Q_ASSERT(ok);
 
+	// The result value is the difference between the known depth to the new depth
+	int result = callStackDepth - newCallStackDepth;
+	callStackDepth = newCallStackDepth;
+
 	qCCritical(logTemporary, "ExecutionThread[%d]::callStackDepth=%d", id, callStackDepth);
-	return true;
+	return result;
 }
 
 int ExecutionThread::createLocalVariables(GdbCall* debuggerCall, const QString& gdbCommand, const QString& gdbRootNodeName, int initialDelay)
