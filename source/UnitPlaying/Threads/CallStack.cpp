@@ -17,7 +17,7 @@ CallStack::CallStack(size_t startByte, size_t rowSize, size_t maxSize, qreal zVa
 int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 {
 	// We start the count of watches for a new function call
-	watchCount = 0;
+	watchCounts.append(0);
 
 	// Parameters to build a memory frame:
 	QGraphicsItem* parent = this;
@@ -125,7 +125,7 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int thr
 
 	// The function call where local variabels will be defined is the topmost one
 	Q_ASSERT(stackFrames.count() > 0);
-	MemoryFrame* functionCall = stackFrames[ stackFrames.count() - 1 ];
+	MemoryFrame* functionCall = stackFrames.top();
 
 	// In order to know if the stack frame grew
 	size_t frameRows = functionCall->getRowCount();
@@ -173,7 +173,7 @@ int CallStack::createLocalVariable(const GdbTreeNode* variableNode, int threadId
 		return 0;
 
 	// Experimental: we set a watch also for local variables
-	const QString& watchName = QString("bn_lv_%1_%2_%3").arg(threadId).arg(stackFrames.count()).arg(++watchCount);
+	const QString& watchName = QString("bn_lv_%1_%2_%3").arg(threadId).arg(stackFrames.count()).arg(++watchCounts.top());
 
 	// Create a mapping
 	Q_ASSERT( MemoryMapper::getInstance() );
@@ -188,7 +188,7 @@ int CallStack::returnFunction(int initialDelay)
 {
 	// The function call to be returned
 	Q_ASSERT( stackFrames.count() > 0 );
-	MemoryFrame* functionCall = stackFrames[ stackFrames.count() - 1 ];
+	MemoryFrame* functionCall = stackFrames.top();
 	Q_ASSERT( functionCall );
 
 	// Aniate it moving into the memory interface of the cpu core

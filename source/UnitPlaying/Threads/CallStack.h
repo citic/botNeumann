@@ -28,10 +28,10 @@ class CallStack : public RectLayoutItem
 	size_t rowSize = 0;
 	/// The stack of frames or function calls
 	QStack<MemoryFrame*> stackFrames;
+	/// Counts the number of local variable watches for each stack frame
+	QStack<int> watchCounts;
 	/// Default number of rows in CPU cores
 	qreal cpuCoreRows = 0.0;
-	/// Counts the number of local variable watches for each stack frame
-	int watchCount = 0;
 
   public:
 	/// Constructor
