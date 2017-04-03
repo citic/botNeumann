@@ -123,3 +123,25 @@ bool MemoryMapper::addMapping(MemoryAllocation* watch)
 	mapNameMemoryAllocation.insert( watch->getId(), watch );
 	return true;
 }
+
+bool MemoryMapper::removeWatch(const QString& watchName)
+{
+	// Find the memory allocation associated to the watch name and delete it
+	MemoryAllocation* variable = mapNameMemoryAllocation.value(watchName, nullptr);
+	delete variable;
+
+	// Remove the (watchName,variable) association from the map
+	if ( mapNameMemoryAllocation.remove(watchName) <= 0 )
+		return false;
+
+	// Removes the gdb's watch
+	GdbItemTree resultWatch;
+	const QString& command = QString("-var-delete %1").arg(watchName);
+	if ( debuggerCall->sendGdbCommand(command, visMemoryMapper, &resultWatch) == GDB_ERROR )
+		qCCritical(logVisualizator).noquote() << "Failed to delete watch" << watchName;
+
+	// Check gdb watch deletion is success, eg:
+	// 8^done,ndeleted="1"
+	Q_ASSERT( resultWatch.findNodeTextValue("ndeleted") == "1" );
+	return true;
+}

@@ -72,6 +72,9 @@ class MemoryMapper : public QObject
 	/// @return true if the variable was allocated in the segment, false if there is no enough space
 	/// and a segment overflow should be animated
 	bool allocate(MemoryAllocation* memoryAllocation);
+	/// Removes the watch with the given name
+	/// @return true if the watch was removed, false if the watch does not exist
+	bool removeWatch(const QString& watchName);
 
   protected:
 	/// Adds a memory mapping. Gets the ramining information from GDB

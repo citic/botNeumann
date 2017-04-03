@@ -38,7 +38,7 @@ void ExecutionThread::buildExecutionThread()
 	// No functions are added to the call stack until the execution thread gets updated form GDB
 	// By default the call stack is invisible, until functions are called
 	Q_ASSERT(callStack == nullptr);
-	callStack = new CallStack(startByte, rowSize, maxSize, zUnitPlaying::stackFrame, scene);
+	callStack = new CallStack(id, startByte, rowSize, maxSize, zUnitPlaying::stackFrame, scene);
 	callStack->setMargins(0.06, 0.075);
 
 	// Add the call stack to this thread, but keep it invisible
@@ -413,5 +413,5 @@ int ExecutionThread::createLocalVariables(GdbCall* debuggerCall, const QString& 
 		gdbVariableArray = argFrame;
 
 	// Parameter passing is done by the callStack object
-	return callStack->createLocalVariables(gdbVariableArray, this->id, initialDelay);
+	return callStack->createLocalVariables(gdbVariableArray, initialDelay);
 }

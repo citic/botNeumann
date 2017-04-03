@@ -6,8 +6,11 @@
 #include "Scene.h"
 #include "VisualizationSpeed.h"
 
-CallStack::CallStack(size_t startByte, size_t rowSize, size_t maxSize, qreal zValue, QGraphicsItem* graphicsParentItem)
+#include <QTimer>
+
+CallStack::CallStack(int threadId, size_t startByte, size_t rowSize, size_t maxSize, qreal zValue, QGraphicsItem* graphicsParentItem)
 	: RectLayoutItem(Qt::Vertical, zValue, graphicsParentItem)
+	, threadId(threadId)
 	, startByte(startByte)
 	, maxSize(maxSize)
 	, rowSize(rowSize)
@@ -95,7 +98,7 @@ int CallStack::animateDisappear(int initialDelay)
 	return initialDelay + maxDuration;
 }
 
-int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int threadId, int initialDelay)
+int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int initialDelay)
 {
 	// Example of GDB response to `-stack-list-arguments 2 0 0`
 	/*
@@ -135,7 +138,7 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int thr
 	{
 		// Create the variable on the stack
 		const GdbTreeNode* variableNode = gdbVariableArray->getChild(varIndex);
-		int variableDuration = createLocalVariable(variableNode, threadId, functionCall, initialDelay);
+		int variableDuration = createLocalVariable(variableNode, functionCall, initialDelay);
 
 		// Adjust duration and the delay for the next variable
 		duration += variableDuration;
@@ -156,7 +159,7 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int thr
 	return duration;
 }
 
-int CallStack::createLocalVariable(const GdbTreeNode* variableNode, int threadId, MemoryFrame* functionCall, int initialDelay)
+int CallStack::createLocalVariable(const GdbTreeNode* variableNode, MemoryFrame* functionCall, int initialDelay)
 {
 	Q_ASSERT(variableNode);
 	Q_ASSERT(functionCall);
@@ -173,7 +176,7 @@ int CallStack::createLocalVariable(const GdbTreeNode* variableNode, int threadId
 		return 0;
 
 	// Experimental: we set a watch also for local variables
-	const QString& watchName = QString("bn_lv_%1_%2_%3").arg(threadId).arg(stackFrames.count()).arg(++watchCounts.top());
+	const QString& watchName = buildWatchName();
 
 	// Create a mapping
 	Q_ASSERT( MemoryMapper::getInstance() );
@@ -182,6 +185,13 @@ int CallStack::createLocalVariable(const GdbTreeNode* variableNode, int threadId
 	// Finally allocate a graphical variable in the stack frame
 	Q_ASSERT(variable);
 	return functionCall->allocate(variable, initialDelay);
+}
+
+QString CallStack::buildWatchName(int variableNumber)
+{
+	if ( variableNumber <= 0 )
+		variableNumber = ++watchCounts.top();
+	return QString("bn_lv_%1_%2_%3").arg(threadId).arg(stackFrames.count()).arg(variableNumber);
 }
 
 int CallStack::returnFunction(int initialDelay)
@@ -194,7 +204,29 @@ int CallStack::returnFunction(int initialDelay)
 	// Aniate it moving into the memory interface of the cpu core
 	int duration = functionCall->animateMoveTo( 1.0, functionCall->getHeightInRows() * 500, initialDelay );
 
-	// Remove local variables from MemoryMapper
-//	removeLocalVariables();
+	// Remove local variables from MemoryMapper and the stack frame when animation is finished
+	QTimer::singleShot( initialDelay + duration, this, SLOT(removeFunctionCall()) );
+
+	// Done
 	return duration;
+}
+
+bool CallStack::removeFunctionCall()
+{
+	// Remove the topmost watch counter
+	Q_ASSERT( watchCounts.count() > 0 );
+	int watchCount = watchCounts.pop();
+
+	// Delete watches for local variables in memory mapper
+	MemoryMapper* memoryMapper = MemoryMapper::getInstance();
+	Q_ASSERT( memoryMapper );
+	for ( int index = 1; index <= watchCount; ++index )
+		memoryMapper->removeWatch( buildWatchName(index) );
+
+	// Removes the topmost stackframe from the scene and memory
+	Q_ASSERT( stackFrames.count() > 0 );
+	stackFrames.pop()->removeAllItems(true);
+
+	// Done
+	return true;
 }

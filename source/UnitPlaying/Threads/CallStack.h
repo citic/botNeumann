@@ -3,6 +3,7 @@
 
 #include "RectLayoutItem.h"
 
+#include <QObject>
 #include <QStack>
 
 class GdbItemTree;
@@ -17,9 +18,14 @@ class MemoryFrame;
 	- dive the stack frame (function call) when the function returns,
 	- show a stack frame on top of others temporally when user selects it or during parameter-passing
 */
-class CallStack : public RectLayoutItem
+class CallStack : public QObject, public RectLayoutItem
 {
+	Q_OBJECT
+	Q_DISABLE_COPY(CallStack)
+
   protected:
+	/// The thread id that owns this call stack
+	int threadId = 0;
 	/// The memory address of the first byte assigned for stack memory to this execution thread
 	size_t startByte = 0;
 	/// The maximum size in bytes that the call stack can grow
@@ -35,7 +41,8 @@ class CallStack : public RectLayoutItem
 
   public:
 	/// Constructor
-	CallStack(size_t startByte, size_t rowSize, size_t maxSize, qreal zValue, QGraphicsItem* graphicsParentItem);
+	/// @param threadId We require the thread id to create watches
+	CallStack(int threadId, size_t startByte, size_t rowSize, size_t maxSize, qreal zValue, QGraphicsItem* graphicsParentItem);
 	/// Set the rows of the CPU where this call stack should be displayed
 	inline void setCpuCoreRows(qreal cpuCoreRows) { this->cpuCoreRows = cpuCoreRows; }
 	/// Animate a function call
@@ -54,13 +61,22 @@ class CallStack : public RectLayoutItem
 	int animateDisappear(int initialDelay = 0);
 	/// Create parameters and local variable in the top-most function call
 	/// @param gdbVariableArray Gdb node result that lists the local variables to be shown
-	/// @param threadId We require the thread id to create watches
-	int createLocalVariables(const GdbTreeNode* gdbVariableArray, int threadId, int initialDelay);
+	int createLocalVariables(const GdbTreeNode* gdbVariableArray, int initialDelay);
 	/// Create one variable in the stack of the top-most function call
-	int createLocalVariable(const GdbTreeNode* variableNode, int threadId, MemoryFrame* functionCall, int initialDelay);
+	int createLocalVariable(const GdbTreeNode* variableNode, MemoryFrame* functionCall, int initialDelay);
 	/// Animate a function return
 	/// @return The milliseconds required by the animation
 	int returnFunction(int initialDelay = 0);
+
+  protected slots:
+	/// Called when the innermost function return animation is finished in order to delete the stack
+	/// frame and its memory mappings
+	bool removeFunctionCall();
+
+  protected:
+	/// Get the watch name for a local variable for the topmost stack frame
+	/// @param Number of the local variable, if -1 a new number will be assigned
+	QString buildWatchName(int variableNumber = -1);
 };
 
 #endif // CALLSTACK_H
