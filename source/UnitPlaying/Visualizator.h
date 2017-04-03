@@ -204,6 +204,10 @@ class Visualizator : public GdbResponseListener
 	bool processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
 	/// Called when player solution stopped on some user-defined breakpoint. Visualization pauses
 	bool processUserDefinedBreakpoint();
+	/// Called when player solution stopped on some dynamic memory function (malloc, calloc, realloc
+	/// or free). If unit has dynamic memory enabled, it may animate some values changing in its
+	/// area or pointers in other segments that point to data in heap segment
+	bool processDynamicMemoryBreakpoint();
 	/// Called when a next-step comand finished in the next source code line
 	bool processEndSteppingRange(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 	/// A signal was received by the inferior, for example an assert() failed on inferior

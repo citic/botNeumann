@@ -86,7 +86,7 @@ bool Visualizator::start(bool preparation)
 
 		// The preparation phase is done, continue with the starting process
 	  #ifdef Q_OS_LINUX
-		setDynamicMemoryBreakpoints();
+//		setDynamicMemoryBreakpoints();
 	  #endif
 		watchStandardInputOutput();
 		watchGlobalVariables();
@@ -664,8 +664,8 @@ bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationCo
 	if ( breakpoint->hasRole(DebuggerBreakpoint::functionDefinition) )
 		return unitPlayingScene->getCpuCores()->processFunctionCall(tree, debuggerCall, maxDuration);
 
-	// * Do 4.5 Dynamic memory management breakpoint
-	return false;
+	// * if breakpoint is within a dynamic memory function, Do Dynamic memory management breakpoint
+	return processDynamicMemoryBreakpoint();
 }
 
 bool Visualizator::processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration)
@@ -702,6 +702,13 @@ bool Visualizator::processUserDefinedBreakpoint()
 	// When debugger enters in idle state, no more exec-next commands will be automatically sent.
 	// Execution will continue when user presses the resume button or the step button.
 	return true;
+}
+
+bool Visualizator::processDynamicMemoryBreakpoint()
+{
+	// ToDo
+	// if ( breakpoint->hasRole(DebuggerBreakpoint::) )
+	return false;
 }
 
 bool Visualizator::processEndSteppingRange(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
