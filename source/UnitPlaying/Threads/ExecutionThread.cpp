@@ -327,7 +327,6 @@ bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)
 
 	// If there are no remaining function calls, execute -exec-continue:
 	// ...
-	Q_UNUSED(debuggerCall);
 
 	// Close the interface after the function is finally called
 	QTimer::singleShot( duration, cpuCore, SLOT(closeMemoryInterface()) );
@@ -335,6 +334,11 @@ bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)
 	// Tell caller the duration of the entire animation
 	if ( duration > maxDuration )
 		maxDuration = duration;
+
+	// We must update the stack depth after a function return
+	int difference = updateCallStackDepth(debuggerCall);
+	qCInfo(logTemporary(), "Thread %d: function returned. Call stack depth: %d. Diff %d", id, callStackDepth, difference);
+	Q_ASSERT(difference < 0);
 
 	return true;
 }
