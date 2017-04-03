@@ -264,6 +264,9 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 		return false;
 	}
 
+	// We are going to ask a new command to gdb, and tree will be destroyed. Save a copy
+	GdbItemTree breakpointHitTree = tree;
+
 	// Update the stack depth value, reported by debugger
 	if ( updateCallStackDepth(debuggerCall) == 0 )
 		return false;
@@ -274,8 +277,8 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 
 	// Animate the function call
 	Q_ASSERT(callStack);
-	functionName = tree.findNodeTextValue("/frame/func");
-	duration += callStack->callFunction(tree, duration);
+	functionName = breakpointHitTree.findNodeTextValue("/frame/func");
+	duration += callStack->callFunction(breakpointHitTree, duration);
 
 	// Animate parameter passing and creation of local variables
 	duration += createLocalVariables(debuggerCall, "-stack-list-arguments 2 0 0", "stack-args", duration);
