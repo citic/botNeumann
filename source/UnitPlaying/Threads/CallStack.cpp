@@ -19,6 +19,9 @@ CallStack::CallStack(int threadId, size_t startByte, size_t rowSize, size_t maxS
 
 int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 {
+	// Make room for the new stack frame while the cpu core's memory interface is opening
+	animateMarginIncrease(-1.05, 1.05, 1.10, 1.05, initialDelay);
+
 	// We start the count of watches for a new function call
 	watchCounts.append(0);
 
@@ -96,6 +99,15 @@ int CallStack::animateDisappear(int initialDelay)
 	}
 
 	return initialDelay + maxDuration;
+}
+
+int CallStack::animateMarginIncrease(qreal topIncrease, qreal rightIncrease, qreal bottomIncrease, qreal leftInecrease, int duration, int initialDelay)
+{
+	// Increase margins from the outtermost (bottom) function call to the innermost (top)
+	for ( int index = 0; index < stackFrames.count(); ++index )
+		stackFrames[index]->animateMarginIncrease(topIncrease, rightIncrease, bottomIncrease, leftInecrease, duration, initialDelay);
+
+	return duration;
 }
 
 int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int initialDelay)

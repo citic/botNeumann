@@ -55,6 +55,8 @@ void LinearLayout::resize(qreal left, qreal top, qreal width, qreal height)
 // LinearLayoutActor class -----------------------------------------------------------------------
 
 #include "VisualizationSpeed.h"
+
+#include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
 
 LinearLayoutActor::LinearLayoutActor(Qt::Orientation orientation)
@@ -103,9 +105,39 @@ int LinearLayoutActor::animateMoveTo(qreal endProportion, int duration, int init
 	return duration;
 }
 
-void LinearLayoutActor::updateStartProportion(qreal startProportion)
+int LinearLayoutActor::animateMarginIncrease(qreal topIncrease, qreal rightIncrease, qreal bottomIncrease, qreal leftIncrease, int duration, int initialDelay)
 {
-	setStartProportion(startProportion);
+	QParallelAnimationGroup* groupAnimation = new QParallelAnimationGroup(this);
+	groupAnimation->addAnimation( createMarginAnimation("marginTop", topIncrease, getMarginTop(), duration, initialDelay) );
+	groupAnimation->addAnimation( createMarginAnimation("marginRight", rightIncrease, getMarginRight(), duration, initialDelay) );
+	groupAnimation->addAnimation( createMarginAnimation("marginBottom", bottomIncrease, getMarginBottom(), duration, initialDelay) );
+	groupAnimation->addAnimation( createMarginAnimation("marginLeft", leftIncrease, getMarginLeft(), duration, initialDelay) );
+
+	groupAnimation->start();
+	return VisualizationSpeed::getInstance().adjust(duration);
+}
+
+QPropertyAnimation* LinearLayoutActor::createMarginAnimation(const char* propertyName, qreal increaseFactor, qreal initialValue, int duration, int initialDelay)
+{
+	// Adjust animation time
+	duration = VisualizationSpeed::getInstance().adjust(duration);
+	int totalDuration = initialDelay + duration;
+
+	// Create an animation and set its duration
+	QPropertyAnimation* animation = new QPropertyAnimation(this, propertyName, this);
+	animation->setDuration(totalDuration);
+
+	// Do not change initial value on delay
+	animation->setKeyValueAt(0.0, initialValue);
+	if ( totalDuration > 0 )
+		animation->setKeyValueAt(qreal(initialDelay) / totalDuration, initialValue);
+	animation->setKeyValueAt(1.0, initialValue * increaseFactor);
+
+	return animation;
+}
+
+void LinearLayoutActor::updateParentLayoutItem()
+{
 	Q_ASSERT(parentLayoutItem);
 	parentLayoutItem->updateLayoutItem();
 }
