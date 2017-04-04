@@ -77,7 +77,7 @@ QPropertyAnimation* LinearLayoutActor::createMarginAnimation(const char* propert
 	animation->setKeyValueAt(0.0, initialValue);
 	if ( totalDuration > 0 )
 		animation->setKeyValueAt(qreal(initialDelay) / totalDuration, initialValue);
-	animation->setKeyValueAt(1.0, initialValue * increaseFactor);
+	animation->setKeyValueAt(1.0, initialValue + increaseFactor);
 
 	return animation;
 }

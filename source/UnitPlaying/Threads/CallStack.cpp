@@ -8,6 +8,9 @@
 
 #include <QTimer>
 
+const qreal marginIncreaseTopBottom = 0.15;
+const qreal marginIncreaseLeftRight = 0.01;
+
 CallStack::CallStack(int threadId, size_t startByte, size_t rowSize, size_t maxSize, qreal zValue, QGraphicsItem* graphicsParentItem)
 	: RectLayoutItem(Qt::Vertical, zValue, graphicsParentItem)
 	, threadId(threadId)
@@ -20,7 +23,7 @@ CallStack::CallStack(int threadId, size_t startByte, size_t rowSize, size_t maxS
 int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 {
 	// Make room for the new stack frame while the cpu core's memory interface is opening
-	animateMarginIncrease(-1.05, 1.05, 1.10, 1.05, initialDelay);
+	animateMarginIncrease(-marginIncreaseTopBottom, marginIncreaseLeftRight, marginIncreaseTopBottom, marginIncreaseLeftRight, initialDelay);
 
 	// We start the count of watches for a new function call
 	watchCounts.append(0);
@@ -215,6 +218,10 @@ int CallStack::returnFunction(int initialDelay)
 
 	// Aniate it moving into the memory interface of the cpu core
 	int duration = functionCall->animateMoveTo( 1.0, functionCall->getHeightInRows() * 500, initialDelay );
+
+	// Move the remaining function calls to the front in order to use the room that the finished
+	// function left while the cpu core's memory interface is closing
+	animateMarginIncrease(marginIncreaseTopBottom, -marginIncreaseLeftRight, -marginIncreaseTopBottom, -marginIncreaseLeftRight, initialDelay, duration);
 
 	// Remove local variables from MemoryMapper and the stack frame when animation is finished
 	QTimer::singleShot( initialDelay + duration, this, SLOT(removeFunctionCall()) );
