@@ -310,6 +310,13 @@ bool ExecutionThread::checkForFunctionReturn(GdbCall* debuggerCall, int& maxDura
 
 bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)
 {
+	// If there are no remaining function calls, execute `-exec-continue`. An execution thread may
+	// end with no stack frames (function calls). This is possible because we are not animating all
+	// function calls. Library functions may be executing. For example GNU libc++ runs
+	// __static_initialization_and_destruction_0 to call global objects' constructors before main().
+	if ( callStack->isEmpty() )
+		return debuggerCall->sendGdbCommand("-exec-continue", visExecutionLoop) != GDB_ERROR;
+
 	// Animate the door opening in its CPU core
 	Q_ASSERT(cpuCore);
 	int duration = cpuCore->openMemoryInterface();
@@ -327,9 +334,6 @@ bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)
 
 	// If there are remaining function calls, make them to move a step towards the robot, and
 	// return to the 5. Execution loop
-
-	// If there are no remaining function calls, execute -exec-continue:
-	// ...
 
 	// Close the interface after the function is finally called
 	QTimer::singleShot( duration, cpuCore, SLOT(closeMemoryInterface()) );
