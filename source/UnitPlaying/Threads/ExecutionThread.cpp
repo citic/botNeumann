@@ -363,10 +363,10 @@ int ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
 	Q_ASSERT(ok);
 
 	// The result value is the difference between the known depth to the new depth
-	int result = callStackDepth - newCallStackDepth;
-	callStackDepth = newCallStackDepth;
+	int result = newCallStackDepth - callStackDepth;
+	qCCritical(logTemporary, "ExecutionThread[%d]::callStackDepth from %d to %d (%+d)", id, callStackDepth, newCallStackDepth, result);
 
-	qCCritical(logTemporary, "ExecutionThread[%d]::callStackDepth=%d", id, callStackDepth);
+	callStackDepth = newCallStackDepth;
 	return result;
 }
 

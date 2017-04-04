@@ -34,6 +34,7 @@ int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 	const QString& functionName = tree.findNodeTextValue("/frame/func") + "()";
 	bool withGarbage = true;
 	bool withLegs = true;
+	qCCritical(logTemporary, "Calling function %s", qPrintable(functionName));
 
 	// Build a memory frame for the new stack frame with the function name (/frame/func) in the roof
 	// By default, memory frames are filled of garbage.
@@ -216,6 +217,7 @@ int CallStack::returnFunction(int initialDelay)
 	Q_ASSERT( stackFrames.count() > 0 );
 	MemoryFrame* functionCall = stackFrames.top();
 	Q_ASSERT( functionCall );
+	qCCritical(logTemporary, "Return from function %d", stackFrames.count());
 
 	// Aniate it moving into the memory interface of the cpu core
 	int duration = functionCall->animateMoveTo( 1.0, functionCall->getHeightInRows() * 500, initialDelay );
