@@ -357,8 +357,11 @@ bool Visualizator::resume()
 
 bool Visualizator::stepForward()
 {
+	// If there are pending responses, do not step next until they are processed
+	if ( processGdbResponse() != 0 )
+		return scheduleStepForward(100);
+
 	// Ask GDB to advance to the next line
-	qCCritical(logTemporary) << "======================================> Step forward";
 	Q_ASSERT(debuggerCall);
 	if ( debuggerCall->sendGdbCommand("-exec-next", visExecutionLoop) == GDB_ERROR )
 	{
@@ -393,17 +396,18 @@ bool Visualizator::scheduleStepForward(int time)
 
 // Responses received by GdbCall ------------------------------------------------------------------
 
-void Visualizator::processGdbResponse()
+int Visualizator::processGdbResponse()
 {
 	/// Do not process responses when visualization is stopped
-	if ( unitPlayingScene->isStopped() ) return;
+	if ( unitPlayingScene->isStopped() )
+		return -1;
 
 //	static long long callCount = 0;
 //	qCDebug(logVisualizator, "====processGdbResponse(%lld)", ++callCount);
 
 	// If there is an active animation, wait until it is done
 	if ( animationDone.remainingTime() > 0 )
-		return;
+		return 1;
 
 	// The last animation is finished, stop its timer
 	animationDone.stop();
@@ -413,7 +417,7 @@ void Visualizator::processGdbResponse()
 	// If animation is paused, do not animate
 	// Needed?
 	if ( unitPlayingScene->getState() == UnitPlayingState::paused && inStep == false )
-		return;
+		return -1;
 
 	// Fetch the next pending response
 	Q_ASSERT(debuggerCall);
@@ -423,7 +427,7 @@ void Visualizator::processGdbResponse()
 	if ( gdbResponse == nullptr )
 	{
 		inStep = false;
-		return;
+		return 0;
 	}
 
 	// Notify all actors to animate this response, they will inform how many milliseconds they
@@ -435,6 +439,7 @@ void Visualizator::processGdbResponse()
 	// response
 	animationDone.start(maxDuration);
 //	qCDebug(logVisualizator, "----processGdbResponse(%lld) next in %dms", callCount, maxDuration);
+	return 1;
 }
 
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)

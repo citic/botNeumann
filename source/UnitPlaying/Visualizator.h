@@ -106,7 +106,10 @@ class Visualizator : public GdbResponseListener
 	/// This method fetches the next pending GdbResponse and notifies actors to do the animation.
 	/// It waits until the animation is done. When it is done, it calls itself again to check if
 	/// there is more pending GdbResponses, until there is not more.
-	void processGdbResponse();
+	/// @return A negative value if no animation is done at all, eg: visualization stopped.
+	/// Return 0 if there are no pending responses to process and visualizator is ready to animate.
+	/// Return a positive value if there is a current animation in progress.
+	int processGdbResponse();
 	/// Called when user presses over a breakpoint symbol in order to create or remove it
 	/// Visualization controller requires this signal in order to clear the breakpont in
 	/// debugger when visualization is running. Internally the GuiBreakpoint object carries
