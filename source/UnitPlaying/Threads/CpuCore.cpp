@@ -51,11 +51,11 @@ void CpuCore::buildCpuCore()
 int CpuCore::openMemoryInterface()
 {
 	Q_ASSERT(memoryInterface);
-	return memoryInterface->transitionFaces(QTimeLine::Forward);
+	return memoryInterface->transitionFaces(QTimeLine::Forward, 500);
 }
 
 int CpuCore::closeMemoryInterface()
 {
 	Q_ASSERT(memoryInterface);
-	return memoryInterface->transitionFaces(QTimeLine::Backward);
+	return memoryInterface->transitionFaces(QTimeLine::Backward, 500);
 }
