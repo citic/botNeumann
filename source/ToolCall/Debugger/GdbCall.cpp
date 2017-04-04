@@ -496,7 +496,9 @@ GdbResponse* GdbCall::parseResultRecord()
 	if ( ! pendingCommands.isEmpty() )
 	{
 		GdbCommand cmd = pendingCommands.takeFirst();
+	  #ifdef LOG_GDB_RESPONSES
 		qCDebug(logDebugger).noquote() << "DONE" << cmd.getText();
+	  #endif
 	}
 
 	return response;

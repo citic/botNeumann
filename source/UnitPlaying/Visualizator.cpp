@@ -13,6 +13,8 @@
 
 #include <QMessageBox>
 
+#define LOG_GDB_RESPONSES 0
+
 #ifdef Q_OS_LINUX
 const char* const nameForMalloc  = "__libc_malloc";
 const char* const nameForCalloc  = "__libc_calloc";
@@ -445,7 +447,9 @@ int Visualizator::processGdbResponse()
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
+  #if LOG_GDB_RESPONSES
 	qCDebug(logTemporary, "onExecAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
+  #endif
 
 	switch ( asyncClass )
 	{
@@ -468,15 +472,28 @@ void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass
 void Visualizator::onStatusAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
+  #if LOG_GDB_RESPONSES
 	qCDebug(logTemporary, "onStatusAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
+  #else
+	Q_UNUSED(tree);
+	Q_UNUSED(asyncClass);
+	Q_UNUSED(context);
+  #endif
 }
 
 void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
 	Q_ASSERT(debuggerCall);
-	qCDebug(logTemporary, "onNotifyAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
 	const GdbTreeNode* node = nullptr;
+
+  #if LOG_GDB_RESPONSES
+	qCDebug(logTemporary, "onNotifyAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
+  #else
+	Q_UNUSED(tree);
+	Q_UNUSED(asyncClass);
+	Q_UNUSED(context);
+  #endif
 
 	switch ( asyncClass )
 	{
@@ -508,7 +525,12 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
+  #if LOG_GDB_RESPONSES
 	qCDebug(logTemporary, "onResult(%s) | ctx=%d", qPrintable(tree.buildDescription()), context);
+  #else
+	Q_UNUSED(tree);
+	Q_UNUSED(context);
+  #endif
 }
 
 void Visualizator::onConsoleStreamOutput(const QString& text, VisualizationContext context, int& maxDuration)
@@ -527,13 +549,23 @@ void Visualizator::onConsoleStreamOutput(const QString& text, VisualizationConte
 void Visualizator::onTargetStreamOutput(const QString& str, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
+  #if LOG_GDB_RESPONSES
 	qCDebug(logTemporary, "onTargetStreamOutput(%s) | ctx=%d", qPrintable(str), context);
+  #else
+	Q_UNUSED(str);
+	Q_UNUSED(context);
+  #endif
 }
 
 void Visualizator::onLogStreamOutput(const QString& str, VisualizationContext context, int& maxDuration)
 {
 	Q_UNUSED(maxDuration);
+  #if LOG_GDB_RESPONSES
 	qCDebug(logTemporary, "onLogStreamOutput(%s) | ctx=%d", qPrintable(str), context);
+  #else
+	Q_UNUSED(str);
+	Q_UNUSED(context);
+  #endif
 }
 
 
