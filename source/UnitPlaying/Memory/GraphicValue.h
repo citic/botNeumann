@@ -2,7 +2,7 @@
 #define GRAPHICVALUE_H
 
 #include "Common.h"
-#include "LinearLayout.h"
+#include "LinearLayoutActor.h"
 #include "MemoryAllocation.h"
 
 class LabelButton;

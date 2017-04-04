@@ -2,7 +2,7 @@
 #define MEMORYFRAME_H
 
 #include "Common.h"
-#include "LinearLayout.h"
+#include "LinearLayoutActor.h"
 
 #include <QLinkedList>
 
