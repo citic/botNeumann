@@ -301,7 +301,7 @@ bool ExecutionThread::checkForFunctionReturn(GdbCall* debuggerCall, int& maxDura
 	// If we are running on the same function, do not animate a function return
 	// ToDo: it may have return several functions
 	int depthChange = updateCallStackDepth(debuggerCall);
-	if ( depthChange > INT_MAX && depthChange < 0 )
+	if ( depthChange > -INT_MAX && depthChange < 0 )
 		return returnFunction(debuggerCall, maxDuration);
 
 	// We do not need to aniamte a function call, probably we are at the same function
@@ -341,7 +341,7 @@ bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)
 	// We must update the stack depth after a function return
 	int difference = updateCallStackDepth(debuggerCall);
 	qCInfo(logTemporary(), "Thread %d: function returned. Call stack depth: %d. Diff %d", id, callStackDepth, difference);
-	Q_ASSERT(difference < 0);
+	Q_ASSERT(difference <= 0);
 
 	return true;
 }
