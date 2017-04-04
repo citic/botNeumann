@@ -37,13 +37,14 @@ int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 
 	// Build a memory frame for the new stack frame with the function name (/frame/func) in the roof
 	// By default, memory frames are filled of garbage.
-	MemoryFrame* functionCall = new MemoryFrame(parent, rowCount, startByte, rowSize, functionName, zValue, withGarbage, withLegs, maxSize);
+	qreal zFunctionCall = zValue + 0.01 * stackFrames.count();
+	MemoryFrame* functionCall = new MemoryFrame(parent, rowCount, startByte, rowSize, functionName, zFunctionCall, withGarbage, withLegs, maxSize);
 
 	// Add the functionCall to the list
 	stackFrames.append(functionCall);
 
 	// Add the function call frame to the scene
-	insertItem(functionCall, 1.0, functionCall->getHeightInRows() / cpuCoreRows, zValue + 0.01 * stackFrames.count());
+	insertItem(functionCall, 1.0, functionCall->getHeightInRows() / cpuCoreRows, zFunctionCall);
 
 	// Raise the memory roof to the CPU core opened door, to make the roof visible only.
 	// The final position is calculated as the empty space on top of the memory frame

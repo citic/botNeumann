@@ -41,7 +41,7 @@ class Layout : public LayoutItem
 	/// Add expansible space
 	virtual void addStretch(qreal proportion, qreal zValue = 0.0);
 	/// zValue is currenlty only set for QGraphicsItem objects
-	virtual void setZ(qreal) { }
+	virtual void setZ(qreal) override { }
 	/// Find the zValue of this item in its parent, -1.0 if not added or not parent
 	/// @remarks The search is done in linear time
 	qreal findZValue() const;

@@ -11,8 +11,8 @@ class Actor;
 class QGraphicsItem;
 
 // Extra z-values for the parts of the graphic variable
-const qreal zPodOffset = 0.30;
-const qreal zLabelValueOffset = 0.31;
+const qreal zPodOffset = 0.00002;
+const qreal zLabelValueOffset = 0.00004;
 
 /**
 	Represents a value on the screen. Values can be standalone. They may be not values of a variable
@@ -55,6 +55,8 @@ class GraphicValue : public LinearLayoutActor
 	void setValue(const QString& value);
 	/// Constructs this value according to its data type
 	bool buildGraphicValue();
+	/// Updates zValue for children actors
+	virtual void setZ(qreal newZValue) override;
 
   protected:
 	/// Create the pod, the value, and the label for a bool or char value

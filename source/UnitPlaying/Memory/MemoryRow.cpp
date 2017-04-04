@@ -56,7 +56,7 @@ void MemoryRow::buildMemoryAddresses()
 	// Each memory address is for just one byte
 	const qreal byteProportion = getByteProportion();
 	// Memory address labels are in a higher layer
-	qreal zMemoryAddress = this->zValue + 0.2;
+	qreal zMemoryAddress = this->zValue + 0.002;
 
 	// Create a spacer for the left extreme
 	addItem(new Spacer(), byteProportion, zMemoryAddress);
@@ -79,7 +79,7 @@ void MemoryRow::buildGarbage()
 	// We place garbage in each byte
 	const qreal byteProportion = getByteProportion();
 	// Memory address labels are in a higher layer
-	qreal zGarbage = this->zValue + 0.4;
+	qreal zGarbage = this->zValue + 0.008;
 
 	// Create a spacer for the left extreme
 	addItem(new Spacer(), byteProportion, zGarbage);
@@ -172,7 +172,7 @@ int MemoryRow::allocate(MemoryAllocation* variable, int& entirelyAllocated, int 
 
 	// Dimensions of the row are calculated in terms of the lenght of a byte
 	const qreal byteProportion = getByteProportion();
-	const qreal zVariable = this->zValue + 0.3;
+	const qreal zVariable = this->zValue + 0.0004;
 
 	// If the variable is already allocated, we skip it
 	if ( graphicVariables.contains(graphicVariable) == false )

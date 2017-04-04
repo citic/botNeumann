@@ -87,6 +87,16 @@ bool GraphicValue::buildGraphicValue()
 	return true;
 }
 
+void GraphicValue::setZ(qreal newZValue)
+{
+	LinearLayoutActor::setZ(newZValue);
+	if ( podLeft ) podLeft->setZValue(newZValue + zPodOffset);
+	if ( podMiddle ) podMiddle->setZValue(newZValue + zPodOffset);
+	if ( podRight ) podRight->setZValue(newZValue + zPodOffset);
+
+	if ( valueLabel ) valueLabel->setZValue(newZValue + zLabelValueOffset);
+}
+
 bool GraphicValue::buildSingleByteVariable(const QString& asset, const qreal refDataMargins[])
 {
 	// Apply margins according to the height of the data type and the nesting on composite data types
