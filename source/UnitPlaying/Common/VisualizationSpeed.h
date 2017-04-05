@@ -29,6 +29,8 @@ class VisualizationSpeed : public QObject
 	/// Get the current delay factor, where 0.0 is fast-as-possible, 1.0 is normal and a number
 	/// greater than 1.0 is slow
 	inline double getDelayFactor() const { return seeking ? 0.0 : delayFactor; }
+	/// Get the speed that user can see in the speed selector
+	int getSpeed() const;
 	/// Apply the user speed factor to the given duration
 	/// @param The normal duration in milliseconds that an animation would take in normal speed
 	inline int adjust(int normalDuration) const { return normalDuration * getDelayFactor(); }

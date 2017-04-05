@@ -150,7 +150,7 @@ void CodeSegment::setupRunToolbar()
 	visualizationSpeedSlider->setFocusPolicy(Qt::WheelFocus);
 	visualizationSpeedSlider->setTickPosition(QSlider::TicksBelow);
 	visualizationSpeedSlider->setTickInterval(20);
-	visualizationSpeedSlider->setValue(100);
+	visualizationSpeedSlider->setValue( VisualizationSpeed::getInstance().getSpeed() );
 	visualizationSpeedSlider->setSingleStep(5);
 	visualizationSpeedSlider->setPageStep(10);
 	connect(visualizationSpeedSlider, SIGNAL(valueChanged(int)), this, SLOT(visualizationSpeedChanged(int)));

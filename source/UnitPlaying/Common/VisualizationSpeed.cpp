@@ -11,6 +11,11 @@ VisualizationSpeed& VisualizationSpeed::getInstance()
 	return visualizationSpeed;
 }
 
+int VisualizationSpeed::getSpeed() const
+{
+	return maxDelayFactor - 100 * delayFactor;
+}
+
 void VisualizationSpeed::updateSpeed(int userValue)
 {
 	Q_ASSERT(userValue >= 0 && userValue <= maxDelayFactor);
