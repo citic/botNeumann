@@ -77,6 +77,10 @@ bool MemoryAllocation::updateMissingFields(GdbCall* debuggerCall)
 				this->unrolledDataTypeStr.replace("type = ", "");
 				this->unrolledDataTypeStr.replace("\n", "");
 				parseDataTypeStr( unrolledDataTypeStr, debuggerCall );
+
+				// If it is still unknown, assume structures (they may have very complex declarations)
+				if ( dataType == typeUnknown )
+					dataType = typeStruct;
 			}
 		}
 	}
