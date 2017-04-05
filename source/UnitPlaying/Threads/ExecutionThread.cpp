@@ -267,13 +267,17 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 	// We are going to ask a new command to gdb, and tree will be destroyed. Save a copy
 	GdbItemTree breakpointHitTree = tree;
 
-	// Update the stack depth value, reported by debugger
+	// Update the stack depth value, reported by debugger. If no changes in stack frame, the
+	// breakpoint may have been updated by debugger to a loop statement. Ignore it
 	if ( updateCallStackDepth(debuggerCall) == 0 )
 		return false;
 
 	// Animate the door opening in its CPU core
 	Q_ASSERT(cpuCore);
 	int duration = cpuCore->openMemoryInterface();
+
+	// The tree has the new current location of the thread
+	updateLocation( breakpointHitTree.getRoot() );
 
 	// Animate the function call
 	Q_ASSERT(callStack);
