@@ -1,14 +1,17 @@
 #include "Visualizator.h"
+#include "BotNeumannApp.h"
 #include "CpuCores.h"
 #include "CtagsCall.h"
 #include "GdbCall.h"
 #include "GuiBreakpoint.h"
 #include "LogManager.h"
+#include "MemoryMapper.h"
 #include "MessagesArea.h"
+#include "Player.h"
 #include "PlayerSolution.h"
+#include "TestCaseManager.h"
 #include "UnitPlayingScene.h"
 #include "Util.h"
-#include "MemoryMapper.h"
 #include "VisualizationSpeed.h"
 
 #include <QMessageBox>
@@ -608,8 +611,8 @@ bool Visualizator::processPlayerSolutionStopped(const GdbItemTree& tree, Visuali
 	//else if ( reason == "exited" )
 	//	processExited(tree, context, maxDuration);
 	// The inferior exited normally.
-	//else if ( reason == "exited-normally" )
-	//	processExitedNormally(tree, context, maxDuration);
+	else if ( reason == "exited-normally" )
+		return processExitedNormally(tree, context, maxDuration);
 	// A signal was received by the inferior.
 	else if ( reason == "signal-received" )
 		processSignalReceived(tree, context, maxDuration);
@@ -825,6 +828,38 @@ bool Visualizator::processSignalReceived(const GdbItemTree& tree, VisualizationC
 	const QString& message = QString("Your solution received signal %1 (%2)").arg( tree.findNodeTextValue("signal-name") ).arg( tree.findNodeTextValue("signal-meaning") );
 	QMessageBox::warning(nullptr, tr("Program finished"), message, QMessageBox::Ok, QMessageBox::NoButton);
 	return false;
+}
+
+bool Visualizator::processExitedNormally(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
+{
+	// Gdb response:
+	// *stopped,reason="exited-normally"
+	Q_UNUSED(tree);
+	Q_UNUSED(context);
+	Q_UNUSED(maxDuration);
+
+	// Change state to finished
+	unitPlayingScene->changeState(UnitPlayingState::finished);
+
+	// Did player solution passed all test cases?
+	TestCaseManager* testCaseManager = unitPlayingScene->getTestCaseManager();
+	Q_ASSERT(testCaseManager);
+	Q_ASSERT(playerSolution->getTestCasesCount() == testCaseManager->getTestCaseCount());
+	int testCasePassed = testCaseManager->countPassedTestCases();
+	int testCaseCount = testCaseManager->getTestCaseCount();
+
+	// Save wether player passed or failed the test case in settings
+	bool passed = testCasePassed == testCaseCount;
+	const QString& filename = unitPlayingScene->getUnitFilename();
+	BotNeumannApp::getInstance()->getCurrentPlayer()->setCompletedUnit(filename, passed);
+
+	// ToDo: Animate robot congratulating
+	const QString& messageFailed = QString("Your solution passed %1 out %2 test cases").arg(testCasePassed).arg(testCaseCount);
+	const QString& messagePassed = QString("Congrulations!\nYour solution passed all the %1 test cases.\nPress the Back button to return to the problem selection screen").arg(testCaseCount);
+	const QString& message = passed ? messagePassed : messageFailed;
+	QMessageBox::information(nullptr, tr("Solution finished normally"), message, QMessageBox::Ok);
+
+	return true;
 }
 
 bool Visualizator::updateWatches()

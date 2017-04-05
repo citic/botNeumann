@@ -34,8 +34,12 @@ class Player : public QObject
 	bool load();
 	/// Save an entry for this player on settings
 	bool save();
-	/// Returns true if this player completed the unit with the given id (or base filename)
-	bool hasCompletedUnit(const QString& unitId);
+	/// Returns true if this player completed the unit with the given filename
+	bool hasCompletedUnit(const QString& unitFilename);
+	/// Saves in settings if this player has completed the unit with the given filename
+	bool setCompletedUnit(const QString& filename, bool completed);
+	/// Get the key to store/retrieve the state of an unit by its filename
+	QString buildCompletedUnitKey(const QString& filename) const;
 	/// Returns the path to the directory in the local machine to store data for this player, for
 	/// example, his/her products according he or he is going progressing through the game
 	/// This method is protected because it does not create the folder if it does not exist

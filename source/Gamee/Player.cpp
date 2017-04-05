@@ -50,11 +50,26 @@ bool Player::save()
 	return true;
 }
 
-bool Player::hasCompletedUnit(const QString& unitId)
+bool Player::hasCompletedUnit(const QString& unitFilename)
 {
 	QSettings settings;
-	const QString& key = "Players/" + id + '/' + unitId + "/Completed";
+	const QString& key = buildCompletedUnitKey(unitFilename);
 	return settings.value(sk(key), false).toBool();
+}
+
+bool Player::setCompletedUnit(const QString& filename, bool completed)
+{
+	QSettings settings;
+	const QString& key = buildCompletedUnitKey(filename);
+	settings.setValue(sk(key), completed);
+	settings.sync();
+	return true;
+}
+
+QString Player::buildCompletedUnitKey(const QString& filename) const
+{
+	const QString& unitId = QFileInfo(filename).baseName();
+	return "Players/" + id + '/' + unitId + "/Completed";
 }
 
 QString Player::getLocalDataPath() const

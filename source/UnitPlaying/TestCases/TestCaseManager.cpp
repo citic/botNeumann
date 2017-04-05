@@ -89,6 +89,17 @@ bool TestCaseManager::createAndRunTestCase(int index, const qreal testerWidthPro
 	return testCaseActor->testPlayerSolution(playerSolution);
 }
 
+int TestCaseManager::countPassedTestCases() const
+{
+	int passedCount = 0;
+
+	for ( int index = 0; index < testCaseActors.count(); ++index )
+		if ( testCaseActors[index]->isPassed() )
+			++passedCount;
+
+	return passedCount;
+}
+
 void TestCaseManager::clearAnimation()
 {
 	// If there are not test cases, done

@@ -37,6 +37,11 @@ class TestCaseManager : public QObject, public LinearLayout
 	explicit TestCaseManager(Scene* scene, QObject* parent = nullptr);
 	/// Set the player solution for later use
 	inline void setPlayerSolution(PlayerSolution* playerSolution) { this->playerSolution = playerSolution; }
+	/// Get the count of test cases
+	inline int getTestCaseCount() const { return testCaseActors.count(); }
+	/// Get the number of passed test cases by player solution
+	/// @remarks Call this method after all test cases have been run
+	int countPassedTestCases() const;
 
   signals:
 	/// Emitted when user changed the test case being visualized

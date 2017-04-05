@@ -87,6 +87,8 @@ class UnitPlayingScene : public GameScene
 	inline UnitPlayingState getState() const { return state; }
 	/// Return true if visualization is stopped and no animations must be done at all
 	inline bool isStopped() const { return state == UnitPlayingState::editing; }
+	/// Return the filename of the .botnu Unit file
+	inline const QString& getUnitFilename() const { return filename; }
 	/// Give access to the code segment object
 	inline CodeSegment* getCodeSegment() const { return codeSegment; }
 	/// Give access to the heap segment object
@@ -97,6 +99,8 @@ class UnitPlayingScene : public GameScene
 	inline DataSegment* getDataSegment() const { return dataSegment; }
 	/// Give access to the messages area object
 	inline MessagesArea* getMessagesArea() const { return messagesArea; }
+	/// Give access to the test case manager
+	inline TestCaseManager* getTestCaseManager() const { return testCaseManager; }
 	/// Get access to the breakpoints list set by the user
 	QList<GuiBreakpoint*> retrieveBreakpoints();
 	/// Change the state of the visualization and emit the @a stateChanged signal

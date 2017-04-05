@@ -90,8 +90,7 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 	qreal averageUnitWidth = 1.0 / (unitCountInLevel);
 
 	// The chip and its state depends on the status the current player has reached for it
-	const QString& unitId = QFileInfo(filename).baseName();
-	bool playerCompletedUnit = BotNeumannApp::getInstance()->getCurrentPlayer()->hasCompletedUnit(unitId);
+	bool playerCompletedUnit = BotNeumannApp::getInstance()->getCurrentPlayer()->hasCompletedUnit(filename);
 
 	// Add a pneumatic tube
 	Actor* pneumaticTube = new Actor("us_air_tube_short", this);
@@ -109,10 +108,6 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 	// The button will be enabled if player completed the unit it or it is the first not completed
 	button->setEnabled(currentUnitEnabled);
 	if ( ! playerCompletedUnit ) currentUnitEnabled = false;
-
-  #ifdef QT_DEBUG
-	currentUnitEnabled = true;
-  #endif
 
 	// Each button represents an unit. When the button is pressed, the respective unit should be
 	// loaded, pass the filename by a QObject's dynamic property

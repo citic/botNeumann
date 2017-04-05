@@ -68,6 +68,8 @@ class TestCaseActor : public Actor
 	/// @param updateInterface Send true if the actor should change its face to reflect the
 	/// activation or de-activation change
 	void setActiveTestCase(bool active, bool updateInterface = false);
+	/// Returns true if this test case was passed by player solution
+	inline bool isPassed() const { return result == passed; }
 
   signals:
 	/// Emitted when user presses this test case in order to make it active

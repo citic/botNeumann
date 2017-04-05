@@ -215,6 +215,9 @@ class Visualizator : public GdbResponseListener
 	bool processEndSteppingRange(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 	/// A signal was received by the inferior, for example an assert() failed on inferior
 	bool processSignalReceived(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
+	/// Player solution finished normally. If it passed all test cases, player is congratulated and
+	/// the level is marked as passed
+	bool processExitedNormally(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 	/// Update watches in gdb, and updates the visualization if some watches were modified
 	bool updateWatches();
 };
