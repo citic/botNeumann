@@ -216,7 +216,14 @@ void CodeSegment::loadPlayerCodeForUnit(PlayerSolution* playerSolution, Unit* un
 void CodeSegment::playerSolutionBuilt(CompiledProgram* playerSolutionProgram)
 {
 	// ToDo: if there were compiling or linking errors, mark the lines
-	Q_UNUSED(playerSolutionProgram);
+
+	// If player solution was built with no errors, it will be start animating
+	if ( playerSolutionProgram->getErrorCount() == 0 )
+	{
+		// Save code editor cursors and clear them to reduce noise while animation
+		Q_ASSERT(codeEditor);
+		codeEditor->setAnimating(true);
+	}
 }
 
 void CodeSegment::newFileTriggered()
@@ -303,12 +310,13 @@ void CodeSegment::clearAnimation()
 {
 	// Remove all the highlights in code editors
 	Q_ASSERT(codeEditor);
-	codeEditor->clearHighlights();
+	codeEditor->setAnimating(false);
 }
 
 void CodeSegment::executionThreadUpdated(ExecutionThread* executionThread, int& maxDuration)
 {
 	// Get the file index of the execution thread
+	Q_UNUSED(maxDuration);
 	Q_ASSERT(playerSolution);
 
 	// If we have to clear the previous highlighted line
@@ -328,6 +336,7 @@ void CodeSegment::executionThreadUpdated(ExecutionThread* executionThread, int& 
 		if ( fileIndex >= 0 && fileIndex == fileSelector->currentIndex() )
 		{
 			codeEditor->addHighlight( executionThread->getLineNumber(), executionThread->getHighlightColor(), true );
+			codeEditor->makeLineVisible( executionThread->getLineNumber() );
 
 			// The update was accepted, we feedback the execution thread in order to update the
 			// line number on the actor (robot) and make a backup of the filename and line number

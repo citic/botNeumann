@@ -53,6 +53,10 @@ class CodeEditor : public QPlainTextEdit
 	LineColorsType lineColors;
 	/// Traces the line where the user has the cursor, in order to update the higlihgt efficiently
 	int currentLine = -1;
+	/// True if it is in animating mode
+	bool animating = false;
+	/// Saves the text cursor before starting the animation. It will recovered when it is finished
+	QTextCursor savedCursor;
 
   public:
 	/// Constructor
@@ -91,6 +95,14 @@ class CodeEditor : public QPlainTextEdit
 	void toggleBreakpoint(QTextBlock& block);
 	/// Get access to the list of user-defined breakpoints
 	QList<GuiBreakpoint*> retrieveBreakpoints();
+	/// Sets if the visualization is in animating state
+	void setAnimating(bool state);
+	/// Saves the cursor. Eg: before starting an animation
+	inline void saveCursor() { savedCursor = textCursor(); }
+	/// Restores the saved cursor. Eg: after finishing an animation
+	inline void restoreCursor() { setTextCursor( savedCursor ); highlightCurrentLine(); }
+	/// Scrolls the editor to make the given line visible
+	void makeLineVisible(int line);
 
   signals:
 	/// Emited when user presses over a breakpoint symbol in order to create or remove it
@@ -104,7 +116,7 @@ class CodeEditor : public QPlainTextEdit
 	/// @return true on success or when there is not need to save, false on error
 	bool saveChanges();
 	/// Place cursor in the given line (block) and column
-	void placeCursor(int line, int column );
+	void placeCursor(int line, int column);
 	/// Hightlights the line with the given color
 	/// @param updateView If true, the change will apply immediately in the interface
 	void addHighlight(int line, const QColor& backgroundColor, bool updateView = true);

@@ -380,6 +380,10 @@ void CodeEditor::updateLineNumberArea(const QRect& rect, int dy)
 
 void CodeEditor::highlightCurrentLine()
 {
+	// Do not highlight in animating mode
+	if ( animating )
+		return;
+
 	// Get the line number where the cursor is
 	// Line numbers are 1-based, block numbers are 0-based
 	int newCurrentLine = textCursor().blockNumber() + 1;
@@ -473,11 +477,40 @@ void CodeEditor::placeCursor(int line, int column)
 	if ( line < 0 || line >= blockCount() )
 		return;
 
-	QTextCursor cur( document()->findBlockByLineNumber(line) );
-	cur.movePosition(QTextCursor::NextCharacter, QTextCursor::MoveAnchor, column);
-	setTextCursor(cur);
+	// Now move the cursor to the desired position
+	QTextCursor cursor( document()->findBlockByLineNumber(line) );
+	cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::MoveAnchor, column);
+	setTextCursor(cursor);
 	setFocus();
 
 	// ToDo: change the color of the number in the line number area
 	//lineNumberArea
+}
+
+void CodeEditor::makeLineVisible(int line)
+{
+	// If asked, scroll the editor to make the cursor visible
+	// This is made using a trick: move the cursor to the end before
+	moveCursor(QTextCursor::End);
+	placeCursor(line, 0);
+}
+
+void CodeEditor::setAnimating(bool state)
+{
+	// If no change, do nothing
+	if ( animating == state )
+		return;
+
+	// State changed. If we are now animating
+	animating = state;
+	if ( animating )
+	{
+		saveCursor();
+		clearHighlights(false);
+	}
+	else
+	{
+		restoreCursor();
+		clearHighlights(true);
+	}
 }
