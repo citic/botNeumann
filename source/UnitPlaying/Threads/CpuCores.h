@@ -42,9 +42,10 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	virtual bool deallocate(MemoryAllocation* memoryAllocation) override;
 	/// Called when player solution stopped by a function body breakpoint
 	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
-	/// Player solution stopped by reason="end-stepping-range", and the tree tells the new line
-	/// being executed by the thread that stopped. We update it
-	void updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
+	/// GDB generated any response that has a '/frame/' subtree. E.g: stopped by
+	/// reason="end-stepping-range", or "reason="breakpoint-hit". The '/frame' subtree tells the
+	/// line being executed by the thread. We update it
+	void updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkForFunctionReturn);
 
   signals:
 	/// Emitted when an execution thread was updated from GDB

@@ -216,7 +216,7 @@ void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 	}
 }
 
-void CpuCores::updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
+void CpuCores::updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkForFunctionReturn)
 {
 	// Player solution stopped by reason="end-stepping-range", and it includes a frame of the
 	// execution thread that stopped, update it
@@ -238,7 +238,8 @@ void CpuCores::updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall,
 	}
 
 	// Check if we are running on the same function
-	executionThread->checkForFunctionReturn(debuggerCall, maxDuration);
+	if ( checkForFunctionReturn )
+		executionThread->checkForFunctionReturn(debuggerCall, maxDuration);
 }
 
 bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
@@ -257,12 +258,5 @@ bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCal
 	Q_ASSERT(executionThread);
 
 	// The execution thread will animate the function call
-	if ( executionThread->callFunction(tree, debuggerCall, maxDuration) )
-	{
-		// The thread changed its position, reflect it
-		emit executionThreadUpdated(executionThread, maxDuration);
-		return true;
-	}
-
-	return false;
+	return executionThread->callFunction(tree, debuggerCall, maxDuration);
 }

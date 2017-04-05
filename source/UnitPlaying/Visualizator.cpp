@@ -690,6 +690,9 @@ bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationCo
 	DebuggerBreakpoint* breakpoint = debuggerBreakpoints[breakpointNumber];
 	Q_ASSERT(breakpoint);
 
+	// Update the line number in execution thread actor and code editor
+	unitPlayingScene->getCpuCores()->updateThreadFrame(tree, debuggerCall, maxDuration, false);
+
 	// If visualization is in starting state and entryPointTree is null process Program entry point:
 	// if ( unitPlayingScene->getState() == UnitPlayingState::starting )
 	if ( context == visStarting )
@@ -795,7 +798,7 @@ bool Visualizator::processEndSteppingRange(const GdbItemTree& tree, Visualizatio
 	// The last exec-next generated the response *stopped,reason="end-stepping-range",
 	// one line of current function was executed, and no a new function was called.
 	// Update ExecutionThread /thread-id line number from the response /frame/line
-	unitPlayingScene->getCpuCores()->updateThreadFrame(tree, debuggerCall, maxDuration);
+	unitPlayingScene->getCpuCores()->updateThreadFrame(tree, debuggerCall, maxDuration, true);
 
 	// Update potential changes in local variables of the current function:
 	// Done
