@@ -45,7 +45,12 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// GDB generated any response that has a '/frame/' subtree. E.g: stopped by
 	/// reason="end-stepping-range", or "reason="breakpoint-hit". The '/frame' subtree tells the
 	/// line being executed by the thread. We update it
-	void updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkForFunctionReturn);
+	void updateThreadFrame(const GdbItemTree& tree, int& maxDuration);
+	/// Checks the call stack depth of the execution thread that generated the given tree. If there
+	/// was a function return, animates it. It do not update the line number on the execution thread
+	/// actor and code editor
+	/// @return true if a function returned, false if we are running at the same function
+	bool checkForFunctionReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 
   signals:
 	/// Emitted when an execution thread was updated from GDB
@@ -79,6 +84,10 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// @param threadIndex If a pointer is given, the pointed variable will be updated with the
 	/// index where the found thread is located
 	ExecutionThread* findThread(int id, int* threadIndex = nullptr) const;
+	/// Finds the thread from any tree that contains a '/thread-id' node
+	/// @param threadIndex If a pointer is given, the pointed variable will be updated with the
+	/// index where the found thread is located
+	ExecutionThread* findThread(const GdbItemTree& tree, int* threadIndex = nullptr) const;
 };
 
 #endif // CPUCORES_H

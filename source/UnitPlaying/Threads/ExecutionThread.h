@@ -143,6 +143,7 @@ class ExecutionThread : public LinearLayout
 	/// Called when player solution stopped by a function body breakpoint
 	bool callFunction(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 	/// Called in execution loop in order to know if there is a function return, and animates it
+	/// @return true if a function returned, false if we are running at the same function
 	bool checkForFunctionReturn(GdbCall* debuggerCall, int& maxDuration);
 	/// Animates a function return, diving the current stack frame into the memory interface of the
 	/// CPU core. It also remove watches to local variable from memory mapper

@@ -182,6 +182,18 @@ ExecutionThread* CpuCores::findThread(int id, int* threadIndex) const
 	return nullptr;
 }
 
+ExecutionThread* CpuCores::findThread(const GdbItemTree& tree, int* threadIndex) const
+{
+	// Get the thread id number from the tree
+	int threadId = 0;
+	bool ok = false;
+	threadId = tree.findNodeTextValue("/thread-id").toInt(&ok);
+	Q_ASSERT(ok);
+
+	// Get the ExecutionThread object that is identified by the given id
+	return findThread(threadId, threadIndex);
+}
+
 void CpuCores::clearAnimation()
 {
 	// Remove all execution threads, visible or not
@@ -216,18 +228,13 @@ void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 	}
 }
 
-void CpuCores::updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkForFunctionReturn)
+void CpuCores::updateThreadFrame(const GdbItemTree& tree, int& maxDuration)
 {
-	// Player solution stopped by reason="end-stepping-range", and it includes a frame of the
-	// execution thread that stopped, update it
-	int threadId = 0;
-	bool ok = false;
-	threadId = tree.findNodeTextValue("/thread-id").toInt(&ok);
-	Q_ASSERT(ok);
+	// Player solution stopped by reason="end-stepping-range" or any other that includes a frame of
+	// the execution thread that stopped, update it
 
 	// Get the ExecutionThread object that is identified by the given id
-	ExecutionThread* executionThread = findThread(threadId);
-	Q_ASSERT(threadId > 0);
+	ExecutionThread* executionThread = findThread(tree);
 	Q_ASSERT(executionThread);
 
 	// The execution thread will animate the function call
@@ -236,10 +243,14 @@ void CpuCores::updateThreadFrame(const GdbItemTree& tree, GdbCall* debuggerCall,
 		// The thread was updated, refresh its highlighted line on the code editor
 		emit executionThreadUpdated(executionThread, maxDuration);
 	}
+}
 
-	// Check if we are running on the same function
-	if ( checkForFunctionReturn )
-		executionThread->checkForFunctionReturn(debuggerCall, maxDuration);
+bool CpuCores::checkForFunctionReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
+{
+	// Get the ExecutionThread object that is identified by the given id
+	ExecutionThread* executionThread = findThread(tree);
+	Q_ASSERT(executionThread);
+	return executionThread->checkForFunctionReturn(debuggerCall, maxDuration);
 }
 
 bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)

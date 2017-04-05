@@ -308,7 +308,7 @@ bool ExecutionThread::checkForFunctionReturn(GdbCall* debuggerCall, int& maxDura
 	if ( depthChange > -INT_MAX && depthChange < 0 )
 		return returnFunction(debuggerCall, maxDuration);
 
-	// We do not need to aniamte a function call, probably we are at the same function
+	// We do not need to animate a function call, probably we are at the same function
 	return false;
 }
 
