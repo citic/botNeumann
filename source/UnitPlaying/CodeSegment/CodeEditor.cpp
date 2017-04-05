@@ -492,7 +492,16 @@ void CodeEditor::makeLineVisible(int line)
 	// If asked, scroll the editor to make the cursor visible
 	// This is made using a trick: move the cursor to the end before
 	moveCursor(QTextCursor::End);
-	placeCursor(line, 0);
+
+	// Move the cursor some lines before the attempted line, to give a little context
+	placeCursor( qMax(0, line - getVisibleLines() / 2), 0);
+}
+
+int CodeEditor::getVisibleLines()
+{
+	QFontMetrics fontMetrics( font() );
+	qreal rowHeight = fontMetrics.lineSpacing();
+	return  width() / rowHeight;
 }
 
 void CodeEditor::setAnimating(bool state)

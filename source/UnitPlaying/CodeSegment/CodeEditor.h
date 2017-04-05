@@ -103,6 +103,8 @@ class CodeEditor : public QPlainTextEdit
 	inline void restoreCursor() { setTextCursor( savedCursor ); highlightCurrentLine(); }
 	/// Scrolls the editor to make the given line visible
 	void makeLineVisible(int line);
+	/// Calculates the approximate number of visible lines according to the height of the editor
+	int getVisibleLines();
 
   signals:
 	/// Emited when user presses over a breakpoint symbol in order to create or remove it
