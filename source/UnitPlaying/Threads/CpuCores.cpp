@@ -208,6 +208,43 @@ void CpuCores::clearAnimation()
 
 void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 {
+	/*
+	-thread-info
+	^done,
+	threads=
+	[
+		{
+			id="1",
+			target-id="Thread 0x7ffff7fcd740 (LWP 18683)",
+			name="average_n",
+			frame=
+			{
+				level="0",
+				addr="0x0000000000402803",
+				func="InputArgument::InputArgument",
+				args=
+				[
+					{
+						name="this",
+						value="0x60b580 <global_program_name>"
+					},
+					{
+						name="number",
+						value="0"
+					},
+					{
+						name="value",
+						value="0x406ea3 \"all_inclusive\""
+					}
+				],
+				file="/tmp/bn_user/average_n/main.cpp",
+				fullname="/tmp/bn_user/average_n/main.cpp",
+				line="64"
+			},state="stopped",
+			core="5"
+		}
+	],current-thread-id="1"
+	*/
 	// Each child node of threadsNode is a thread in execution, gets its information
 	for ( int childIndex = 0; childIndex < threadsNode->getChildCount(); ++childIndex )
 	{

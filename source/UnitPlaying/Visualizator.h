@@ -219,7 +219,11 @@ class Visualizator : public GdbResponseListener
 	/// the level is marked as passed
 	bool processExitedNormally(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 	/// Update watches in gdb, and updates the visualization if some watches were modified
-	bool updateWatches();
+	bool processWatchesUpdated(const GdbItemTree& tree, int& maxDuration);
+	/// Updates the modified variables according to the watch updated
+	bool processWatchUpdate(const GdbTreeNode* watchNode, int& maxDuration);
+	/// Reflects the value change of a local variable
+	bool processLocalVariableUpdate(const GdbTreeNode* watchNode, int& maxDuration);
 };
 
 #endif // VISUALIZATOR_H
