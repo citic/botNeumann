@@ -128,11 +128,15 @@ class ExecutionThread : public LinearLayout
 	bool updateFromDebugger(const GdbTreeNode* threadNode);
 	/// Update the location (the source code file and line) that this execution thread is running
 	/// If the line number has changed, updates the number on the robot
+	/// @param breakpointLineNumber The line number where the breakpoint was originally set. GDB
+	/// modifies breakpoints to the first executable line in the body. We want to highlight the
+	/// line where the function is declared during the function call, instead. If 0 or negative
+	/// the line number in @a threadNode will be used.
 	/// @return true if the new location should be reflected in code editor. Return false if
 	/// the thread has no changed its location
 	/// @remarks The returned value should be used to ask the CodeEditor to highlight the line
 	/// being executed by this tread using its robot color
-	bool updateLocation(const GdbTreeNode* threadNode);
+	bool updateLocation(const GdbTreeNode* threadNode, int breakpointLineNumber = -1);
 	/// Called from code editor when the location change is within the player solution. The line
 	/// number on the actor (robot) is updated and the duration of the animation is returned. Also
 	/// makes a backup of the location (filename and line number)

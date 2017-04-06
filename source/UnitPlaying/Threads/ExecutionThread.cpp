@@ -191,7 +191,7 @@ bool ExecutionThread::updateFromDebugger(const GdbTreeNode* threadNode)
 	return /* locationChanged =*/ updateLocation(threadNode);
 }
 
-bool ExecutionThread::updateLocation(const GdbTreeNode* threadNode)
+bool ExecutionThread::updateLocation(const GdbTreeNode* threadNode, int breakpointLineNumber)
 {
 	bool locationChanged = false;
 
@@ -206,8 +206,12 @@ bool ExecutionThread::updateLocation(const GdbTreeNode* threadNode)
 		locationChanged = true;
 	}
 
+	// We prefer to use breakpoint lines than adjusted GDB lines
+	int updatedLineNumber = breakpointLineNumber;
+	if ( updatedLineNumber <= 0 )
+		updatedLineNumber = threadNode->findTextValue("frame/line").toInt();
+
 	// If the execution thread stays at the same line, do not reflect any change on the GUI
-	int updatedLineNumber = threadNode->findTextValue("frame/line").toInt();
 	if ( lineNumber != updatedLineNumber )
 	{
 		// Update to the new line number

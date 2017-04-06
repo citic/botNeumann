@@ -45,7 +45,10 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// GDB generated any response that has a '/frame/' subtree. E.g: stopped by
 	/// reason="end-stepping-range", or "reason="breakpoint-hit". The '/frame' subtree tells the
 	/// line being executed by the thread. We update it
-	void updateThreadFrame(const GdbItemTree& tree, int& maxDuration);
+	/// @param breakpointLineNumber The line number where the breakpoint was originally set. GDB
+	/// modifies breakpoints to the first executable line in the body. We want to highlight the
+	/// line where the function is declared during the function call, instead.
+	void updateThreadFrame(const GdbItemTree& tree, int& maxDuration, int breakpointLineNumber);
 	/// Checks the call stack depth of the execution thread that generated the given tree. If there
 	/// was a function return, animates it. It do not update the line number on the execution thread
 	/// actor and code editor

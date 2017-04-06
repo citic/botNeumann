@@ -7,6 +7,8 @@
 #include "Scene.h"
 #include "Unit.h"
 
+#include <QTimer>
+
 // Reserve 1 more row for idle threads, and create visual separation between cores and data segment
 const double idleThreadsRows = 1.0;
 
@@ -228,7 +230,7 @@ void CpuCores::updateThreads(const GdbTreeNode* threadsNode, int& maxDuration)
 	}
 }
 
-void CpuCores::updateThreadFrame(const GdbItemTree& tree, int& maxDuration)
+void CpuCores::updateThreadFrame(const GdbItemTree& tree, int& maxDuration, int breakpointLineNumber)
 {
 	// Player solution stopped by reason="end-stepping-range" or any other that includes a frame of
 	// the execution thread that stopped, update it
@@ -238,7 +240,7 @@ void CpuCores::updateThreadFrame(const GdbItemTree& tree, int& maxDuration)
 	Q_ASSERT(executionThread);
 
 	// The execution thread will animate the function call
-	if ( executionThread->updateLocation( tree.getRoot() ) )
+	if ( executionThread->updateLocation( tree.getRoot(), breakpointLineNumber ) )
 	{
 		// The thread was updated, refresh its highlighted line on the code editor
 		emit executionThreadUpdated(executionThread, maxDuration);
@@ -259,15 +261,20 @@ bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCal
 	// at the beginning of the body of a function in a file that is part of player solution.
 	// See comment at Visualization::processBreakpointHit() body for a breakpoint-hit example
 
-	// Get the /thread-id="#" from *stopped response
-	bool ok = false;
-	int threadId = tree.findNodeTextValue("/thread-id").toInt(&ok);
-	Q_ASSERT(ok);
-
-	// Get the ExecutionThread object that is identified by that number
-	ExecutionThread* executionThread = findThread(threadId);
+	// Get the ExecutionThread object that is identified by /thread-id="#"
+	ExecutionThread* executionThread = findThread(tree);
 	Q_ASSERT(executionThread);
 
 	// The execution thread will animate the function call
-	return executionThread->callFunction(tree, debuggerCall, maxDuration);
+	if ( executionThread->callFunction(tree, debuggerCall, maxDuration) )
+	{
+		// The function was called. When the animation of function call is finished, the control
+		// will continue at the first executable line of the function body. That line's number is
+		// indicated by tree's '/frame/line' value. Highlight it
+
+		// ToDo: Update line number at the end of function call animation
+		return true;
+	}
+
+	return false;
 }
