@@ -91,6 +91,9 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// @param threadIndex If a pointer is given, the pointed variable will be updated with the
 	/// index where the found thread is located
 	ExecutionThread* findThread(const GdbItemTree& tree, int* threadIndex = nullptr) const;
+	/// Highlights the given line in thread's actor and code editor
+	/// This method is called as an ugly fix for function call two-line steps. See updateThreadFrame
+	void updateThreadLine(ExecutionThread* thread, int lineNumber);
 };
 
 #endif // CPUCORES_H

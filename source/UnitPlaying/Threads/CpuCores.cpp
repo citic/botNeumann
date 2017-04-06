@@ -264,6 +264,7 @@ bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCal
 	// Get the ExecutionThread object that is identified by /thread-id="#"
 	ExecutionThread* executionThread = findThread(tree);
 	Q_ASSERT(executionThread);
+	int treeLineNumber = tree.findNodeTextValue("frame/line").toInt();
 
 	// The execution thread will animate the function call
 	if ( executionThread->callFunction(tree, debuggerCall, maxDuration) )
@@ -271,10 +272,20 @@ bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCal
 		// The function was called. When the animation of function call is finished, the control
 		// will continue at the first executable line of the function body. That line's number is
 		// indicated by tree's '/frame/line' value. Highlight it
-
-		// ToDo: Update line number at the end of function call animation
+		QTimer* timer = new QTimer(this);
+		timer->setSingleShot(true);
+		connect(timer, &QTimer::timeout, [this, executionThread, treeLineNumber]{ this->updateThreadLine(executionThread, treeLineNumber); } );
+		timer->start(maxDuration / 2);
 		return true;
 	}
 
 	return false;
+}
+
+void CpuCores::updateThreadLine(ExecutionThread* thread, int lineNumber)
+{
+	Q_ASSERT(thread);
+	thread->setLineNumber(lineNumber);
+	int duration = 0;
+	emit executionThreadUpdated(thread, duration);
 }
