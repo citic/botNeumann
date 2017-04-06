@@ -8,6 +8,7 @@
 
 class GdbCall;
 class GdbItemTree;
+class GdbTreeNode;
 class GraphicVariable;
 class MemoryRow;
 
@@ -150,6 +151,10 @@ struct MemoryAllocation
 	/// @return Pointer to the object to be placed in the given bytes; nullptr if this memory
 	/// allocation is not placed in the given address range or this memory allocation is free
 	GraphicVariable* getGraphicVariableFor(VisAddress firstByte, VisAddress lastByte, MemoryRow* memoryRow);
+	/// Update the value for this memory allocation. If it has one or several graphic variables,
+	/// the value change will be animated.
+	/// @return The duration of the animation in milliseconds
+	int updateValue(const GdbTreeNode* watchNode);
 
   protected:
 	/// Parses the @a dataTypeStr text trying to identify the data type of the variable

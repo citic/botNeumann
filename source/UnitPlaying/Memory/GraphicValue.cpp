@@ -55,6 +55,14 @@ void GraphicValue::setValue(const QString& value)
 		valueLabel->setText( value, true );
 }
 
+int GraphicValue::animateValueChange(const QString& value)
+{
+	this->value = value;
+	if ( valueLabel )
+		return valueLabel->animateSetText(value);
+	return 0;
+}
+
 bool GraphicValue::buildGraphicValue()
 {
 	// Create the pod, the value, and the label of the variable

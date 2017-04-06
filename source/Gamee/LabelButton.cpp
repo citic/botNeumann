@@ -31,6 +31,18 @@ void LabelButton::setText(const QString& text, bool updateLayout)
 		updateLayoutItem();
 }
 
+int LabelButton::animateSetText(const QString& text)
+{
+	// Disappear the old value
+	int duration = animateDisappear(1000);
+
+	// Change to the new value while the lable is invisible
+	setText( text, false );
+
+	// Make the text appear
+	return duration + animateAppear(1000);
+}
+
 int LabelButton::animateAppear(int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
 {
 	return Actor::animateAppear(this, duration, initialDelay, fromOpacity, toOpacity);

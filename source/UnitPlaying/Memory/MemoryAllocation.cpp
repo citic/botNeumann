@@ -372,3 +372,29 @@ GraphicVariable* MemoryAllocation::getGraphicVariableFor(VisAddress firstByte, V
 	graphicVariables.append(graphicVariable);
 	return graphicVariable;
 }
+
+int MemoryAllocation::updateValue(const GdbTreeNode* watchNode)
+{
+	// A watch node is part of a /changelist response:
+	/*
+	{
+		name="bn_lv_1_1_2",
+		value="5",
+		in_scope="true",
+		type_changed="false",
+		has_more="0"
+	}
+	*/
+
+	// Get the new value
+	value = watchNode->findTextValue("value");
+
+	// Update the value in all sliced graphic varibles, and take the maximum duration
+	int maxDuration = 0, current = 0;
+	for ( int index = 0; index < graphicVariables.count(); ++index )
+		if ( (current = graphicVariables[index]->animateValueChange(value)) > maxDuration )
+			maxDuration = current;
+
+	// Done
+	return maxDuration;
+}

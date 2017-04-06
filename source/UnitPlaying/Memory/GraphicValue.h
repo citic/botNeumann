@@ -53,6 +53,9 @@ class GraphicValue : public LinearLayoutActor
 	virtual VisAddress getSize() const;
 	/// Set the value and update the interface
 	void setValue(const QString& value);
+	/// Animate the value changing
+	/// @return The duration of the animation in milliseconds, 0 if not value is shown
+	int animateValueChange(const QString& value);
 	/// Constructs this value according to its data type
 	bool buildGraphicValue();
 	/// Updates zValue for children actors

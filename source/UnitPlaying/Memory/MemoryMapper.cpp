@@ -205,9 +205,22 @@ bool MemoryMapper::updateWatch(const GdbTreeNode* watchNode, int& maxDuration)
 
 bool MemoryMapper::updateLocalVariable(const GdbTreeNode* watchNode, int& maxDuration)
 {
-	Q_UNUSED(maxDuration);
+	// Get the name of the watch
 	const QString& watchName = watchNode->findTextValue("name");
 	qCCritical(logTemporary()) << "Updating local variable:" << watchName;
-	return false;
-}
 
+	// Find the variable (memory allocation) that was updated
+	MemoryAllocation* variable = mapNameMemoryAllocation.value(watchName, nullptr);
+	Q_ASSERT(variable);
+
+	// Update the variable's value in all its graphical variables
+	int duration = variable->updateValue(watchNode);
+
+	// Caller needs the longest duration to know how many milliseconds to wait until advance to the
+	// next visualization step
+	if ( duration > maxDuration )
+		maxDuration = duration;
+
+	// Done
+	return duration >= 0;
+}

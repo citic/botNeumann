@@ -30,6 +30,9 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	/// @param updateLayout true if the LayoutItem::updateLayoutItem() should be called
 	/// to update the dimensions of the label
 	void setText(const QString &text, bool updateLayout);
+	/// Animate the value of the label changing
+	/// @return The duration of the animation in milliseconds
+	int animateSetText(const QString& text);
 	/// Sets the Z-index provided by layouts to the QGraphicsItem system
 	virtual void setZ(qreal zValue) override { setZValue(zValue); }
 	/// Animates this actor appearing or disappearing from the scene
