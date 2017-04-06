@@ -184,6 +184,11 @@ int MemoryRow::allocate(MemoryAllocation* variable, int& entirelyAllocated, int 
 		insertItem( graphicVariable, (firstByte - start + 1) * byteProportion, (lastByte - firstByte + 1) * byteProportion, zVariable );
 		qCCritical(logTemporary, "MemRow: %s proportion %lf", qPrintable(variable->name), (lastByte - firstByte + 1) * byteProportion);
 
+		// ToDo: Check if variable is initialized (the current value of the variable appears in
+		// its declaration). Currently we hide garbage for all variables
+		int dummy = 0;
+		showGarbage(firstByte, lastByte, false, initialDelay, dummy);
+
 		// Make the variable appear
 		duration += graphicVariable->animateAppear(1000, initialDelay);
 		this->updateLayoutItem();
