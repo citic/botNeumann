@@ -244,7 +244,10 @@ bool Visualizator::startInferior()
 	inferiorProcessId = 0;
 	GdbState oldState = gdbState;
 	gdbState = STATE_STARTING;
-	if ( debuggerCall->sendGdbCommand("-exec-run --start", visStarting) == GDB_ERROR )
+
+	// --start unnecesary because a breakpoint is set to main() coming from ctags
+	// And GDB sets it to first executable line of main()'s body instead of its declaration
+	if ( debuggerCall->sendGdbCommand("-exec-run" /* --start*/, visStarting) == GDB_ERROR )
 	{
 		gdbState = oldState;
 		return false;
