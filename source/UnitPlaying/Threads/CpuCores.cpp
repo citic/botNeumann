@@ -278,6 +278,12 @@ bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCal
 		timer->start(maxDuration / 2);
 		return true;
 	}
+	else
+	{
+		// The function call was rejected, because it was an adjusted breakpoint by GDB
+		// Highlight the current line reported by gdb
+		updateThreadLine(executionThread, treeLineNumber);
+	}
 
 	return false;
 }
