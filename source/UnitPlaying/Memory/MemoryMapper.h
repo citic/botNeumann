@@ -6,10 +6,11 @@
 #include <QObject>
 #include <QHash>
 
-class HeapSegment;
+class CodeSegment;
 class CpuCores;
 class DataSegment;
-class CodeSegment;
+class GdbTreeNode;
+class HeapSegment;
 
 /** Maps variables in player solution with graphical variables in visualization. Also manages
 	some control variables that are used to produce the visualization, but they are not directly
@@ -75,11 +76,17 @@ class MemoryMapper : public QObject
 	/// Removes the watch with the given name
 	/// @return true if the watch was removed, false if the watch does not exist
 	bool removeWatch(const QString& watchName);
+	/// Update watches in gdb, and updates the visualization if some watches were modified
+	bool updateWatches(const GdbItemTree& tree, int& maxDuration);
 
   protected:
 	/// Adds a memory mapping. Gets the ramining information from GDB
 	/// @return true on success, false otherwise
 	bool addMapping(MemoryAllocation* watch);
+	/// Updates the modified variables according to the watch updated
+	bool updateWatch(const GdbTreeNode* watchNode, int& maxDuration);
+	/// Reflects the value change of a local variable
+	bool updateLocalVariable(const GdbTreeNode* watchNode, int& maxDuration);
 };
 
 #endif // MEMORYMAPPER_H

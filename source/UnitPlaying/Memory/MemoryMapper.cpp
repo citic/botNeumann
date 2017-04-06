@@ -145,3 +145,69 @@ bool MemoryMapper::removeWatch(const QString& watchName)
 	Q_ASSERT( resultWatch.findNodeTextValue("ndeleted") == "1" );
 	return true;
 }
+
+bool MemoryMapper::updateWatches(const GdbItemTree& tree, int& maxDuration)
+{
+	/*
+		^done,
+		changelist=
+		[
+			{
+				name="bn_lv_1_1_2",
+				value="5",
+				in_scope="true",
+				type_changed="false",
+				has_more="0"
+			},
+			{
+				name="bn_lv_1_1_1",
+				value="2",
+				in_scope="true",
+				type_changed="false",
+				has_more="0"
+			}
+		]
+	*/
+	const GdbTreeNode* changeList = tree.findNode("/changelist");
+	Q_ASSERT(changeList);
+
+	// Process each changed watch
+	for ( int childIndex = 0; childIndex < changeList->getChildCount(); ++childIndex )
+		updateWatch( changeList->getChild(childIndex), maxDuration );
+
+	return true;
+}
+
+bool MemoryMapper::updateWatch(const GdbTreeNode* watchNode, int& maxDuration)
+{
+	// Get the name of the watch
+	Q_ASSERT(watchNode);
+	const QString& watchName = watchNode->findTextValue("name");
+
+	// Act according to the type of the watch. It is indicated by its name:
+
+	// bn_io_file  :  standard input/output/error streams
+	// bn_gv_n     :  global variable with number n
+	// bn_lv_t_f_n :  local variable n of thread t, function f
+	// bn_pd_th_fc :  pointed data in function call fc of thread th
+
+	if ( watchName.startsWith("bn_lv_") )
+		return updateLocalVariable(watchNode, maxDuration);
+//	if ( watchName.startsWith("bn_io_") )
+//		return processInputOutputUpdate(watchNode, maxDuration);
+//	if ( watchName.startsWith("bn_gv_") )
+//		return processGlobalVariableUpdate(watchNode, maxDuration);
+//	if ( watchName.startsWith("bn_pd_") )
+//		return processPointedDataUpdate(watchNode, maxDuration);
+
+	return false;
+}
+
+bool MemoryMapper::updateLocalVariable(const GdbTreeNode* watchNode, int& maxDuration)
+{
+	Q_UNUSED(maxDuration);
+	const QString& watchName = watchNode->findTextValue("name");
+	qCCritical(logTemporary()) << "Updating local variable:" << watchName;
+	return false;
+}
+
