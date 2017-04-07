@@ -100,6 +100,12 @@ class Visualizator : public GdbResponseListener
 	void dispatchGdbResponse(const GdbResponse* response, int& maxDuration);
 	/// Emitted when the visualization has finished the starting phase and it is now animating
 	void animationStarted();
+	/// On each step of the visualization, the cursors of the standard input/output/error files
+	/// are requested to GDB. This signal is called when gdb replies to each of these consults.
+	/// @param tree The response yield by GDB containing the cursor of the file
+	/// @param context Use this enumeration to determine the type of file: input/output/error
+	/// @param maxDuration Required to wait all animations finished before stepping forward
+	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 
   public slots:
 	/// Called when there are pending GdbResponses to process.
@@ -218,6 +224,7 @@ class Visualizator : public GdbResponseListener
 	/// Player solution finished normally. If it passed all test cases, player is congratulated and
 	/// the level is marked as passed
 	bool processExitedNormally(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
+	///
 };
 
 #endif // VISUALIZATOR_H

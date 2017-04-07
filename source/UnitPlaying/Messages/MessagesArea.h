@@ -2,10 +2,13 @@
 #define MESSAGESAREA_H
 
 #include "GdbCommon.h"
+#include "VisualizationContext.h"
+
 #include <QDockWidget>
 
 class Compiler;
 class CompiledProgram;
+class GdbItemTree;
 class Diagnostic;
 class PlayerSolution;
 class StandardInputOutputInspector;
@@ -65,6 +68,9 @@ class MessagesArea : public QDockWidget
 	void playerSolutionBuilt(CompiledProgram* compiledProgram);
 	/// Appends a message sent by the debugger (e.g. GDB)
 	void appendDebuggerMessage(QtMsgType type, const QString& category, const QString& message);
+	/// Called when we get an updated cursor from gdb
+	/// @see Visualizator::updateStandardInputOutput()
+	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 
   protected slots:
 	/// Called when user selects a diagnostic in the tools output list

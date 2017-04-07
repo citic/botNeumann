@@ -292,6 +292,10 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), cpuCores, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 
+	// When there is an update on the standard input/output/error cursor
+	connect( visualizator, &Visualizator::updateStandardInputOutput, dataSegment, &DataSegment::updateStandardInputOutput );
+	connect( visualizator, &Visualizator::updateStandardInputOutput, messagesArea, &MessagesArea::updateStandardInputOutput );
+
 	// When user asks to step forward
 	connect( codeSegment, SIGNAL(userSteppedForward()), visualizator, SLOT(stepForward()) );
 

@@ -55,7 +55,7 @@ int InputOutputBuffer::animateFill()
 
 int InputOutputBuffer::animateRead(int length)
 {
-	Q_UNUSED(length);
+	qCCritical(logTemporary()) << "ToDo: animating read of" << length << "bytes...";
 	return 0;
 }
 
@@ -71,10 +71,19 @@ int InputOutputBuffer::clear()
 
 // StandardInputOutput class ----------------------------------------------------------------------
 
-StandardInputOutput::StandardInputOutput(const QString& type, Unit& unit, Scene* scene)
-	: MemorySegment(unit, scene, Qt::Horizontal)
+const char* const ioTypeStr[] =
 {
-	buildStandardInputOutput(type);
+	"input",
+	"output",
+	"error",
+	"",
+};
+
+StandardInputOutput::StandardInputOutput(Type type, Unit& unit, Scene* scene)
+	: MemorySegment(unit, scene, Qt::Horizontal)
+	, type(type)
+{
+	buildStandardInputOutput();
 }
 
 bool StandardInputOutput::loadFile(const QString& filepath)
@@ -93,10 +102,37 @@ bool StandardInputOutput::loadFile(const QString& filepath)
 	return true;
 }
 
-void StandardInputOutput::buildStandardInputOutput(QString type)
+bool StandardInputOutput::updateCursor(int cursor, int& maxDuration)
+{
+	// Calculate how many bytes were read or written
+	Q_ASSERT(buffer);
+	int difference = cursor - buffer->getCursor();
+
+	// If we are at the same cursor, nothing to animate
+	if ( difference == 0 )
+		return false;
+
+	// There is difference
+	// ToDo: We assume no seeking (i.e. player does not call fseek() or seekg())
+	Q_ASSERT(difference > 0);
+
+	// According to the type of this tube, we animate a read or write operation
+	int duration = 0;
+	if ( type == standardInput )
+		duration = buffer->animateRead(difference);
+	else
+		/*duration = buffer->animateWrite(difference)*/;
+
+	if ( duration > maxDuration )
+		maxDuration = duration;
+
+	return duration >= 0;
+}
+
+void StandardInputOutput::buildStandardInputOutput()
 {
 	Q_ASSERT(scene);
-	Q_ASSERT(type == "input" || type == "output");
+	Q_ASSERT(type == standardInput || type == standardOutput);
 
 	// Calculate the percent size of a byte of the data segment
 	size_t rowSize = unit.getDataSegmentSize() / unit.getDataSegmentRows();
@@ -113,11 +149,15 @@ void StandardInputOutput::buildStandardInputOutput(QString type)
 	// The elbow requires almost a pair of bytes
 	double elbowProportion = 2.0 * byteWidth;
 
+	// Map the type to a string
+	Q_ASSERT(type < standardIoUnknown);
+	const char* typeStr = ioTypeStr[type];
+
 	// A tube has three parts: left, middle, and right
-	Actor* left = new Actor(QString("up_standard_%1_left").arg(type), scene);
-	Actor* middle = new Actor(QString("up_standard_%1_middle").arg(type), scene);
-	Actor* coupling = new Actor(QString("up_standard_input_output_coupling").arg(type), scene);
-	Actor* right = new Actor(QString("up_standard_%1_right").arg(type), scene);
+	Actor* left = new Actor(QString("up_standard_%1_left").arg(typeStr), scene);
+	Actor* middle = new Actor(QString("up_standard_%1_middle").arg(typeStr), scene);
+	Actor* coupling = new Actor(QString("up_standard_input_output_coupling").arg(typeStr), scene);
+	Actor* right = new Actor(QString("up_standard_%1_right").arg(typeStr), scene);
 
 	// Ugly fix: the coupling is part of the opening, but it must be placed in a higher layer
 	const qreal couplingStart = (refOpeningWidth - refCouplingWidth) / refOpeningWidth * openingProportion;
@@ -125,7 +165,7 @@ void StandardInputOutput::buildStandardInputOutput(QString type)
 	coupling->setMarginBottom(1.0 - refCouplingHeight / refOpeningHeight);
 
 	// But proportions vary depending on the type of stream
-	if ( type == "input" )
+	if ( type == standardInput )
 	{
 		// Opening
 		insertItem(left, 0.0, openingProportion, zOpening);
@@ -169,10 +209,10 @@ void StandardInputOutput::buildStandardInputOutput(QString type)
 
 	// The buffer has half size of the data segment row, and 3 chars are lost by elbows and edges
 	const size_t bufferSize = rowSize / 2 - 3;
-	buildBuffer(type, bufferSize, scene);
+	buildBuffer(bufferSize, scene);
 }
 
-void StandardInputOutput::buildBuffer(const QString& type, size_t bufferSize, Scene* scene)
+void StandardInputOutput::buildBuffer(size_t bufferSize, Scene* scene)
 {
 	// Build the area to show characters
 	Q_ASSERT(buffer == nullptr);
@@ -180,8 +220,8 @@ void StandardInputOutput::buildBuffer(const QString& type, size_t bufferSize, Sc
 	buffer->setMarginTop( (refTubeHeight - refBufferTop) / refTubeHeight );
 	const qreal bufferMarginLeft = refBufferLeft / refTubeWidth / 2.0 + 0.02;
 	const qreal bufferMarginRight = (refTubeWidth - refBufferRight) / refTubeWidth / 2.0 + 0.025;
-	buffer->setMarginLeft( type == "input" ? bufferMarginLeft : bufferMarginRight );
-	buffer->setMarginRight( type == "input" ? bufferMarginRight : bufferMarginLeft );
+	buffer->setMarginLeft( type == standardInput ? bufferMarginLeft : bufferMarginRight );
+	buffer->setMarginRight( type == standardInput ? bufferMarginRight : bufferMarginLeft );
 	buffer->setMarginBottom( refBufferBottom / refTubeHeight) ;
 	addItem(buffer, 1.0, zBuffer);
 }

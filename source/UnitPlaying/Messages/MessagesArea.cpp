@@ -152,6 +152,16 @@ void MessagesArea::appendDebuggerMessage(QtMsgType type, const QString& category
 	listItem->setForeground( color );
 }
 
+void MessagesArea::updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
+{
+	// ToDo: propagate to the standardInputOutputInspector inspector
+	// Another idea: make the standardInputOutputInspector a listener of read/write operations
+	// emitted by DataSegment::StandardInputOutput objects
+	Q_UNUSED(tree);
+	Q_UNUSED(context);
+	Q_UNUSED(maxDuration);
+}
+
 void MessagesArea::toolsOutputRowChanged(int row)
 {
 	// If there are not diagnostics, or selected the summary line, ignore the event

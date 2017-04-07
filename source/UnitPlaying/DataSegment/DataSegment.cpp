@@ -74,12 +74,12 @@ void DataSegment::buildStandardInOut(const double stdInOutProportion)
 
 	// First stdin tube
 	Q_ASSERT(standardInput == nullptr);
-	standardInput = new StandardInputOutput("input", unit, scene);
+	standardInput = new StandardInputOutput(StandardInputOutput::standardInput, unit, scene);
 	stdInOutLayout->addItem(standardInput, 0.5, zUnitPlaying::standardInputOutput);
 
 	// Second stdout tube
 	Q_ASSERT(standardOutput == nullptr);
-	standardOutput = new StandardInputOutput("output", unit, scene);
+	standardOutput = new StandardInputOutput(StandardInputOutput::standardOutput, unit, scene);
 	stdInOutLayout->addItem(standardOutput, 0.5, zUnitPlaying::standardInputOutput);
 }
 
@@ -92,4 +92,25 @@ void DataSegment::clearAnimation()
 	Q_ASSERT(standardInput && standardOutput);
 	standardInput->clear();
 	standardOutput->clear();
+}
+
+void DataSegment::updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
+{
+	// ^done,value="0"
+	// (gdb)
+
+	// Get the cursor from the GDB response
+	bool ok = false;
+	int cursor = tree.findNodeTextValue("/value").toInt(&ok);
+	Q_ASSERT(ok);
+
+	// The context tells which file is this cursor from
+	switch ( context )
+	{
+		case visStandardInput: standardInput->updateCursor(cursor, maxDuration); break;
+		case visStandardOutput: standardOutput->updateCursor(cursor, maxDuration); break;
+		case visStandardError: /* standardError->updateCursor(cursor, maxDuration); */ break;
+
+		default: Q_ASSERT(false);
+	}
 }

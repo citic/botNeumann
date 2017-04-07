@@ -26,6 +26,8 @@ class InputOutputBuffer : public RectLayoutItem
 	explicit InputOutputBuffer(Scene* scene, qreal zValue, int capacity);
 	/// Set the text to be read (standard input) or printed (standard output)
 	inline void setText(const QString& text) { this->text = text; cursor = 0; }
+	/// Get a copy of the cursor
+	inline int getCursor() const { return cursor; }
 	/// Animate buffering (filling) the standard input. It fills all empty spaces with pending
 	/// characters in @a text
 	/// @return The duration of the animation in milliseconds
@@ -49,15 +51,28 @@ class StandardInputOutput : public MemorySegment
 {
 	Q_DISABLE_COPY(StandardInputOutput)
 
+  public:
+	enum Type
+	{
+		standardInput,
+		standardOutput,
+		standardError,
+
+		standardIoUnknown,
+	};
+
   protected:
+	/// The type of this tube
+	Type type = standardIoUnknown;
 	/// Tester placed in standard output
 	Actor* tester = nullptr;
 	/// An area to show the characters moving through the tube
 	InputOutputBuffer* buffer = nullptr;
 
   public:
-	/// @param type One of the following: "input", "output", "error"
-	explicit StandardInputOutput(const QString& type, Unit& unit, Scene* scene);
+	/// @param type The type of standard input or output this graphical object represents. It must
+	/// be one of the following: "input", "output", "error"
+	explicit StandardInputOutput(Type type, Unit& unit, Scene* scene);
 	/// Loads the active test case input file, and animates characters arriving by the input tube
 	bool loadFile(const QString& inputFilepath);
 	/// Animate buffering (filling) the standard input. It fills all empty spaces with pending
@@ -70,14 +85,14 @@ class StandardInputOutput : public MemorySegment
 	inline int animateRead(int length) { return buffer->animateRead(length); }
 	/// Removes all values from the buffer
 	inline int clear() { return buffer->clear(); }
+	/// Updates the cursor and animates bytes leaving to or entering in the tube
+	bool updateCursor(int cursor, int& maxDuration);
 
   protected:
 	/// Load graphic elements to represent this object
-	/// @param type The type of standard input or output this graphical object represents. It must
-	/// be one of the following: "input", "output", "error"
-	void buildStandardInputOutput(QString type);
+	void buildStandardInputOutput();
 	/// Builds the are where characteres will travel inside the tube
-	void buildBuffer(const QString& type, size_t bufferSize, Scene* scene);
+	void buildBuffer(size_t bufferSize, Scene* scene);
 };
 
 #endif // STANDARDINPUTOUTPUT_H

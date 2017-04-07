@@ -43,6 +43,9 @@ class DataSegment : public GdbResponseListener, public MemorySegment
   public slots:
 	/// Called when visualization has finished in order to clear variables
 	void clearAnimation();
+	/// Called when we get an updated cursor from gdb
+	/// @see Visualizator::updateStandardInputOutput()
+	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 
   protected:
 	/// Builds the data segment represented a shared table for all the robots
