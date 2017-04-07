@@ -192,22 +192,22 @@ bool MemoryMapper::updateWatch(const GdbTreeNode* watchNode, int& maxDuration)
 	// bn_pd_th_fc :  pointed data in function call fc of thread th
 
 	if ( watchName.startsWith("bn_lv_") )
-		return updateLocalVariable(watchNode, maxDuration);
+		return updateVariableValue(watchNode, maxDuration);
 //	if ( watchName.startsWith("bn_io_") )
 //		return processInputOutputUpdate(watchNode, maxDuration);
-//	if ( watchName.startsWith("bn_gv_") )
-//		return processGlobalVariableUpdate(watchNode, maxDuration);
+	if ( watchName.startsWith("bn_gv_") )
+		return updateVariableValue(watchNode, maxDuration);
 //	if ( watchName.startsWith("bn_pd_") )
 //		return processPointedDataUpdate(watchNode, maxDuration);
 
 	return false;
 }
 
-bool MemoryMapper::updateLocalVariable(const GdbTreeNode* watchNode, int& maxDuration)
+bool MemoryMapper::updateVariableValue(const GdbTreeNode* watchNode, int& maxDuration)
 {
 	// Get the name of the watch
 	const QString& watchName = watchNode->findTextValue("name");
-	qCCritical(logTemporary()) << "Updating local variable:" << watchName;
+	qCCritical(logTemporary()) << "Updating variable value of watch:" << watchName;
 
 	// Find the variable (memory allocation) that was updated
 	MemoryAllocation* variable = mapNameMemoryAllocation.value(watchName, nullptr);

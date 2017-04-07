@@ -86,7 +86,7 @@ class MemoryMapper : public QObject
 	/// Updates the modified variables according to the watch updated
 	bool updateWatch(const GdbTreeNode* watchNode, int& maxDuration);
 	/// Reflects the value change of a local variable
-	bool updateLocalVariable(const GdbTreeNode* watchNode, int& maxDuration);
+	bool updateVariableValue(const GdbTreeNode* watchNode, int& maxDuration);
 };
 
 #endif // MEMORYMAPPER_H
