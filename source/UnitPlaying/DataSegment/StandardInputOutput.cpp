@@ -33,7 +33,7 @@ int InputOutputBuffer::animateFill()
 	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
 	{
 		// Create the character as a value
-		GraphicValue* character = new GraphicValue(typeChar, this, zBuffer, text.mid(cursor++, 1));
+		GraphicValue* character = new GraphicValue(typeChar, this, zBuffer, text.mid(textPosition++, 1));
 		character->buildGraphicValue();
 		characters.append(character);
 
