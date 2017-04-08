@@ -87,6 +87,8 @@ class UnitPlayingScene : public GameScene
 	inline UnitPlayingState getState() const { return state; }
 	/// Return true if visualization is stopped and no animations must be done at all
 	inline bool isStopped() const { return state == UnitPlayingState::editing; }
+	/// Return true if visualization is animating
+	inline bool isAnimating() const { return state == UnitPlayingState::animating || state == UnitPlayingState::starting || state == UnitPlayingState::paused; }
 	/// Return the filename of the .botnu Unit file
 	inline const QString& getUnitFilename() const { return filename; }
 	/// Give access to the code segment object
