@@ -208,7 +208,7 @@ class Visualizator : public GdbResponseListener
 	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
 	bool processPlayerSolutionStopped(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 	/// Called when player solution stopped for some reason, eg: breakpoint-hit or end-stepping-range
-	bool processBreakpointHit(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
+	bool processBreakpointHit(const GdbItemTree tree, VisualizationContext context, int& maxDuration);
 	/// Called when player solution stopped by program entry point breakpoint
 	bool processEntryPoint(const GdbItemTree& tree, DebuggerBreakpoint* breakpoint, int& maxDuration);
 	/// Called when player solution stopped on some user-defined breakpoint. Visualization pauses

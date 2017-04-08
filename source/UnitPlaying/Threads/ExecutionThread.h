@@ -151,6 +151,10 @@ class ExecutionThread : public LinearLayout
 	/// Called in execution loop in order to know if there is a function return, and animates it
 	/// @return true if a function returned, false if we are running at the same function
 	bool checkForFunctionReturn(GdbCall* debuggerCall, int& maxDuration);
+	/// Checks if there was a function return and animates it, otherwise checks if stack depth
+	/// increased and animates a function call.
+	/// @return true if a function was called or returned, false otherwise
+	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 	/// Animates a function return, diving the current stack frame into the memory interface of the
 	/// CPU core. It also remove watches to local variable from memory mapper
 	bool returnFunction(GdbCall* debuggerCall, int& maxDuration);

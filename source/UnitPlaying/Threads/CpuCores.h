@@ -54,6 +54,8 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// actor and code editor
 	/// @return true if a function returned, false if we are running at the same function
 	bool checkForFunctionReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
+	/// Check if there was a function return or call and animates the respective action
+	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 
   signals:
 	/// Emitted when an execution thread was updated from GDB

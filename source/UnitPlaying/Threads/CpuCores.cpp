@@ -292,6 +292,14 @@ bool CpuCores::checkForFunctionReturn(const GdbItemTree& tree, GdbCall* debugger
 	return executionThread->checkForFunctionReturn(debuggerCall, maxDuration);
 }
 
+bool CpuCores::checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
+{
+	// Get the ExecutionThread object that is identified by the given id
+	ExecutionThread* executionThread = findThread(tree);
+	Q_ASSERT(executionThread);
+	return executionThread->checkForFunctionCallOrReturn(tree, debuggerCall, maxDuration);
+}
+
 bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
 {
 	// Player solution hit a breakpoint that has the role of functionCall. The breakpoint must be

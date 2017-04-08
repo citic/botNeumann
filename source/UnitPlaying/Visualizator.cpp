@@ -639,7 +639,7 @@ bool Visualizator::processPlayerSolutionStopped(const GdbItemTree& tree, Visuali
 	return scheduleStepForward(maxDuration);
 }
 
-bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
+bool Visualizator::processBreakpointHit(const GdbItemTree tree, VisualizationContext context, int& maxDuration)
 {
 	// Program stopped because a breakpoint was hit. An example of tree:
 
@@ -700,7 +700,7 @@ bool Visualizator::processBreakpointHit(const GdbItemTree& tree, VisualizationCo
 
 	// * If breakpoint is functionBody or programEntryPoint: Do 4.2 Function call.
 	if ( breakpoint->hasRole(DebuggerBreakpoint::functionDefinition) )
-		return unitPlayingScene->getCpuCores()->processFunctionCall(tree, debuggerCall, maxDuration);
+		return unitPlayingScene->getCpuCores()->checkForFunctionCallOrReturn(tree, debuggerCall, maxDuration);
 
 	// * if breakpoint is within a dynamic memory function, Do Dynamic memory management breakpoint
 	return processDynamicMemoryBreakpoint();

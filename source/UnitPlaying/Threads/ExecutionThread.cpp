@@ -271,11 +271,6 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 	// We are going to ask a new command to gdb, and tree will be destroyed. Save a copy
 	GdbItemTree breakpointHitTree = tree;
 
-	// Update the stack depth value, reported by debugger. If no changes in stack frame, the
-	// breakpoint may have been updated by debugger to a loop statement. Ignore it
-	if ( updateCallStackDepth(debuggerCall) == 0 )
-		return false;
-
 	// Animate the door opening in its CPU core
 	Q_ASSERT(cpuCore);
 	int duration = cpuCore->openMemoryInterface();
@@ -313,6 +308,22 @@ bool ExecutionThread::checkForFunctionReturn(GdbCall* debuggerCall, int& maxDura
 		return returnFunction(debuggerCall, maxDuration);
 
 	// We do not need to animate a function call, probably we are at the same function
+	return false;
+}
+
+bool ExecutionThread::checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
+{
+	// If we are running on the same function, do not animate a function return
+	// ToDo: it may have return several functions
+	int depthChange = updateCallStackDepth(debuggerCall);
+	if ( depthChange > -INT_MAX && depthChange < 0 )
+		return returnFunction(debuggerCall, maxDuration);
+
+	// If actually the stack depth increased, animate a function call
+	if ( depthChange > 0 )
+		return callFunction(tree, debuggerCall, maxDuration);
+
+	// depthChange == 0
 	return false;
 }
 
