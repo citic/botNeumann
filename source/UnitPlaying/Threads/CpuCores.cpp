@@ -284,20 +284,12 @@ void CpuCores::updateThreadFrame(const GdbItemTree& tree, int& maxDuration, int 
 	}
 }
 
-bool CpuCores::checkForFunctionReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
+bool CpuCores::checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall)
 {
 	// Get the ExecutionThread object that is identified by the given id
 	ExecutionThread* executionThread = findThread(tree);
 	Q_ASSERT(executionThread);
-	return executionThread->checkForFunctionReturn(debuggerCall, maxDuration);
-}
-
-bool CpuCores::checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
-{
-	// Get the ExecutionThread object that is identified by the given id
-	ExecutionThread* executionThread = findThread(tree);
-	Q_ASSERT(executionThread);
-	return executionThread->checkForFunctionCallOrReturn(tree, debuggerCall, maxDuration);
+	return executionThread->checkForFunctionCallOrReturn(tree, debuggerCall, maxDuration, checkCall);
 }
 
 bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)

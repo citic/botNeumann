@@ -50,12 +50,10 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// line where the function is declared during the function call, instead.
 	void updateThreadFrame(const GdbItemTree& tree, int& maxDuration, int breakpointLineNumber);
 	/// Checks the call stack depth of the execution thread that generated the given tree. If there
-	/// was a function return, animates it. It do not update the line number on the execution thread
-	/// actor and code editor
-	/// @return true if a function returned, false if we are running at the same function
-	bool checkForFunctionReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
-	/// Check if there was a function return or call and animates the respective action
-	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
+	/// was a function call or return, animates it. It do not update the line number on the
+	/// execution thread actor and code editor
+	/// @return true if a function called or returned, false if we are running at the same function
+	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall);
 
   signals:
 	/// Emitted when an execution thread was updated from GDB

@@ -148,13 +148,12 @@ class ExecutionThread : public LinearLayout
 	void clearLocation();
 	/// Called when player solution stopped by a function body breakpoint
 	bool callFunction(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
-	/// Called in execution loop in order to know if there is a function return, and animates it
-	/// @return true if a function returned, false if we are running at the same function
-	bool checkForFunctionReturn(GdbCall* debuggerCall, int& maxDuration);
 	/// Checks if there was a function return and animates it, otherwise checks if stack depth
 	/// increased and animates a function call.
+	/// @param checkCall Function return is always checked. Function call is only checked if this
+	/// param is true
 	/// @return true if a function was called or returned, false otherwise
-	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
+	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall);
 	/// Animates a function return, diving the current stack frame into the memory interface of the
 	/// CPU core. It also remove watches to local variable from memory mapper
 	bool returnFunction(GdbCall* debuggerCall, int& maxDuration);

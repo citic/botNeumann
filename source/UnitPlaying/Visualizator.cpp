@@ -700,7 +700,7 @@ bool Visualizator::processBreakpointHit(const GdbItemTree tree, VisualizationCon
 
 	// * If breakpoint is functionBody or programEntryPoint: Do 4.2 Function call.
 	if ( breakpoint->hasRole(DebuggerBreakpoint::functionDefinition) )
-		return unitPlayingScene->getCpuCores()->checkForFunctionCallOrReturn(tree, debuggerCall, maxDuration);
+		return unitPlayingScene->getCpuCores()->checkForFunctionCallOrReturn(tree, debuggerCall, maxDuration, true);
 
 	// * if breakpoint is within a dynamic memory function, Do Dynamic memory management breakpoint
 	return processDynamicMemoryBreakpoint();
@@ -796,7 +796,7 @@ bool Visualizator::processEndSteppingRange(const GdbItemTree& tree, Visualizatio
 	// The last exec-next generated the response *stopped,reason="end-stepping-range",
 	// one line of current function was executed, and no a new function was called.
 	// Update ExecutionThread /thread-id line number from the response /frame/line
-	unitPlayingScene->getCpuCores()->checkForFunctionReturn(tree, debuggerCall, maxDuration);
+	unitPlayingScene->getCpuCores()->checkForFunctionCallOrReturn(tree, debuggerCall, maxDuration, false);
 
 	// Update potential changes in local variables of the current function:
 	// Done
