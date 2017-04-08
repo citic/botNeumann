@@ -175,6 +175,10 @@ class PlayerSolution : public QObject
 	/// Creates or copies some initial files to the player directory. This process is done just
 	/// when the player solution directory is created (for first time)
 	bool generateInitialFiles();
+	/// Checks if initial botNeumann files exist in player solution directory. If they do not
+	/// exist, copy them to the folder. This method is called each time player solution is loaded,
+	/// because player may delete some files from the folder
+	bool checkInitialFiles();
 	/// Creates a source code file within the player solution's directory. The file contains
 	/// C code that will be evaluated later with help of GDB when the visualization is running.
 	/// The name of the file will begin with "bn_". Files with this prefix must be ignored by

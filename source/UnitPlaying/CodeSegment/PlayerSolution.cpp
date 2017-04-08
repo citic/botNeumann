@@ -65,6 +65,8 @@ int PlayerSolution::loadPlayerSolutionForUnit(Player* player, Unit* unit)
 		// Generate some source code files into player-solution directory
 		generateInitialFiles();
 	}
+	else
+		checkInitialFiles();
 
 	// ToDo: load breakpoints from user configuration
 
@@ -191,6 +193,18 @@ bool PlayerSolution::generateInitialFiles()
 	if ( dumper.dumpTextResource(":/source_code/bn_c_generator.h", getPlayerUnitSourcePath("bn_c_generator.h")) == false )
 		return false;
 	if ( dumper.dumpTextResource(":/source_code/bn_cpp_generator.h", getPlayerUnitSourcePath("bn_cpp_generator.h")) == false )
+		return false;
+
+	return true;
+}
+
+bool PlayerSolution::checkInitialFiles()
+{
+	if ( ! QFile::exists( getPlayerUnitSourcePath("bn_c_generator.h") ) && ! generateInitialFiles() )
+		return false;
+	if ( ! QFile::exists( getPlayerUnitSourcePath("bn_cpp_generator.h") ) && ! generateInitialFiles() )
+		return false;
+	if ( ! QFile::exists( getPlayerUnitSourcePath("bn_player_solution.c") ) && createBotNeumannSourceFile() == "" )
 		return false;
 
 	return true;
