@@ -3,6 +3,7 @@
 #include "Compiler.h"
 #include "CpuCores.h"
 #include "DataSegment.h"
+#include "ExecutionThread.h"
 #include "HeapSegment.h"
 #include "LogManager.h"
 #include "MainWindow.h"

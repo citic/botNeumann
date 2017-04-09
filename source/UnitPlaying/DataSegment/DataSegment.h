@@ -4,6 +4,7 @@
 #include "GdbResponseListener.h"
 #include "MemorySegment.h"
 
+class ExecutionThread;
 class MemoryFrame;
 class PlayerSolution;
 class StandardInputOutput;
@@ -45,7 +46,7 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	void clearAnimation();
 	/// Called when we get an updated cursor from gdb
 	/// @see Visualizator::updateStandardInputOutput()
-	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
+	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, const QList<ExecutionThread*>& threadsWaitingForIO, int& maxDuration);
 
   protected:
 	/// Builds the data segment represented a shared table for all the robots

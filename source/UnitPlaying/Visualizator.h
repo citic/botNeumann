@@ -9,6 +9,7 @@
 #include <QVector>
 
 class DebuggerBreakpoint;
+class ExecutionThread;
 class GdbCall;
 class GuiBreakpoint;
 class PlayerSolution;
@@ -105,7 +106,7 @@ class Visualizator : public GdbResponseListener
 	/// @param tree The response yield by GDB containing the cursor of the file
 	/// @param context Use this enumeration to determine the type of file: input/output/error
 	/// @param maxDuration Required to wait all animations finished before stepping forward
-	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
+	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, const QList<ExecutionThread*>& threadsWaitingForIO, int& maxDuration);
 
   public slots:
 	/// Called when there are pending GdbResponses to process.

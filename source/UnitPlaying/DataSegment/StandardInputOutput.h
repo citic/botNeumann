@@ -19,7 +19,7 @@ class InputOutputBuffer : public RectLayoutItem
 	/// The text of the test case or the generated output
 	QString text;
 	/// Index that indicates the next byte to be read or printed in the @a text string
-	int textPosition = 0;
+	int fillCursor = 0;
 	/// Simulates a file cursor: the byte where the next read or write operation will take place
 	/// Notice that @a textPosition indicates the amount of bytes ready to be read in stdin, and
 	/// they are visibe in the tube, while that @a cursor indicates the next byte to be read by
@@ -30,7 +30,7 @@ class InputOutputBuffer : public RectLayoutItem
 	/// Constructor
 	explicit InputOutputBuffer(Scene* scene, qreal zValue, int capacity);
 	/// Set the text to be read (standard input) or printed (standard output)
-	inline void setText(const QString& text) { this->text = text; textPosition = 0; }
+	inline void setText(const QString& text) { this->text = text; fillCursor = 0; }
 	/// Get a copy of the cursor
 	inline int getCursor() const { return cursor; }
 	/// Animate buffering (filling) the standard input. It fills all empty spaces with pending
@@ -44,7 +44,7 @@ class InputOutputBuffer : public RectLayoutItem
 	/// Returns the amount of free space or characters
 	inline int getFreeCharacters() const { return capacity - characters.count(); }
 	/// Returns the amount of available chars that are still not loaded in the tube
-	inline int getPendingCharacters() const { return text.length() - textPosition; }
+	inline int getPendingCharacters() const { return text.length() - fillCursor; }
 	/// Clear all the values on the buffer
 	/// @return The duration in milliseconds of the animation
 	int clear();

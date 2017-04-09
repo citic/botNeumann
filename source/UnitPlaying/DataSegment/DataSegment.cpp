@@ -1,5 +1,6 @@
 #include "DataSegment.h"
 #include "Common.h"
+#include "ExecutionThread.h"
 #include "MemoryFrame.h"
 #include "PlayerSolution.h"
 #include "Scene.h"
@@ -94,7 +95,7 @@ void DataSegment::clearAnimation()
 	standardOutput->clear();
 }
 
-void DataSegment::updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
+void DataSegment::updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, const QList<ExecutionThread*>& threadsWaitingForIO, int& maxDuration)
 {
 	// ^done,value="0"
 	// (gdb)

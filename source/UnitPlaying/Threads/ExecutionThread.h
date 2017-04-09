@@ -123,6 +123,8 @@ class ExecutionThread : public LinearLayout
 	inline CallStack* getCallStack() const { return callStack; }
 	/// True if this thread is being executed on some cpu core
 	inline bool isActive() const { return state == threadActive; }
+	/// Returns true if this thread is running an input/output operation
+	bool isWaitingForIO();
 
   public:
 	/// Updates this execution thread from Gdb information.

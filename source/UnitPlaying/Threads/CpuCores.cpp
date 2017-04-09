@@ -292,6 +292,23 @@ bool CpuCores::checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* de
 	return executionThread->checkForFunctionCallOrReturn(tree, debuggerCall, maxDuration, checkCall);
 }
 
+QList<ExecutionThread*> CpuCores::getThreadsWaitingForIO()
+{
+	QList<ExecutionThread*> result;
+
+	// IO operation checking may fail, if there is just one thread, assume it
+	if ( executionThreads.count() == 1 )
+		return result << executionThreads[0];
+
+	// Get all threads that are running io operations
+	for ( int index = 0; index < executionThreads.count(); ++index )
+		if ( executionThreads[index]->isWaitingForIO() )
+			result.append( executionThreads[index] );
+
+	// Done
+	return result;
+}
+
 bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
 {
 	// Player solution hit a breakpoint that has the role of functionCall. The breakpoint must be

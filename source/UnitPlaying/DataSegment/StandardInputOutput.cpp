@@ -33,7 +33,7 @@ int InputOutputBuffer::animateFill()
 	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
 	{
 		// Create the character as a value
-		GraphicValue* character = new GraphicValue(typeChar, this, zBuffer, text.mid(textPosition++, 1));
+		GraphicValue* character = new GraphicValue(typeChar, this, zBuffer, text.mid(fillCursor++, 1));
 		character->buildGraphicValue();
 		characters.append(character);
 
@@ -65,6 +65,8 @@ int InputOutputBuffer::clear()
 	// any meaning. They disappear when they are discarded
 	removeAllItems(true);
 	characters.clear();
+	fillCursor = 0;
+	cursor = 0;
 	return 0;
 }
 
