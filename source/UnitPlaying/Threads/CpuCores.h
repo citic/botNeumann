@@ -55,7 +55,7 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// @return true if a function called or returned, false if we are running at the same function
 	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall);
 	/// Returns a list of threads that are waiting for some input/output operation.
-	QList<ExecutionThread*> getThreadsWaitingForIO();
+	void getThreadsWaitingForIO(QList<ExecutionThread*>& inputQueue, QList<ExecutionThread*>& outputQueue);
 
   signals:
 	/// Emitted when an execution thread was updated from GDB

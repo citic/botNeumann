@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "Assets.h"
 #include "Common.h"
+#include "ExecutionThread.h"
 #include "GraphicValue.h"
 #include "LinearLayout.h"
 #include "LogManager.h"
@@ -53,9 +54,12 @@ int InputOutputBuffer::animateFill()
 	return 0;
 }
 
-int InputOutputBuffer::animateRead(int length)
+int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& waitingQueue)
 {
-	qCCritical(logTemporary()) << "ToDo: animating read of" << length << "bytes...";
+	int threadId = 0;
+	if ( waitingQueue.count() > 0 )
+		threadId = waitingQueue[0]->getId();
+	qCCritical(logTemporary()) << "ToDo: animating read of" << length << "bytes towards thread" << threadId;
 	return 0;
 }
 
@@ -104,7 +108,7 @@ bool StandardInputOutput::loadFile(const QString& filepath)
 	return true;
 }
 
-bool StandardInputOutput::updateCursor(int cursor, int& maxDuration)
+bool StandardInputOutput::updateCursor(int cursor, const QList<ExecutionThread*>& waitingQueue, int& maxDuration)
 {
 	// Calculate how many bytes were read or written
 	Q_ASSERT(buffer);
@@ -121,7 +125,7 @@ bool StandardInputOutput::updateCursor(int cursor, int& maxDuration)
 	// According to the type of this tube, we animate a read or write operation
 	int duration = 0;
 	if ( type == standardInput )
-		duration = buffer->animateRead(difference);
+		duration = buffer->animateRead(difference, waitingQueue);
 	else
 		/*duration = buffer->animateWrite(difference)*/;
 

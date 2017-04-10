@@ -5,6 +5,7 @@
 #include "RectLayoutItem.h"
 
 class GraphicValue;
+class ExecutionThread;
 class Actor;
 
 class InputOutputBuffer : public RectLayoutItem
@@ -40,7 +41,7 @@ class InputOutputBuffer : public RectLayoutItem
 	/// Animate the read of @a length characters, which are extracted from standard input tube
 	/// The remaining empty space is filled calling @a animateFill() function
 	/// @return The duration of the animation in milliseconds
-	int animateRead(int length);
+	int animateRead(int length, const QList<ExecutionThread*>& waitingQueue);
 	/// Returns the amount of free space or characters
 	inline int getFreeCharacters() const { return capacity - characters.count(); }
 	/// Returns the amount of available chars that are still not loaded in the tube
@@ -87,11 +88,11 @@ class StandardInputOutput : public MemorySegment
 	/// Animate the read of @a length characters, which are extracted from standard input tube
 	/// The remaining empty space is filled calling @a animateFill() function
 	/// @return The duration of the animation in milliseconds
-	inline int animateRead(int length) { return buffer->animateRead(length); }
+	inline int animateRead(int length, const QList<ExecutionThread*>& waitingQueue) { return buffer->animateRead(length, waitingQueue); }
 	/// Removes all values from the buffer
 	inline int clear() { return buffer->clear(); }
 	/// Updates the cursor and animates bytes leaving to or entering in the tube
-	bool updateCursor(int cursor, int& maxDuration);
+	bool updateCursor(int cursor, const QList<ExecutionThread*>& waitingQueue, int& maxDuration);
 
   protected:
 	/// Load graphic elements to represent this object

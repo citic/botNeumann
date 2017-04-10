@@ -292,21 +292,26 @@ bool CpuCores::checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* de
 	return executionThread->checkForFunctionCallOrReturn(tree, debuggerCall, maxDuration, checkCall);
 }
 
-QList<ExecutionThread*> CpuCores::getThreadsWaitingForIO()
+void CpuCores::getThreadsWaitingForIO(QList<ExecutionThread*>& inputQueue, QList<ExecutionThread*>& outputQueue)
 {
-	QList<ExecutionThread*> result;
-
 	// IO operation checking may fail, if there is just one thread, assume it
 	if ( executionThreads.count() == 1 )
-		return result << executionThreads[0];
+	{
+		inputQueue.append( executionThreads[0] );
+		outputQueue.append( executionThreads[0] );
+		return;
+	}
 
 	// Get all threads that are running io operations
 	for ( int index = 0; index < executionThreads.count(); ++index )
-		if ( executionThreads[index]->isWaitingForIO() )
-			result.append( executionThreads[index] );
-
-	// Done
-	return result;
+	{
+		switch ( executionThreads[index]->isWaitingForIO() )
+		{
+			case 0: break;
+			case 1: inputQueue.append( executionThreads[index] );
+			case 2: outputQueue.append( executionThreads[index] );
+		}
+	}
 }
 
 bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)

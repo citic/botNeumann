@@ -88,6 +88,7 @@ HEADERS += \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
 	source/UnitPlaying/Common/Assets.h \
 	source/UnitPlaying/Common/GdbResponseListener.h \
+	source/UnitPlaying/Common/StaticAnalysisGlobals.h \
 	source/UnitPlaying/Common/VisualizationContext.h \
 	source/UnitPlaying/Common/VisualizationSpeed.h \
 	source/UnitPlaying/DataSegment/DataSegment.h \

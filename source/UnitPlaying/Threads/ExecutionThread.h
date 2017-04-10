@@ -123,8 +123,12 @@ class ExecutionThread : public LinearLayout
 	inline CallStack* getCallStack() const { return callStack; }
 	/// True if this thread is being executed on some cpu core
 	inline bool isActive() const { return state == threadActive; }
-	/// Returns true if this thread is running an input/output operation
-	bool isWaitingForIO();
+	/// Checks if this thread is running an input/output operation
+	/// @return 0 if it is not doing any input/output operation, 1 if its reading, and 2 if it
+	/// is writing to stdout or stderr or some other file
+	/// @remarks This function does static analys code of the line being executed by the thread.
+	/// It may fail to identify a real input/output operation
+	int isWaitingForIO();
 
   public:
 	/// Updates this execution thread from Gdb information.
@@ -180,6 +184,12 @@ class ExecutionThread : public LinearLayout
 	int updateCallStackDepth(GdbCall* debuggerCall);
 	/// Animate parameter passing to the new function call
 	int createLocalVariables(GdbCall* debuggerCall, const QString& gdbCommand, const QString& gdbRootNodeName, int initialDelay);
+	/// Loads the text of the line being executed by this thread
+	/// @param fromPreviousLine If true, returns the range of lines from @a previousLineNumber to
+	/// current @a lineNumber. It may be useful for function calls, because gdb changes line number
+	/// of function definition breakpoints automatically to the first executable function body line
+	/// @return A String with the asked range of lines, or empty string on error
+	QString loadRunningLine(bool fromPreviousLine) const;
 };
 
 #endif // EXECUTIONTHREAD_H

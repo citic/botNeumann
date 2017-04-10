@@ -8,8 +8,10 @@
 #include "LogManager.h"
 #include "Scene.h"
 #include "Spacer.h"
+#include "StaticAnalysisGlobals.h"
 
 #include <climits>
+#include <QRegularExpression>
 #include <QTimer>
 
 ExecutionThread::ExecutionThread(size_t startByte, size_t rowSize, size_t maxSize, Scene* scene, int id)
@@ -225,6 +227,7 @@ bool ExecutionThread::updateLocation(const GdbTreeNode* threadNode, int breakpoi
 
 int ExecutionThread::locationUpdateAccepted()
 {
+//	qCInfo(logTemporary(), "ExecutionThread(%d) line=[%s] filename=%s:%d-%d", id, qPrintable( loadRunningLine(false) ), qPrintable(filename), lineNumber, previousLineNumber );
 	// Backup the accepted location (being displayed in code editor) before a new update overwrites
 	// the location. Code editors need the previous location in order to clear highlited lines
 	previousFilename = filename;
@@ -257,9 +260,28 @@ qreal ExecutionThread::getActorReferenceWidth() const
 	return actor->boundingRect().width();
 }
 
-bool ExecutionThread::isWaitingForIO()
+int ExecutionThread::isWaitingForIO()
 {
-	return false;
+	// GDB does not provide any way to know if a thread issued a input/output operation
+	// As a workaround we do static code analysis. If thread is running a line that contains a
+	// call to some standard library function to read or print, it is likely to be running an input
+	// or output operation. Notice that macros or other libraries may deceive this detection system
+
+	// Get the lines being executed
+	const QString& line = loadRunningLine(false);
+
+	// ToDo: a line may have two or more stdin/stdout operations
+	// Check for any input function call
+	for ( size_t index = 0; index < stdInputTokensSize; ++index )
+		if ( line.contains(QRegularExpression("\\b" + QString(stdInputTokens[index]) + "\\b")) )
+			return 1;
+
+	// Check for any output function call
+	for ( size_t index = 0; index < stdOutputTokensSize; ++index )
+		if ( line.contains(QRegularExpression("\\b" + QString(stdOutputTokens[index]) + "\\b")) )
+			return 2;
+
+	return 0;
 }
 
 bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
@@ -437,4 +459,40 @@ int ExecutionThread::createLocalVariables(GdbCall* debuggerCall, const QString& 
 
 	// Parameter passing is done by the callStack object
 	return callStack->createLocalVariables(gdbVariableArray, initialDelay);
+}
+
+QString ExecutionThread::loadRunningLine(bool fromPreviousLine) const
+{
+	// Check we have the enough data to locate the line or lines
+	if ( lineNumber <= 0 ) return "";
+	if ( filename.isEmpty() ) return "";
+
+	// We have the first line number, get the last one
+	int lastLine = lineNumber;
+	if ( fromPreviousLine && previousLineNumber < lineNumber )
+		lastLine = previousLineNumber;
+
+	// Open the file
+	QFile inputFile(filename);
+	if ( inputFile.open(QIODevice::ReadOnly | QIODevice::Text) == false )
+		{ qCritical(logApplication) << "ExecutionThread: Could not open" << filename; return ""; }
+
+	// Concatenate the desired lines to this string
+	QString result;
+
+	// Read until reach the expected line
+	QTextStream inputCode(&inputFile);
+	for ( int currentLine = 1; ! inputCode.atEnd(); ++currentLine )
+	{
+		// Get a line from the source resource
+		const QString& line = inputCode.readLine();
+//		qCritical(logApplication, "LINE %s:%d [%s]", qPrintable(filename), currentLine, qPrintable(line));
+
+		// The line is done, write it to the target file
+		if ( currentLine >= lineNumber && currentLine <= lastLine )
+			result += line + '\n';
+	}
+
+	// Done
+	return result;
 }

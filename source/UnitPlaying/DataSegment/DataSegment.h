@@ -46,7 +46,8 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	void clearAnimation();
 	/// Called when we get an updated cursor from gdb
 	/// @see Visualizator::updateStandardInputOutput()
-	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, const QList<ExecutionThread*>& threadsWaitingForIO, int& maxDuration);
+	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context,
+		const QList<ExecutionThread*>& inputQueue, const QList<ExecutionThread*>& outputQueue, int& maxDuration);
 
   protected:
 	/// Builds the data segment represented a shared table for all the robots
