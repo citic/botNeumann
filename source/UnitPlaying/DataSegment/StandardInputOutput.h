@@ -4,7 +4,7 @@
 #include "MemorySegment.h"
 #include "RectLayoutItem.h"
 
-class GraphicValue;
+class GraphicCharValue;
 class ExecutionThread;
 class Actor;
 
@@ -16,7 +16,7 @@ class InputOutputBuffer : public RectLayoutItem
 	/// Capacity in bytes of the buffer
 	int capacity = 0;
 	/// Characteres traveling by the tube
-	QList<GraphicValue*> characters;
+	QList<GraphicCharValue*> characters;
 	/// The text of the test case or the generated output
 	QString text;
 	/// Index that indicates the next byte to be read or printed in the @a text string

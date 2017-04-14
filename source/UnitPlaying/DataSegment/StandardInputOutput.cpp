@@ -3,7 +3,7 @@
 #include "Assets.h"
 #include "Common.h"
 #include "ExecutionThread.h"
-#include "GraphicValue.h"
+#include "GraphicCharValue.h"
 #include "LinearLayout.h"
 #include "LogManager.h"
 #include "Scene.h"
@@ -34,8 +34,7 @@ int InputOutputBuffer::animateFill()
 	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
 	{
 		// Create the character as a value
-		GraphicValue* character = new GraphicValue(typeChar, this, zBuffer, text.mid(fillCursor++, 1));
-		character->buildGraphicValue();
+		GraphicCharValue* character = new GraphicCharValue(this, zBuffer, text.mid(fillCursor++, 1));
 		characters.append(character);
 
 		// Characters are slighly inclined, adjust their margins to overlap themselves
