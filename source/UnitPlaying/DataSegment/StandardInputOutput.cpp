@@ -25,10 +25,22 @@ InputOutputBuffer::InputOutputBuffer(Scene* scene, qreal zValue, int capacity)
 {
 }
 
-int InputOutputBuffer::animateFill()
+int InputOutputBuffer::animateFill(int charsToFill)
 {
-	// The amount of free space that can be filled
-	int charsToFill = qMin( getFreeCharacters() + 1, getPendingCharacters() );
+	// Check if a specific number of characters are required to be loaded in the buffer
+	if ( charsToFill < 0 )
+	{
+		// No characters to fill was given, use the total amount of free space that can be filled
+		charsToFill = qMin( getFreeCharacters() + 1, getPendingCharacters() );
+	}
+	else
+	{
+		// We may have some charactere already loaded in the buffer
+		charsToFill -= characters.count();
+
+		// Use the given amount, but we cannot exceed the length of test case's input file
+		charsToFill = qMin( charsToFill, getPendingCharacters() );
+	}
 
 	// Create characters, place them and animate them arriving
 	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
@@ -41,8 +53,11 @@ int InputOutputBuffer::animateFill()
 		character->setMargins(0.0, -0.11);
 
 		// To animate them arriving, we place them at the first non visible position
-		qreal finalPercent = qreal(charCounter) / capacity;
+		qreal finalPercent = qreal( characters.count() - 1 ) / capacity;
 		insertItem(character, finalPercent + 1.0, 1.0 / capacity, zBuffer);
+
+		// Character is moving through the input buffer
+		character->setCurrentAnimationState(GraphicCharValue::animInputBuffer);
 
 		// The duration of the animation is proportional to the number of spaces that characters
 		// have to move, i.e: empty spaces
@@ -55,11 +70,25 @@ int InputOutputBuffer::animateFill()
 
 int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& waitingQueue)
 {
-	int threadId = 0;
-	if ( waitingQueue.count() > 0 )
-		threadId = waitingQueue[0]->getId();
-	qCCritical(logTemporary()) << "ToDo: animating read of" << length << "bytes towards thread" << threadId;
-	return 0;
+	// Get the thread that made the read operation
+	Q_ASSERT(waitingQueue.count() > 0);
+	ExecutionThread* thread = waitingQueue[0];
+	qCCritical(logTemporary()) << "ToDo: animating read of" << length << "bytes towards thread" << thread->getId();
+
+	// Measure the duration of the animation
+	int maxDuration = 0, duration = 0;
+
+	// Make sure there are enough characters to animate
+	if ( characters.count() < length )
+		maxDuration = animateFill( length - characters.count() );
+	Q_ASSERT( characters.count() >= length );
+
+	// For each character animate them reaching the robot
+	for ( int index = 0; index < length; ++index )
+		if ( (duration = characters[index]->animateRead(index, thread) ) > maxDuration )
+			maxDuration = duration;
+
+	return maxDuration;
 }
 
 int InputOutputBuffer::clear()

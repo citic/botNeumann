@@ -36,8 +36,10 @@ class InputOutputBuffer : public RectLayoutItem
 	inline int getCursor() const { return cursor; }
 	/// Animate buffering (filling) the standard input. It fills all empty spaces with pending
 	/// characters in @a text
+	/// @param charsToFill Send the required number of characters to be loaded in the buffer,
+	/// -1 if only the available empty space in the tube should be filled
 	/// @return The duration of the animation in milliseconds
-	int animateFill();
+	int animateFill(int charsToFill = -1);
 	/// Animate the read of @a length characters, which are extracted from standard input tube
 	/// The remaining empty space is filled calling @a animateFill() function
 	/// @return The duration of the animation in milliseconds
