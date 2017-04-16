@@ -25,47 +25,52 @@ InputOutputBuffer::InputOutputBuffer(Scene* scene, qreal zValue, int capacity)
 {
 }
 
-int InputOutputBuffer::animateFill(int charsToFill)
+int InputOutputBuffer::animateFill()
 {
-	// Check if a specific number of characters are required to be loaded in the buffer
-	if ( charsToFill < 0 )
-	{
-		// No characters to fill was given, use the total amount of free space that can be filled
-		charsToFill = qMin( getFreeCharacters() + 1, getPendingCharacters() );
-	}
-	else
-	{
-		// We may have some charactere already loaded in the buffer
-		charsToFill -= characters.count();
+	// We animate the characters that fill the capacity of the buffer, the remaining characters
+	// are just created at position capacity + 1. They will be animated later one by one
+	int charsToAnimate = qMin( getFreeCharacters(), text.length() );
 
-		// Use the given amount, but we cannot exceed the length of test case's input file
-		charsToFill = qMin( charsToFill, getPendingCharacters() );
-	}
+	// The max duration of the animation
+	int maxDuration = 0;
 
-	// Create characters, place them and animate them arriving
-	for ( int charCounter = 0; charCounter < charsToFill; ++charCounter )
+	// Create all characters, place them and animate them arriving
+	for ( int charCounter = 0; charCounter < text.length(); ++charCounter )
 	{
 		// Create the character as a value
-		GraphicCharValue* character = new GraphicCharValue(this, zBuffer, text.mid(fillCursor++, 1));
+		GraphicCharValue* character = new GraphicCharValue(this, zBuffer, text.mid(charCounter, 1));
 		characters.append(character);
 
 		// Characters are slighly inclined, adjust their margins to overlap themselves
 		character->setMargins(0.0, -0.11);
 
-		// To animate them arriving, we place them at the first non visible position
-		qreal finalPercent = qreal( characters.count() - 1 ) / capacity;
-		insertItem(character, finalPercent + 1.0, 1.0 / capacity, zBuffer);
+		// If this character must be animated arriving to fill the buffer
+		if ( charCounter < charsToAnimate )
+		{
+			// To animate them arriving, we place them at the first non visible position
+			qreal finalPercent = qreal( characters.count() - 1 ) / capacity;
+			insertItem(character, finalPercent + 1.0, 1.0 / capacity, zBuffer);
 
-		// Character is moving through the input buffer
-		character->setCurrentAnimationState(GraphicCharValue::animInputBuffer);
+			// Character is moving through the input buffer
+			character->setCurrentAnimationState(GraphicCharValue::animInputBuffer);
 
-		// The duration of the animation is proportional to the number of spaces that characters
-		// have to move, i.e: empty spaces
-		/*int duration =*/ character->animateMoveTo( finalPercent, charsToFill * 250 );
+			// The duration of the animation is proportional to the number of spaces that characters
+			// have to move, i.e: empty spaces
+			int duration = character->animateMoveTo( finalPercent, charsToAnimate * 250 );
+			if ( duration > maxDuration )
+				maxDuration = duration;
+		}
+		else
+		{
+			// This character is not animated, just placed in capacity + 1 position. It will be
+			// waiting to be read. At that moment, it will be animated
+			qreal finalPercent = qreal( capacity + 1 ) / capacity;
+			insertItem(character, finalPercent, 1.0 / capacity, zBuffer);
+		}
 	}
 
 	this->updateLayoutItem();
-	return 0;
+	return maxDuration;
 }
 
 int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& waitingQueue)
@@ -79,8 +84,6 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 	int maxDuration = 0, duration = 0;
 
 	// Make sure there are enough characters to animate
-	if ( characters.count() < length )
-		maxDuration = animateFill( length - characters.count() );
 	Q_ASSERT( characters.count() >= length );
 
 	// For each character animate them reaching the robot
@@ -97,7 +100,6 @@ int InputOutputBuffer::clear()
 	// any meaning. They disappear when they are discarded
 	removeAllItems(true);
 	characters.clear();
-	fillCursor = 0;
 	cursor = 0;
 	return 0;
 }
