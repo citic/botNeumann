@@ -70,7 +70,7 @@ int ExecutionThread::run(CpuCore* cpuCore)
 
 	// The actor will be at the bottom of the call stack
 	Q_ASSERT(actor);
-	actor->setStartProportion(0.9);
+	actor->setMainStartProportion(0.9);
 	duration += actor->animateAppear();
 
 	// Add this execution thread (both actor and call stack) to the cpu core
@@ -104,7 +104,7 @@ int ExecutionThread::sleep(LinearLayout* idleThreads, int idleThreadNumber)
 
 	// The space that the call stack released on the top, will be used by the robot
 	Q_ASSERT(actor);
-	actor->setStartProportion(0.0);
+	actor->setMainStartProportion(0.0);
 	idleThreads->updateLayoutItem();
 
 	duration += actor->animateAppear();

@@ -20,8 +20,8 @@ void Layout::insertItem(LayoutItem* item, qreal startProportion, qreal proportio
 {
 	Q_ASSERT(item);
 	item->setParentLayoutItem(this);
-	item->setStartProportion(startProportion);
-	item->setProportion(proportion);
+	item->setMainStartProportion(startProportion);
+	item->setMainProportion(proportion);
 	item->setZ(zValue);
 	items[zValue].append(item);
 }
@@ -71,7 +71,7 @@ void Layout::addStretch(qreal proportion, qreal zValue)
 {
 	Spacer* spacer = new Spacer();
 	spacer->setParentLayoutItem(this);
-	spacer->setProportion(proportion);
+	spacer->setMainProportion(proportion);
 	items[zValue].append(spacer);
 }
 

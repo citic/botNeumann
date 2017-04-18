@@ -1,7 +1,7 @@
 #include "LayoutItem.h"
 
 LayoutItem::LayoutItem(qreal proportion)
-	: proportion(proportion)
+	: mainProportion(proportion)
 {
 }
 

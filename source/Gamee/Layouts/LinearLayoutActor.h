@@ -13,7 +13,7 @@ class LinearLayoutActor : public QObject, public LinearLayout
 
   protected:
 	/// To animate start proportion changes
-	Q_PROPERTY(qreal startProportion READ getStartProportion WRITE updateStartProportion)
+	Q_PROPERTY(qreal mainStart READ getMainStartProportion WRITE updateStartProportion)
 	/// Saves a copy of the start proportion that can be restored after a moveTo animation
 	qreal savedStartProportion = 0.0;
 	/// To animate margin increase or decrease changes
@@ -35,11 +35,11 @@ class LinearLayoutActor : public QObject, public LinearLayout
 
   public:
 	/// Updates this object, and also the parent object in order to reflect the position change
-	inline void updateStartProportion(qreal startProportion) { setStartProportion(startProportion); updateParentLayoutItem(); }
+	inline void updateStartProportion(qreal startProportion) { setMainStartProportion(startProportion); updateParentLayoutItem(); }
 	/// Get access to the saved start proportion copy
 	inline qreal getSavedStartProportion() const { return savedStartProportion; }
 	/// Saves a copy of the current start proportion. Useful before start a moveTo animation
-	inline void saveStartProportion() { savedStartProportion = startProportion; }
+	inline void saveStartProportion() { savedStartProportion = mainStart; }
 	/// Set individual margins and updates the parent
 	inline void updateMarginTop(qreal value) { setMarginTop(value); updateParentLayoutItem(); }
 	inline void updateMarginRight(qreal value) { setMarginRight(value); updateParentLayoutItem(); }

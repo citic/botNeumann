@@ -263,8 +263,8 @@ int MemoryFrame::grow(int extraRows, int initialDelay)
 // Utility function to update the start and proportion of one row, and returns the proportion
 qreal updateRowProportion(LayoutItem* item, qreal start, qreal proportion)
 {
-	item->setStartProportion(start);
-	item->setProportion(proportion);
+	item->setMainStartProportion(start);
+	item->setMainProportion(proportion);
 	return proportion;
 }
 

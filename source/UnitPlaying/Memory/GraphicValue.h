@@ -75,7 +75,7 @@ class GraphicValue : public LinearLayoutActor
 	/// memory rows)
 	bool buildPod(const QString& asset, bool buildLeftPod, bool buildRightPod);
 	/// Builds a label to show the value (or variable value)
-	bool buildValueLabel(const qreal refDataMargins[], qreal proportion = 1.0 - 0.2);
+	bool buildValueLabel(const qreal refDataMargins[], qreal mainProportion = 1.0 - 0.2);
 	/// In character values, convert some invisible chacters by scape sequences
 	QString processInvisibleChars();
 };

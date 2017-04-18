@@ -24,9 +24,9 @@ class Layout : public LayoutItem
 	/// Destructor
 	virtual ~Layout();
 	/// Add the given item to the sequence of items
-	virtual void addItem(LayoutItem* item, qreal proportion, qreal zValue = 0.0);
+	virtual void addItem(LayoutItem* item, qreal mainProportion, qreal zValue = 0.0);
 	/// Insert the item at the given percent
-	virtual void insertItem(LayoutItem* item, qreal startProportion, qreal proportion, qreal zValue = 0.0);
+	virtual void insertItem(LayoutItem* item, qreal mainStart, qreal mainProportion, qreal zValue = 0.0);
 	/// Add any Qt graphics item, including QGraphicsWidget
 //	virtual void addItem(QGraphicsItem* widget);
 	/// Removes the item from the layout, and the scene
@@ -37,9 +37,9 @@ class Layout : public LayoutItem
 	/// @param removeFromScene if true, QGraphicsItems will be removed from the scene and deleted
 	void removeAllItems(bool removeItemsFromScene);
 	/// A layout is a layout item also
-	virtual void addLayout(Layout* layout, qreal proportion, qreal zValue = 0.0);
+	virtual void addLayout(Layout* layout, qreal mainProportion, qreal zValue = 0.0);
 	/// Add expansible space
-	virtual void addStretch(qreal proportion, qreal zValue = 0.0);
+	virtual void addStretch(qreal mainProportion, qreal zValue = 0.0);
 	/// zValue is currenlty only set for QGraphicsItem objects
 	virtual void setZ(qreal) override { }
 	/// Find the zValue of this item in its parent, -1.0 if not added or not parent

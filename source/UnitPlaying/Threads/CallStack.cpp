@@ -169,7 +169,7 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int ini
 		// ToDo: re-open the memory interface on cpu core
 		Q_ASSERT(cpuCoreRows > 0.0);
 		qreal finalPercent = 1.0 - functionCall->getHeightInRows() / cpuCoreRows;
-		functionCall->setProportion( functionCall->getHeightInRows() / cpuCoreRows );
+		functionCall->setMainProportion( functionCall->getHeightInRows() / cpuCoreRows );
 		duration += functionCall->animateMoveTo( finalPercent, functionCall->getHeightInRows() * 1000, /*initialDelay*/ 0 );
 	}
 

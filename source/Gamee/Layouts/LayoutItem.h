@@ -17,10 +17,15 @@ class LayoutItem
 	/// @remarks Implemented but not used, as well as Layout::findZValue()
 	LayoutItem* parentLayoutItem = nullptr;
 	/// Percent of the parent where this item starts. A negative value means it starts just after
-	/// the previous element that has been added to the parent.
-	qreal startProportion = -1.0;
-	/// Percent of extension (aka proportion) this item will occupy in parent's space
-	qreal proportion = 0.0;
+	/// the previous element that has been added to the parent. Inspired in CSS3 flexbox layout
+	qreal mainStart = -1.0;
+	/// The start proportion on the cross axis. Inspired in CSS3 flexbox layout
+	qreal crossStart = -1.0;
+	/// Percent of extension (aka proportion) this item will occupy in parent's space in the same
+	/// direction of the parent's main direction. Inspired in CSS3 flexbox layout
+	qreal mainProportion = 0.0;
+	/// Percent on the cross axis. Inspired in CSS3 flexbox layout
+	qreal crossProportion = 0.0;
 	/// Percent of extension of each margin of this item
 	qreal margins[marginCount] = { 0 };
 	/// Current dimensions of this item set in the last resize event
@@ -28,12 +33,10 @@ class LayoutItem
 	qreal layoutTop = 0.0;
 	qreal layoutWidth = 0.0;
 	qreal layoutHeight = 0.0;
-	/// True if this item is floating over other items
-	bool floating = false;
 
   public:
 	/// Constructor
-	explicit LayoutItem(qreal proportion = 1.0);
+	explicit LayoutItem(qreal mainProportion = 1.0);
 	/// Destructor
 	virtual ~LayoutItem();
 	/// Used to differentiate between pure-layout items and scenic elements
@@ -48,12 +51,18 @@ class LayoutItem
 	/// The parent item that contains this one
 	inline LayoutItem* getParentLayoutItem() const { return parentLayoutItem; }
 	inline void setParentLayoutItem(LayoutItem* parent) { this->parentLayoutItem = parent; }
+	/// The proportion in parent where this item starts in the parent's direction
+	inline qreal getMainStartProportion() const { return mainStart; }
+	inline void setMainStartProportion(qreal startProportion) { this->mainStart = startProportion; }
+	/// The proportion of space this item occupies of its layout in parent's direction
+	inline qreal getMainProportion() const { return mainProportion; }
+	inline void setMainProportion(qreal proportion) { this->mainProportion = proportion; }
 	/// The proportion in parent where this item starts
-	inline qreal getStartProportion() const { return startProportion; }
-	inline void setStartProportion(qreal startProportion) { this->startProportion = startProportion; }
+	inline qreal getCrossStartProportion() const { return crossStart; }
+	inline void setCrossStartProportion(qreal startProportion) { this->crossStart = startProportion; }
 	/// The proportion of space this item occupies of its layout
-	inline qreal getProportion() const { return proportion; }
-	inline void setProportion(qreal proportion) { this->proportion = proportion; }
+	inline qreal getCrossProportion() const { return crossProportion; }
+	inline void setCrossProportion(qreal proportion) { this->crossProportion = proportion; }
 	/// Scenic elements require this method.
 	/// This is dirty hack, it is no implemented by other LayoutItems
 	virtual void setZ(qreal) = 0;
@@ -77,9 +86,6 @@ class LayoutItem
 	inline qreal getLayoutTop() const { return layoutTop; }
 	inline qreal getLayoutWidth() const { return layoutWidth; }
 	inline qreal getLayoutHeight() const { return layoutHeight; }
-	/// True if the item can float over other items
-	inline bool isFloating() const { return floating; }
-	inline void makeFloat(bool newState = true) { floating = newState; }
 
   protected:
 	/// Adjust the given variables reducing the margins

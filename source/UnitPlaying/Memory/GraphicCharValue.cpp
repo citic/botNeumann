@@ -69,9 +69,9 @@ bool GraphicCharValue::reparentTo(Scene* newParent)
 	Q_ASSERT(parentLayout);
 	parentLayout->removeItem(this, false);
 
-	startProportion = 0.5; //podMiddle->getLayoutTop() / scene->getLayout()->getLayoutHeight();
+	mainStart = 0.5; //podMiddle->getLayoutTop() / scene->getLayout()->getLayoutHeight();
 	qreal proportion = podMiddle->getLayoutHeight() / scene->getLayout()->getLayoutHeight();
-	scene->getLayout()->insertItem(this, startProportion, proportion, zValue );
+	scene->getLayout()->insertItem(this, mainStart, proportion, zValue );
 	/*
 	LayoutItem* parentLayoutItem = nullptr;
 	qreal proportion = 0.0;

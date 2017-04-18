@@ -31,7 +31,6 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 	robot->setMargins(0.2);
 	centralLayout->addItem(robot, 0.5);
 	robot->alignCenter();
-	robot->makeFloat(true);
 	centralLayout->addStretch(0.5);
 
 	LinearLayout* rightLayout = new LinearLayout(Qt::Vertical);
