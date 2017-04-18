@@ -4,6 +4,7 @@
 #include "GraphicValue.h"
 
 class ExecutionThread;
+class Scene;
 
 /** A GraphicCharValue is a GraphicValue that can travel by any standard input/output tube,
 	exit from or enter to it when it arrives to the open tube's area, travel by the scene towars/
@@ -44,7 +45,7 @@ class GraphicCharValue : public GraphicValue
 	inline void setFinalAnimationState(AnimationState state) { this->finalState = state; }
 	/// Starts the several-state animation from the current place to the given execution thread
 	/// @return The duration of the animation in milliseconds
-	int animateRead(int index, ExecutionThread* targetThread);
+	int animateRead(int index, int length, int ioBufferCapacity, ExecutionThread* targetThread, Scene* scene);
 };
 
 #endif // GRAPHICCHARVALUE_H

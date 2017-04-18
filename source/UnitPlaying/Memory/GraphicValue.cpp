@@ -3,7 +3,6 @@
 #include "Assets.h"
 #include "BotNeumannApp.h"
 #include "LabelButton.h"
-#include "Scene.h"
 
 #include <QBrush>
 #include <QFont>

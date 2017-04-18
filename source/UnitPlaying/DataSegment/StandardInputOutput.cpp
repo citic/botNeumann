@@ -80,17 +80,36 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 	ExecutionThread* thread = waitingQueue[0];
 	qCCritical(logTemporary()) << "ToDo: animating read of" << length << "bytes towards thread" << thread->getId();
 
-	// Measure the duration of the animation
-	int maxDuration = 0, duration = 0;
-
 	// Make sure there are enough characters to animate
 	Q_ASSERT( characters.count() >= length );
 
-	// For each character animate them reaching the robot
-	for ( int index = 0; index < length; ++index )
-		if ( (duration = characters[index]->animateRead(index, thread) ) > maxDuration )
-			maxDuration = duration;
+	// Measure the duration of the animation
+	int maxDuration = 0, duration = 0;
 
+	// The parent of the buffer is the scene
+	Scene* scene = dynamic_cast<Scene*>( parentItem() );
+	Q_ASSERT(scene);
+
+	// For each character animate them reaching the robot. Also animate the characters that will
+	// remain in the tube or will just enter on it
+	for ( int index = 0; index < length + capacity; ++index )
+	{
+		if ( index >= characters.count() )
+			break;
+
+		if ( (duration = characters[index]->animateRead(index, length, capacity, thread, scene) ) > maxDuration )
+			maxDuration = duration;
+	}
+
+	// Temporary:
+	for ( int index = 0; index < length; ++index )
+		characters[index]->removeAllItems(true);
+
+	// Remove the read characters from the buffer
+	for ( int index = 0; index < length; ++index )
+		characters.removeFirst();
+
+	this->updateLayoutItem();
 	return maxDuration;
 }
 

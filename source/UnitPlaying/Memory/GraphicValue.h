@@ -6,7 +6,6 @@
 #include "MemoryAllocation.h"
 
 class LabelButton;
-class Scene;
 class Actor;
 class QGraphicsItem;
 
