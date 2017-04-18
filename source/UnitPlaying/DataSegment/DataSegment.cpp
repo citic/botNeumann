@@ -95,7 +95,7 @@ void DataSegment::clearAnimation()
 	standardOutput->clear();
 }
 
-void DataSegment::updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context,
+int DataSegment::updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context,
 	const QList<ExecutionThread*>& inputQueue, const QList<ExecutionThread*>& outputQueue, int& maxDuration)
 {
 	// ^done,value="0"
@@ -109,10 +109,10 @@ void DataSegment::updateStandardInputOutput(const GdbItemTree& tree, Visualizati
 	// The context tells which file is this cursor from
 	switch ( context )
 	{
-		case visStandardInput: standardInput->updateCursor(cursor, inputQueue, maxDuration); break;
-		case visStandardOutput: standardOutput->updateCursor(cursor, outputQueue, maxDuration); break;
-		case visStandardError: /* standardError->updateCursor(cursor, maxDuration); */ break;
+		case visStandardInput: return standardInput->updateCursor(cursor, inputQueue, maxDuration);
+		case visStandardOutput: return standardOutput->updateCursor(cursor, outputQueue, maxDuration);
+		case visStandardError: /* standardError->updateCursor(cursor, maxDuration); */ return 0;
 
-		default: Q_ASSERT(false);
+		default: Q_ASSERT(false); return -1;
 	}
 }

@@ -90,7 +90,8 @@ class StandardInputOutput : public MemorySegment
 	/// Removes all values from the buffer
 	inline int clear() { return buffer->clear(); }
 	/// Updates the cursor and animates bytes leaving to or entering in the tube
-	bool updateCursor(int cursor, const QList<ExecutionThread*>& waitingQueue, int& maxDuration);
+	/// @return Number of bytes read or written, 0 if no cursor was changed
+	int updateCursor(int cursor, const QList<ExecutionThread*>& waitingQueue, int& maxDuration);
 
   protected:
 	/// Load graphic elements to represent this object

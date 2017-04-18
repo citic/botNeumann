@@ -108,6 +108,7 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 	// Remove the read characters from the buffer
 	for ( int index = 0; index < length; ++index )
 		characters.removeFirst();
+	cursor += length;
 
 	this->updateLayoutItem();
 	return maxDuration;
@@ -157,7 +158,7 @@ bool StandardInputOutput::loadFile(const QString& filepath)
 	return true;
 }
 
-bool StandardInputOutput::updateCursor(int cursor, const QList<ExecutionThread*>& waitingQueue, int& maxDuration)
+int StandardInputOutput::updateCursor(int cursor, const QList<ExecutionThread*>& waitingQueue, int& maxDuration)
 {
 	// Calculate how many bytes were read or written
 	Q_ASSERT(buffer);
@@ -165,7 +166,7 @@ bool StandardInputOutput::updateCursor(int cursor, const QList<ExecutionThread*>
 
 	// If we are at the same cursor, nothing to animate
 	if ( difference == 0 )
-		return false;
+		return 0;
 
 	// There is difference
 	// ToDo: We assume no seeking (i.e. player does not call fseek() or seekg())
@@ -181,7 +182,7 @@ bool StandardInputOutput::updateCursor(int cursor, const QList<ExecutionThread*>
 	if ( duration > maxDuration )
 		maxDuration = duration;
 
-	return duration >= 0;
+	return difference;
 }
 
 void StandardInputOutput::buildStandardInputOutput()

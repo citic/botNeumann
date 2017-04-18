@@ -532,12 +532,7 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext contex
 
 	// Standard input/output/error responses are identified by the context
 	if ( ! error && (context == visStandardInput || context == visStandardOutput || context == visStandardError) )
-	{
-		QList<ExecutionThread*> inputQueue;
-		QList<ExecutionThread*> outputQueue;
-		unitPlayingScene->getCpuCores()->getThreadsWaitingForIO(inputQueue, outputQueue);
-		return emit updateStandardInputOutput(tree, context, inputQueue, outputQueue, maxDuration);
-	}
+		return unitPlayingScene->updateStandardInputOutput(tree, context, maxDuration);
 
 	const GdbTreeNode* node = nullptr;
 	if ( ( node = tree.findNode("/changelist") ) )

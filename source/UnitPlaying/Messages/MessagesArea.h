@@ -70,9 +70,8 @@ class MessagesArea : public QDockWidget
 	/// Appends a message sent by the debugger (e.g. GDB)
 	void appendDebuggerMessage(QtMsgType type, const QString& category, const QString& message);
 	/// Called when we get an updated cursor from gdb
-	/// @see Visualizator::updateStandardInputOutput()
-	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context,
-		const QList<ExecutionThread*>& inputQueue, const QList<ExecutionThread*>& outputQueue, int& maxDuration);
+	/// @see UnitPlayingScene::updateStandardInputOutput()
+	bool updateStandardInputOutput(int bytes, VisualizationContext context, int& maxDuration);
 
   protected slots:
 	/// Called when user selects a diagnostic in the tools output list

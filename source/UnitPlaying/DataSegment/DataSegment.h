@@ -45,8 +45,9 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	/// Called when visualization has finished in order to clear variables
 	void clearAnimation();
 	/// Called when we get an updated cursor from gdb
+	/// @return Number of bytes read or written, 0 if no cursor was changed
 	/// @see Visualizator::updateStandardInputOutput()
-	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context,
+	int updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context,
 		const QList<ExecutionThread*>& inputQueue, const QList<ExecutionThread*>& outputQueue, int& maxDuration);
 
   protected:

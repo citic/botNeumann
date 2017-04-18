@@ -152,17 +152,15 @@ void MessagesArea::appendDebuggerMessage(QtMsgType type, const QString& category
 	listItem->setForeground( color );
 }
 
-void MessagesArea::updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context,
-	const QList<ExecutionThread*>& inputQueue, const QList<ExecutionThread*>& outputQueue, int& maxDuration)
+bool MessagesArea::updateStandardInputOutput(int bytes, VisualizationContext context, int& maxDuration)
 {
 	// ToDo: propagate to the standardInputOutputInspector inspector
 	// Another idea: make the standardInputOutputInspector a listener of read/write operations
 	// emitted by DataSegment::StandardInputOutput objects
-	Q_UNUSED(tree);
+	Q_UNUSED(bytes);
 	Q_UNUSED(context);
-	Q_UNUSED(inputQueue);
-	Q_UNUSED(outputQueue);
 	Q_UNUSED(maxDuration);
+	return false;
 }
 
 void MessagesArea::toolsOutputRowChanged(int row)

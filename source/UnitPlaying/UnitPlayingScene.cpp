@@ -226,6 +226,16 @@ void UnitPlayingScene::changeState(UnitPlayingState newState)
 	}
 }
 
+void UnitPlayingScene::updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
+{
+	QList<ExecutionThread*> inputQueue;
+	QList<ExecutionThread*> outputQueue;
+	cpuCores->getThreadsWaitingForIO(inputQueue, outputQueue);
+	int bytes = dataSegment->updateStandardInputOutput(tree, context, inputQueue, outputQueue, maxDuration);
+	if ( bytes > 0 )
+		messagesArea->updateStandardInputOutput(bytes, context, maxDuration);
+}
+
 void UnitPlayingScene::userRunOrPaused()
 {
 	// The Run/Pause produces several actions depending on the current state
@@ -292,10 +302,6 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), heapSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), cpuCores, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
-
-	// When there is an update on the standard input/output/error cursor
-	connect( visualizator, &Visualizator::updateStandardInputOutput, dataSegment, &DataSegment::updateStandardInputOutput );
-	connect( visualizator, &Visualizator::updateStandardInputOutput, messagesArea, &MessagesArea::updateStandardInputOutput );
 
 	// When user asks to step forward
 	connect( codeSegment, SIGNAL(userSteppedForward()), visualizator, SLOT(stepForward()) );

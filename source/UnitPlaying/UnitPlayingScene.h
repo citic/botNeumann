@@ -3,11 +3,13 @@
 
 #include "GameScene.h"
 #include "Unit.h"
+#include "VisualizationContext.h"
 
 class CodeSegment;
 class CompiledProgram;
 class CpuCores;
 class DataSegment;
+class GdbItemTree;
 class GuiBreakpoint;
 class HeapSegment;
 class MessagesArea;
@@ -107,6 +109,12 @@ class UnitPlayingScene : public GameScene
 	QList<GuiBreakpoint*> retrieveBreakpoints();
 	/// Change the state of the visualization and emit the @a stateChanged signal
 	void changeState(UnitPlayingState newState);
+	/// On each step of the visualization, the cursors of the standard input/output/error files
+	/// are requested to GDB. This signal is called when gdb replies to each of these consults.
+	/// @param tree The response yield by GDB containing the cursor of the file
+	/// @param context Use this enumeration to determine the type of file: input/output/error
+	/// @param maxDuration Required to wait all animations finished before stepping forward
+	void updateStandardInputOutput(const GdbItemTree& tree, VisualizationContext context, int& maxDuration);
 
   signals:
 	/// Emitted when a game mode button is pressed
