@@ -111,8 +111,9 @@ bool GraphicValue::buildSingleByteVariable(const QString& asset, const qreal ref
 
 	// Pod:
 	// A single-byte variable requires just one graphic
-	Actor* pod = new Actor(asset, graphicsParent);
-	addItem(pod, 1.0, zValue + zPodOffset );
+	Q_ASSERT(podMiddle == nullptr);
+	podMiddle = new Actor(asset, graphicsParent);
+	addItem(podMiddle, 1.0, zValue + zPodOffset );
 
 	// Characters can contain a single value
 	buildValueLabel(refDataMargins);

@@ -35,6 +35,8 @@ class GraphicCharValue : public GraphicValue
 	AnimationState currentState = animIdle;
 	/// The final target state of the animation
 	AnimationState finalState = animIdle;
+	/// When characters float, they do over the scene instead of stdin/stdout buffers
+	Scene* scene = nullptr;
 
   public:
 	/// Constructor
@@ -46,6 +48,14 @@ class GraphicCharValue : public GraphicValue
 	/// Starts the several-state animation from the current place to the given execution thread
 	/// @return The duration of the animation in milliseconds
 	int animateRead(int index, int length, int ioBufferCapacity, ExecutionThread* targetThread, Scene* scene);
+
+  protected slots:
+	/// Make this character float over the scene. After this method is called, the character
+	/// remains at the same position, but it can be freely moved through the scene
+	/// ToDo: we use the scene, but it may eventually changed for any other QGraphicsItem object
+	bool reparentTo(Scene* newParent);
+	/// Convenience function
+	bool reparentToScene();
 };
 
 #endif // GRAPHICCHARVALUE_H

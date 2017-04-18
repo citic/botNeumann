@@ -102,8 +102,8 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 	}
 
 	// Temporary:
-	for ( int index = 0; index < length; ++index )
-		characters[index]->removeAllItems(true);
+//	for ( int index = 0; index < length; ++index )
+//		characters[index]->removeAllItems(true);
 
 	// Remove the read characters from the buffer
 	for ( int index = 0; index < length; ++index )

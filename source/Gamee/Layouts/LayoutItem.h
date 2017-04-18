@@ -72,6 +72,11 @@ class LayoutItem
 	inline qreal getMarginRight() const { return margins[marginRight]; }
 	inline qreal getMarginBottom() const { return margins[marginBottom]; }
 	inline qreal getMarginLeft() const { return margins[marginLeft]; }
+	// Get access to the position of this item
+	inline qreal getLayoutLeft() const { return layoutLeft; }
+	inline qreal getLayoutTop() const { return layoutTop; }
+	inline qreal getLayoutWidth() const { return layoutWidth; }
+	inline qreal getLayoutHeight() const { return layoutHeight; }
 	/// True if the item can float over other items
 	inline bool isFloating() const { return floating; }
 	inline void makeFloat(bool newState = true) { floating = newState; }
