@@ -176,8 +176,8 @@ int StandardInputOutput::updateCursor(int cursor, const QList<ExecutionThread*>&
 	int duration = 0;
 	if ( type == standardInput )
 		duration = buffer->animateRead(difference, waitingQueue);
-	else
-		/*duration = buffer->animateWrite(difference)*/;
+	//else
+	//	duration = buffer->animateWrite(difference);
 
 	if ( duration > maxDuration )
 		maxDuration = duration;
