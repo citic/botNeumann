@@ -56,6 +56,8 @@ class GraphicCharValue : public GraphicValue
 	bool reparentTo(Scene* newParent);
 	/// Convenience function
 	bool reparentToScene();
+	/// Called when read or write animation is finished
+	void removeCharFromScene();
 };
 
 #endif // GRAPHICCHARVALUE_H

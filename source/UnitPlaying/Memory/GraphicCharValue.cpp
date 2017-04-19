@@ -33,6 +33,11 @@ int GraphicCharValue::animateRead(int index, int length, int ioBufferCapacity, E
 	this->scene = scene;
 	QTimer::singleShot( index * 250, this, &GraphicCharValue::reparentToScene );
 
+	duration += 4000 + index * 250;
+	duration += animateAppear(250, duration, 1.0, 0.0);
+
+	QTimer::singleShot( duration, this, &GraphicCharValue::removeCharFromScene );
+
 	Q_UNUSED(targetThread);
 
 	return duration;
@@ -69,7 +74,7 @@ bool GraphicCharValue::reparentTo(Scene* newParent)
 	Q_ASSERT(parentLayout);
 	parentLayout->removeItem(this, false);
 
-	mainStart = 0.5; //podMiddle->getLayoutTop() / scene->getLayout()->getLayoutHeight();
+	mainStart = podMiddle->getLayoutTop() / scene->getLayout()->getLayoutHeight() - 0.23;
 	qreal proportion = podMiddle->getLayoutHeight() / scene->getLayout()->getLayoutHeight();
 	scene->getLayout()->insertItem(this, mainStart, proportion, zValue );
 
@@ -92,4 +97,9 @@ bool GraphicCharValue::reparentTo(Scene* newParent)
 bool GraphicCharValue::reparentToScene()
 {
 	return reparentTo(scene);
+}
+
+void GraphicCharValue::removeCharFromScene()
+{
+	removeAllItems(true);
 }
