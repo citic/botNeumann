@@ -20,14 +20,21 @@ int GraphicCharValue::animateRead(int index, int length, int ioBufferCapacity, E
 	if ( index > ioBufferCapacity )
 		duration += (index - ioBufferCapacity) * 250;
 
-	// If this character was not read, it will be only moved through the stdin tube
+	// Move this charater to its final position inside the tube
+	// If this character was read (index < length) it will be moved to the position 0 where it will
+	// be moved to the execution thread. Otherwise it will be only moved through the stdin tube to
+	// the index - length position. Eg: thread read 4 chars. Chars in positions 0 through 3 will
+	// end at position 0 before being extracted. Char in position 4 will end in position 0 after the
+	// animation is done, char in position 5 will end in position 1, and so on...
+	int finalPositionInBuffer = index < length ? 0 : index - length;
+
+	// Animate this character to reach its final position
+	qreal finalPercent = qreal(finalPositionInBuffer) / ioBufferCapacity;
+	duration += animateMoveTo( finalPercent, (index - finalPositionInBuffer) * 250, duration );
+
+	// If this char was not read, it will not extract towards the thread. Its animation is done
 	if ( index >= length )
-	{
-		// To animate them arriving, we place them at the first non visible position
-		qreal finalPercent = qreal( index - length ) / ioBufferCapacity;
-		duration += animateMoveTo( finalPercent, (index - length) * 250, duration );
 		return duration;
-	}
 
 	// This character will float towards the execution thread
 	this->scene = scene;
