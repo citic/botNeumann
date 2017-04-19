@@ -23,12 +23,23 @@ void LinearLayout::resize(qreal left, qreal top, qreal width, qreal height)
 			left = reset;
 			for ( int i = 0; i < itr.value().size(); ++i )
 			{
-				LayoutItem* item = itr.value()[i];
-				if ( item->getMainStartProportion() >= 0.0 )
-					left = reset + width * item->getMainStartProportion();
-				qreal extend = width * item->getMainProportion();
-				item->resize(left, top, extend, height);
-				left += extend;
+				LayoutItem* child = itr.value()[i];
+
+				if ( child->getMainStartProportion() >= 0.0 )
+					left = reset + width * child->getMainStartProportion();
+
+				qreal childWidth = width * child->getMainProportion();
+
+				qreal childTop = top;
+				if ( child->getCrossStartProportion() > 0.0 )
+					childTop += height * child->getCrossStartProportion();
+
+				qreal childHeight = height;
+				if ( child->getCrossProportion() > 0.0 )
+					childHeight = height * child->getCrossProportion();
+
+				child->resize(left, childTop, childWidth, childHeight);
+				left += childWidth;
 			}
 		}
 	}
@@ -40,12 +51,23 @@ void LinearLayout::resize(qreal left, qreal top, qreal width, qreal height)
 			top = reset;
 			for ( int i = 0; i < itr.value().size(); ++i )
 			{
-				LayoutItem* item = itr.value()[i];
-				if ( item->getMainStartProportion() >= 0.0 )
-					top = reset + height * item->getMainStartProportion();
-				qreal extend = height * item->getMainProportion();
-				item->resize(left, top, width, extend);
-				top += extend;
+				LayoutItem* child = itr.value()[i];
+
+				if ( child->getMainStartProportion() >= 0.0 )
+					top = reset + height * child->getMainStartProportion();
+
+				qreal childHeight = height * child->getMainProportion();
+
+				qreal childLeft = left;
+				if ( child->getCrossStartProportion() > 0.0 )
+					childLeft += width * child->getCrossStartProportion();
+
+				qreal childWidth = width;
+				if ( child->getCrossProportion() > 0.0 )
+					childWidth = width * child->getCrossProportion();
+
+				child->resize(childLeft, top, childWidth, childHeight);
+				top += childHeight;
 			}
 		}
 	}
