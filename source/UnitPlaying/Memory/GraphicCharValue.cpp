@@ -3,11 +3,21 @@
 #include "ExecutionThreadActor.h"
 #include "LogManager.h"
 #include "Scene.h"
+#include "VisualizationSpeed.h"
 
 #include "Actor.h"
 #include "LabelButton.h"
 
 #include <QTimer>
+
+// Duration in milliseconds of a char traveling from stdin to the thread or reverse direction
+const int durationBufferThread = 1000;
+// Duration waiting for remaining characters arrive to the thread or leaving it
+const int durationWaitingOthers = 250;
+// Duration of a "visual" delay to allow user to watch all characteres together
+const int durationVisualDelay = 500;
+// Duration of disappear animation
+const int durationDisappear = 250;
 
 GraphicCharValue::GraphicCharValue(QGraphicsItem* graphicsParent, qreal zValue, const QString& value)
 	: GraphicValue(typeChar, graphicsParent, zValue, value)
@@ -42,27 +52,53 @@ int GraphicCharValue::animateRead(int index, int length, int ioBufferCapacity, E
 	// When it reaches the position 0 in the tube, it must be repareted to the scene, because it
 	// it currently clipped by its stdin buffer parent
 	this->scene = scene;
-	QTimer::singleShot( duration, this, &GraphicCharValue::reparentToScene );
+	this->executionThread = targetThread;
+	this->index = index;
+	this->length = length;
+	QTimer::singleShot( duration, this, &GraphicCharValue::animateMoveToThread );
+
+	// Add the duration that the move to thread animation will take later
+	int moveToThreadDuration
+		= durationBufferThread	// traveling from stdin to the thread
+		+ (length - index) * durationWaitingOthers	// waiting for remaining characters arrive to the thread
+		+ durationVisualDelay // delay to allow user to watch all characteres together
+		+ durationDisappear; // duration of disappear animation
+
+	duration += VisualizationSpeed::getInstance().adjust(moveToThreadDuration);
+	return duration;
+}
+
+int GraphicCharValue::animateMoveToThread()
+{
+	// We need to move this character accros the scene. Currently it is owned by the stdin buffer
+	int duration = 0;
+	reparentTo(scene);
 
 	// Calculate the final position in execution thread's area
-	Q_ASSERT(targetThread);
-	qreal mainPercent = targetThread->getActor()->getLayoutTop() / scene->getLayout()->getLayoutHeight();
-	qreal crossPercent = targetThread->getLayoutLeft() / scene->getLayout()->getLayoutWidth();
+	Q_ASSERT(executionThread);
+	qreal mainPercent = executionThread->getActor()->getLayoutTop() / scene->getLayout()->getLayoutHeight();
+	qreal crossPercent = executionThread->getLayoutLeft() / scene->getLayout()->getLayoutWidth();
 
-	// Set the initial position of this character using percents of the scene instead of buffer
-//	setCrossStartProportion( podMiddle->getLayoutLeft() / scene->getLayout()->getLayoutWidth() );
-//	setCrossProportion( podMiddle->getLayoutWidth() / scene->getLayout()->getLayoutWidth() );
+	// Add the horizontal displacement according to the index of this character in the animation
+	// 0.85 is an adjust to keep characters tight together
+	crossPercent += index * podMiddle->getLayoutWidth() / scene->getLayout()->getLayoutWidth() * 0.85;
 
 	// Animate this character moving towards the thread position
-	duration += animateMoveToPos(mainPercent, crossPercent, 4000 + index * 250, duration);
+	duration += animateMoveToPos(mainPercent, crossPercent, durationBufferThread, duration);
+
+	// Wait until other characters arrive to the thread
+	duration += VisualizationSpeed::getInstance().adjust((length - index) * durationWaitingOthers + durationVisualDelay);
 
 	// ToDo: move this to IOBuffer
 	// Disappear this character after the read is complete
-	duration += animateAppear(250, duration, 1.0, 0.0);
+	duration += animateAppear(durationDisappear, duration, 1.0, 0.0);
 	QTimer::singleShot( duration, this, &GraphicCharValue::removeCharFromScene );
-
-	// Done
 	return duration;
+}
+
+void GraphicCharValue::removeCharFromScene()
+{
+	removeAllItems(true);
 }
 
 bool GraphicCharValue::reparentTo(Scene* newParent)
@@ -113,14 +149,4 @@ bool GraphicCharValue::reparentTo(Scene* newParent)
 	*/
 	scene->getLayout()->updateLayoutItem();
 	return true;
-}
-
-bool GraphicCharValue::reparentToScene()
-{
-	return reparentTo(scene);
-}
-
-void GraphicCharValue::removeCharFromScene()
-{
-	removeAllItems(true);
 }

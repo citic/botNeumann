@@ -37,6 +37,12 @@ class GraphicCharValue : public GraphicValue
 	AnimationState finalState = animIdle;
 	/// When characters float, they do over the scene instead of stdin/stdout buffers
 	Scene* scene = nullptr;
+	/// This chacter was read or written by this thread
+	ExecutionThread* executionThread = nullptr;
+	/// The index of this character moving to/from the thread
+	int index = 0;
+	/// The amount of other characters traveling to/from the thread
+	int length = 0;
 
   public:
 	/// Constructor
@@ -50,14 +56,15 @@ class GraphicCharValue : public GraphicValue
 	int animateRead(int index, int length, int ioBufferCapacity, ExecutionThread* targetThread, Scene* scene);
 
   protected slots:
+	/// Animates this character leaving the stdin tube and move to the execution thread stored
+	/// in the class member pointer
+	int animateMoveToThread();
+	/// Called when read or write animation is finished
+	void removeCharFromScene();
 	/// Make this character float over the scene. After this method is called, the character
 	/// remains at the same position, but it can be freely moved through the scene
 	/// ToDo: we use the scene, but it may eventually changed for any other QGraphicsItem object
 	bool reparentTo(Scene* newParent);
-	/// Convenience function
-	bool reparentToScene();
-	/// Called when read or write animation is finished
-	void removeCharFromScene();
 };
 
 #endif // GRAPHICCHARVALUE_H
