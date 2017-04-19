@@ -101,15 +101,12 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 			maxDuration = duration;
 	}
 
-	// Temporary:
-//	for ( int index = 0; index < length; ++index )
-//		characters[index]->removeAllItems(true);
-
 	// Remove the read characters from the buffer
 	for ( int index = 0; index < length; ++index )
 		characters.removeFirst();
 	cursor += length;
 
+	// Update layout
 	this->updateLayoutItem();
 	return maxDuration;
 }
