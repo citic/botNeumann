@@ -1,5 +1,7 @@
 #include "GraphicCharValue.h"
 #include "ExecutionThread.h"
+#include "ExecutionThreadActor.h"
+#include "LogManager.h"
 #include "Scene.h"
 
 #include "Actor.h"
@@ -36,21 +38,33 @@ int GraphicCharValue::animateRead(int index, int length, int ioBufferCapacity, E
 	if ( index >= length )
 		return duration;
 
-	// This character will float towards the execution thread
+	// This character will be extracted from stdin tube and float towards the execution thread.
+	// When it reaches the position 0 in the tube, it must be repareted to the scene, because it
+	// it currently clipped by its stdin buffer parent
 	this->scene = scene;
-	QTimer::singleShot( index * 250, this, &GraphicCharValue::reparentToScene );
+	QTimer::singleShot( duration, this, &GraphicCharValue::reparentToScene );
 
-	duration += 4000 + index * 250;
+	// Calculate the final position in execution thread's area
+	Q_ASSERT(targetThread);
+	qreal mainPercent = targetThread->getActor()->getLayoutTop() / scene->getLayout()->getLayoutHeight();
+	qreal crossPercent = targetThread->getLayoutLeft() / scene->getLayout()->getLayoutWidth();
+
+	// Set the initial position of this character using percents of the scene instead of buffer
+//	setCrossStartProportion( podMiddle->getLayoutLeft() / scene->getLayout()->getLayoutWidth() );
+//	setCrossProportion( podMiddle->getLayoutWidth() / scene->getLayout()->getLayoutWidth() );
+
+	// Animate this character moving towards the thread position
+	duration += animateMoveToPos(mainPercent, crossPercent, 4000 + index * 250, duration);
+
+	// ToDo: move this to IOBuffer
+	// Disappear this character after the read is complete
 	duration += animateAppear(250, duration, 1.0, 0.0);
-
 	QTimer::singleShot( duration, this, &GraphicCharValue::removeCharFromScene );
 
-	Q_UNUSED(targetThread);
-
+	// Done
 	return duration;
 }
 
-#include "LogManager.h"
 bool GraphicCharValue::reparentTo(Scene* newParent)
 {
 	Q_ASSERT(newParent);
@@ -81,7 +95,7 @@ bool GraphicCharValue::reparentTo(Scene* newParent)
 	Q_ASSERT(parentLayout);
 	parentLayout->removeItem(this, false);
 
-	mainStart = podMiddle->getLayoutTop() / scene->getLayout()->getLayoutHeight() - 0.23;
+	mainStart = podMiddle->getLayoutTop() / scene->getLayout()->getLayoutHeight();
 	qreal proportion = podMiddle->getLayoutHeight() / scene->getLayout()->getLayoutHeight();
 	scene->getLayout()->insertItem(this, mainStart, proportion, zValue );
 

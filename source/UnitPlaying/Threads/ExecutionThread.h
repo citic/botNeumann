@@ -111,6 +111,7 @@ class ExecutionThread : public LinearLayout
 	inline int getLineNumber() const { return lineNumber; }
 	inline const QString& getPreviousFilename() const { return previousFilename; }
 	inline int getPreviousLineNumber() const { return previousLineNumber; }
+	inline ExecutionThreadActor* getActor() const { return actor; }
 	/// Updates the line number. This is an ugly gix for GDB adjusting breakpoints' line numbers
 	void setLineNumber(int lineNumber) { this->lineNumber = qMax(lineNumber, -1); }
 	/// Returns the color of this thread, in order to highlight its running line
