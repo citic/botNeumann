@@ -51,9 +51,6 @@ int InputOutputBuffer::animateFill()
 			qreal finalPercent = qreal( characters.count() - 1 ) / capacity;
 			insertItem(character, finalPercent + 1.0, 1.0 / capacity, zBuffer);
 
-			// Character is moving through the input buffer
-			character->setCurrentAnimationState(GraphicCharValue::animInputBuffer);
-
 			// The duration of the animation is proportional to the number of spaces that characters
 			// have to move, i.e: empty spaces
 			int duration = character->animateMoveTo( finalPercent, charsToAnimate * 250 );

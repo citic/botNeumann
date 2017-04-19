@@ -17,24 +17,7 @@ class GraphicCharValue : public GraphicValue
 	Q_OBJECT
 	Q_DISABLE_COPY(GraphicCharValue)
 
-  public:
-	/// States of the read/write animation
-	enum AnimationState
-	{
-		animIdle,
-		animInputBuffer,
-		animLeavingBuffer,
-		animToThread,
-		animToBuffer,
-		animEnteringBuffer,
-		animOutputBuffer,
-	};
-
   protected:
-	/// Current state of the animation of this character
-	AnimationState currentState = animIdle;
-	/// The final target state of the animation
-	AnimationState finalState = animIdle;
 	/// When characters float, they do over the scene instead of stdin/stdout buffers
 	Scene* scene = nullptr;
 	/// This chacter was read or written by this thread
@@ -47,10 +30,6 @@ class GraphicCharValue : public GraphicValue
   public:
 	/// Constructor
 	GraphicCharValue(QGraphicsItem* graphicsParent, qreal zValue, const QString& value);
-	/// Set the current state of the animation
-	inline void setCurrentAnimationState(AnimationState state) { this->currentState = state; }
-	/// Set the final state of the animation
-	inline void setFinalAnimationState(AnimationState state) { this->finalState = state; }
 	/// Starts the several-state animation from the current place to the given execution thread
 	/// @return The duration of the animation in milliseconds
 	int animateRead(int index, int length, int ioBufferCapacity, ExecutionThread* targetThread, Scene* scene);
