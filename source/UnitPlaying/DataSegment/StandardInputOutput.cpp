@@ -11,10 +11,10 @@
 
 #include <QTextStream>
 
-const qreal zTube =    zUnitPlaying::standardInputOutput + 0.3;
-const qreal zElbow =   zUnitPlaying::standardInputOutput + 0.2;
-const qreal zBuffer =  zUnitPlaying::standardInputOutput + 0.1;
-const qreal zOpening = zUnitPlaying::standardInputOutput + 0.0;
+const qreal zTube =    zUnitPlaying::standardInputOutput + 0.1;
+const qreal zElbow =   zUnitPlaying::standardInputOutput + 0.0;
+const qreal zBuffer =  zUnitPlaying::standardInputOutput - 0.1;
+const qreal zOpening = zUnitPlaying::standardInputOutput - 0.2;
 
 
 // InputOutputBuffer class ------------------------------------------------------------------------

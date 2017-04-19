@@ -1,12 +1,9 @@
 #include "GraphicCharValue.h"
+#include "Actor.h"
 #include "ExecutionThread.h"
 #include "ExecutionThreadActor.h"
-#include "LogManager.h"
 #include "Scene.h"
 #include "VisualizationSpeed.h"
-
-#include "Actor.h"
-#include "LabelButton.h"
 
 #include <QTimer>
 
@@ -18,6 +15,7 @@ const int durationWaitingOthers = 250;
 const int durationVisualDelay = 500;
 // Duration of disappear animation
 const int durationDisappear = 250;
+
 
 GraphicCharValue::GraphicCharValue(QGraphicsItem* graphicsParent, qreal zValue, const QString& value)
 	: GraphicValue(typeChar, graphicsParent, zValue, value)
@@ -89,7 +87,6 @@ int GraphicCharValue::animateMoveToThread()
 	// Wait until other characters arrive to the thread
 	duration += VisualizationSpeed::getInstance().adjust((length - index) * durationWaitingOthers + durationVisualDelay);
 
-	// ToDo: move this to IOBuffer
 	// Disappear this character after the read is complete
 	duration += animateAppear(durationDisappear, duration, 1.0, 0.0);
 	QTimer::singleShot( duration, this, &GraphicCharValue::removeCharFromScene );
@@ -101,31 +98,26 @@ void GraphicCharValue::removeCharFromScene()
 	removeAllItems(true);
 }
 
+#include "LabelButton.h"
 bool GraphicCharValue::reparentTo(Scene* newParent)
 {
+	// ToDo: This method has code that must be spread to ancestors
+	// Do not call setParent(). It comes from QObject
 	Q_ASSERT(newParent);
 	this->scene = newParent;
-
-	// Get coordinates in the new parent
-	Q_ASSERT(podMiddle);
-	const QPointF& scenePos = newParent->mapFromItem( graphicsParent, podMiddle->pos() );
-	qCCritical(logTemporary, "Reaparent char to scene from (%lf, %lf) to (%lf, %lf)", podMiddle->pos().x(), podMiddle->pos().y(), scenePos.x(), scenePos.y());
-
-	// Do not call setParent(). It comes from QObject
 
 	// Reparent all children from GraphicValue
 	graphicsParent = newParent;
 	if ( podLeft ) podLeft->setParentItem(newParent);
+	Q_ASSERT(podMiddle);
 	podMiddle->setParentItem(newParent);
 	if ( podRight ) podRight->setParentItem(newParent);
 	if ( valueLabel ) valueLabel->setParentItem(newParent);
 
 	// LinearLayoutActor::savedStartProportion ?
-
 	// Layout::items?
 
-	// LayoutItem
-
+	// LayoutItem:
 	// Remove from old layout
 	Layout* parentLayout = dynamic_cast<Layout*>( parentLayoutItem );
 	Q_ASSERT(parentLayout);
@@ -137,16 +129,7 @@ bool GraphicCharValue::reparentTo(Scene* newParent)
 
 	setCrossStartProportion( podMiddle->getLayoutLeft() / scene->getLayout()->getLayoutWidth() );
 	setCrossProportion( podMiddle->getLayoutWidth() / scene->getLayout()->getLayoutWidth() );
-	/*
-	LayoutItem* parentLayoutItem = nullptr;
-	qreal proportion = 0.0;
-	qreal margins[marginCount] = { 0 };
-	qreal layoutLeft = 0.0;
-	qreal layoutTop = 0.0;
-	qreal layoutWidth = 0.0;
-	qreal layoutHeight = 0.0;
-	bool floating = false;
-	*/
+
 	scene->getLayout()->updateLayoutItem();
 	return true;
 }
