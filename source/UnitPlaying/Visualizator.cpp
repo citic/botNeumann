@@ -527,15 +527,15 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext contex
 	qCDebug(logTemporary, "onResult(%s) | ctx=%d", qPrintable(tree.buildDescription()), context);
   #endif
 
-	// Ugly fix: Error can be checked in GdbResponse, but not tree. A workaround:
-	bool error = tree.findNodeTextValue("msg").length() > 0;
-
 	// Standard input/output/error responses are identified by the context
-	if ( ! error && (context == visStandardInput || context == visStandardOutput || context == visStandardError) )
-		return unitPlayingScene->updateStandardInputOutput(tree, context, maxDuration);
+	if ( context == visStandardInput || context == visStandardOutput || context == visStandardError )
+	{
+		// Ugly fix: Error can be checked in GdbResponse, but not tree. A workaround:
+		if ( tree.findNode("/value") )
+			return unitPlayingScene->updateStandardInputOutput(tree, context, maxDuration);
+	}
 
-	const GdbTreeNode* node = nullptr;
-	if ( ( node = tree.findNode("/changelist") ) )
+	if ( tree.findNode("/changelist") )
 		return (void) memoryMapper->updateWatches( tree, maxDuration );
 }
 
