@@ -67,7 +67,7 @@ void CpuCores::createCpuCores()
 		cpuCoresLayout->addLayout( cpuCore, 1.0 / coreCount );
 
 		// Overlap the workstation separator with the previous one
-		if ( index ) cpuCore->setMarginLeft(-0.04105605779343);
+		if ( index ) cpuCore->setPaddingLeft(-0.04105605779343);
 	}
 
 	// Create the layout to place future execution threads that will be sleeping (idle)

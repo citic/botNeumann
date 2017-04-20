@@ -66,8 +66,8 @@ void MemoryRow::buildMemoryAddresses()
 	{
 		const QString& label = QString("%1 ").arg(index, 3, 10, QChar(' '));
 		LabelButton* memoryAddress = new LabelButton(label, graphicsParentItem);
-		memoryAddress->setMarginTop(0.77);
-		memoryAddress->setMarginBottom(0.073);
+		memoryAddress->setPaddingTop(0.77);
+		memoryAddress->setPaddingBottom(0.073);
 		memoryAddress->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 		memoryAddress->setBrush(QBrush(Qt::yellow));
 		addItem(memoryAddress, byteProportion, zMemoryAddress);
@@ -94,11 +94,11 @@ void MemoryRow::buildGarbage()
 		// Create the garbage artifact and place it in its byte within the memory row
 		Actor* garbage = new Actor(resource, graphicsParentItem);
 
-		// We use margins because artifacts are smaller than the memory row's height
-		garbage->setMarginLeft(0.15);
-		garbage->setMarginRight(0.15);
-		garbage->setMarginTop( garbageMarginTop[garbageNum - 1] );
-		garbage->setMarginBottom( 14.500 / refRowHeight );
+		// We use paddings because artifacts are smaller than the memory row's height
+		garbage->setPaddingLeft(0.15);
+		garbage->setPaddingRight(0.15);
+		garbage->setPaddingTop( garbagePaddingTop[garbageNum - 1] );
+		garbage->setPaddingBottom( 14.500 / refRowHeight );
 		//garbage->setOpacity(0.75);
 
 		// We ad the garbage to the scene, and also to the list of artifacts

@@ -42,8 +42,8 @@ int InputOutputBuffer::animateFill()
 		GraphicCharValue* character = new GraphicCharValue(this, zBuffer, text.mid(charCounter, 1));
 		characters.append(character);
 
-		// Characters are slighly inclined, adjust their margins to overlap themselves
-		character->setMargins(0.0, -0.11);
+		// Characters are slighly inclined, adjust their paddings to overlap themselves
+		character->setPaddings(0.0, -0.11);
 
 		// If this character must be animated arriving to fill the buffer
 		if ( charCounter < charsToAnimate )
@@ -220,7 +220,7 @@ void StandardInputOutput::buildStandardInputOutput()
 	// Ugly fix: the coupling is part of the opening, but it must be placed in a higher layer
 	const qreal couplingStart = (refOpeningWidth - refCouplingWidth) / refOpeningWidth * openingProportion;
 	const qreal couplingPercent = refCouplingWidth / refOpeningWidth * openingProportion;
-	coupling->setMarginBottom(1.0 - refCouplingHeight / refOpeningHeight);
+	coupling->setPaddingBottom(1.0 - refCouplingHeight / refOpeningHeight);
 
 	// But proportions vary depending on the type of stream
 	if ( type == standardInput )
@@ -262,7 +262,7 @@ void StandardInputOutput::buildStandardInputOutput()
 		insertItem(coupling, start, couplingPercent, zTube);
 
 		// Make the middle tube to plug to the tester
-		middle->setMarginLeft(-0.011);
+		middle->setPaddingLeft(-0.011);
 	}
 
 	// The buffer has half size of the data segment row, and 3 chars are lost by elbows and edges
@@ -275,11 +275,11 @@ void StandardInputOutput::buildBuffer(size_t bufferSize, Scene* scene)
 	// Build the area to show characters
 	Q_ASSERT(buffer == nullptr);
 	buffer = new InputOutputBuffer(scene, zBuffer, bufferSize);
-	buffer->setMarginTop( (refTubeHeight - refBufferTop) / refTubeHeight );
-	const qreal bufferMarginLeft = refBufferLeft / refTubeWidth / 2.0 + 0.02;
-	const qreal bufferMarginRight = (refTubeWidth - refBufferRight) / refTubeWidth / 2.0 + 0.025;
-	buffer->setMarginLeft( type == standardInput ? bufferMarginLeft : bufferMarginRight );
-	buffer->setMarginRight( type == standardInput ? bufferMarginRight : bufferMarginLeft );
-	buffer->setMarginBottom( refBufferBottom / refTubeHeight) ;
+	buffer->setPaddingTop( (refTubeHeight - refBufferTop) / refTubeHeight );
+	const qreal bufferPaddingLeft = refBufferLeft / refTubeWidth / 2.0 + 0.02;
+	const qreal bufferPaddingRight = (refTubeWidth - refBufferRight) / refTubeWidth / 2.0 + 0.025;
+	buffer->setPaddingLeft( type == standardInput ? bufferPaddingLeft : bufferPaddingRight );
+	buffer->setPaddingRight( type == standardInput ? bufferPaddingRight : bufferPaddingLeft );
+	buffer->setPaddingBottom( refBufferBottom / refTubeHeight) ;
 	addItem(buffer, 1.0, zBuffer);
 }

@@ -37,7 +37,7 @@ void ExecutionThreadActor::buildActor()
 
 	// Center the line number within the robot's display
 	qreal lineNumberLeft = (this->boundingRect().width() - lineNumberRefWidth) * 0.5;
-	qreal lineNumberTop = lineNumberTopMargin[actorNumber - 1];
+	qreal lineNumberTop = lineNumberTopPadding[actorNumber - 1];
 	lineNumber->resizeItem(lineNumber, lineNumberLeft, lineNumberTop, lineNumberRefWidth, lineNumberRefHeight, false);
 
 	// The faces used when the robot turns to read or write data to stdin/stdout buffers

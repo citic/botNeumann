@@ -22,13 +22,13 @@ GameMenuScene::GameMenuScene(Stage* stage, QGraphicsItem* parent)
 
 	LinearLayout* leftLayout = new LinearLayout(Qt::Vertical);
 	Actor* gameTitle = new Actor("ge_game_title", this);
-	gameTitle->setMargins(0.1);
+	gameTitle->setPaddings(0.1);
 	leftLayout->addItem(gameTitle, 0.2);
 
 	LinearLayout* centralLayout = new LinearLayout(Qt::Horizontal);
 	leftLayout->addLayout(centralLayout, 0.8);
 	Actor* robot = new Actor("ge_robot", this);
-	robot->setMargins(0.2);
+	robot->setPaddings(0.2);
 	centralLayout->addItem(robot, 0.5);
 	robot->alignCenter();
 	centralLayout->addStretch(0.5);
@@ -54,7 +54,7 @@ void GameMenuScene::setupButtons(LinearLayout* rightLayout)
 {
 	// A label that shows the nickname of the current player. Press it to change player
 	playerStatus = new PlayerStatus(this);
-	playerStatus->setMargins(0.2);
+	playerStatus->setPaddings(0.2);
 	rightLayout->addItem(playerStatus, 1.0 / 6.0);
 	connect(playerStatus, SIGNAL(pressed()), this, SLOT(playerControlPressed()));
 	PlayerManager* playerManager = BotNeumannApp::getInstance()->getPlayerManager();
@@ -98,9 +98,9 @@ void GameMenuScene::setupConfigButtons(LinearLayout* parentLayout)
 	configButtonLayout->addItem(configButton, 1.0 / 3.0);
 	parentLayout->addLayout( configButtonLayout, 1.0 / 6.0 );
 
-	infoButton->setMargins(0.15, 0.0, 0.15, 0.4);
-	rewardsButton->setMargins(0.15, 0.2, 0.15, 0.2);
-	configButton->setMargins(0.15, 0.4, 0.15, 0.0);
+	infoButton->setPaddings(0.15, 0.0, 0.15, 0.4);
+	rewardsButton->setPaddings(0.15, 0.2, 0.15, 0.2);
+	configButton->setPaddings(0.15, 0.4, 0.15, 0.0);
 
 	infoButton->alignCenter();
 	rewardsButton->alignCenter();

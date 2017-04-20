@@ -8,7 +8,7 @@
 
 /// The line number must appear within the display of the robot, but each robot has the display
 /// at different top
-const qreal lineNumberTopMargin[] = {30, 60, 58, 34};
+const qreal lineNumberTopPadding[] = {30, 60, 58, 34};
 const qreal lineNumberRefWidth =  33; // px
 const qreal lineNumberRefHeight = 19; // px
 
@@ -31,7 +31,7 @@ const qreal refRowHeight = 34.879;
 
 // Garbage graphics have different height, but we place all of them aligned to the bottom
 // So, we need to calculate the top percent. These numbers come from the SVG dimensions
-const qreal garbageMarginTop[] =
+const qreal garbagePaddingTop[] =
 {
 	1.0 - ( 14.500 + 15.515 ) / refRowHeight,
 	1.0 - ( 14.500 + 11.480 ) / refRowHeight,
@@ -48,36 +48,36 @@ const qreal variableLabelHeight = 11.946;
 // Convert Inkscape positions and dimensions to percents
 enum refDataElements
 {
-	refMarginTop,
-	refMarginBottom,
+	refPaddingTop,
+	refPaddingBottom,
 	refLabelTop,
 	refLabelBottom,
 
 	refElementsSize
 };
 
-#define RefMarginTop(y, height)    (1.0 - (y + height) / refRowHeight)
-#define RefMarginBottom(y)         (y / refRowHeight)
+#define RefPaddingTop(y, height)    (1.0 - (y + height) / refRowHeight)
+#define RefPaddingBottom(y)         (y / refRowHeight)
 #define RefLabelTop(y, height)     (((y + height) - (variableLabelY + variableLabelHeight)) / height)
 #define RefLabelBottom(y, height)  ((variableLabelY - y) / height)
 
-#define RefMarginArray(type, y, height) \
-	const qreal ref ## type ## Margins[] =\
+#define RefPaddingArray(type, y, height) \
+	const qreal ref ## type ## Paddings[] =\
 	{ \
-		RefMarginTop(y, height) ,\
-		RefMarginBottom(y) ,\
+		RefPaddingTop(y, height) ,\
+		RefPaddingBottom(y) ,\
 		RefLabelTop(y, height) ,\
 		RefLabelBottom(y, height) \
 	}; \
-	//static_assert( sizeof(ref ## type ## Margins) / sizeof(qreal) == refElementsSize );
+	//static_assert( sizeof(ref ## type ## Paddings) / sizeof(qreal) == refElementsSize );
 
 
-RefMarginArray(Bool, 11.529, 16.500)
-RefMarginArray(Char, 11.529, 16.681)
-RefMarginArray(Int, 12.545, 15.500)
-RefMarginArray(Float, 12.545, 15.500)
-RefMarginArray(Pointer, 12.545, 21.944)
-RefMarginArray(Struct, 12.545, 19.500)
+RefPaddingArray(Bool, 11.529, 16.500)
+RefPaddingArray(Char, 11.529, 16.681)
+RefPaddingArray(Int, 12.545, 15.500)
+RefPaddingArray(Float, 12.545, 15.500)
+RefPaddingArray(Pointer, 12.545, 21.944)
+RefPaddingArray(Struct, 12.545, 19.500)
 
 
 // StandardInputOutput ----------------------------------------------------------------------------

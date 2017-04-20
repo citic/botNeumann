@@ -41,7 +41,7 @@ void ExecutionThread::buildExecutionThread()
 	// By default the call stack is invisible, until functions are called
 	Q_ASSERT(callStack == nullptr);
 	callStack = new CallStack(id, startByte, rowSize, maxSize, zUnitPlaying::stackFrame, scene);
-	callStack->setMargins(0.06, 0.075);
+	callStack->setPaddings(0.06, 0.075);
 
 	// Add the call stack to this thread, but keep it invisible
 	addItem( callStack, 1.0, zUnitPlaying::stackFrame );

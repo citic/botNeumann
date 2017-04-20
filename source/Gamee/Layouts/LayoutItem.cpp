@@ -22,32 +22,32 @@ void LayoutItem::updateLayoutItem()
 	resize(layoutLeft, layoutTop, layoutWidth, layoutHeight);
 }
 
-void LayoutItem::setMargins(qreal top, qreal right, qreal bottom, qreal left)
+void LayoutItem::setPaddings(qreal top, qreal right, qreal bottom, qreal left)
 {
-	margins[marginTop] = top;
-	margins[marginRight] = right;
-	margins[marginBottom] = bottom;
-	margins[marginLeft] = left;
+	paddings[paddingTop] = top;
+	paddings[paddingRight] = right;
+	paddings[paddingBottom] = bottom;
+	paddings[paddingLeft] = left;
 }
 
-void LayoutItem::applyMargins(qreal& left, qreal& top, qreal& width, qreal& height)
+void LayoutItem::applyPaddings(qreal& left, qreal& top, qreal& width, qreal& height)
 {
-	// ToDo: avoid reducing margins when there are not enough space
+	// ToDo: avoid reducing paddings when there are not enough space
 
-	// Calculate each margin in pixes and store the results because they are used twice below
-	qreal marginTopHeight = getPixelsForMargin(marginTop, height);
-	qreal marginRightWidth = getPixelsForMargin(marginRight, width);
-	qreal marginBottomHeight = getPixelsForMargin(marginBottom, height);
-	qreal marginLeftWidth = getPixelsForMargin(marginLeft, width);
+	// Calculate each paddings in pixes and store the results because they are used twice below
+	qreal paddingTopHeight = getPixelsForPadding(paddingTop, height);
+	qreal paddingRightWidth = getPixelsForPadding(paddingRight, width);
+	qreal paddingBottomHeight = getPixelsForPadding(paddingBottom, height);
+	qreal paddingLeftWidth = getPixelsForPadding(paddingLeft, width);
 
-	// Reduce the available space according to the number of pixels for each margin
-	left += marginLeftWidth;
-	top += marginTopHeight;
-	width -= marginLeftWidth + marginRightWidth;
-	height -= marginTopHeight + marginBottomHeight;
+	// Reduce the available space according to the number of pixels for each padding
+	left += paddingLeftWidth;
+	top += paddingTopHeight;
+	width -= paddingLeftWidth + paddingRightWidth;
+	height -= paddingTopHeight + paddingBottomHeight;
 }
 
-qreal LayoutItem::getPixelsForMargin(int margin, qreal edge) const
+qreal LayoutItem::getPixelsForPadding(int padding, qreal edge) const
 {
-	return margins[margin] > -1.0 && margins[margin] < 1.0 ? margins[margin] * edge : margins[margin];
+	return paddings[padding] > -1.0 && paddings[padding] < 1.0 ? paddings[padding] * edge : paddings[padding];
 }

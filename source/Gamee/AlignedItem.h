@@ -7,7 +7,7 @@
 class AlignedItem
 {
   protected:
-	/// Aligns the contents of this item adjusting its left or right margins automatically
+	/// Aligns the contents of this item adjusting its left or right paddings automatically
 	Qt::Alignment alignment = Qt::AlignJustify;
 	/// For items that require to be horizontally skewed (shear or slanting)
 	qreal shearX = 0.0;
@@ -15,7 +15,7 @@ class AlignedItem
 	qreal shearY = 0.0;
 
   public:
-	/// Aligns the contents of this item adjusting its left or right margins automatically
+	/// Aligns the contents of this item adjusting its left or right paddings automatically
 	inline void setAlignment(Qt::Alignment alignment) { this->alignment = alignment; }
 	inline const Qt::Alignment& getAlignment() const { return alignment; }
 	inline void alignLeft() { this->alignment = Qt::AlignLeft | Qt::AlignVCenter; }

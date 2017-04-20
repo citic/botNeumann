@@ -53,7 +53,7 @@ void MultiSvgButton::buildLabel(const QString& text, QGraphicsItem* parentItem, 
 	if ( ! text.isEmpty() )
 	{
 		this->label = new LabelButton(text, parentItem);
-		this->label->setMargins(0.1);
+		this->label->setPaddings(0.1);
 		addItem( this->label, 1.0, zValue + 0.01 );
 	}
 }

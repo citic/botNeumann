@@ -58,7 +58,7 @@ void LabelButton::resize(qreal left, qreal top, qreal width, qreal height)
 {
 	// Update the LayoutItem part of this object
 	LayoutItem::resize(left, top, width, height);
-	applyMargins(left, top, width, height);
+	applyPaddings(left, top, width, height);
 
 	// Resize the QGraphicaItem part of this object
 	resizeItem(this, left, top, width, height);

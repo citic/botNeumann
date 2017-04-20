@@ -66,7 +66,7 @@ void UnitSelectionScene::createLevel(int levelIndex, const UnitLevel& level)
 
 	// Position the layout a little bit at the left, to create the sensation of
 	// incomplete air tubes at the beginning and the end
-	levelLayout->setMarginLeft(-0.01);
+	levelLayout->setPaddingLeft(-0.01);
 
 	// Calculate the average height proportional percent of the remaining scene for
 	// all the leves. 0.1% is the height of the standard menu
@@ -94,7 +94,7 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 
 	// Add a pneumatic tube
 	Actor* pneumaticTube = new Actor("us_air_tube_short", this);
-	pneumaticTube->setMargins(0.3, 0.0, 0.3);
+	pneumaticTube->setPaddings(0.3, 0.0, 0.3);
 	levelLayout->addItem(pneumaticTube, tubeWidthPercent * averageUnitWidth);
 	if ( ! currentUnitEnabled ) pneumaticTube->setOpacity(defaultDisabledOpacity);
 
@@ -102,7 +102,7 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 	const QString& label = QString("%1-%2").arg(levelIndex + 1).arg(unitIndex + 1);
 	QString buttonBackground(playerCompletedUnit ? "us_chip_restored" : "us_chip_damaged");
 	SvgButton* button = new SvgButton(buttonBackground, this, label);
-	button->setMargins(0.0);
+	button->setPaddings(0.0);
 	levelLayout->addItem(button, chipWidthPercent * averageUnitWidth);
 
 	// The button will be enabled if player completed the unit it or it is the first not completed

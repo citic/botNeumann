@@ -36,7 +36,7 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 
 	// Game title
 	this->gameTitle = new Actor("ge_game_title", this);
-	this->gameTitle->setMargins(0.1, 0.0);
+	this->gameTitle->setPaddings(0.1, 0.0);
 	this->gameTitle->alignLeft();
 	menuLayout->addItem(gameTitle, 0.32);
 	menuLayout->addStretch(0.084);
@@ -49,7 +49,7 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 
 	// Scene title
 	this->sceneTitle = new LabelButton(title, this);
-	this->sceneTitle->setMargins(0.15, 0.0, 0.05);
+	this->sceneTitle->setPaddings(0.15, 0.0, 0.05);
 	this->sceneTitle->alignLeft();
 	menuLayout->addItem(sceneTitle, 0.17);
 	connect(sceneTitle, SIGNAL(pressed()), this, SLOT(infoButtonPressed()));

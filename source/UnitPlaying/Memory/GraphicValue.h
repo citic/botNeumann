@@ -62,20 +62,20 @@ class GraphicValue : public LinearLayoutActor
 
   protected:
 	/// Create the pod, the value, and the label for a bool or char value
-	virtual bool buildSingleByteVariable(const QString& asset, const qreal refDataMargins[]);
+	virtual bool buildSingleByteVariable(const QString& asset, const qreal refDataPaddings[]);
 	/// Create the pod, the value, and the label for an int or float value
-	virtual bool buildMultiByteVariable(const QString& asset, const qreal refDataMargins[]);
+	virtual bool buildMultiByteVariable(const QString& asset, const qreal refDataPaddings[]);
 	/// Create a recursive array
 	virtual bool buildArray();
 	/// Create a recursive structure
 	virtual bool buildStruct();
-	/// Apply margins to this graphical object according to the data type
-	virtual void applyDataTypeMargins(const qreal refDataMargins[]);
+	/// Apply paddings to this graphical object according to the data type
+	virtual void applyDataTypePaddings(const qreal refDataPaddings[]);
 	/// Builds the pod. For some variables the pod may be incomplete (sliced through several
 	/// memory rows)
 	bool buildPod(const QString& asset, bool buildLeftPod, bool buildRightPod);
 	/// Builds a label to show the value (or variable value)
-	bool buildValueLabel(const qreal refDataMargins[], qreal mainProportion = 1.0 - 0.2);
+	bool buildValueLabel(const qreal refDataPaddings[], qreal mainProportion = 1.0 - 0.2);
 	/// In character values, convert some invisible chacters by scape sequences
 	QString processInvisibleChars();
 };

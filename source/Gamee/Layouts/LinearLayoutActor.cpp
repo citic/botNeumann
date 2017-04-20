@@ -85,19 +85,19 @@ QPropertyAnimation* LinearLayoutActor::createMoveToAnimation(const char* propert
 	return animation;
 }
 
-int LinearLayoutActor::animateMarginIncrease(qreal topIncrease, qreal rightIncrease, qreal bottomIncrease, qreal leftIncrease, int duration, int initialDelay)
+int LinearLayoutActor::animatePaddingIncrease(qreal topIncrease, qreal rightIncrease, qreal bottomIncrease, qreal leftIncrease, int duration, int initialDelay)
 {
 	QParallelAnimationGroup* groupAnimation = new QParallelAnimationGroup(this);
-	groupAnimation->addAnimation( createMarginAnimation("marginTop", topIncrease, getMarginTop(), duration, initialDelay) );
-	groupAnimation->addAnimation( createMarginAnimation("marginRight", rightIncrease, getMarginRight(), duration, initialDelay) );
-	groupAnimation->addAnimation( createMarginAnimation("marginBottom", bottomIncrease, getMarginBottom(), duration, initialDelay) );
-	groupAnimation->addAnimation( createMarginAnimation("marginLeft", leftIncrease, getMarginLeft(), duration, initialDelay) );
+	groupAnimation->addAnimation( createPaddingAnimation("paddingTop", topIncrease, getPaddingTop(), duration, initialDelay) );
+	groupAnimation->addAnimation( createPaddingAnimation("paddingRight", rightIncrease, getPaddingRight(), duration, initialDelay) );
+	groupAnimation->addAnimation( createPaddingAnimation("paddingBottom", bottomIncrease, getPaddingBottom(), duration, initialDelay) );
+	groupAnimation->addAnimation( createPaddingAnimation("paddingLeft", leftIncrease, getPaddingLeft(), duration, initialDelay) );
 
 	groupAnimation->start();
 	return VisualizationSpeed::getInstance().adjust(duration);
 }
 
-QPropertyAnimation* LinearLayoutActor::createMarginAnimation(const char* propertyName, qreal increaseFactor, qreal initialValue, int duration, int initialDelay)
+QPropertyAnimation* LinearLayoutActor::createPaddingAnimation(const char* propertyName, qreal increaseFactor, qreal initialValue, int duration, int initialDelay)
 {
 	// Adjust animation time
 	duration = VisualizationSpeed::getInstance().adjust(duration);

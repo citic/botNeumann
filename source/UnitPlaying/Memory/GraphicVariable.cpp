@@ -25,13 +25,13 @@ GraphicVariable::GraphicVariable(MemoryAllocation* variable, VisAddress firstByt
 	buildGraphicValue();
 }
 
-void GraphicVariable::applyDataTypeMargins(const qreal refDataMargins[])
+void GraphicVariable::applyDataTypePaddings(const qreal refDataPaddings[])
 {
-	setMarginTop( parent ? refDataMargins[refMarginTop] + 0.1 : refDataMargins[refMarginTop] );
-	setMarginBottom( parent ? refDataMargins[refMarginBottom] + 0.1 : refDataMargins[refMarginBottom] );
+	setPaddingTop( parent ? refDataPaddings[refPaddingTop] + 0.1 : refDataPaddings[refPaddingTop] );
+	setPaddingBottom( parent ? refDataPaddings[refPaddingBottom] + 0.1 : refDataPaddings[refPaddingBottom] );
 }
 
-bool GraphicVariable::buildVariableName(const qreal refDataMargins[])
+bool GraphicVariable::buildVariableName(const qreal refDataPaddings[])
 {
 	const VisAddress size = getSize();
 
@@ -58,9 +58,9 @@ bool GraphicVariable::buildVariableName(const qreal refDataMargins[])
 
 		// Create the label and add it to the scene
 		nameLabel = new MultiSvgButton(labelAssets, proportions, memoryRow->getGraphicsParentItem(), variable->name, memoryRow->getZValue() + zLabelValueOffset );
-		nameLabel->setMarginLeft(0.15);
-		nameLabel->setMarginTop( refDataMargins[refLabelTop] );
-		nameLabel->setMarginBottom( refDataMargins[refLabelBottom] );
+		nameLabel->setPaddingLeft(0.15);
+		nameLabel->setPaddingTop( refDataPaddings[refLabelTop] );
+		nameLabel->setPaddingBottom( refDataPaddings[refLabelBottom] );
 		nameLabel->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 		nameLabel->setBrush(QBrush(Qt::black));
 		//label->setShear(-0.2, 0.0);
@@ -72,22 +72,22 @@ bool GraphicVariable::buildVariableName(const qreal refDataMargins[])
 	// ToDo: If dataType is pointer, we can save a pointer to the pointed data, but it may be
 	// more realistic to find the pointed data any time it is required
 
-	return buildValueLabel(refDataMargins, valueBytes / size);
+	return buildValueLabel(refDataPaddings, valueBytes / size);
 }
 
-bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal refDataMargins[])
+bool GraphicVariable::buildMultiByteVariable(const QString& asset, const qreal refDataPaddings[])
 {
-	// Apply margins according to the height of the data type and the nesting on composite data types
-	applyDataTypeMargins(refDataMargins);
+	// Apply paddings according to the height of the data type and the nesting on composite data types
+	applyDataTypePaddings(refDataPaddings);
 	buildPod(asset, leftComplete, rightComplete);
-	buildVariableName(refDataMargins);
+	buildVariableName(refDataPaddings);
 	return true;
 }
 
 bool GraphicVariable::buildArray()
 {
 	// We use the same proportions of structs for arrays
-	applyDataTypeMargins(refStructMargins);
+	applyDataTypePaddings(refStructPaddings);
 
 	// We create an sub-array of the variable
 	Q_ASSERT( variable->children.count() > 0 );
@@ -114,6 +114,6 @@ bool GraphicVariable::buildStruct()
 {
 	// ToDo: We have to traverse the data members of the structure
 	// Label asset is not proportioned for structs. We fix it
-	const qreal refStructMarginsFixed[] = { refStructMargins[refMarginTop], refStructMargins[refMarginBottom], 0.1, 0.1 };
-	return buildMultiByteVariable("up_struct", refStructMarginsFixed);
+	const qreal refStructPaddingsFixed[] = { refStructPaddings[refPaddingTop], refStructPaddings[refPaddingBottom], 0.1, 0.1 };
+	return buildMultiByteVariable("up_struct", refStructPaddingsFixed);
 }

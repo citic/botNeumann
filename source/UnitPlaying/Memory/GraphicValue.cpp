@@ -71,18 +71,18 @@ bool GraphicValue::buildGraphicValue()
 		case typeVoid: return false;
 
 		// Atomic types
-		case typeBool:      buildSingleByteVariable("up_bool_false", refBoolMargins); break;
-		case typeChar:      buildSingleByteVariable("up_char", refCharMargins); break;
-		case typeInt:       buildMultiByteVariable("int", refIntMargins); break;
-		case typeEnum:      buildMultiByteVariable("int", refIntMargins); break;
-		case typeBitField:  buildMultiByteVariable("int", refIntMargins); break;
-		case typeFloat:     buildMultiByteVariable("float", refFloatMargins); break;
+		case typeBool:      buildSingleByteVariable("up_bool_false", refBoolPaddings); break;
+		case typeChar:      buildSingleByteVariable("up_char", refCharPaddings); break;
+		case typeInt:       buildMultiByteVariable("int", refIntPaddings); break;
+		case typeEnum:      buildMultiByteVariable("int", refIntPaddings); break;
+		case typeBitField:  buildMultiByteVariable("int", refIntPaddings); break;
+		case typeFloat:     buildMultiByteVariable("float", refFloatPaddings); break;
 
 		// Indirection types
-		case typePointer:   buildMultiByteVariable("pointer", refPointerMargins); break;
-		case typeReference: buildMultiByteVariable("pointer", refPointerMargins); break;
-		case typeRValue:    buildMultiByteVariable("pointer", refPointerMargins); break;
-		case typeFunction:  buildMultiByteVariable("pointer", refPointerMargins); break;
+		case typePointer:   buildMultiByteVariable("pointer", refPointerPaddings); break;
+		case typeReference: buildMultiByteVariable("pointer", refPointerPaddings); break;
+		case typeRValue:    buildMultiByteVariable("pointer", refPointerPaddings); break;
+		case typeFunction:  buildMultiByteVariable("pointer", refPointerPaddings); break;
 
 		// Composite types
 		case typeArray:     buildArray(); break;
@@ -104,10 +104,10 @@ void GraphicValue::setZ(qreal newZValue)
 	if ( valueLabel ) valueLabel->setZValue(newZValue + zLabelValueOffset);
 }
 
-bool GraphicValue::buildSingleByteVariable(const QString& asset, const qreal refDataMargins[])
+bool GraphicValue::buildSingleByteVariable(const QString& asset, const qreal refDataPaddings[])
 {
-	// Apply margins according to the height of the data type and the nesting on composite data types
-	applyDataTypeMargins(refDataMargins);
+	// Apply paddings according to the height of the data type and the nesting on composite data types
+	applyDataTypePaddings(refDataPaddings);
 
 	// Pod:
 	// A single-byte variable requires just one graphic
@@ -116,18 +116,18 @@ bool GraphicValue::buildSingleByteVariable(const QString& asset, const qreal ref
 	addItem(podMiddle, 1.0, zValue + zPodOffset );
 
 	// Characters can contain a single value
-	buildValueLabel(refDataMargins);
+	buildValueLabel(refDataPaddings);
 
 	// No variable name
 	return true;
 }
 
-bool GraphicValue::buildMultiByteVariable(const QString& asset, const qreal refDataMargins[])
+bool GraphicValue::buildMultiByteVariable(const QString& asset, const qreal refDataPaddings[])
 {
-	// Apply margins according to the height of the data type and the nesting on composite data types
-	applyDataTypeMargins(refDataMargins);
+	// Apply paddings according to the height of the data type and the nesting on composite data types
+	applyDataTypePaddings(refDataPaddings);
 	buildPod(asset, true, true);
-	buildValueLabel(refDataMargins);
+	buildValueLabel(refDataPaddings);
 	return true;
 }
 
@@ -143,10 +143,10 @@ bool GraphicValue::buildStruct()
 	return false;
 }
 
-void GraphicValue::applyDataTypeMargins(const qreal refDataMargins[])
+void GraphicValue::applyDataTypePaddings(const qreal refDataPaddings[])
 {
-	setMarginTop( refDataMargins[refMarginTop] );
-	setMarginBottom( refDataMargins[refMarginBottom] );
+	setPaddingTop( refDataPaddings[refPaddingTop] );
+	setPaddingBottom( refDataPaddings[refPaddingBottom] );
 }
 
 bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildRightPod)
@@ -186,7 +186,7 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 	return true;
 }
 
-bool GraphicValue::buildValueLabel(const qreal refDataMargins[], qreal proportion)
+bool GraphicValue::buildValueLabel(const qreal refDataPaddings[], qreal proportion)
 {
 	// Variable value will be shown in the label
 	// Change non visible characters for escape sequences (eg: tabs for '\t')
@@ -198,16 +198,16 @@ bool GraphicValue::buildValueLabel(const qreal refDataMargins[], qreal proportio
 	Q_ASSERT(valueLabel == nullptr);
 	valueLabel = new LabelButton( visibleValue, graphicsParent );
 
-	// Set margins according to the data type's graphical asset
-	valueLabel->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
-	valueLabel->setMarginBottom( refDataMargins[refLabelBottom] );
+	// Set paddings according to the data type's graphical asset
+	valueLabel->setPaddingTop( refDataPaddings[refLabelTop] + 0.1 );
+	valueLabel->setPaddingBottom( refDataPaddings[refLabelBottom] );
 
 	// Characters are centered in the inclined asset
 	if ( dataType == typeChar )
 	{
 		valueLabel->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
-		valueLabel->setMarginLeft(1.0 / 3.0);
-		valueLabel->setMarginRight(0.1);
+		valueLabel->setPaddingLeft(1.0 / 3.0);
+		valueLabel->setPaddingRight(0.1);
 	}
 	else
 	{

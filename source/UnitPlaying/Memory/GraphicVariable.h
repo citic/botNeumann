@@ -47,16 +47,16 @@ class GraphicVariable : public GraphicValue
 
   protected:
 	/// Create the pod, the value, and the label for an int or float variable
-	virtual bool buildMultiByteVariable(const QString& asset, const qreal refDataMargins[]) override;
+	virtual bool buildMultiByteVariable(const QString& asset, const qreal refDataPaddings[]) override;
 	/// Create a recursive array of variables
 	virtual bool buildArray() override;
 	/// Create a recursive structure of variables
 	virtual bool buildStruct() override;
-	/// Apply margins to this variable according to the data type. If the variable is child of
-	/// other variable (composite data types), minimum margins are applied instead
-	virtual void applyDataTypeMargins(const qreal refDataMargins[]) override;
+	/// Apply paddings to this variable according to the data type. If the variable is child of
+	/// other variable (composite data types), minimum paddings are applied instead
+	virtual void applyDataTypePaddings(const qreal refDataPaddings[]) override;
 	/// Variables have a name. If there is enough room, name is shown
-	bool buildVariableName(const qreal refDataMargins[]);
+	bool buildVariableName(const qreal refDataPaddings[]);
 };
 
 #endif // GRAPHICVARIABLE_H

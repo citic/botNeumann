@@ -33,7 +33,7 @@ void SvgButton::buildLabel(const QString& text)
 		qreal sh = height * 0.6 / label->boundingRect().height();
 		label->setTransform(QTransform().scale(sw, sh));
 	}
-	setMargins(0.1); // I am not sure if it is a good margin default for buttons
+	setPaddings(0.1); // I am not sure if it is a good padding default for buttons
 }
 
 void SvgButton::setEnabled(bool enabled)

@@ -25,7 +25,7 @@ void RectLayoutItem::resize(qreal left, qreal top, qreal width, qreal height)
 	LinearLayout::resize(left, top, width, height);
 
 	// Update the QGraphicsRectIem part of this object
-	applyMargins(left, top, width, height);
+	applyPaddings(left, top, width, height);
 	setRect(left, top, width, height);
 }
 

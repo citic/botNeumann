@@ -8,8 +8,8 @@
 
 #include <QTimer>
 
-const qreal marginIncreaseTopBottom = 0.15;
-const qreal marginIncreaseLeftRight = 0.01;
+const qreal paddingIncreaseTopBottom = 0.15;
+const qreal paddingIncreaseLeftRight = 0.01;
 
 CallStack::CallStack(int threadId, size_t startByte, size_t rowSize, size_t maxSize, qreal zValue, QGraphicsItem* graphicsParentItem)
 	: RectLayoutItem(Qt::Vertical, zValue, graphicsParentItem)
@@ -23,7 +23,7 @@ CallStack::CallStack(int threadId, size_t startByte, size_t rowSize, size_t maxS
 int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 {
 	// Make room for the new stack frame while the cpu core's memory interface is opening
-	animateMarginIncrease(-marginIncreaseTopBottom, marginIncreaseLeftRight, marginIncreaseTopBottom, marginIncreaseLeftRight, initialDelay);
+	animatePaddingIncrease(-paddingIncreaseTopBottom, paddingIncreaseLeftRight, paddingIncreaseTopBottom, paddingIncreaseLeftRight, initialDelay);
 
 	// We start the count of watches for a new function call
 	watchCounts.append(0);
@@ -106,11 +106,11 @@ int CallStack::animateDisappear(int initialDelay)
 	return initialDelay + maxDuration;
 }
 
-int CallStack::animateMarginIncrease(qreal topIncrease, qreal rightIncrease, qreal bottomIncrease, qreal leftInecrease, int duration, int initialDelay)
+int CallStack::animatePaddingIncrease(qreal topIncrease, qreal rightIncrease, qreal bottomIncrease, qreal leftInecrease, int duration, int initialDelay)
 {
-	// Increase margins from the outtermost (bottom) function call to the innermost (top)
+	// Increase paddings from the outtermost (bottom) function call to the innermost (top)
 	for ( int index = 0; index < stackFrames.count(); ++index )
-		stackFrames[index]->animateMarginIncrease(topIncrease, rightIncrease, bottomIncrease, leftInecrease, duration, initialDelay);
+		stackFrames[index]->animatePaddingIncrease(topIncrease, rightIncrease, bottomIncrease, leftInecrease, duration, initialDelay);
 
 	return duration;
 }
@@ -224,7 +224,7 @@ int CallStack::returnFunction(int initialDelay)
 
 	// Move the remaining function calls to the front in order to use the room that the finished
 	// function left while the cpu core's memory interface is closing
-	animateMarginIncrease(marginIncreaseTopBottom, -marginIncreaseLeftRight, -marginIncreaseTopBottom, -marginIncreaseLeftRight, initialDelay, duration);
+	animatePaddingIncrease(paddingIncreaseTopBottom, -paddingIncreaseLeftRight, -paddingIncreaseTopBottom, -paddingIncreaseLeftRight, initialDelay, duration);
 
 	// Remove local variables from MemoryMapper and the stack frame when animation is finished
 	QTimer::singleShot( initialDelay + duration, this, SLOT(removeFunctionCall()) );

@@ -79,9 +79,9 @@ class CallStack : public QObject, public RectLayoutItem
 	/// Get the watch name for a local variable for the topmost stack frame
 	/// @param Number of the local variable, if -1 a new number will be assigned
 	QString buildWatchName(int variableNumber = -1);
-	/// Apply the given percent increase to the margins of all function calls in stack frame
+	/// Apply the given percent increase to the paddings of all function calls in stack frame
 	/// @return Duration of animation in milliseconds
-	int animateMarginIncrease(qreal topIncrease, qreal rightIncrease, qreal bottomIncrease, qreal leftInecrease, int duration, int initialDelay = 0);
+	int animatePaddingIncrease(qreal topIncrease, qreal rightIncrease, qreal bottomIncrease, qreal leftInecrease, int duration, int initialDelay = 0);
 };
 
 #endif // CALLSTACK_H
