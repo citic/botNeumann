@@ -7,6 +7,7 @@
 #include "Scene.h"
 
 #include <QFont>
+#include <QTimer>
 
 ExecutionThreadActor::ExecutionThreadActor(int threadId, QGraphicsItem* parentItem)
 	: Actor("", parentItem)
@@ -38,6 +39,13 @@ void ExecutionThreadActor::buildActor()
 	qreal lineNumberLeft = (this->boundingRect().width() - lineNumberRefWidth) * 0.5;
 	qreal lineNumberTop = lineNumberTopMargin[actorNumber - 1];
 	lineNumber->resizeItem(lineNumber, lineNumberLeft, lineNumberTop, lineNumberRefWidth, lineNumberRefHeight, false);
+
+	// The faces used when the robot turns to read or write data to stdin/stdout buffers
+	QStringList robotFaces;
+	robotFaces << QString("up_thread%1_back").arg(actorNumber);
+	robotFaces << QString("up_thread%1_side").arg(actorNumber);
+	robotFaces << QString("up_thread%1_front").arg(actorNumber);
+	setFaces( robotFaces );
 }
 
 int ExecutionThreadActor::updateLineNumber(int updatedLineNumber)
@@ -50,4 +58,26 @@ const QColor& ExecutionThreadActor::getHighlightColor() const
 {
 	Q_ASSERT( actorNumber - 1 < (int)(sizeof(threadColors) / sizeof(threadColors[0])) );
 	return threadColors[actorNumber - 1];
+}
+
+int ExecutionThreadActor::turnFront()
+{
+	lineNumber->setVisible(false);
+	int duration = transitionFaces(QTimeLine::Forward, 750);
+	QTimer::singleShot( duration, this, &ExecutionThreadActor::setLineNumberVisible );
+	return duration;
+}
+
+int ExecutionThreadActor::turnBack()
+{
+	// ToDo: redundant code from previous method
+	lineNumber->setVisible(false);
+	int duration = transitionFaces(QTimeLine::Backward, 750);
+	QTimer::singleShot( duration, this, &ExecutionThreadActor::setLineNumberVisible );
+	return duration;
+}
+
+void ExecutionThreadActor::setLineNumberVisible()
+{
+	lineNumber->setVisible(true);
 }

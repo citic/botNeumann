@@ -384,6 +384,18 @@ bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)
 	return true;
 }
 
+int ExecutionThread::turnFront()
+{
+	Q_ASSERT(actor);
+	return actor->turnFront();
+}
+
+int ExecutionThread::turnBack()
+{
+	Q_ASSERT(actor);
+	return actor->turnBack();
+}
+
 int ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)
 {
 	// Get the number of functions currently being executed by this thread

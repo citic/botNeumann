@@ -10,6 +10,7 @@
 #include "Unit.h"
 
 #include <QTextStream>
+#include <QTimer>
 
 const qreal zTube =    zUnitPlaying::standardInputOutput + 0.1;
 const qreal zElbow =   zUnitPlaying::standardInputOutput + 0.0;
@@ -72,20 +73,23 @@ int InputOutputBuffer::animateFill()
 
 int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& waitingQueue)
 {
-	// Get the thread that made the read operation
-	Q_ASSERT(waitingQueue.count() > 0);
-	ExecutionThread* thread = waitingQueue[0];
-	qCCritical(logTemporary()) << "ToDo: animating read of" << length << "bytes towards thread" << thread->getId();
-
 	// Make sure there are enough characters to animate
 	Q_ASSERT( characters.count() >= length );
-
-	// Measure the duration of the animation
-	int maxDuration = 0, duration = 0;
 
 	// The parent of the buffer is the scene
 	Scene* scene = dynamic_cast<Scene*>( parentItem() );
 	Q_ASSERT(scene);
+
+	// Measure the duration of the animation
+	int maxDuration = 0, duration = 0;
+
+	// Get the thread that made the read operation
+	Q_ASSERT(waitingQueue.count() > 0);
+	ExecutionThread* thread = waitingQueue[0];
+	qCCritical(logTemporary()) << "Read of" << length << "bytes towards thread" << thread->getId();
+
+	// Turn the robot front to receive the characters
+	int robotTurnDuration = thread->turnFront();
 
 	// For each character animate them reaching the robot. Also animate the characters that will
 	// remain in the tube or will just enter on it
@@ -97,6 +101,10 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 		if ( (duration = characters[index]->animateRead(index, length, capacity, thread, scene) ) > maxDuration )
 			maxDuration = duration;
 	}
+
+	// When read animation is done, turn the robot back
+	QTimer::singleShot( maxDuration, thread, &ExecutionThread::turnBack );
+	maxDuration += 2 * robotTurnDuration;
 
 	// Remove the read characters from the buffer
 	for ( int index = 0; index < length; ++index )

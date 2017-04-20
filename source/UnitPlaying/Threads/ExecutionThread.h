@@ -2,6 +2,7 @@
 #define EXECUTIONTHREAD_H
 
 #include "LinearLayout.h"
+#include <QObject>
 
 class CpuCore;
 class DebuggerBreakpoint;
@@ -31,8 +32,9 @@ enum ThreadState
 	code that the execution thread is running. 2: One or more stack frames represent the function
 	calls that the execution thread is running. The top-most frame is the running function call.
 **/
-class ExecutionThread : public LinearLayout
+class ExecutionThread : public QObject, public LinearLayout
 {
+	Q_OBJECT
 	Q_DISABLE_COPY(ExecutionThread)
 
   protected:
@@ -164,6 +166,14 @@ class ExecutionThread : public LinearLayout
 	/// Animates a function return, diving the current stack frame into the memory interface of the
 	/// CPU core. It also remove watches to local variable from memory mapper
 	bool returnFunction(GdbCall* debuggerCall, int& maxDuration);
+
+  public slots:
+	/// Animates the robot turning. At the end of the animation the robot will be facing the camera
+	/// @return the duration in milliseconds of the animation
+	int turnFront();
+	/// Animates the robot turning. At the end of the animation the robot's back will be visible
+	/// @return the duration in milliseconds of the animation
+	int turnBack();
 
   protected:
 	/// Build the robot and the call stack as objects in memory. They are not added to the layout

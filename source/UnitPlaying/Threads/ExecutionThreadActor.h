@@ -10,6 +10,7 @@ class QColor;
 
 class ExecutionThreadActor : public Actor
 {
+	Q_OBJECT
 	Q_DISABLE_COPY(ExecutionThreadActor)
 
   protected:
@@ -31,10 +32,20 @@ class ExecutionThreadActor : public Actor
 	int updateLineNumber(int updatedLineNumber);
 	/// Returns the color of this thread, in order to highlight its running line
 	const QColor& getHighlightColor() const;
+	/// Animates the robot turning. At the end of the animation the robot will be facing the camera
+	/// @return the duration in milliseconds of the animation
+	int turnFront();
+	/// Animates the robot turning. At the end of the animation the robot's back will be visible
+	/// @return the duration in milliseconds of the animation
+	int turnBack();
 
   protected:
 	/// Build the label to show line numbers
 	void buildActor();
+
+  protected slots:
+	/// Makes the line number visible
+	void setLineNumberVisible();
 };
 
 #endif // EXECUTIONTHREADACTOR_H
