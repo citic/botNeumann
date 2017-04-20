@@ -1,5 +1,6 @@
 #include "LinearLayoutActor.h"
 #include "Actor.h"
+#include "LabelButton.h"
 #include "VisualizationSpeed.h"
 
 #include <QParallelAnimationGroup>
@@ -17,6 +18,7 @@ int LinearLayoutActor::animateAppear(int duration, int initialDelay, qreal fromO
 
 	// Animate all children appearing at the same time (concurrently)
 	for (ItemsType::iterator itr = items.begin(); itr != items.end(); ++itr )
+	{
 		for ( int index = 0; index < itr.value().size(); ++index )
 		{
 			Actor* actor = dynamic_cast<Actor*>(itr.value()[index]);
@@ -26,7 +28,19 @@ int LinearLayoutActor::animateAppear(int duration, int initialDelay, qreal fromO
 				if ( actorDuration > maxDuration )
 					maxDuration = actorDuration;
 			}
+			else
+			{
+				// ToDo: Ugly fix: LabelButton should be also animated, but it does not inherit Actor
+				LabelButton* label = dynamic_cast<LabelButton*>(itr.value()[index]);
+				if ( label )
+				{
+					int labelDuration = label->animateAppear(duration, initialDelay, fromOpacity, toOpacity);
+					if ( labelDuration > maxDuration )
+						maxDuration = labelDuration;
+				}
+			}
 		}
+	}
 
 	return maxDuration;
 }

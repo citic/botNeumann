@@ -188,24 +188,37 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 
 bool GraphicValue::buildValueLabel(const qreal refDataMargins[], qreal proportion)
 {
-	// Variable value
-	Q_ASSERT(valueLabel == nullptr);
+	// Variable value will be shown in the label
+	// Change non visible characters for escape sequences (eg: tabs for '\t')
 	QString visibleValue = value;
 	if ( dataType == typeChar )
 		visibleValue = processInvisibleChars();
+
+	// Create the label to show the value
+	Q_ASSERT(valueLabel == nullptr);
 	valueLabel = new LabelButton( visibleValue, graphicsParent );
+
+	// Set margins according to the data type's graphical asset
 	valueLabel->setMarginTop( refDataMargins[refLabelTop] + 0.1 );
 	valueLabel->setMarginBottom( refDataMargins[refLabelBottom] );
+
+	// Characters are centered in the inclined asset
 	if ( dataType == typeChar )
 	{
-		//valueLabel->alignCenter();
 		valueLabel->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
 		valueLabel->setMarginLeft(1.0 / 3.0);
 		valueLabel->setMarginRight(0.1);
 	}
 	else
+	{
+		// Integers and floats are aligned right
 		valueLabel->alignRight();
+	}
+
+	// Paint values black
 	valueLabel->setBrush(QBrush(Qt::black));
+
+	// Add the label to the scene
 	addItem(valueLabel, proportion, zValue + zLabelValueOffset);
 	return true;
 }

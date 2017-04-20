@@ -86,7 +86,7 @@ int GraphicCharValue::animateMoveToThread()
 	qreal verticalPercent = ( actorTop + actorHeight * 0.75 ) / sceneHeight;
 
 	// Horizontal position is centered in the execution thread
-	qreal horizontalPercent = threadLeft / sceneWidth + (threadWidth - length * charWidth ) / 2.0 / sceneWidth;
+	qreal horizontalPercent = ( threadLeft + 0.5 * (threadWidth - length * charWidth) ) / sceneWidth;
 
 	// Add the horizontal displacement according to the index of this character in the animation
 	// 0.85 is an adjust to keep characters tight together
