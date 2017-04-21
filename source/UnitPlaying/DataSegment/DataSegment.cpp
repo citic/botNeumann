@@ -37,13 +37,13 @@ bool DataSegment::loadTestCase(int testCaseNumber, PlayerSolution* playerSolutio
 	// Get the full path to the test case's input/output files
 //	const QString& args      = playerSolution->buildTestCaseFilepath(testCaseNumber, "args");
 	const QString& input     = playerSolution->buildTestCaseFilepath(testCaseNumber, "input");
-//	const QString& output_ex = playerSolution->buildTestCaseFilepath(testCaseNumber, "output_ex");
-//	const QString& output_ps = playerSolution->buildTestCaseFilepath(testCaseNumber, "output_ps");
+	const QString& output_ex = playerSolution->buildTestCaseFilepath(testCaseNumber, "output_ex");
+	const QString& output_ps = playerSolution->buildTestCaseFilepath(testCaseNumber, "output_ps");
 //	const QString& error_ex  = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ex");
 //	const QString& error_ps  = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ps");
 
 	// The data segment owns the standard input/output, and the messages area owns the inspector
-	return standardInput->loadFile(input) /* && standardOutput->loadFiles(output_ex, output_ps) */;
+	return standardInput->loadInputFile(input) && standardOutput->loadOutputFiles(output_ex, output_ps);
 }
 
 void DataSegment::buildDataSegment()

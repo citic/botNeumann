@@ -127,6 +127,16 @@ int InputOutputBuffer::clear()
 }
 
 
+
+// OutputTester class -----------------------------------------------------------------------------
+
+OutputTester::OutputTester(const QString& prefixedSvgElementId, QGraphicsItem* parentItem)
+	: Actor(prefixedSvgElementId, parentItem)
+{
+}
+
+
+
 // StandardInputOutput class ----------------------------------------------------------------------
 
 const char* const ioTypeStr[] =
@@ -144,19 +154,50 @@ StandardInputOutput::StandardInputOutput(Type type, Unit& unit, Scene* scene)
 	buildStandardInputOutput();
 }
 
-bool StandardInputOutput::loadFile(const QString& filepath)
+bool StandardInputOutput::loadInputFile(const QString& filepath)
+{
+	// Load the test case's input file into the buffer
+	if ( ! loadFile(filepath) )
+		return false;
+
+	// Animate the buffer being filled by the first characters
+	animateFill();
+	return true;
+}
+
+bool StandardInputOutput::loadOutputFiles(const QString& playerSolutionOutput, const QString& expectedOutput)
+{
+	// Load the player solution's output to the buffer text
+	// Load the test case's expected output into the tester
+	return loadFile(playerSolutionOutput, "buffer") && loadFile(expectedOutput, "tester");
+}
+
+bool StandardInputOutput::loadFile(const QString& filepath, const QString& target)
 {
 	// Open the test case's standard input file
 	QFile file(filepath);
 	if ( file.open(QIODevice::ReadOnly | QIODevice::Text) == false )
 		{ qCritical(logApplication) << "Could not open" << filepath; return false; }
 
-	// At least one file has data, we have to read them to compare
-	Q_ASSERT(buffer);
+	// Get the entire text contents from the file
 	const QString& text = QTextStream(&file).readAll();
-	buffer->setText(text);
 
-	animateFill();
+	// Set the text to the target
+	if ( target == "buffer" )
+	{
+		Q_ASSERT(buffer);
+		buffer->setText(text);
+	}
+	else if ( target == "tester" )
+	{
+		Q_ASSERT(tester);
+		tester->setText(text);
+		qCCritical(logTemporary()) << "Tester text:" << text;
+	}
+	else
+		Q_ASSERT_X(false, "StandardInputOutput", "invalid file contents target");
+
+	// Done
 	return true;
 }
 
@@ -246,7 +287,7 @@ void StandardInputOutput::buildStandardInputOutput()
 		start += elbowProportion;
 
 		// Tester
-		tester = new Actor(QString("up_standard_output_test_inactive"), scene);
+		tester = new OutputTester(QString("up_standard_output_test_inactive"), scene);
 		insertItem(tester, start, elbowProportion, zElbow);
 		start += elbowProportion;
 

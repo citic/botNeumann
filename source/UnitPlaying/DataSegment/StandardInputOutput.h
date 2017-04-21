@@ -1,12 +1,12 @@
 #ifndef STANDARDINPUTOUTPUT_H
 #define STANDARDINPUTOUTPUT_H
 
+#include "Actor.h"
 #include "MemorySegment.h"
 #include "RectLayoutItem.h"
 
 class GraphicCharValue;
 class ExecutionThread;
-class Actor;
 
 class InputOutputBuffer : public RectLayoutItem
 {
@@ -49,6 +49,25 @@ class InputOutputBuffer : public RectLayoutItem
 	int clear();
 };
 
+class OutputTester : public Actor
+{
+	Q_OBJECT
+	Q_DISABLE_COPY(OutputTester)
+
+  protected:
+	/// The test case's expected output
+	QString text;
+	/// Indicates the next character to be written. Simulates a cursor
+	int cursor = 0;
+
+  public:
+	/// Constructor
+	/// @see Actor::Actor()
+	explicit OutputTester(const QString& prefixedSvgElementId, QGraphicsItem* parentItem);
+	/// Set the text of the test case's expected output
+	inline void setText(const QString& text) { this->text = text; cursor = 0; }
+};
+
 /// Base class that represents a standard input, output or error object with a tube
 /// They behave as a memory segment
 class StandardInputOutput : public MemorySegment
@@ -69,7 +88,7 @@ class StandardInputOutput : public MemorySegment
 	/// The type of this tube
 	Type type = standardIoUnknown;
 	/// Tester placed in standard output
-	Actor* tester = nullptr;
+	OutputTester* tester = nullptr;
 	/// An area to show the characters moving through the tube
 	InputOutputBuffer* buffer = nullptr;
 
@@ -78,7 +97,11 @@ class StandardInputOutput : public MemorySegment
 	/// be one of the following: "input", "output", "error"
 	explicit StandardInputOutput(Type type, Unit& unit, Scene* scene);
 	/// Loads the active test case input file, and animates characters arriving by the input tube
-	bool loadFile(const QString& inputFilepath);
+	bool loadInputFile(const QString& filepath);
+	/// Loads a pair of output files. The player solution's output file is compared character by
+	/// character against to the test case's expected output file. If they math, the tester becomes
+	/// green. If they do not, the tester becomes red and stays red.
+	bool loadOutputFiles(const QString& playerSolutionOutput, const QString& expectedOutput);
 	/// Animate buffering (filling) the standard input. It fills all empty spaces with pending
 	/// characters in @a text
 	/// @return The duration of the animation in milliseconds
@@ -98,6 +121,9 @@ class StandardInputOutput : public MemorySegment
 	void buildStandardInputOutput();
 	/// Builds the are where characteres will travel inside the tube
 	void buildBuffer(size_t bufferSize, Scene* scene);
+	/// Load the given file as text of the buffer. It does not animate input buffer fill
+	/// @return true on success
+	bool loadFile(const QString& filepath, const QString& target = "buffer");
 };
 
 #endif // STANDARDINPUTOUTPUT_H
