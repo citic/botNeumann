@@ -142,10 +142,18 @@ int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& w
 	{
 		// Create the character as a value. It will appear within the execution thread, i.e. its
 		// parent will be the scene until it enters into the stdout buffer
-		GraphicCharValue* character = new GraphicCharValue(scene, zBuffer, text.mid(cursor++, 1));
+		GraphicCharValue* character = new GraphicCharValue(this, zBuffer, text.mid(cursor++, 1));
+
+		// Characters are slighly inclined, adjust their paddings to overlap themselves
+		character->setPaddings(0.0, -0.11);
+
+		// Ugly fix: Add the char to this buffer temporarily, in order to give it its dimensions
+		insertItem(character, 1.0 - (length - charCounter) * 1.0 / capacity, 1.0 / capacity, zBuffer);
+		this->updateLayoutItem();
 
 		// Place the character in its position within the thread
-		character->placeInThread(charCounter, length, capacity, thread, scene);
+		character->reparentTo(scene);
+//		character->placeInThread(charCounter, length, capacity, thread, scene);
 
 		// Move the character from the thread towards the stdout
 //		if ( (duration = character->animateWrite(charCounter, length, thread)) > maxDuration )

@@ -37,6 +37,10 @@ class GraphicCharValue : public GraphicValue
 	/// This method is called when the character is written by a thread. Its initial position is
 	/// within the thread according to its index and the length of the write operation
 	void placeInThread(int index, int length, int ioBufferCapacity, ExecutionThread* thread, Scene* scene);
+	/// Make this character float over the scene. After this method is called, the character
+	/// remains at the same position, but it can be freely moved through the scene
+	/// ToDo: we use the scene, but it may eventually changed for any other QGraphicsItem object
+	bool reparentTo(Scene* newParent);
 
   protected slots:
 	/// Animates this character leaving the stdin tube and move to the execution thread stored
@@ -44,10 +48,6 @@ class GraphicCharValue : public GraphicValue
 	int animateMoveToThread();
 	/// Called when read or write animation is finished
 	void removeCharFromScene();
-	/// Make this character float over the scene. After this method is called, the character
-	/// remains at the same position, but it can be freely moved through the scene
-	/// ToDo: we use the scene, but it may eventually changed for any other QGraphicsItem object
-	bool reparentTo(Scene* newParent);
 
   protected:
 	/// Calculates the horizontal percent of this character in its thread

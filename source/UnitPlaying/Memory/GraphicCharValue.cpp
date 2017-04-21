@@ -122,8 +122,8 @@ void GraphicCharValue::placeInThread(int index, int length, int ioBufferCapacity
 	this->scene = scene;
 
 	// Add the character to the scene in its positions
+	setMainProportion( calculateVerticalScenePercent() );
 	setCrossProportion( calculateHorizontalScenePercent() );
-	scene->getLayout()->insertItem(this, calculateVerticalScenePercent(), 1.0 / ioBufferCapacity, zValue);
 }
 
 void GraphicCharValue::removeCharFromScene()
