@@ -353,16 +353,6 @@ bool Visualizator::stepForward()
 	// The previous command may finish the player solution's execution
 	if ( ! unitPlayingScene->isAnimating() ) return false;
 
-	// Ask GDB to update watches. It will answer with a ^done response, processed by onResult()
-	if ( debuggerCall->sendGdbCommand("-var-update --all-values *", visExecutionLoop) == GDB_ERROR )
-	{
-		qCCritical(logVisualizator) << "Error sending -var-update command";
-		return false;
-	}
-
-	// The previous commands may finish the player solution's execution
-	if ( ! unitPlayingScene->isAnimating() ) return false;
-
 	// Check if there was a stdin read or stderr/stdout write and animate it
 	// It will produce a ^done,value="cursor" response, and the context is used to map the response
 	if (   debuggerCall->sendGdbCommand("-data-evaluate-expression bn_tell_stdin()",  visStandardInput ) == GDB_ERROR
@@ -370,6 +360,16 @@ bool Visualizator::stepForward()
 		|| debuggerCall->sendGdbCommand("-data-evaluate-expression bn_tell_stderr()", visStandardError ) == GDB_ERROR )
 	{
 		qCCritical(logVisualizator) << "Error sending GDB commands for updating standard input/output/error";
+		return false;
+	}
+
+	// The previous commands may finish the player solution's execution
+	if ( ! unitPlayingScene->isAnimating() ) return false;
+
+	// Ask GDB to update watches. It will answer with a ^done response, processed by onResult()
+	if ( debuggerCall->sendGdbCommand("-var-update --all-values *", visExecutionLoop) == GDB_ERROR )
+	{
+		qCCritical(logVisualizator) << "Error sending -var-update command";
 		return false;
 	}
 
@@ -638,12 +638,6 @@ bool Visualizator::processPlayerSolutionStopped(const GdbItemTree& tree, Visuali
 	//else if ( reason == "exec" )
 	//	processExec(tree, context, maxDuration);
 
-	// Gede gets pid asking the list of threads, we got pid from AC_THREAD_GROUP_STARTED
-	// if (inferiorProcessId == 0) debuggerCall->sendGdbCommand("-list-thread-groups");
-	// These are Gede commands:
-	//debuggerCall->sendGdbCommand("-thread-info", visExecutionLoop);
-	//debuggerCall->sendGdbCommand("-var-update --all-values *", visExecutionLoop);
-	//debuggerCall->sendGdbCommand("-stack-list-locals 1", visExecutionLoop);
 	return scheduleStepForward(maxDuration);
 }
 

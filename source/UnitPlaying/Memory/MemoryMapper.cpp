@@ -211,7 +211,10 @@ bool MemoryMapper::updateVariableValue(const GdbTreeNode* watchNode, int& maxDur
 
 	// Find the variable (memory allocation) that was updated
 	MemoryAllocation* variable = mapNameMemoryAllocation.value(watchName, nullptr);
-	Q_ASSERT(variable);
+
+	// If the watch is not found in the map, it was deleted by a function return
+	if ( ! variable )
+		return false;
 
 	// Update the variable's value in all its graphical variables
 	int duration = variable->updateValue(watchNode);
