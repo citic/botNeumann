@@ -16,6 +16,12 @@ const int durationVisualDelay = 500;
 // Duration of disappear animation
 const int durationDisAppear = 250;
 
+// Start proportion of a character in the standard output buffer. These values are saved when
+// written characters are created in the output buffer, because they are moved to the thread and
+// later they will return to the buffer
+qreal mainStartInOutputBuffer = 0.0;
+qreal crossStartInOutputBuffer = 0.0;
+
 
 GraphicCharValue::GraphicCharValue(QGraphicsItem* graphicsParent, qreal zValue, const QString& value)
 	: GraphicValue(typeChar, graphicsParent, zValue, value)
@@ -121,6 +127,11 @@ void GraphicCharValue::placeInThread(int index, int length, ExecutionThread* thr
 	this->executionThread = thread;
 	this->scene = scene;
 
+	// We save the current position in the scene. It will be used later to animate this character
+	// returning to the output buffer
+	mainStartInOutputBuffer = mainStart;
+	crossStartInOutputBuffer = crossStart;
+
 	// Add the character to the scene in its positions
 //	setMainProportion( calculateVerticalScenePercent() );
 //	setCrossProportion( calculateHorizontalScenePercent() );
@@ -133,6 +144,9 @@ int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer)
 	// Animate this character appearing, not all at the same time
 	int duration = VisualizationSpeed::getInstance().adjust( durationDisAppear * index );
 	duration += animateAppear(durationDisAppear, duration);
+
+	// Animate this character moving towards the thread position
+	duration += animateMoveToPos(mainStartInOutputBuffer, crossStartInOutputBuffer, durationBufferThread * 1.5, duration);
 
 	// Temporary
 	QTimer::singleShot( duration + 1000, this, &GraphicCharValue::removeCharFromScene );
