@@ -46,7 +46,7 @@ class InputOutputBuffer : public RectLayoutItem
 	/// The output tester will be turned green if player solution's output matches the test case's
 	/// expected output, or red otherwise.
 	/// @return The duration of the animation in milliseconds
-	inline int animateWrite(int length, const QList<ExecutionThread*>& waitingQueue);
+	int animateWrite(int length, const QList<ExecutionThread*>& waitingQueue);
 	/// Returns the amount of free space or characters
 	inline int getFreeCharacters() const { return capacity - characters.count(); }
 	/// Clear all the values on the buffer

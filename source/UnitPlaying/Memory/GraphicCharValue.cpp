@@ -14,7 +14,7 @@ const int durationWaitingOthers = 250;
 // Duration of a "visual" delay to allow user to watch all characteres together
 const int durationVisualDelay = 500;
 // Duration of disappear animation
-const int durationDisappear = 250;
+const int durationDisAppear = 250;
 
 
 GraphicCharValue::GraphicCharValue(QGraphicsItem* graphicsParent, qreal zValue, const QString& value)
@@ -60,7 +60,7 @@ int GraphicCharValue::animateRead(int index, int length, int ioBufferCapacity, E
 		= durationBufferThread	// traveling from stdin to the thread
 		+ (length - index) * durationWaitingOthers	// waiting for remaining characters arrive to the thread
 		+ durationVisualDelay // delay to allow user to watch all characteres together
-		+ durationDisappear; // duration of disappear animation
+		+ durationDisAppear; // duration of disappear animation
 
 	duration += VisualizationSpeed::getInstance().adjust(moveToThreadDuration);
 	return duration;
@@ -79,7 +79,7 @@ int GraphicCharValue::animateMoveToThread()
 	duration += VisualizationSpeed::getInstance().adjust((length - index) * durationWaitingOthers + durationVisualDelay);
 
 	// Disappear this character after the read is complete
-	duration += animateAppear(durationDisappear, duration, 1.0, 0.0);
+	duration += animateAppear(durationDisAppear, duration, 1.0, 0.0);
 	QTimer::singleShot( duration, this, &GraphicCharValue::removeCharFromScene );
 	return duration;
 }
@@ -113,7 +113,7 @@ qreal GraphicCharValue::calculateVerticalScenePercent() const
 	return (actorTop + actorHeight * 0.75 ) / sceneHeight;
 }
 
-void GraphicCharValue::placeInThread(int index, int length, int ioBufferCapacity, ExecutionThread* thread, Scene* scene)
+void GraphicCharValue::placeInThread(int index, int length, ExecutionThread* thread, Scene* scene)
 {
 	// Copy given parameters
 	this->index = index;
@@ -122,8 +122,24 @@ void GraphicCharValue::placeInThread(int index, int length, int ioBufferCapacity
 	this->scene = scene;
 
 	// Add the character to the scene in its positions
-	setMainProportion( calculateVerticalScenePercent() );
-	setCrossProportion( calculateHorizontalScenePercent() );
+//	setMainProportion( calculateVerticalScenePercent() );
+//	setCrossProportion( calculateHorizontalScenePercent() );
+	// Ugly fix: if we animate the final position, it works
+	animateMoveToPos( calculateVerticalScenePercent(), calculateHorizontalScenePercent(), 0 );
+}
+
+int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer)
+{
+	// Animate this character appearing, not all at the same time
+	int duration = VisualizationSpeed::getInstance().adjust( durationDisAppear * index );
+	duration += animateAppear(durationDisAppear, duration);
+
+	// Temporary
+	QTimer::singleShot( duration + 1000, this, &GraphicCharValue::removeCharFromScene );
+
+	// Done
+	(void)targetBuffer;
+	return duration;
 }
 
 void GraphicCharValue::removeCharFromScene()

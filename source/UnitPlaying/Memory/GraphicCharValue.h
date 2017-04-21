@@ -5,6 +5,7 @@
 
 class ExecutionThread;
 class Scene;
+class InputOutputBuffer;
 
 /** A GraphicCharValue is a GraphicValue that can travel by any standard input/output tube,
 	exit from or enter to it when it arrives to the open tube's area, travel by the scene towars/
@@ -36,11 +37,14 @@ class GraphicCharValue : public GraphicValue
 	/// Place this character within the thread position
 	/// This method is called when the character is written by a thread. Its initial position is
 	/// within the thread according to its index and the length of the write operation
-	void placeInThread(int index, int length, int ioBufferCapacity, ExecutionThread* thread, Scene* scene);
+	void placeInThread(int index, int length, ExecutionThread* thread, Scene* scene);
 	/// Make this character float over the scene. After this method is called, the character
 	/// remains at the same position, but it can be freely moved through the scene
 	/// ToDo: we use the scene, but it may eventually changed for any other QGraphicsItem object
 	bool reparentTo(Scene* newParent);
+	/// Animates the appearing of this char at the execution theaad's actor
+	/// @return The duration of the animation in milliseconds
+	int animateWrite(InputOutputBuffer* targetBuffer);
 
   protected slots:
 	/// Animates this character leaving the stdin tube and move to the execution thread stored

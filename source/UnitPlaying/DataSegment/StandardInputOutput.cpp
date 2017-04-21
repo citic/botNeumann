@@ -153,11 +153,11 @@ int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& w
 
 		// Place the character in its position within the thread
 		character->reparentTo(scene);
-//		character->placeInThread(charCounter, length, capacity, thread, scene);
+		character->placeInThread(charCounter, length, thread, scene);
 
 		// Move the character from the thread towards the stdout
-//		if ( (duration = character->animateWrite(charCounter, length, thread)) > maxDuration )
-//			maxDuration = duration;
+		if ( (duration = character->animateWrite(this)) > maxDuration )
+			maxDuration = duration;
 	}
 /*
 	{
