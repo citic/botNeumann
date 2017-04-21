@@ -32,7 +32,7 @@ bool DataSegment::allocate(MemoryAllocation* memoryAllocation)
 	return memoryFrame->allocate(memoryAllocation, 0) >= 0;
 }
 
-bool DataSegment::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution)
+bool DataSegment::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution, bool loadInput, bool loadOutput)
 {
 	// Get the full path to the test case's input/output files
 //	const QString& args      = playerSolution->buildTestCaseFilepath(testCaseNumber, "args");
@@ -43,7 +43,12 @@ bool DataSegment::loadTestCase(int testCaseNumber, PlayerSolution* playerSolutio
 //	const QString& error_ps  = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ps");
 
 	// The data segment owns the standard input/output, and the messages area owns the inspector
-	return standardInput->loadInputFile(input) && standardOutput->loadOutputFiles(output_ex, output_ps);
+	if ( loadInput && ! standardInput->loadInputFile(input) )
+		return false;
+	if ( loadOutput && ! standardOutput->loadOutputFiles(output_ps, output_ex) )
+		return false;
+
+	return true;
 }
 
 void DataSegment::buildDataSegment()

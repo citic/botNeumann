@@ -144,6 +144,9 @@ class UnitPlayingScene : public GameScene
 	/// Called when user changed the test case being visualized. Current visualization must be
 	/// stopped, and a new visualization must be started
 	void activeTestCaseChanged(int newTestCaseNumber);
+	/// Called when player solution's output for all test cases has been generated in order to
+	/// load output in standard output buffer
+	void loadStandardOutput();
 
   protected:
 	/// Starts the process of build the player solution code, test cases and symbol extraction
@@ -157,7 +160,9 @@ class UnitPlayingScene : public GameScene
 	/// Create a dock widget that show information about the unit, messages from compilers...
 	void createMessagesArea();
 	/// Start a new visualization with the given test case number
-	void startVisualization(int testCaseNumber);
+	/// @param testCaseNumber Send 0 when called for first time. Send a positive number when
+	/// user changes the active test case being visualized
+	void startVisualization(int testCaseNumber = 0);
 };
 
 #endif // UNITPLAYINGSCENE_H

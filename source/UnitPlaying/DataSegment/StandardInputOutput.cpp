@@ -187,6 +187,7 @@ bool StandardInputOutput::loadFile(const QString& filepath, const QString& targe
 	{
 		Q_ASSERT(buffer);
 		buffer->setText(text);
+		qCCritical(logTemporary()) << "Buffer text:" << text;
 	}
 	else if ( target == "tester" )
 	{

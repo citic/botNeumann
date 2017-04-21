@@ -60,10 +60,10 @@ void MessagesArea::setUnitDescription(const QString &description, bool makeActiv
 		messagesTabWidget->setCurrentWidget(unitDescription);
 }
 
-bool MessagesArea::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution)
+bool MessagesArea::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution, bool loadInput, bool loadOutput)
 {
 	Q_ASSERT(standardInputOutputInspector);
-	return standardInputOutputInspector->loadTestCase(testCaseNumber, playerSolution);
+	return standardInputOutputInspector->loadTestCase(testCaseNumber, playerSolution, loadInput, loadOutput);
 }
 
 void MessagesArea::clear()

@@ -34,7 +34,7 @@ class StandardInputOutputInspector : public QSplitter
 	explicit StandardInputOutputInspector(QWidget* parent = nullptr);
 	/// Loads the expected input/output/error in the StandardInputOutputInspector from the test
 	/// case files, and set the cursors to the first character of them
-	bool loadTestCase(int testCaseNumber, PlayerSolution* playerSolution);
+	bool loadTestCase(int testCaseNumber, PlayerSolution* playerSolution, bool loadInput, bool loadOutput);
 
   public slots:
 

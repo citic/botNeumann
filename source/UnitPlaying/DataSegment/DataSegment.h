@@ -39,7 +39,12 @@ class DataSegment : public GdbResponseListener, public MemorySegment
 	virtual bool allocate(MemoryAllocation* memoryAllocation) override;
 	/// Loads the expected input/output/error in the StandardInputOutput tubes from the test
 	/// case files. It animates characters arriving by the standard input.
-	bool loadTestCase(int testCaseNumber, PlayerSolution* playerSolution);
+	/// @param loadOutput Send false if only test case's input file should be loaded. This is done
+	/// at the beginning of the visualization, in order to visualize characters filling the buffer.
+	/// On the other hand, output files should wait, because while the player solution generates
+	/// its output for this test case, it will take some time. When all test cases have been
+	/// generated, call this method again sending true on loadOuput and false in loadInput.
+	bool loadTestCase(int testCaseNumber, PlayerSolution* playerSolution, bool loadInput, bool loadOutput);
 
   public slots:
 	/// Called when visualization has finished in order to clear variables

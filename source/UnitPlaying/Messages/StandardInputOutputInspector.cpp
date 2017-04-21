@@ -50,7 +50,7 @@ void StandardInputOutputInspector::toggleOutputError()
 	standardErrorInspector->setVisible( checked );
 }
 
-bool StandardInputOutputInspector::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution)
+bool StandardInputOutputInspector::loadTestCase(int testCaseNumber, PlayerSolution* playerSolution, bool loadInput, bool loadOutput)
 {
 	this->testCaseNumber = testCaseNumber;
 
@@ -61,9 +61,16 @@ bool StandardInputOutputInspector::loadTestCase(int testCaseNumber, PlayerSoluti
 	const QString& error_ex  = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ex");
 //	const QString& error_ps  = playerSolution->buildTestCaseFilepath(testCaseNumber, "error_ps");
 
-	return loadFileInto(input, standardInputInspector)
-		&& loadFileInto(output_ex, standardOutputInspector)
-		&& loadFileInto(error_ex, standardErrorInspector);
+	if ( loadInput && ! loadFileInto(input, standardInputInspector) )
+		return false;
+
+	if ( loadOutput && ! loadFileInto(output_ex, standardOutputInspector) )
+		return false;
+
+	if ( loadOutput && ! loadFileInto(error_ex, standardErrorInspector) )
+		return false;
+
+	return true;
 }
 
 bool StandardInputOutputInspector::loadFileInto(const QString& filepath, QTextEdit* inspector)

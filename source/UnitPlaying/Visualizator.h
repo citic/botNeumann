@@ -70,6 +70,8 @@ class Visualizator : public GdbResponseListener
 	explicit Visualizator(PlayerSolution* playerSolution, int testCaseNumber, UnitPlayingScene* unitPlayingScene);
 	/// Destructor
 	~Visualizator();
+	/// Get access to the test case number being visualized
+	inline int getTestCaseNumber() const { return testCaseNumber; }
 	/// Start the visualization process
 	/// @param preparation If true, only the preparation phase will be executed. The preparation
 	/// phase runs GDB, sets the inferior, arguments, user-defined breakpoints, function definition

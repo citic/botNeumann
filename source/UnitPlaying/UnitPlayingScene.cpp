@@ -103,6 +103,7 @@ void UnitPlayingScene::finishedEnteringStage()
 	// When ALSO all test cases were generated, run player solution against them
 	testCaseManager->setPlayerSolution(playerSolution);
 	connect( playerSolution, SIGNAL(allBuilt()), testCaseManager, SLOT(testPlayerSolution()) );
+	connect( playerSolution, SIGNAL(allBuilt()), this, SLOT(loadStandardOutput()) );
 
 	// When user wants to change the active test case, we have to stop current visualization and
 	// start a new one for the selected test case
@@ -285,11 +286,17 @@ void UnitPlayingScene::playerSolutionBuilt(CompiledProgram* compiledProgram)
 
 	// By default, the first test case (the example) is always animated. If user wants another,
 	// s/he can press it later
-	startVisualization(1);
+	startVisualization();
 }
 
 void UnitPlayingScene::startVisualization(int testCaseNumber)
 {
+	// If called with 0, it is first time this visualization is called
+	Q_ASSERT(testCaseNumber >= 0);
+	bool firstTime = testCaseNumber == 0;
+	if ( firstTime )
+		testCaseNumber = 1;
+
 	// The player solution generated an executable and we are ready to visualize it, or a new
 	// test case was actived and the previuous visualization is finished
 	visualizator->deleteLater();
@@ -310,10 +317,20 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 	if ( ! visualizator->start() )
 		return changeState(UnitPlayingState::editing);
 
-	// Load the test case expected input/output/error in the StandardInputOutputInspector
-	dataSegment->loadTestCase(testCaseNumber, playerSolution);
-	messagesArea->loadTestCase(testCaseNumber, playerSolution);
+	// Load the test case expected input in the StandardInputOutputInspector
+	dataSegment->loadTestCase(testCaseNumber, playerSolution, true, ! firstTime);
+	messagesArea->loadTestCase(testCaseNumber, playerSolution, true, ! firstTime);
 	changeState(UnitPlayingState::animating);
+}
+
+void UnitPlayingScene::loadStandardOutput()
+{
+	// After the player solution has generated all output for all test cases, load the output
+	// in the visualization
+	Q_ASSERT(visualizator);
+	int testCaseNumber = visualizator->getTestCaseNumber();
+	dataSegment->loadTestCase(testCaseNumber, playerSolution, false, true);
+	messagesArea->loadTestCase(testCaseNumber, playerSolution, false, true);
 }
 
 void UnitPlayingScene::userStopped(bool removeTestCases)
