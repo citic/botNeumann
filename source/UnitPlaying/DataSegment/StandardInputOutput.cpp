@@ -214,7 +214,7 @@ void StandardInputOutput::buildStandardInputOutput()
 	// A tube has three parts: left, middle, and right
 	Actor* left = new Actor(QString("up_standard_%1_left").arg(typeStr), scene);
 	Actor* middle = new Actor(QString("up_standard_%1_middle").arg(typeStr), scene);
-	Actor* coupling = new Actor(QString("up_standard_input_output_coupling").arg(typeStr), scene);
+	Actor* coupling = new Actor(QString("up_standard_input_output_coupling"), scene);
 	Actor* right = new Actor(QString("up_standard_%1_right").arg(typeStr), scene);
 
 	// Ugly fix: the coupling is part of the opening, but it must be placed in a higher layer

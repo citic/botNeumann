@@ -114,7 +114,6 @@ int MemoryRow::showGarbage(VisAddress firstByte, VisAddress lastByte, bool visib
 	lastByte  -= start;
 
 	// Check index out of bounds
-	qCCritical(logTemporary(), "Garbage first=%lld last=%lld, row=[%lld,+%lld] garbage.count=%d", firstByte, lastByte, start, size, garbage.count());
 	if ( firstByte < 0 || lastByte  < 0 || firstByte >= garbage.count() )
 		return entirelyAllocated = -1;
 
@@ -182,7 +181,6 @@ int MemoryRow::allocate(MemoryAllocation* variable, int& entirelyAllocated, int 
 
 		// We add the variable to an absolute position in layout, +1 for memory legs at the left
 		insertItem( graphicVariable, (firstByte - start + 1) * byteProportion, (lastByte - firstByte + 1) * byteProportion, zVariable );
-		qCCritical(logTemporary, "MemRow: %s proportion %lf", qPrintable(variable->name), (lastByte - firstByte + 1) * byteProportion);
 
 		// ToDo: Check if variable is initialized (the current value of the variable appears in
 		// its declaration). Currently we hide garbage for all variables
@@ -195,7 +193,6 @@ int MemoryRow::allocate(MemoryAllocation* variable, int& entirelyAllocated, int 
 	}
 
 	// Set true to the param if the variable was entirely allocated in this memory row
-	qCCritical(logTemporary, "Memory row: allocating %s in [%lld, %lld]", qPrintable(variable->name), firstByte, lastByte);
 	entirelyAllocated = variable->visualizationAddress + variable->size - 1 <= lastByte;
 
 	// Done

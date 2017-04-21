@@ -141,7 +141,6 @@ bool MemoryAllocation::parseAtomicDataTypeStr(const QString& text)
 	if ( this->dataType == typeFloat && dataTypeText == "double" )
 		this->sizeQualifier = sizeLong;
 
-	qCCritical(logTemporary).nospace() << "cv=" << constVolatile << " sign=" << signQualifier << " size=" << sizeQualifier << " dataType=" << dataTypeText;
 	return true;
 }
 

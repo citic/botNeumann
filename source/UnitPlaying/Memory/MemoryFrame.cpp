@@ -288,10 +288,10 @@ void MemoryFrame::updateRowProportions()
 void MemoryFrame::printAllocationQueue()
 {
 	// Print allocations
-	QString output("Allocation queue ");
-	for ( MemoryAllocations::iterator current = memoryAllocations.begin(); current != memoryAllocations.end(); ++current )
-		output += QString("[%1|%2|%3]").arg( (*current)->visualizationAddress ).arg( (*current)->size ).arg( (*current)->name );
-	qCCritical(logTemporary).noquote() << output;
+//	QString output("Allocation queue ");
+//	for ( MemoryAllocations::iterator current = memoryAllocations.begin(); current != memoryAllocations.end(); ++current )
+//		output += QString("[%1|%2|%3]").arg( (*current)->visualizationAddress ).arg( (*current)->size ).arg( (*current)->name );
+//	qCCritical(logTemporary).noquote() << output;
 }
 
 bool MemoryFrame::deallocate(MemoryAllocation* memoryAllocation)
