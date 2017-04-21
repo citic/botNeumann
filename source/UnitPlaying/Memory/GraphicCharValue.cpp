@@ -72,28 +72,8 @@ int GraphicCharValue::animateMoveToThread()
 	int duration = 0;
 	reparentTo(scene);
 
-	// Calculate the final position in execution thread's area. Some reference values:
-	Q_ASSERT(executionThread);
-	qreal sceneWidth = scene->getLayout()->getLayoutWidth();
-	qreal sceneHeight = scene->getLayout()->getLayoutHeight();
-	qreal threadLeft = executionThread->getLayoutLeft();
-	qreal threadWidth = executionThread->getLayoutWidth();
-	qreal actorTop = executionThread->getActor()->getLayoutTop();
-	qreal actorHeight = executionThread->getActor()->getLayoutHeight();
-	qreal charWidth = podMiddle->getLayoutWidth();
-
-	// Vertical position is the actor top + 75% of actors height's percent
-	qreal verticalPercent = ( actorTop + actorHeight * 0.75 ) / sceneHeight;
-
-	// Horizontal position is centered in the execution thread
-	qreal horizontalPercent = ( threadLeft + 0.5 * (threadWidth - length * charWidth) ) / sceneWidth;
-
-	// Add the horizontal displacement according to the index of this character in the animation
-	// 0.85 is an adjust to keep characters tight together
-	horizontalPercent += index * charWidth / sceneWidth * 0.85;
-
 	// Animate this character moving towards the thread position
-	duration += animateMoveToPos(verticalPercent, horizontalPercent, durationBufferThread, duration);
+	duration += animateMoveToPos(calculateVerticalScenePercent(), calculateHorizontalScenePercent(), durationBufferThread, duration);
 
 	// Wait until other characters arrive to the thread
 	duration += VisualizationSpeed::getInstance().adjust((length - index) * durationWaitingOthers + durationVisualDelay);
@@ -102,6 +82,48 @@ int GraphicCharValue::animateMoveToThread()
 	duration += animateAppear(durationDisappear, duration, 1.0, 0.0);
 	QTimer::singleShot( duration, this, &GraphicCharValue::removeCharFromScene );
 	return duration;
+}
+
+qreal GraphicCharValue::calculateHorizontalScenePercent() const
+{
+	// Calculate the final position in execution thread's area. Some reference values:
+	Q_ASSERT(executionThread);
+	qreal sceneWidth = scene->getLayout()->getLayoutWidth();
+	qreal threadLeft = executionThread->getLayoutLeft();
+	qreal threadWidth = executionThread->getLayoutWidth();
+	qreal charWidth = podMiddle->getLayoutWidth();
+
+	// Horizontal position is centered in the execution thread
+	qreal horizontalPercent = ( threadLeft + 0.5 * (threadWidth - length * charWidth) ) / sceneWidth;
+
+	// Add the horizontal displacement according to the index of this character in the animation
+	// 0.85 is an adjust to keep characters tight together
+	horizontalPercent += index * charWidth / sceneWidth * 0.85;
+	return horizontalPercent;
+}
+
+qreal GraphicCharValue::calculateVerticalScenePercent() const
+{
+	// Calculate the final position in execution thread's area. Some reference values:
+	qreal sceneHeight = scene->getLayout()->getLayoutHeight();
+	qreal actorTop = executionThread->getActor()->getLayoutTop();
+	qreal actorHeight = executionThread->getActor()->getLayoutHeight();
+
+	// Vertical position is the actor top + 75% of actors height's percent
+	return (actorTop + actorHeight * 0.75 ) / sceneHeight;
+}
+
+void GraphicCharValue::placeInThread(int index, int length, int ioBufferCapacity, ExecutionThread* thread, Scene* scene)
+{
+	// Copy given parameters
+	this->index = index;
+	this->length = length;
+	this->executionThread = thread;
+	this->scene = scene;
+
+	// Add the character to the scene in its positions
+	setCrossProportion( calculateHorizontalScenePercent() );
+	scene->getLayout()->insertItem(this, calculateVerticalScenePercent(), 1.0 / ioBufferCapacity, zValue);
 }
 
 void GraphicCharValue::removeCharFromScene()

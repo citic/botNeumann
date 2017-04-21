@@ -116,6 +116,82 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 	return maxDuration;
 }
 
+int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& waitingQueue)
+{
+	// This is the inverse process of reading
+	// Make sure we have pending characters to read from buffer
+	Q_ASSERT( text.length() - cursor >= length );
+
+	// The parent of the buffer is the scene
+	Scene* scene = dynamic_cast<Scene*>( parentItem() );
+	Q_ASSERT(scene);
+
+	// Measure the duration of the animation
+	int maxDuration = 0, duration = 0;
+
+	// Get the thread that made the read operation
+	Q_ASSERT(waitingQueue.count() > 0);
+	ExecutionThread* thread = waitingQueue[0];
+	qCCritical(logTemporary()) << "Write of" << length << "bytes from thread" << thread->getId();
+
+	// Turn the robot front to receive the characters
+	int robotTurnDuration = thread->turnFront();
+
+	// Create the written characters, place them and animate them traveling towards the stdout
+	for ( int charCounter = 0; charCounter < length; ++charCounter )
+	{
+		// Create the character as a value. It will appear within the execution thread, i.e. its
+		// parent will be the scene until it enters into the stdout buffer
+		GraphicCharValue* character = new GraphicCharValue(scene, zBuffer, text.mid(cursor++, 1));
+
+		// Place the character in its position within the thread
+		character->placeInThread(charCounter, length, capacity, thread, scene);
+
+		// Move the character from the thread towards the stdout
+//		if ( (duration = character->animateWrite(charCounter, length, thread)) > maxDuration )
+//			maxDuration = duration;
+	}
+/*
+	{
+		// The standard output is buffered, it will be flushed when a new line character is written
+		// ToDo: flush buffer when fflush(stdout) is called
+		characters.append(character);
+
+		// Characters are slighly inclined, adjust their paddings to overlap themselves
+		character->setPaddings(0.0, -0.11);
+
+		// If this character must be animated arriving to fill the buffer
+		if ( charCounter < charsToAnimate )
+		{
+			// To animate them arriving, we place them at the first non visible position
+			qreal finalPercent = qreal( characters.count() - 1 ) / capacity;
+			insertItem(character, finalPercent + 1.0, 1.0 / capacity, zBuffer);
+
+			// The duration of the animation is proportional to the number of spaces that characters
+			// have to move, i.e: empty spaces
+			duration = character->animateMoveTo( finalPercent, charsToAnimate * 250 );
+			if ( duration > maxDuration )
+				maxDuration = duration;
+		}
+		else
+		{
+			// This character is not animated, just placed in capacity + 1 position. It will be
+			// waiting to be read. At that moment, it will be animated
+			qreal finalPercent = qreal( capacity + 1 ) / capacity;
+			insertItem(character, finalPercent, 1.0 / capacity, zBuffer);
+		}
+	}
+
+	*/
+	scene->getLayout()->updateLayoutItem();
+
+	// When read animation is done, turn the robot back
+	maxDuration += robotTurnDuration;
+	QTimer::singleShot( maxDuration, thread, &ExecutionThread::turnBack );
+
+	return maxDuration + robotTurnDuration;
+}
+
 int InputOutputBuffer::clear()
 {
 	// Characters in tube are not animated to disappear, because that animation does not convey
@@ -220,8 +296,8 @@ int StandardInputOutput::updateCursor(int cursor, const QList<ExecutionThread*>&
 	int duration = 0;
 	if ( type == standardInput )
 		duration = buffer->animateRead(difference, waitingQueue);
-	//else
-	//	duration = buffer->animateWrite(difference);
+	else
+		duration = buffer->animateWrite(difference, waitingQueue);
 
 	if ( duration > maxDuration )
 		maxDuration = duration;

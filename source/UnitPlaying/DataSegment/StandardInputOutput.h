@@ -42,6 +42,11 @@ class InputOutputBuffer : public RectLayoutItem
 	/// The remaining empty space is filled calling @a animateFill() function
 	/// @return The duration of the animation in milliseconds
 	int animateRead(int length, const QList<ExecutionThread*>& waitingQueue);
+	/// Animate writing @a length characters from the execution thread to the output buffer.
+	/// The output tester will be turned green if player solution's output matches the test case's
+	/// expected output, or red otherwise.
+	/// @return The duration of the animation in milliseconds
+	inline int animateWrite(int length, const QList<ExecutionThread*>& waitingQueue);
 	/// Returns the amount of free space or characters
 	inline int getFreeCharacters() const { return capacity - characters.count(); }
 	/// Clear all the values on the buffer
@@ -110,6 +115,11 @@ class StandardInputOutput : public MemorySegment
 	/// The remaining empty space is filled calling @a animateFill() function
 	/// @return The duration of the animation in milliseconds
 	inline int animateRead(int length, const QList<ExecutionThread*>& waitingQueue) { return buffer->animateRead(length, waitingQueue); }
+	/// Animate writing @a length characters from the execution thread to the output buffer.
+	/// The output tester will be turned green if player solution's output matches the test case's
+	/// expected output, or red otherwise.
+	/// @return The duration of the animation in milliseconds
+	inline int animateWrite(int length, const QList<ExecutionThread*>& waitingQueue) { return buffer->animateWrite(length, waitingQueue); }
 	/// Removes all values from the buffer
 	inline int clear() { return buffer->clear(); }
 	/// Updates the cursor and animates bytes leaving to or entering in the tube

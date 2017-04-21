@@ -33,6 +33,10 @@ class GraphicCharValue : public GraphicValue
 	/// Starts the several-state animation from the current place to the given execution thread
 	/// @return The duration of the animation in milliseconds
 	int animateRead(int index, int length, int ioBufferCapacity, ExecutionThread* targetThread, Scene* scene);
+	/// Place this character within the thread position
+	/// This method is called when the character is written by a thread. Its initial position is
+	/// within the thread according to its index and the length of the write operation
+	void placeInThread(int index, int length, int ioBufferCapacity, ExecutionThread* thread, Scene* scene);
 
   protected slots:
 	/// Animates this character leaving the stdin tube and move to the execution thread stored
@@ -44,6 +48,12 @@ class GraphicCharValue : public GraphicValue
 	/// remains at the same position, but it can be freely moved through the scene
 	/// ToDo: we use the scene, but it may eventually changed for any other QGraphicsItem object
 	bool reparentTo(Scene* newParent);
+
+  protected:
+	/// Calculates the horizontal percent of this character in its thread
+	qreal calculateHorizontalScenePercent() const;
+	/// Calculates the vertical percent of this character in its thread
+	qreal calculateVerticalScenePercent() const;
 };
 
 #endif // GRAPHICCHARVALUE_H
