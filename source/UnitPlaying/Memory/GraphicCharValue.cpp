@@ -145,6 +145,9 @@ int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer)
 	int duration = VisualizationSpeed::getInstance().adjust( durationDisAppear * index );
 	duration += animateAppear(durationDisAppear, duration);
 
+	// Wait until other characters have appeared before starting to travel to the buffer
+	duration += VisualizationSpeed::getInstance().adjust((length - index) * durationWaitingOthers);
+
 	// Animate this character moving towards the thread position
 	duration += animateMoveToPos(mainStartInOutputBuffer, crossStartInOutputBuffer, durationBufferThread * 1.5, duration);
 
