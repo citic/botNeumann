@@ -16,6 +16,8 @@ const int durationWaitingOthers = 250;
 const int durationVisualDelay = 500;
 // Duration of disappear animation
 const int durationDisAppear = 250;
+// Duration of char chain traveling by stdout
+const int durationStdoutBuffer = 125;
 
 // Start proportion of a character in the standard output buffer. These values are saved when
 // written characters are created in the output buffer, because they are moved to the thread and
@@ -146,6 +148,7 @@ void GraphicCharValue::placeInThread(int index, int length, ExecutionThread* thr
 	animateMoveToPos( calculateVerticalScenePercent(), calculateHorizontalScenePercent(), 0 );
 }
 
+#include "LogManager.h"
 int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer)
 {
 	// Animate this character appearing, not all at the same time
@@ -153,21 +156,24 @@ int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer)
 	duration += animateAppear(durationDisAppear, duration);
 
 	// Wait until other characters have appeared before starting to travel to the buffer
-	int waitDuration = 1000 + (length - index) * durationWaitingOthers + index * durationVisualDelay;
+	int waitDuration = 1000 + (length - index) * durationDisAppear + index * durationStdoutBuffer;
 	duration += VisualizationSpeed::getInstance().adjust(waitDuration);
 
 	// Animate this character moving towards the thread position
-	duration += animateMoveToPos(mainStartInOutputBuffer, crossStartInOutputBuffer, durationBufferThread + (length - index) * 250, duration);
+	duration += animateMoveToPos(mainStartInOutputBuffer, crossStartInOutputBuffer, durationBufferThread, duration);
 
 	// When this character arrives to the output buffer, we have to reparent it
 	this->targetBuffer = targetBuffer;
 	QTimer::singleShot( duration, this, &GraphicCharValue::animateMoveThroughBuffer );
+	qCCritical(logTemporary, "%d(%s)+animateMoveThroughBuffer(%d)", index, qPrintable(processInvisibleChars()), duration);
+
+	// We need to add the ramaining duration of the animation
+	duration += VisualizationSpeed::getInstance().adjust(targetBuffer->getCapacity() * durationStdoutBuffer);
 
 	// Done
 	return duration;
 }
 
-#include "LogManager.h"
 int GraphicCharValue::animateMoveThroughBuffer()
 {
 	// Reparent this character to the buffer
@@ -182,7 +188,8 @@ int GraphicCharValue::animateMoveThroughBuffer()
 
 	// Animate this character to reach its final position
 	qreal finalPercent = qreal(finalPositionInBuffer) / targetBuffer->getCapacity();
-	duration += animateMoveTo( finalPercent, targetBuffer->getCapacity() * 250, duration );
+	duration += animateMoveTo( finalPercent, targetBuffer->getCapacity() * durationStdoutBuffer, duration );
+	qCCritical(logTemporary, "%d(%s)=animateMoveThroughBuffer(%d)", index, qPrintable(processInvisibleChars()), duration);
 
 	// Reparent this character to the buffer
 	// Temporary
