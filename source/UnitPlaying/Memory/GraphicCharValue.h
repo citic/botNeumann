@@ -4,8 +4,8 @@
 #include "GraphicValue.h"
 
 class ExecutionThread;
-class Scene;
 class InputOutputBuffer;
+class Scene;
 
 /** A GraphicCharValue is a GraphicValue that can travel by any standard input/output tube,
 	exit from or enter to it when it arrives to the open tube's area, travel by the scene towars/
@@ -20,28 +20,31 @@ class GraphicCharValue : public GraphicValue
 
   protected:
 	/// When characters float, they do over the scene instead of stdin/stdout buffers
-	Scene* scene = nullptr;
+	QGraphicsItem* newParent = nullptr;
+	Layout* newLayout = nullptr;
 	/// This chacter was read or written by this thread
 	ExecutionThread* executionThread = nullptr;
 	/// The index of this character moving to/from the thread
 	int index = 0;
 	/// The amount of other characters traveling to/from the thread
 	int length = 0;
+	/// The output buffer where this character will be written
+	InputOutputBuffer* targetBuffer = nullptr;
 
   public:
 	/// Constructor
 	GraphicCharValue(QGraphicsItem* graphicsParent, qreal zValue, const QString& value);
 	/// Starts the several-state animation from the current place to the given execution thread
 	/// @return The duration of the animation in milliseconds
-	int animateRead(int index, int length, int ioBufferCapacity, ExecutionThread* targetThread, Scene* scene);
+	int animateRead(int index, int length, int ioBufferCapacity, ExecutionThread* targetThread, Scene* newParent);
 	/// Place this character within the thread position
 	/// This method is called when the character is written by a thread. Its initial position is
 	/// within the thread according to its index and the length of the write operation
-	void placeInThread(int index, int length, ExecutionThread* thread, Scene* scene);
+	void placeInThread(int index, int length, ExecutionThread* thread, Scene* newParent);
 	/// Make this character float over the scene. After this method is called, the character
 	/// remains at the same position, but it can be freely moved through the scene
 	/// ToDo: we use the scene, but it may eventually changed for any other QGraphicsItem object
-	bool reparentTo(Scene* newParent);
+	bool reparentTo(QGraphicsItem* newParent, Layout* layout, bool mapToScene);
 	/// Animates the appearing of this char at the execution theaad's actor
 	/// @return The duration of the animation in milliseconds
 	int animateWrite(InputOutputBuffer* targetBuffer);
@@ -50,6 +53,8 @@ class GraphicCharValue : public GraphicValue
 	/// Animates this character leaving the stdin tube and move to the execution thread stored
 	/// in the class member pointer
 	int animateMoveToThread();
+	/// Animates this chracter enterin into the standard output buffer and moving through it
+	int animateMoveThroughBuffer();
 	/// Called when read or write animation is finished
 	void removeCharFromScene();
 

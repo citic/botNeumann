@@ -148,11 +148,11 @@ int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& w
 		character->setPaddings(0.0, -0.11);
 
 		// Ugly fix: Add the char to this buffer temporarily, in order to give it its dimensions
-		insertItem(character, 1.0 - (length - charCounter) * 1.0 / capacity, 1.0 / capacity, zBuffer);
+		insertItem(character, 1.0 - 1.0 / capacity, 1.0 / capacity, zBuffer);
 		this->updateLayoutItem();
 
 		// Place the character in its position within the thread
-		character->reparentTo(scene);
+		character->reparentTo( scene, scene->getLayout(), true );
 		character->placeInThread(charCounter, length, thread, scene);
 
 		// Move the character from the thread towards the stdout

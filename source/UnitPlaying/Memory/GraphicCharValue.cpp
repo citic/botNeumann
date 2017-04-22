@@ -3,6 +3,7 @@
 #include "ExecutionThread.h"
 #include "ExecutionThreadActor.h"
 #include "Scene.h"
+#include "StandardInputOutput.h"
 #include "VisualizationSpeed.h"
 
 #include <QTimer>
@@ -55,7 +56,8 @@ int GraphicCharValue::animateRead(int index, int length, int ioBufferCapacity, E
 	// This character will be extracted from stdin tube and float towards the execution thread.
 	// When it reaches the position 0 in the tube, it must be repareted to the scene, because it
 	// it currently clipped by its stdin buffer parent
-	this->scene = scene;
+	this->newParent = scene;
+	this->newLayout = scene->getLayout();
 	this->executionThread = targetThread;
 	this->index = index;
 	this->length = length;
@@ -76,7 +78,7 @@ int GraphicCharValue::animateMoveToThread()
 {
 	// We need to move this character accros the scene. Currently it is owned by the stdin buffer
 	int duration = 0;
-	reparentTo(scene);
+	reparentTo(newParent, newLayout, true);
 
 	// Animate this character moving towards the thread position
 	duration += animateMoveToPos(calculateVerticalScenePercent(), calculateHorizontalScenePercent(), durationBufferThread, duration);
@@ -94,7 +96,9 @@ qreal GraphicCharValue::calculateHorizontalScenePercent() const
 {
 	// Calculate the final position in execution thread's area. Some reference values:
 	Q_ASSERT(executionThread);
-	qreal sceneWidth = scene->getLayout()->getLayoutWidth();
+	Q_ASSERT(newLayout);
+	Q_ASSERT(podMiddle);
+	qreal sceneWidth = newLayout->getLayoutWidth();
 	qreal threadLeft = executionThread->getLayoutLeft();
 	qreal threadWidth = executionThread->getLayoutWidth();
 	qreal charWidth = podMiddle->getLayoutWidth();
@@ -111,7 +115,9 @@ qreal GraphicCharValue::calculateHorizontalScenePercent() const
 qreal GraphicCharValue::calculateVerticalScenePercent() const
 {
 	// Calculate the final position in execution thread's area. Some reference values:
-	qreal sceneHeight = scene->getLayout()->getLayoutHeight();
+	Q_ASSERT(executionThread);
+	Q_ASSERT(newLayout);
+	qreal sceneHeight = newLayout->getLayoutHeight();
 	qreal actorTop = executionThread->getActor()->getLayoutTop();
 	qreal actorHeight = executionThread->getActor()->getLayoutHeight();
 
@@ -125,7 +131,8 @@ void GraphicCharValue::placeInThread(int index, int length, ExecutionThread* thr
 	this->index = index;
 	this->length = length;
 	this->executionThread = thread;
-	this->scene = scene;
+	this->newParent = scene;
+	this->newLayout = scene->getLayout();
 
 	// We save the current position in the scene. It will be used later to animate this character
 	// returning to the output buffer
@@ -142,20 +149,44 @@ void GraphicCharValue::placeInThread(int index, int length, ExecutionThread* thr
 int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer)
 {
 	// Animate this character appearing, not all at the same time
-	int duration = VisualizationSpeed::getInstance().adjust( durationDisAppear * index );
+	int duration = VisualizationSpeed::getInstance().adjust( index * durationDisAppear );
 	duration += animateAppear(durationDisAppear, duration);
 
 	// Wait until other characters have appeared before starting to travel to the buffer
-	duration += VisualizationSpeed::getInstance().adjust((length - index) * durationWaitingOthers);
+	int waitDuration = 1000 + (length - index) * durationWaitingOthers + index * durationVisualDelay;
+	duration += VisualizationSpeed::getInstance().adjust(waitDuration);
 
 	// Animate this character moving towards the thread position
-	duration += animateMoveToPos(mainStartInOutputBuffer, crossStartInOutputBuffer, durationBufferThread * 1.5, duration);
+	duration += animateMoveToPos(mainStartInOutputBuffer, crossStartInOutputBuffer, durationBufferThread + (length - index) * 250, duration);
 
-	// Temporary
-	QTimer::singleShot( duration + 1000, this, &GraphicCharValue::removeCharFromScene );
+	// When this character arrives to the output buffer, we have to reparent it
+	this->targetBuffer = targetBuffer;
+	QTimer::singleShot( duration, this, &GraphicCharValue::animateMoveThroughBuffer );
 
 	// Done
-	(void)targetBuffer;
+	return duration;
+}
+
+#include "LogManager.h"
+int GraphicCharValue::animateMoveThroughBuffer()
+{
+	// Reparent this character to the buffer
+	Q_ASSERT(targetBuffer);
+	reparentTo(this->targetBuffer, this->targetBuffer, false);
+	targetBuffer->insertItem(this, 1.0 - 1.0 / targetBuffer->getCapacity(), 1.0 / targetBuffer->getCapacity(), zValue);
+
+	// Calculate the final position within the buffer
+	// ToDo: stdout is buffered, characters must wait until a new line is written or flushed
+	int finalPositionInBuffer = 0;
+	int duration = 0;
+
+	// Animate this character to reach its final position
+	qreal finalPercent = qreal(finalPositionInBuffer) / targetBuffer->getCapacity();
+	duration += animateMoveTo( finalPercent, targetBuffer->getCapacity() * 250, duration );
+
+	// Reparent this character to the buffer
+	// Temporary
+	QTimer::singleShot( duration, this, &GraphicCharValue::removeCharFromScene );
 	return duration;
 }
 
@@ -165,12 +196,11 @@ void GraphicCharValue::removeCharFromScene()
 }
 
 #include "LabelButton.h"
-bool GraphicCharValue::reparentTo(Scene* newParent)
+bool GraphicCharValue::reparentTo(QGraphicsItem* newParent, Layout* newParentLayout, bool mapToScene)
 {
 	// ToDo: This method has code that must be spread to ancestors
 	// Do not call setParent(). It comes from QObject
 	Q_ASSERT(newParent);
-	this->scene = newParent;
 
 	// Reparent all children from GraphicValue
 	graphicsParent = newParent;
@@ -185,17 +215,28 @@ bool GraphicCharValue::reparentTo(Scene* newParent)
 
 	// LayoutItem:
 	// Remove from old layout
-	Layout* parentLayout = dynamic_cast<Layout*>( parentLayoutItem );
-	Q_ASSERT(parentLayout);
-	parentLayout->removeItem(this, false);
+	Layout* oldParentLayout = dynamic_cast<Layout*>( parentLayoutItem );
+	Q_ASSERT(oldParentLayout);
+	oldParentLayout->removeItem(this, false);
+	oldParentLayout->updateLayoutItem();
 
-	mainStart = podMiddle->getLayoutTop() / scene->getLayout()->getLayoutHeight();
-	qreal proportion = podMiddle->getLayoutHeight() / scene->getLayout()->getLayoutHeight();
-	scene->getLayout()->insertItem(this, mainStart, proportion, zValue );
+	if ( mapToScene )
+	{
+		Q_ASSERT(newParentLayout);
+		mainStart = podMiddle->getLayoutTop() / newParentLayout->getLayoutHeight();
+		qreal proportion = podMiddle->getLayoutHeight() / newParentLayout->getLayoutHeight();
+		newParentLayout->insertItem(this, mainStart, proportion, zValue );
 
-	setCrossStartProportion( podMiddle->getLayoutLeft() / scene->getLayout()->getLayoutWidth() );
-	setCrossProportion( podMiddle->getLayoutWidth() / scene->getLayout()->getLayoutWidth() );
+		setCrossStartProportion( podMiddle->getLayoutLeft() / newParentLayout->getLayoutWidth() );
+		setCrossProportion( podMiddle->getLayoutWidth() / newParentLayout->getLayoutWidth() );
+	}
+	else
+	{
+		// Reset cross proportions, because scene altered them
+		setCrossStartProportion(0.0);
+		setCrossProportion(1.0);
+	}
 
-	scene->getLayout()->updateLayoutItem();
+	newParentLayout->updateLayoutItem();
 	return true;
 }

@@ -30,6 +30,8 @@ class InputOutputBuffer : public RectLayoutItem
 	explicit InputOutputBuffer(Scene* scene, qreal zValue, int capacity);
 	/// Set the text to be read (standard input) or printed (standard output)
 	inline void setText(const QString& text) { this->text = text; }
+	/// Get access to the capacity of this buffer
+	inline int getCapacity() const { return capacity; }
 	/// Get a copy of the cursor
 	inline int getCursor() const { return cursor; }
 	/// Animate buffering (filling) the standard input. It fills all empty spaces with pending
