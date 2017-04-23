@@ -6,6 +6,7 @@
 #include "StandardInputOutput.h"
 #include "VisualizationSpeed.h"
 
+#include <QTime>
 #include <QTimer>
 
 // Duration in milliseconds of a char traveling from stdin to the thread or reverse direction
@@ -174,6 +175,26 @@ int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer)
 	return duration;
 }
 
+void adjustErraticDelay(int& duration)
+{
+	// This function injects delays to serialize the entrance of interleaved characters to the stdout buffer
+	static int nextCharTime = 0;
+
+	// Let know if the last character arrived on time or delayed
+	int currentCharTime = QTime::currentTime().msecsSinceStartOfDay();
+	int diffCharTime = currentCharTime - nextCharTime;
+
+	// In any case, next char must wait until current char enters in the buffer
+	nextCharTime = currentCharTime + durationStdoutBuffer;
+
+	// If this char or a previous one arrived late, we must increase delay for remaining chars
+	if ( diffCharTime < 0 )
+	{
+		duration += -diffCharTime;
+		nextCharTime += -diffCharTime;
+	}
+}
+
 int GraphicCharValue::animateMoveThroughBuffer()
 {
 	// Reparent this character to the buffer
@@ -185,6 +206,10 @@ int GraphicCharValue::animateMoveThroughBuffer()
 	// ToDo: stdout is buffered, characters must wait until a new line is written or flushed
 	int finalPositionInBuffer = 0;
 	int duration = 0;
+
+	// Ugly fix: It seems Qt animation framework erratically delays and some characters join
+	// If animation of previous character is delayed, delay this one too
+	adjustErraticDelay(duration);
 
 	// Animate this character to reach its final position
 	qreal finalPercent = qreal(finalPositionInBuffer) / targetBuffer->getCapacity();
