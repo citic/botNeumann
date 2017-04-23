@@ -170,10 +170,10 @@ class ExecutionThread : public QObject, public LinearLayout
   public slots:
 	/// Animates the robot turning. At the end of the animation the robot will be facing the camera
 	/// @return the duration in milliseconds of the animation
-	int turnFront();
+	int animateTurnFront(int initialDelay = 0);
 	/// Animates the robot turning. At the end of the animation the robot's back will be visible
 	/// @return the duration in milliseconds of the animation
-	int turnBack();
+	int animateTurnBack(int initialDelay = 0);
 
   protected:
 	/// Build the robot and the call stack as objects in memory. They are not added to the layout

@@ -34,14 +34,16 @@ class ExecutionThreadActor : public Actor
 	const QColor& getHighlightColor() const;
 	/// Animates the robot turning. At the end of the animation the robot will be facing the camera
 	/// @return the duration in milliseconds of the animation
-	int turnFront();
+	inline int animateTurnFront(int initialDelay = 0) { return animateTurn(QTimeLine::Forward, initialDelay); }
 	/// Animates the robot turning. At the end of the animation the robot's back will be visible
 	/// @return the duration in milliseconds of the animation
-	int turnBack();
+	inline int animateTurnBack(int initialDelay = 0) { return animateTurn(QTimeLine::Backward, initialDelay); }
 
   protected:
 	/// Build the label to show line numbers
 	void buildActor();
+	/// Animates an actor turn
+	int animateTurn(QTimeLine::Direction direction, int initialDelay);
 
   protected slots:
 	/// Makes the line number visible

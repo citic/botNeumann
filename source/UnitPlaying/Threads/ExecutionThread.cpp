@@ -384,16 +384,16 @@ bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)
 	return true;
 }
 
-int ExecutionThread::turnFront()
+int ExecutionThread::animateTurnFront(int initialDelay)
 {
 	Q_ASSERT(actor);
-	return actor->turnFront();
+	return actor->animateTurnFront(initialDelay);
 }
 
-int ExecutionThread::turnBack()
+int ExecutionThread::animateTurnBack(int initialDelay)
 {
 	Q_ASSERT(actor);
-	return actor->turnBack();
+	return actor->animateTurnBack(initialDelay);
 }
 
 int ExecutionThread::updateCallStackDepth(GdbCall* debuggerCall)

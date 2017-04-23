@@ -5,6 +5,7 @@
 #include "LabelButton.h"
 #include "LinearLayout.h"
 #include "Scene.h"
+#include "VisualizationSpeed.h"
 
 #include <QFont>
 #include <QTimer>
@@ -60,20 +61,26 @@ const QColor& ExecutionThreadActor::getHighlightColor() const
 	return threadColors[actorNumber - 1];
 }
 
-int ExecutionThreadActor::turnFront()
+int ExecutionThreadActor::animateTurn(QTimeLine::Direction direction, int initialDelay)
 {
-	lineNumber->setVisible(false);
-	int duration = transitionFaces(QTimeLine::Forward, 750);
-	QTimer::singleShot( duration, this, &ExecutionThreadActor::setLineNumberVisible );
-	return duration;
-}
+	int duration = 0;
+	QTimer* timer = new QTimer(this);
+	timer->setSingleShot(true);
 
-int ExecutionThreadActor::turnBack()
-{
-	// ToDo: redundant code from previous method
-	lineNumber->setVisible(false);
-	int duration = transitionFaces(QTimeLine::Backward, 750);
-	QTimer::singleShot( duration, this, &ExecutionThreadActor::setLineNumberVisible );
+	if ( initialDelay > 0 )
+	{
+		connect(timer, &QTimer::timeout, [this, direction]{ animateTurn(direction, 0); } );
+		duration += VisualizationSpeed::getInstance().adjust(750);
+		timer->start(initialDelay);
+	}
+	else
+	{
+		lineNumber->setVisible(false);
+		duration += transitionFaces(direction, 750);
+		connect(timer, &QTimer::timeout, [this]{ this->lineNumber->setVisible(true); } );
+		timer->start(duration);
+	}
+
 	return duration;
 }
 

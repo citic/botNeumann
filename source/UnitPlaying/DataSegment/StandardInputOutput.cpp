@@ -89,7 +89,7 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 	qCCritical(logTemporary()) << "Read of" << length << "bytes towards thread" << thread->getId();
 
 	// Turn the robot front to receive the characters
-	int robotTurnDuration = thread->turnFront();
+	int robotTurnDuration = thread->animateTurnFront();
 
 	// For each character animate them reaching the robot. Also animate the characters that will
 	// remain in the tube or will just enter on it
@@ -103,7 +103,7 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 	}
 
 	// When read animation is done, turn the robot back
-	QTimer::singleShot( maxDuration, thread, &ExecutionThread::turnBack );
+	thread->animateTurnBack(maxDuration);
 	maxDuration += 2 * robotTurnDuration;
 
 	// Remove the read characters from the buffer
@@ -135,7 +135,7 @@ int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& w
 	qCCritical(logTemporary()) << "Write of" << length << "bytes from thread" << thread->getId();
 
 	// Turn the robot front to receive the characters
-	int robotTurnDuration = thread->turnFront();
+	int robotTurnDuration = thread->animateTurnFront();
 
 	// Create the written characters, place them and animate them traveling towards the stdout
 	for ( int charCounter = 0; charCounter < length; ++charCounter )
@@ -195,7 +195,7 @@ int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& w
 
 	// When read animation is done, turn the robot back
 	maxDuration += robotTurnDuration;
-	QTimer::singleShot( maxDuration, thread, &ExecutionThread::turnBack );
+	thread->animateTurnBack(maxDuration);
 
 	return maxDuration + robotTurnDuration;
 }
