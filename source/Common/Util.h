@@ -3,6 +3,7 @@
 
 #include <QColor>
 #include <QList>
+#include <QTimer>
 
 class QTextStream;
 
@@ -11,7 +12,7 @@ class Util
 	Q_DISABLE_COPY(Util)
 
   public:
-	/// This is a static-pure class
+	/// This is a pure static class
 	Util() = delete;
 	/// Merge colors using the ratio first/second
 	static QColor mixColors(const QColor& first, const QColor& second, qreal ratio = 0.5);
@@ -37,6 +38,21 @@ class Util
 	/// @param position If the address of a long variable is given, it will be increased by the
 	/// number of read (or skipped if @a ignoreWhitespace is true) characters from input
 	static QChar readNextChar(QTextStream& input, bool ignoreWhitespace, bool caseSensitive, bool eatWhitespace, long* position = nullptr);
+
+  public:
+	/// Creates a timer as a child of the given object, to call a method the given amount of
+	/// milliseconds later. The method will be called just once.
+	/// @return A pointer to the created timer
+	template <typename Function>
+	static QTimer* createTimer(int milliseconds, QObject* parent, Function method)
+	{
+		QTimer* timer = new QTimer(parent);
+		Q_ASSERT(timer);
+		timer->setSingleShot(true);
+		parent->connect(timer, &QTimer::timeout, method);
+		timer->start(milliseconds);
+		return timer;
+	}
 };
 
 /// Copies Qt resources or Strings to text files

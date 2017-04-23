@@ -5,10 +5,10 @@
 #include "LabelButton.h"
 #include "LinearLayout.h"
 #include "Scene.h"
+#include "Util.h"
 #include "VisualizationSpeed.h"
 
 #include <QFont>
-#include <QTimer>
 
 ExecutionThreadActor::ExecutionThreadActor(int threadId, QGraphicsItem* parentItem)
 	: Actor("", parentItem)
@@ -63,28 +63,21 @@ const QColor& ExecutionThreadActor::getHighlightColor() const
 
 int ExecutionThreadActor::animateTurn(QTimeLine::Direction direction, int initialDelay)
 {
-	int duration = 0;
-	QTimer* timer = new QTimer(this);
-	timer->setSingleShot(true);
-
+	// If this method must be called some time later, schedule a function call with delay 0
 	if ( initialDelay > 0 )
 	{
-		connect(timer, &QTimer::timeout, [this, direction]{ animateTurn(direction, 0); } );
-		duration += VisualizationSpeed::getInstance().adjust(750);
-		timer->start(initialDelay);
-	}
-	else
-	{
-		lineNumber->setVisible(false);
-		duration += transitionFaces(direction, 750);
-		connect(timer, &QTimer::timeout, [this]{ this->lineNumber->setVisible(true); } );
-		timer->start(duration);
+		Util::createTimer(initialDelay, this, [this, direction]{ animateTurn(direction, 0); } );
+		return VisualizationSpeed::getInstance().adjust(750);
 	}
 
+	// We do not have to wait, start to animate turn right now
+	// Hide the line number while the actor is turning
+	lineNumber->setVisible(false);
+
+	// Turn the actor
+	int duration = transitionFaces(direction, 750);
+
+	// When actor has finished turning, make the line number visible again
+	Util::createTimer(duration, this, [this]{ this->lineNumber->setVisible(true); } );
 	return duration;
-}
-
-void ExecutionThreadActor::setLineNumberVisible()
-{
-	lineNumber->setVisible(true);
 }

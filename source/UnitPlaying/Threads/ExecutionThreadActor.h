@@ -44,10 +44,6 @@ class ExecutionThreadActor : public Actor
 	void buildActor();
 	/// Animates an actor turn
 	int animateTurn(QTimeLine::Direction direction, int initialDelay);
-
-  protected slots:
-	/// Makes the line number visible
-	void setLineNumberVisible();
 };
 
 #endif // EXECUTIONTHREADACTOR_H
