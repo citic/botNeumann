@@ -105,6 +105,9 @@ class Visualizator : public GdbResponseListener
 	void dispatchGdbResponse(const GdbResponse* response, int& maxDuration);
 	/// Emitted when the visualization has finished the starting phase and it is now animating
 	void animationStarted();
+	/// Emitted when the player solution finished its execution
+	/// @remarks Currently it is only issued when player solution finished normally
+	void playerSolutionFinished();
 
   public slots:
 	/// Called when there are pending GdbResponses to process.

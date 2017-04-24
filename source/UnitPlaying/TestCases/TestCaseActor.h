@@ -70,6 +70,12 @@ class TestCaseActor : public Actor
 	void setActiveTestCase(bool active, bool updateInterface = false);
 	/// Returns true if this test case was passed by player solution
 	inline bool isPassed() const { return result == passed; }
+	/// Set the actor face according to the test case result
+	/// @param hideActiveTestCaseResult Send true if the unknown result must be shown when this is
+	/// the active test case being visualized. Send false, if the interface must update to the
+	/// result anyway. The latter is the case when the active test case has finished the
+	/// visualization and the test case actor must update
+	void reflectTestCaseResult(bool hideActiveTestCaseResult);
 
   signals:
 	/// Emitted when user presses this test case in order to make it active
@@ -82,12 +88,6 @@ class TestCaseActor : public Actor
 	void playerSolutionTimeout();
 
   protected:
-	/// Set the actor face according to the test case result
-	/// @param hideActiveTestCaseResult Send true if the unknown result must be shown when this is
-	/// the active test case being visualized. Send false, if the interface must update to the
-	/// result anyway. The latter is the case when the active test case has finished the
-	/// visualization and the test case actor must update
-	void reflectTestCaseResult(bool hideActiveTestCaseResult);
 	/// Overriden to manage click or tap events
 	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };

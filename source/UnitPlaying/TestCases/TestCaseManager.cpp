@@ -136,3 +136,10 @@ void TestCaseManager::setActiveTestCase(int newTestCaseNumber)
 	// Alert other objects that we shall start a new visualization
 	emit activeTestCaseChanged(activeTestCase);
 }
+
+void TestCaseManager::playerSolutionFinished()
+{
+	qCCritical(logApplication()) << "TestCaseManager::playerSolutionFinished:" << activeTestCase;
+	Q_ASSERT( activeTestCase - 1 < testCaseActors.count() );
+	testCaseActors[activeTestCase - 1]->reflectTestCaseResult(false);
+}

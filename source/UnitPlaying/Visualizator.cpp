@@ -859,6 +859,9 @@ bool Visualizator::processExitedNormally(const GdbItemTree& tree, VisualizationC
 	const QString& filename = unitPlayingScene->getUnitFilename();
 	BotNeumannApp::getInstance()->getCurrentPlayer()->setCompletedUnit(filename, passed);
 
+	// Tell others the animation finished, eg: test case manager
+	emit playerSolutionFinished();
+
 	// ToDo: Animate robot congratulating
 	const QString& messageFailed = QString("Your solution passed %1 out %2 test cases").arg(testCasePassed).arg(testCaseCount);
 	const QString& messagePassed = QString("Congrulations!\nYour solution passed all the %1 test cases.\nPress the Back button to return to the problem selection screen").arg(testCaseCount);

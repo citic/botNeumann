@@ -301,6 +301,7 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 	// test case was actived and the previuous visualization is finished
 	visualizator->deleteLater();
 	visualizator = new Visualizator(playerSolution, testCaseNumber, this);
+	Q_ASSERT(visualizator);
 
 	// When user creates or removes breakpoints and visualization is running, update them
 	connect( codeSegment, SIGNAL(breakpointAction(GuiBreakpoint*)), visualizator, SLOT(breakpointAction(GuiBreakpoint*)) );
@@ -309,6 +310,10 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), heapSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), cpuCores, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
+
+	// When animation finished, reflect the result in the test case manager
+	Q_ASSERT(testCaseManager);
+	connect( visualizator, &Visualizator::playerSolutionFinished, testCaseManager, &TestCaseManager::playerSolutionFinished );
 
 	// When user asks to step forward
 	connect( codeSegment, SIGNAL(userSteppedForward()), visualizator, SLOT(stepForward()) );

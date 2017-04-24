@@ -55,6 +55,10 @@ class TestCaseManager : public QObject, public LinearLayout
 	void clearAnimation();
 	/// Called when user asked to change the test case being visualized
 	void setActiveTestCase(int newTestCaseNumber);
+	/// Called when player solution stopped normally and the active test case result must be
+	/// reflected on this manager. This is needed because the active test case light stays "off"
+	/// while the test case is being animated
+	void playerSolutionFinished();
 
   protected:
 	/// Build a region to place future test cases (an empty tube)

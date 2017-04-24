@@ -219,6 +219,7 @@ int OutputTester::test(const QString& character)
 
 void OutputTester::clear()
 {
+	valid = true;
 	setElementId("up_standard_output_test_inactive");
 	setText("");
 }
