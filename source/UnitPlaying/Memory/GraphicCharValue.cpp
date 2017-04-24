@@ -150,7 +150,6 @@ void GraphicCharValue::placeInThread(int index, int length, ExecutionThread* thr
 	animateMoveToPos( calculateVerticalScenePercent(), calculateHorizontalScenePercent(), 0 );
 }
 
-#include "LogManager.h"
 int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer, OutputTester* tester)
 {
 	// Animate this character appearing, not all at the same time
@@ -168,7 +167,6 @@ int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer, OutputTester
 	this->targetBuffer = targetBuffer;
 	this->tester = tester;
 	QTimer::singleShot( duration, this, &GraphicCharValue::animateMoveThroughBuffer );
-	qCCritical(logTemporary, "%d(%s)+animateMoveThroughBuffer(%d)", index, qPrintable(processInvisibleChars()), duration);
 
 	// We need to add the ramaining duration of the animation
 	duration += VisualizationSpeed::getInstance().adjust(targetBuffer->getCapacity() * durationStdoutBuffer);
@@ -216,7 +214,6 @@ int GraphicCharValue::animateMoveThroughBuffer()
 	// Animate this character to reach its final position
 	qreal finalPercent = qreal(finalPositionInBuffer) / targetBuffer->getCapacity();
 	duration += animateMoveTo( finalPercent, targetBuffer->getCapacity() * durationStdoutBuffer, duration );
-	qCCritical(logTemporary, "%d(%s)=animateMoveThroughBuffer(%d)", index, qPrintable(processInvisibleChars()), duration);
 
 	// In duration milliseconds this character is passing behind the tester
 	Q_ASSERT(tester);

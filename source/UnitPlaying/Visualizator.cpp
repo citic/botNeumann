@@ -68,7 +68,9 @@ bool Visualizator::start(bool preparation)
 	  #ifdef Q_OS_LINUX
 //		setDynamicMemoryBreakpoints();
 	  #endif
-		watchStandardInputOutput();
+		// Unnecessary: bn_tell_file() functions are used instead on each execution loop iteration
+		// ToDo: remove watch bn_io logic from code and algorithm (example session)
+		//watchStandardInputOutput();
 		watchGlobalVariables();
 		// UnitPlayingScene loads standard input after the prepration phase
 		// Animate function call at program's entry point
