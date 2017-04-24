@@ -323,8 +323,8 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 		return changeState(UnitPlayingState::editing);
 
 	// Load the test case expected input in the StandardInputOutputInspector
-	dataSegment->loadTestCase(testCaseNumber, playerSolution, true, ! firstTime);
-	messagesArea->loadTestCase(testCaseNumber, playerSolution, true, ! firstTime);
+	dataSegment->loadTestCase(testCaseNumber, playerSolution, true, firstTime == false);
+	messagesArea->loadTestCase(testCaseNumber, playerSolution, true, firstTime == false);
 	changeState(UnitPlayingState::animating);
 }
 

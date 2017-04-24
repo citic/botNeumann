@@ -13,8 +13,8 @@ const char* bn_build_path(const char* file_type, int test_case)
 }
 
 FILE* bn_reopen_stdin(int test_case)  { return freopen(bn_build_path("input", test_case), "r", stdin ); }
-FILE* bn_reopen_stdout(int test_case) { return freopen(bn_build_path("output_ps", test_case), "w", stdout ); }
-FILE* bn_reopen_stderr(int test_case) { return freopen(bn_build_path("error_ps", test_case), "w", stderr ); }
+FILE* bn_reopen_stdout(int test_case) { return freopen(bn_build_path("output_ps_v", test_case), "w", stdout ); }
+FILE* bn_reopen_stderr(int test_case) { return freopen(bn_build_path("error_ps_v", test_case), "w", stderr ); }
 
 long bn_tell_stdin()  { return ftell(stdin);  }
 long bn_tell_stdout() { return ftell(stdout); }

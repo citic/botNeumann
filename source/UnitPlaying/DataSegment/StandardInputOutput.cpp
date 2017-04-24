@@ -276,13 +276,13 @@ bool StandardInputOutput::loadFile(const QString& filepath, const QString& targe
 	{
 		Q_ASSERT(buffer);
 		buffer->setText(text);
-		qCCritical(logTemporary()) << ioTypeStr[type] << "buffer text:" << text;
+		qCCritical(logTemporary()) << ioTypeStr[type] << "buffer text:" << text << "from" << filepath;
 	}
 	else if ( target == "tester" )
 	{
 		Q_ASSERT(tester);
 		tester->setText(text);
-		qCCritical(logTemporary()) << ioTypeStr[type] << "tester text:" << text;
+		qCCritical(logTemporary()) << ioTypeStr[type] << "tester text:" << text << "from" << filepath;
 	}
 	else
 		Q_ASSERT_X(false, "StandardInputOutput", "invalid file contents target");
