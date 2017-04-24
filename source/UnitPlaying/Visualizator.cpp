@@ -335,7 +335,9 @@ bool Visualizator::pause()
 bool Visualizator::resume()
 {
 	// Continue processing the next available GdbResult
-	processGdbResponse();
+	if ( processGdbResponse() == 0 )
+		stepForwardTimer.start(0);
+
 	return true;
 }
 
