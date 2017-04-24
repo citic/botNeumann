@@ -159,38 +159,7 @@ int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& w
 		if ( (duration = character->animateWrite(this)) > maxDuration )
 			maxDuration = duration;
 	}
-/*
-	{
-		// The standard output is buffered, it will be flushed when a new line character is written
-		// ToDo: flush buffer when fflush(stdout) is called
-		characters.append(character);
 
-		// Characters are slighly inclined, adjust their paddings to overlap themselves
-		character->setPaddings(0.0, -0.11);
-
-		// If this character must be animated arriving to fill the buffer
-		if ( charCounter < charsToAnimate )
-		{
-			// To animate them arriving, we place them at the first non visible position
-			qreal finalPercent = qreal( characters.count() - 1 ) / capacity;
-			insertItem(character, finalPercent + 1.0, 1.0 / capacity, zBuffer);
-
-			// The duration of the animation is proportional to the number of spaces that characters
-			// have to move, i.e: empty spaces
-			duration = character->animateMoveTo( finalPercent, charsToAnimate * 250 );
-			if ( duration > maxDuration )
-				maxDuration = duration;
-		}
-		else
-		{
-			// This character is not animated, just placed in capacity + 1 position. It will be
-			// waiting to be read. At that moment, it will be animated
-			qreal finalPercent = qreal( capacity + 1 ) / capacity;
-			insertItem(character, finalPercent, 1.0 / capacity, zBuffer);
-		}
-	}
-
-	*/
 	scene->getLayout()->updateLayoutItem();
 
 	// When read animation is done, turn the robot back
@@ -271,13 +240,13 @@ bool StandardInputOutput::loadFile(const QString& filepath, const QString& targe
 	{
 		Q_ASSERT(buffer);
 		buffer->setText(text);
-		qCCritical(logTemporary()) << "Buffer text:" << text;
+		qCCritical(logTemporary()) << ioTypeStr[type] << "buffer text:" << text;
 	}
 	else if ( target == "tester" )
 	{
 		Q_ASSERT(tester);
 		tester->setText(text);
-		qCCritical(logTemporary()) << "Tester text:" << text;
+		qCCritical(logTemporary()) << ioTypeStr[type] << "tester text:" << text;
 	}
 	else
 		Q_ASSERT_X(false, "StandardInputOutput", "invalid file contents target");
