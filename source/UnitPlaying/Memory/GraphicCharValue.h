@@ -5,6 +5,7 @@
 
 class ExecutionThread;
 class InputOutputBuffer;
+class OutputTester;
 class Scene;
 
 /** A GraphicCharValue is a GraphicValue that can travel by any standard input/output tube,
@@ -30,6 +31,9 @@ class GraphicCharValue : public GraphicValue
 	int length = 0;
 	/// The output buffer where this character will be written
 	InputOutputBuffer* targetBuffer = nullptr;
+	/// If this character is being printed, when it pass behind the output tester, we tell it to
+	/// check if this char matches the test case's expected output
+	OutputTester* tester = nullptr;
 
   public:
 	/// Constructor
@@ -47,7 +51,7 @@ class GraphicCharValue : public GraphicValue
 	bool reparentTo(QGraphicsItem* newParent, Layout* layout, bool mapToScene);
 	/// Animates the appearing of this char at the execution theaad's actor
 	/// @return The duration of the animation in milliseconds
-	int animateWrite(InputOutputBuffer* targetBuffer);
+	int animateWrite(InputOutputBuffer* targetBuffer, OutputTester* tester);
 
   protected slots:
 	/// Animates this character leaving the stdin tube and move to the execution thread stored
@@ -55,8 +59,6 @@ class GraphicCharValue : public GraphicValue
 	int animateMoveToThread();
 	/// Animates this chracter enterin into the standard output buffer and moving through it
 	int animateMoveThroughBuffer();
-	/// Called when read or write animation is finished
-	void removeCharFromScene();
 
   protected:
 	/// Calculates the horizontal percent of this character in its thread

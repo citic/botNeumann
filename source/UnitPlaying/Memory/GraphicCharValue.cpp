@@ -4,6 +4,7 @@
 #include "ExecutionThreadActor.h"
 #include "Scene.h"
 #include "StandardInputOutput.h"
+#include "Util.h"
 #include "VisualizationSpeed.h"
 
 #include <QTime>
@@ -91,7 +92,7 @@ int GraphicCharValue::animateMoveToThread()
 
 	// Disappear this character after the read is complete
 	duration += animateAppear(durationDisAppear, duration, 1.0, 0.0);
-	QTimer::singleShot( duration, this, &GraphicCharValue::removeCharFromScene );
+	Util::createTimer( duration, this, [this]{ removeAllItems(true); } );
 	return duration;
 }
 
@@ -150,7 +151,7 @@ void GraphicCharValue::placeInThread(int index, int length, ExecutionThread* thr
 }
 
 #include "LogManager.h"
-int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer)
+int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer, OutputTester* tester)
 {
 	// Animate this character appearing, not all at the same time
 	int duration = VisualizationSpeed::getInstance().adjust( index * durationDisAppear );
@@ -165,6 +166,7 @@ int GraphicCharValue::animateWrite(InputOutputBuffer* targetBuffer)
 
 	// When this character arrives to the output buffer, we have to reparent it
 	this->targetBuffer = targetBuffer;
+	this->tester = tester;
 	QTimer::singleShot( duration, this, &GraphicCharValue::animateMoveThroughBuffer );
 	qCCritical(logTemporary, "%d(%s)+animateMoveThroughBuffer(%d)", index, qPrintable(processInvisibleChars()), duration);
 
@@ -216,15 +218,14 @@ int GraphicCharValue::animateMoveThroughBuffer()
 	duration += animateMoveTo( finalPercent, targetBuffer->getCapacity() * durationStdoutBuffer, duration );
 	qCCritical(logTemporary, "%d(%s)=animateMoveThroughBuffer(%d)", index, qPrintable(processInvisibleChars()), duration);
 
+	// In duration milliseconds this character is passing behind the tester
+	Q_ASSERT(tester);
+	Util::createTimer(duration, this, [this]{ tester->test(value); } );
+
 	// Reparent this character to the buffer
 	// Temporary
-	QTimer::singleShot( duration, this, &GraphicCharValue::removeCharFromScene );
+	Util::createTimer( duration + 50, this, [this]{ removeAllItems(true); } );
 	return duration;
-}
-
-void GraphicCharValue::removeCharFromScene()
-{
-	removeAllItems(true);
 }
 
 #include "LabelButton.h"

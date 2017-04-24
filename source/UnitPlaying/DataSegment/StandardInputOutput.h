@@ -7,6 +7,7 @@
 
 class GraphicCharValue;
 class ExecutionThread;
+class OutputTester;
 
 class InputOutputBuffer : public RectLayoutItem
 {
@@ -48,7 +49,7 @@ class InputOutputBuffer : public RectLayoutItem
 	/// The output tester will be turned green if player solution's output matches the test case's
 	/// expected output, or red otherwise.
 	/// @return The duration of the animation in milliseconds
-	int animateWrite(int length, const QList<ExecutionThread*>& waitingQueue);
+	int animateWrite(int length, const QList<ExecutionThread*>& waitingQueue, OutputTester* tester);
 	/// Returns the amount of free space or characters
 	inline int getFreeCharacters() const { return capacity - characters.count(); }
 	/// Clear all the values on the buffer
@@ -66,13 +67,22 @@ class OutputTester : public Actor
 	QString text;
 	/// Indicates the next character to be written. Simulates a cursor
 	int cursor = 0;
+	/// True if the player solution output is valid until now
+	bool valid = true;
 
   public:
 	/// Constructor
 	/// @see Actor::Actor()
-	explicit OutputTester(const QString& prefixedSvgElementId, QGraphicsItem* parentItem);
+	explicit OutputTester(QGraphicsItem* parentItem);
 	/// Set the text of the test case's expected output
 	inline void setText(const QString& text) { this->text = text; cursor = 0; }
+	/// Test a character passing behind the tester. If character does not match the next expected
+	/// character, the tester becomes red. If character is the first one, the tester becomes green.
+	/// Otherwise it keeps its current state
+	/// @return The duration of the animation in milliseconds
+	int test(const QString& character);
+	/// Clear the test. It becomes inactive
+	void clear();
 };
 
 /// Base class that represents a standard input, output or error object with a tube
@@ -114,7 +124,7 @@ class StandardInputOutput : public MemorySegment
 	/// @return The duration of the animation in milliseconds
 	inline int animateFill() { return buffer->animateFill(); }
 	/// Removes all values from the buffer
-	inline int clear() { return buffer->clear(); }
+	int clear();
 	/// Updates the cursor and animates bytes leaving to or entering in the tube
 	/// @return Number of bytes read or written, 0 if no cursor was changed
 	int updateCursor(int cursor, const QList<ExecutionThread*>& waitingQueue, int& maxDuration);

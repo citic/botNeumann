@@ -116,7 +116,7 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 	return maxDuration;
 }
 
-int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& waitingQueue)
+int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& waitingQueue, OutputTester* tester)
 {
 	// This is the inverse process of reading
 	// Make sure we have pending characters to read from buffer
@@ -156,7 +156,7 @@ int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& w
 		character->placeInThread(charCounter, length, thread, scene);
 
 		// Move the character from the thread towards the stdout
-		if ( (duration = character->animateWrite(this)) > maxDuration )
+		if ( (duration = character->animateWrite(this, tester)) > maxDuration )
 			maxDuration = duration;
 	}
 
@@ -183,9 +183,44 @@ int InputOutputBuffer::clear()
 
 // OutputTester class -----------------------------------------------------------------------------
 
-OutputTester::OutputTester(const QString& prefixedSvgElementId, QGraphicsItem* parentItem)
-	: Actor(prefixedSvgElementId, parentItem)
+OutputTester::OutputTester(QGraphicsItem* parentItem)
+	: Actor("up_standard_output_test_inactive", parentItem)
 {
+}
+
+int OutputTester::test(const QString& character)
+{
+	// Get the next expected character in test case's expected output
+	QChar expectedChar = EOF;
+	if( cursor < text.length() )
+		expectedChar = text[cursor++];
+
+	// If tester is invalid, there is no way to turn it valid again
+	if ( ! valid )
+		return 0;
+
+	// Tester is still valid, if the character does not match the expected, turn tester invalid
+	// ToDo: Apply ignore-case and ignore-whitespace from Unit
+	if ( character != expectedChar )
+	{
+		setElementId("up_standard_output_test_invalid");
+		valid = false;
+	}
+	else if ( cursor == 1 )
+	{
+		// The character matched the expected one and it is the first one. The tester is still
+		// inactive. Turn it valid
+		setElementId("up_standard_output_test_valid");
+	}
+
+	// ToDo: tester change is not animated
+	return 0;
+}
+
+void OutputTester::clear()
+{
+	setElementId("up_standard_output_test_inactive");
+	setText("");
 }
 
 
@@ -274,12 +309,20 @@ int StandardInputOutput::updateCursor(int cursor, const QList<ExecutionThread*>&
 	if ( type == standardInput )
 		duration = buffer->animateRead(difference, waitingQueue);
 	else
-		duration = buffer->animateWrite(difference, waitingQueue);
+		duration = buffer->animateWrite(difference, waitingQueue, tester);
 
 	if ( duration > maxDuration )
 		maxDuration = duration;
 
 	return difference;
+}
+
+int StandardInputOutput::clear()
+{
+	if ( tester )
+		tester->clear();
+
+	return buffer->clear();
 }
 
 void StandardInputOutput::buildStandardInputOutput()
@@ -341,7 +384,7 @@ void StandardInputOutput::buildStandardInputOutput()
 		start += elbowProportion;
 
 		// Tester
-		tester = new OutputTester(QString("up_standard_output_test_inactive"), scene);
+		tester = new OutputTester(scene);
 		insertItem(tester, start, elbowProportion, zElbow);
 		start += elbowProportion;
 
