@@ -418,11 +418,6 @@ int Visualizator::processGdbResponse()
 
 //	qCDebug(logVisualizator, "++++processGdbResponse(%lld) animation done", callCount);
 
-	// If animation is paused, do not animate
-	// Needed?
-	if ( unitPlayingScene->getState() == UnitPlayingState::paused && inStep == false )
-		return -1;
-
 	// Fetch the next pending response
 	Q_ASSERT(debuggerCall);
 	GdbResponse* gdbResponse = debuggerCall->takeNextResponse();
