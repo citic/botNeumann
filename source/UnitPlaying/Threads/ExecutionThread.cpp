@@ -9,10 +9,10 @@
 #include "Scene.h"
 #include "Spacer.h"
 #include "StaticAnalysisGlobals.h"
+#include "Util.h"
 
 #include <climits>
 #include <QRegularExpression>
-#include <QTimer>
 
 ExecutionThread::ExecutionThread(size_t startByte, size_t rowSize, size_t maxSize, Scene* scene, int id)
 	: LinearLayout(Qt::Vertical)
@@ -317,7 +317,7 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 	// duration += createLocalVariables(debuggerCall, "-stack-list-variables 2", "variables");
 
 	// Close the interface after the function is finally called
-	QTimer::singleShot( duration, cpuCore, SLOT(closeMemoryInterface()) );
+	CREATE_TIMER( duration, cpuCore, &CpuCore::closeMemoryInterface );
 
 	// Tell caller the duration of the entire animation
 	if ( duration > maxDuration )
@@ -370,7 +370,7 @@ bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)
 	// return to the 5. Execution loop
 
 	// Close the interface after the function is finally called
-	QTimer::singleShot( duration, cpuCore, SLOT(closeMemoryInterface()) );
+	CREATE_TIMER( duration, cpuCore, &CpuCore::closeMemoryInterface );
 
 	// Tell caller the duration of the entire animation
 	if ( duration > maxDuration )

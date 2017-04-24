@@ -4,8 +4,6 @@
 #include "Unit.h"
 #include "Util.h"
 
-#include <QTimer>
-
 TestCaseActor::TestCaseActor(int index, QGraphicsItem* parentItem)
 	: Actor("up_standard_output_test_inactive1", parentItem)
 	, index(index)
@@ -51,7 +49,7 @@ bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
 
 	// Start a timer to know if player solution has exceed the allowed running time (timeout)
 	if ( timeout > 0 )
-		QTimer::singleShot( timeout, this, SLOT(playerSolutionTimeout()) );
+		CREATE_TIMER(timeout, this, &TestCaseActor::playerSolutionTimeout);
 
 	// Done
 	return true;

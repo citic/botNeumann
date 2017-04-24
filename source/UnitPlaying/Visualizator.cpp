@@ -25,6 +25,8 @@ Visualizator::Visualizator(PlayerSolution* playerSolution, int testCase, UnitPla
 	, testCaseNumber(testCase)
 	, unitPlayingScene(unitPlayingScene)
 {
+	stepForwardTimer.setSingleShot(true);
+	connect( &stepForwardTimer, &QTimer::timeout, this, &Visualizator::stepForward );
 }
 
 Visualizator::~Visualizator()
@@ -309,6 +311,7 @@ bool Visualizator::stop()
 {
 	// Stop the GdbResult fetching mechanism
 	animationDone.stop();
+	stepForwardTimer.stop();
 
 	// Removing elements from the scene must be done at-once
 	VisualizationSpeed::getInstance().setSeeking(true);
@@ -389,7 +392,7 @@ bool Visualizator::scheduleStepForward(int time)
 	if ( unitPlayingScene->getState() != UnitPlayingState::animating )
 		return false;
 
-	QTimer::singleShot( time, this, SLOT(stepForward()) );
+	stepForwardTimer.start(time);
 	return true;
 }
 

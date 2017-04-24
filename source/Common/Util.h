@@ -55,6 +55,16 @@ class Util
 	}
 };
 
+// Macro to create a timer and connect its single shot with any slot
+#define CREATE_TIMER(milliseconds, parent, method) \
+{ \
+	QTimer* timer = new QTimer(parent); \
+	Q_ASSERT(timer); \
+	timer->setSingleShot(true); \
+	parent->connect(timer, &QTimer::timeout, parent, method); \
+	timer->start(milliseconds); \
+} \
+
 /// Copies Qt resources or Strings to text files
 class ResourceToFileDumper
 {

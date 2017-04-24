@@ -4,9 +4,8 @@
 #include "MemoryFrame.h"
 #include "MemoryMapper.h"
 #include "Scene.h"
+#include "Util.h"
 #include "VisualizationSpeed.h"
-
-#include <QTimer>
 
 const qreal paddingIncreaseTopBottom = 0.15;
 const qreal paddingIncreaseLeftRight = 0.01;
@@ -227,7 +226,7 @@ int CallStack::returnFunction(int initialDelay)
 	animatePaddingIncrease(paddingIncreaseTopBottom, -paddingIncreaseLeftRight, -paddingIncreaseTopBottom, -paddingIncreaseLeftRight, initialDelay, duration);
 
 	// Remove local variables from MemoryMapper and the stack frame when animation is finished
-	QTimer::singleShot( initialDelay + duration, this, SLOT(removeFunctionCall()) );
+	CREATE_TIMER( initialDelay + duration, this, &CallStack::removeFunctionCall );
 
 	// Done
 	return duration;

@@ -53,6 +53,8 @@ class Visualizator : public GdbResponseListener
 	int inferiorProcessId = 0;
 	/// Controls when the last animation is done before processing the next GdbCommand
 	QTimer animationDone;
+	/// Schedules a @a stepForward() function call some milliseconds later
+	QTimer stepForwardTimer;
 	/// When the unit playing scene is paused, not animations are done, but if a step in/out/over
 	/// command is issued, the animation resumes until the step is done
 	bool inStep = false;

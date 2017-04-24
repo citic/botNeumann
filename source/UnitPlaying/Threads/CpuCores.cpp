@@ -6,8 +6,7 @@
 #include "LogManager.h"
 #include "Scene.h"
 #include "Unit.h"
-
-#include <QTimer>
+#include "Util.h"
 
 // Reserve 1 more row for idle threads, and create visual separation between cores and data segment
 const double idleThreadsRows = 1.0;
@@ -331,10 +330,7 @@ bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCal
 		// The function was called. When the animation of function call is finished, the control
 		// will continue at the first executable line of the function body. That line's number is
 		// indicated by tree's '/frame/line' value. Highlight it
-		QTimer* timer = new QTimer(this);
-		timer->setSingleShot(true);
-		connect(timer, &QTimer::timeout, [this, executionThread, treeLineNumber]{ this->updateThreadLine(executionThread, treeLineNumber); } );
-		timer->start(maxDuration / 2);
+		Util::createTimer( maxDuration / 2, this, [this, executionThread, treeLineNumber]{ this->updateThreadLine(executionThread, treeLineNumber); } );
 		return true;
 	}
 	else
