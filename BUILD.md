@@ -3,15 +3,17 @@
 botNeumann requires the following tools:
 
 * All
-	* [Qt](http://www.qt.io/) (>5.4)
-	* [Inkscape](https://inkscape.org/)
+	* [Qt](http://www.qt.io/) (>5.4) (mandatory)
+	* [Universal ctags](https://ctags.io/) (mandatory)
+	* [GNU GCC](https://gcc.gnu.org/) or [Clang](http://clang.llvm.org/) (mandatory)
+	* [GNU GDB](https://www.gnu.org/software/gdb/) (mandatory)
+	* [Inkscape](https://inkscape.org/) (optional)
 	* [Doxygen](http://doxygen.org) (optional)
+	* [Graphviz](http://www.graphviz.org/) (optional)
 * Windows
 	* [BitRock InstallBuilder](http://bitrock.com/)
 * Mac OS X
 	* [XCode](https://developer.apple.com/xcode/)
-* Linux
-	* [GCC](https://gcc.gnu.org/) or [Clang](http://clang.llvm.org/) command line tools
 
 
 
@@ -53,7 +55,7 @@ Dependencies:
 
 On Debian you may write:
 
-	sudo apt install build-essential gdb libgl1-mesa-dev libc6-dev-i386 gcc-multilib g++-multilib ctags
+	sudo apt install build-essential gdb libgl1-mesa-dev libc6-dev-i386 gcc-multilib g++-multilib ctags doxygen graphviz
 
 
 ## Mac OS X
