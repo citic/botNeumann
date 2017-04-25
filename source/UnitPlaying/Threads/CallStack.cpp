@@ -49,7 +49,7 @@ int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 	// Raise the memory roof to the CPU core opened door, to make the roof visible only.
 	// The final position is calculated as the empty space on top of the memory frame
 	Q_ASSERT(cpuCoreRows > 0.0);
-	qreal finalPercent = 1.0 - functionCall->getHeightInRows() / cpuCoreRows;
+	qreal finalPercent = qMax( 0.0, 1.0 - functionCall->getHeightInRows() / cpuCoreRows );
 
 	// Do the raise up animation of the empty memory frame with its roof and legs only
 	// Parameters and local variables will be created and animated later
@@ -167,7 +167,7 @@ int CallStack::createLocalVariables(const GdbTreeNode* gdbVariableArray, int ini
 		// Raise the memory rows and make them visible
 		// ToDo: re-open the memory interface on cpu core
 		Q_ASSERT(cpuCoreRows > 0.0);
-		qreal finalPercent = 1.0 - functionCall->getHeightInRows() / cpuCoreRows;
+		qreal finalPercent = qMax( 0.0, 1.0 - functionCall->getHeightInRows() / cpuCoreRows );
 		functionCall->setMainProportion( functionCall->getHeightInRows() / cpuCoreRows );
 		duration += functionCall->animateMoveTo( finalPercent, functionCall->getHeightInRows() * 1000, /*initialDelay*/ 0 );
 	}
