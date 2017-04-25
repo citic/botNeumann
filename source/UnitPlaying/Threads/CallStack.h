@@ -57,10 +57,10 @@ class CallStack : public QObject, public RectLayoutItem
 	/// @param initialDelay The animation will start this amount of milliseconds later of this
 	/// function call. It may be used to wait until the CPU's memory interface is completely open
 	/// @return The amount of milliseconds of the complete animation
-	int animateAppear(int initialDelay = 0);
+	int animateRaise(int initialDelay = 0);
 	/// Animate the entire fame stack diving into the basement
 	/// @see animateAppear()
-	int animateDisappear(int initialDelay = 0);
+	int animateDive(int initialDelay = 0);
 	/// Create parameters and local variable in the top-most function call
 	/// @param gdbVariableArray Gdb node result that lists the local variables to be shown
 	int createLocalVariables(const GdbTreeNode* gdbVariableArray, int initialDelay);

@@ -27,8 +27,6 @@ class LinearLayoutActor : public QObject, public LinearLayout
   public:
 	/// Constructor
 	explicit LinearLayoutActor(Qt::Orientation orientation);
-	/// Animate all children of this layout appearing
-	int animateAppear(int duration = 1000, int initialDelay = 0, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
 	/// Animate this value moving to the position
 	int animateMoveTo(qreal endProportion, int duration, int initialDelay = 0);
 	/// Animate this value moving to the position

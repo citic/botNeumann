@@ -80,7 +80,7 @@ int ExecutionThread::run(CpuCore* cpuCore)
 	// Animate appearing of both, actor and call stack
 	actor->setVisible(true);
 	callStack->setVisible(true);
-	duration += callStack->animateAppear();
+	duration += callStack->animateRaise();
 	return duration;
 }
 
@@ -134,7 +134,7 @@ int ExecutionThread::detach()
 	{
 		// Detach the actor and the call stack
 		Q_ASSERT(callStack);
-		duration += callStack->animateDisappear();
+		duration += callStack->animateDive();
 
 		// Release the cpu core
 		Q_ASSERT(cpuCore);
@@ -333,6 +333,7 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 	// duration += createLocalVariables(debuggerCall, "-stack-list-variables 2", "variables");
 
 	// Close the interface after the function is finally called
+	// ToDo: cpuCore->closeMemoryInterface(duration);
 	CREATE_TIMER( duration, cpuCore, &CpuCore::closeMemoryInterface );
 
 	// Tell caller the duration of the entire animation
@@ -453,7 +454,7 @@ int ExecutionThread::createLocalVariables(GdbCall* debuggerCall, const QString& 
 		(gdb)
 	*/
 
-	// Get the list of arguments
+	// Get the list of arguments or local variables
 	// The "2" argument asks GDB to include name, type and value for each parameter
 	// The "0 0" argument is for selecting top frame only: /frame/level == 0
 	GdbItemTree gdbResponseTree;

@@ -56,7 +56,7 @@ int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 	return functionCall->animateMoveTo( finalPercent, functionCall->getHeightInRows() * 500, initialDelay );
 }
 
-int CallStack::animateAppear(int initialDelay)
+int CallStack::animateRaise(int initialDelay)
 {
 	// Adjust animation time
 	initialDelay = VisualizationSpeed::getInstance().adjust(initialDelay);
@@ -80,7 +80,7 @@ int CallStack::animateAppear(int initialDelay)
 	return initialDelay + maxDuration;
 }
 
-int CallStack::animateDisappear(int initialDelay)
+int CallStack::animateDive(int initialDelay)
 {
 	// Adjust animation time
 	initialDelay = VisualizationSpeed::getInstance().adjust(initialDelay);

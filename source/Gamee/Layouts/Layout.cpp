@@ -90,3 +90,22 @@ qreal Layout::findZValue(const LayoutItem* item) const
 
 	return -1.0;
 }
+
+int Layout::animateAppear(int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
+{
+	// The duration of the animation is the max duration of children
+	int maxDuration = 0;
+
+	// Animate all children appearing at the same time (concurrently)
+	for (ItemsType::iterator itr = items.begin(); itr != items.end(); ++itr )
+	{
+		for ( int index = 0; index < itr.value().size(); ++index )
+		{
+			int itemDuration = itr.value()[index]->animateAppear(duration, initialDelay, fromOpacity, toOpacity);
+			if ( itemDuration > maxDuration )
+				maxDuration = itemDuration;
+		}
+	}
+
+	return maxDuration;
+}

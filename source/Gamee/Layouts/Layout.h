@@ -48,6 +48,9 @@ class Layout : public LayoutItem
 	/// Find the zValue of the given item, -1.0 if not found
 	/// @remarks The search is done in linear time
 	qreal findZValue(const LayoutItem* item) const;
+	/// Animates this object appearing or disappearing from the scene
+	/// @see LayoutItem::animateAppear()
+	virtual int animateAppear(int duration = 1000, int initialDelay = 0, qreal fromOpacity = 0.0, qreal toOpacity = 1.0) override;
 };
 
 #endif // LAYOUT_H

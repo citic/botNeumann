@@ -11,40 +11,6 @@ LinearLayoutActor::LinearLayoutActor(Qt::Orientation orientation)
 {
 }
 
-int LinearLayoutActor::animateAppear(int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
-{
-	// The duration of the animation is the max duration of children
-	int maxDuration = 0;
-
-	// Animate all children appearing at the same time (concurrently)
-	for (ItemsType::iterator itr = items.begin(); itr != items.end(); ++itr )
-	{
-		for ( int index = 0; index < itr.value().size(); ++index )
-		{
-			Actor* actor = dynamic_cast<Actor*>(itr.value()[index]);
-			if ( actor )
-			{
-				int actorDuration = actor->animateAppear(duration, initialDelay, fromOpacity, toOpacity);
-				if ( actorDuration > maxDuration )
-					maxDuration = actorDuration;
-			}
-			else
-			{
-				// ToDo: Ugly fix: LabelButton should be also animated, but it does not inherit Actor
-				LabelButton* label = dynamic_cast<LabelButton*>(itr.value()[index]);
-				if ( label )
-				{
-					int labelDuration = label->animateAppear(duration, initialDelay, fromOpacity, toOpacity);
-					if ( labelDuration > maxDuration )
-						maxDuration = labelDuration;
-				}
-			}
-		}
-	}
-
-	return maxDuration;
-}
-
 int LinearLayoutActor::animateMoveTo(qreal endProportion, int duration, int initialDelay)
 {
 	QPropertyAnimation* animation = createMoveToAnimation("mainStart", endProportion, mainStart, duration, initialDelay);

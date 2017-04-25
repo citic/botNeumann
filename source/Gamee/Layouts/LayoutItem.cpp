@@ -30,6 +30,15 @@ void LayoutItem::setPaddings(qreal top, qreal right, qreal bottom, qreal left)
 	paddings[paddingLeft] = left;
 }
 
+int LayoutItem::animateAppear(int duration, int initialDelay, qreal fromOpacity, qreal toOpacity)
+{
+	Q_UNUSED(duration);
+	Q_UNUSED(initialDelay);
+	Q_UNUSED(fromOpacity);
+	Q_UNUSED(toOpacity);
+	return 0;
+}
+
 void LayoutItem::applyPaddings(qreal& left, qreal& top, qreal& width, qreal& height)
 {
 	// ToDo: avoid reducing paddings when there are not enough space

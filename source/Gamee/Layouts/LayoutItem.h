@@ -86,6 +86,15 @@ class LayoutItem
 	inline qreal getLayoutTop() const { return layoutTop; }
 	inline qreal getLayoutWidth() const { return layoutWidth; }
 	inline qreal getLayoutHeight() const { return layoutHeight; }
+	/// The most basic animation is appear or disappear from scene. QGraphicItem child classes
+	/// override this method to do an opacity property animation. Layouts propagate this call
+	/// to its children
+	/// @param duration Duration of the dis/appearing animation
+	/// @param initialDelay The animation will start after this number of milliseconds
+	/// @param fromOpacity Opacity of the object when the animation starts
+	/// @param toOpacity The final opacity of the object when the animation finishes
+	/// @return Duration of animation in milliseconds
+	virtual int animateAppear(int duration = 1000, int initialDelay = 0, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
 
   protected:
 	/// Adjust the given variables reducing the paddings

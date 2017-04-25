@@ -35,10 +35,9 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	int animateSetText(const QString& text);
 	/// Sets the Z-index provided by layouts to the QGraphicsItem system
 	virtual void setZ(qreal zValue) override { setZValue(zValue); }
-	/// Animates this actor appearing or disappearing from the scene
-	/// @return the actual duration of the animation in milliseconds after ajusting to the user
-	/// preference in visualization speed slider
-	int animateAppear(int duration = 1000, int initialDelay = 0, qreal fromOpacity = 0.0, qreal toOpacity = 1.0);
+	/// Animates this object appearing or disappearing from the scene
+	/// @see LayoutItem::animateAppear()
+	virtual int animateAppear(int duration = 1000, int initialDelay = 0, qreal fromOpacity = 0.0, qreal toOpacity = 1.0) override;
 	/// Convenience method to disappear an actor
 	inline int animateDisappear(int duration = 1000, int initialDelay = 0) { return animateAppear(duration, initialDelay, 1.0, 0.0); }
 
