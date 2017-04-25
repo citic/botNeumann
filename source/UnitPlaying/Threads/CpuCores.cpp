@@ -289,36 +289,6 @@ void CpuCores::getThreadsWaitingForIO(QList<ExecutionThread*>& inputQueue, QList
 	}
 }
 
-bool CpuCores::processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
-{
-	// Player solution hit a breakpoint that has the role of functionCall. The breakpoint must be
-	// at the beginning of the body of a function in a file that is part of player solution.
-	// See comment at Visualization::processBreakpointHit() body for a breakpoint-hit example
-
-	// Get the ExecutionThread object that is identified by /thread-id="#"
-	ExecutionThread* executionThread = findThread(tree);
-	Q_ASSERT(executionThread);
-	int treeLineNumber = tree.findNodeTextValue("frame/line").toInt();
-
-	// The execution thread will animate the function call
-	if ( executionThread->callFunction(tree, debuggerCall, maxDuration) )
-	{
-		// The function was called. When the animation of function call is finished, the control
-		// will continue at the first executable line of the function body. That line's number is
-		// indicated by tree's '/frame/line' value. Highlight it
-		Util::createTimer( maxDuration / 2, this, [this, executionThread, treeLineNumber]{ this->updateThreadLine(executionThread, treeLineNumber); } );
-		return true;
-	}
-	else
-	{
-		// The function call was rejected, because it was an adjusted breakpoint by GDB
-		// Highlight the current line reported by gdb
-		updateThreadLine(executionThread, treeLineNumber);
-	}
-
-	return false;
-}
-
 void CpuCores::updateThreadLine(ExecutionThread* thread, int lineNumber)
 {
 	Q_ASSERT(thread);

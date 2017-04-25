@@ -508,10 +508,6 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 
   #if LOG_GDB_RESPONSES
 	qCDebug(logTemporary, "onNotifyAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
-  #else
-	Q_UNUSED(tree);
-	Q_UNUSED(asyncClass);
-	Q_UNUSED(context);
   #endif
 
 	switch ( asyncClass )

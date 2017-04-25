@@ -57,8 +57,6 @@ class CpuCores : public QObject, public MemorySegment
 	/// execution thread actor and code editor
 	/// @return true if a function called or returned, false if we are running at the same function
 	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall);
-	/// Called when player solution stopped by a function body breakpoint
-	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 	/// Allocate local variables in some thread that is running
 	virtual bool allocate(MemoryAllocation* memoryAllocation) override;
 	/// Deallocate local variables in some thread that is running

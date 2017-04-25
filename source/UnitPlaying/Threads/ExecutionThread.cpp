@@ -284,6 +284,22 @@ int ExecutionThread::isWaitingForIO()
 	return 0;
 }
 
+bool ExecutionThread::checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall)
+{
+	// If we are running on the same function, do not animate a function return
+	// ToDo: it may have return several functions
+	int depthChange = updateCallStackDepth(debuggerCall);
+	if ( depthChange > -INT_MAX && depthChange < 0 )
+		return returnFunction(debuggerCall, maxDuration);
+
+	// If actually the stack depth increased, animate a function call
+	if ( checkCall && depthChange > 0 )
+		return callFunction(tree, debuggerCall, maxDuration);
+
+	// depthChange == 0
+	return false;
+}
+
 bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration)
 {
 	// The ExecutionThread must be active (must have an assigned CPU core)
@@ -324,22 +340,6 @@ bool ExecutionThread::callFunction(const GdbItemTree& tree, GdbCall* debuggerCal
 		maxDuration = duration;
 
 	return true;
-}
-
-bool ExecutionThread::checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall)
-{
-	// If we are running on the same function, do not animate a function return
-	// ToDo: it may have return several functions
-	int depthChange = updateCallStackDepth(debuggerCall);
-	if ( depthChange > -INT_MAX && depthChange < 0 )
-		return returnFunction(debuggerCall, maxDuration);
-
-	// If actually the stack depth increased, animate a function call
-	if ( checkCall && depthChange > 0 )
-		return callFunction(tree, debuggerCall, maxDuration);
-
-	// depthChange == 0
-	return false;
 }
 
 bool ExecutionThread::returnFunction(GdbCall* debuggerCall, int& maxDuration)

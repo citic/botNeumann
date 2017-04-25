@@ -155,14 +155,14 @@ class ExecutionThread : public QObject, public LinearLayout
 	/// Reset filename and line number to a non valid location. Called before terminating an
 	/// execution thread in order to remove its highlight from code editro
 	void clearLocation();
-	/// Called when player solution stopped by a function body breakpoint
-	bool callFunction(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 	/// Checks if there was a function return and animates it, otherwise checks if stack depth
 	/// increased and animates a function call.
 	/// @param checkCall Function return is always checked. Function call is only checked if this
 	/// param is true
 	/// @return true if a function was called or returned, false otherwise
 	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall);
+	/// Called when player solution stopped by a function body breakpoint
+	bool callFunction(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
 	/// Animates a function return, diving the current stack frame into the memory interface of the
 	/// CPU core. It also remove watches to local variable from memory mapper
 	bool returnFunction(GdbCall* debuggerCall, int& maxDuration);
