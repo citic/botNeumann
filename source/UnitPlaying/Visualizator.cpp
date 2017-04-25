@@ -20,7 +20,7 @@
 // Construction -----------------------------------------------------------------------------------
 
 Visualizator::Visualizator(PlayerSolution* playerSolution, int testCase, UnitPlayingScene* unitPlayingScene)
-	: GdbResponseListener(unitPlayingScene)
+	: QObject(unitPlayingScene)
 	, playerSolution(playerSolution)
 	, testCaseNumber(testCase)
 	, unitPlayingScene(unitPlayingScene)
@@ -102,8 +102,6 @@ bool Visualizator::createGdb()
 	// Each time an animation is done, process the next GdbResponse, if any
 	connect( &animationDone, SIGNAL(timeout()), this, SLOT(processGdbResponse()));
 	animationDone.setSingleShot(true);
-	// This object also processes GdbResponses
-	connect( this, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), this, SLOT(onGdbResponse(const GdbResponse*,int&)) );
 	return true;
 }
 
@@ -439,7 +437,7 @@ int Visualizator::processGdbResponse()
 	// Notify all actors to animate this response, they will inform how many milliseconds they
 	// will take to complete the animation
 	int maxDuration = 0;
-	emit dispatchGdbResponse(gdbResponse, maxDuration);
+	onGdbResponse(gdbResponse, maxDuration);
 
 	// Wait until the animation is done, then call this method again to process the next pending
 	// response
@@ -448,9 +446,26 @@ int Visualizator::processGdbResponse()
 	return 1;
 }
 
+void Visualizator::onGdbResponse(const GdbResponse* response, int& maxDuration)
+{
+	Q_ASSERT(response);
+	VisualizationContext context = static_cast<VisualizationContext>( response->getUserData() );
+	switch ( response->getType() )
+	{
+		case GdbResponse::EXEC_ASYNC_OUTPUT: return onExecAsyncOut(response->getItemTree(), response->getReason(), context, maxDuration);
+		case GdbResponse::STATUS_ASYNC_OUTPUT: return onStatusAsyncOut(response->getItemTree(), response->getReason(), context, maxDuration);
+		case GdbResponse::NOTIFY_ASYNC_OUTPUT: return onNotifyAsyncOut(response->getItemTree(), response->getReason(), context, maxDuration);
+		case GdbResponse::LOG_STREAM_OUTPUT: return onLogStreamOutput(response->getText(), context, maxDuration);
+		case GdbResponse::TARGET_STREAM_OUTPUT: return onTargetStreamOutput(response->getText(), context, maxDuration);
+		case GdbResponse::CONSOLE_STREAM_OUTPUT: return onConsoleStreamOutput(response->getText(), context, maxDuration);
+		case GdbResponse::RESULT: return onResult(response->getItemTree(), context, maxDuration);
+
+		default: break;
+	}
+}
+
 void Visualizator::onExecAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
 {
-	Q_UNUSED(maxDuration);
   #if LOG_GDB_RESPONSES
 	qCDebug(logTemporary, "onExecAsyncOut(%s) %s | ctx=%d", qPrintable(tree.buildDescription()), GdbResponse::mapReasonToString(asyncClass), context);
   #endif
@@ -507,7 +522,12 @@ void Visualizator::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncCla
 			break;
 
 		case AsyncClass::AC_THREAD_CREATED:
+			updateMaxDuration( unitPlayingScene->getCpuCores()->createThread( tree.findNodeTextValue("/id").toInt() ) );
 			debuggerCall->sendGdbCommand("-thread-info", visExecutionLoop);
+			break;
+
+		case AsyncClass::AC_THREAD_EXITED:
+			updateMaxDuration( unitPlayingScene->getCpuCores()->removeThread( tree.findNodeTextValue("/id").toInt() ) );
 			break;
 
 		case AsyncClass::AC_BREAKPOINT_CREATED:
@@ -540,8 +560,14 @@ void Visualizator::onResult(const GdbItemTree& tree, VisualizationContext contex
 			return unitPlayingScene->updateStandardInputOutput(tree, context, maxDuration);
 	}
 
+	// If this is a result of updating watches (GDB variable objects)
 	if ( tree.findNode("/changelist") )
 		return (void) memoryMapper->updateWatches( tree, maxDuration );
+
+	// If this is a result of a -thread-info command
+	const GdbTreeNode* node = nullptr;
+	if ( ( node = tree.findNode("/threads") ) )
+		return unitPlayingScene->getCpuCores()->updateThreads( node, maxDuration );
 }
 
 void Visualizator::onConsoleStreamOutput(const QString& text, VisualizationContext context, int& maxDuration)
@@ -692,13 +718,13 @@ bool Visualizator::processBreakpointHit(const GdbItemTree tree, VisualizationCon
 	DebuggerBreakpoint* breakpoint = debuggerBreakpoints[breakpointNumber];
 	Q_ASSERT(breakpoint);
 
-	// Update the line number in execution thread actor and code editor
-	unitPlayingScene->getCpuCores()->updateThreadFrame(tree, maxDuration, breakpoint->getLineNumber());
-
 	// If visualization is in starting state and entryPointTree is null process Program entry point:
 	// if ( unitPlayingScene->getState() == UnitPlayingState::starting )
 	if ( context == visStarting )
 		return processEntryPoint(tree, breakpoint, maxDuration);
+
+	// Update the line number in execution thread actor and code editor
+	unitPlayingScene->getCpuCores()->updateThreadFrame(tree, maxDuration, breakpoint->getLineNumber());
 
 	// If breakpoint object has one or more roles:
 	// * If breakpoint is userDefined: Do 4.4 User defined breakpoint.

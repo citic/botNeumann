@@ -9,7 +9,7 @@
 const double interfaceRows = 0.66;
 
 HeapSegment::HeapSegment(Unit& unit, Scene* scene, QObject* parent)
-	: GdbResponseListener(parent)
+	: QObject(parent)
 	, MemorySegment(unit, scene, Qt::Vertical)
 {
 	unit.requiresHeapSegment() ? buildSegment() : hideSegment();

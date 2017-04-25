@@ -1,6 +1,7 @@
 #include "DataSegment.h"
 #include "Common.h"
 #include "ExecutionThread.h"
+#include "GdbItemTree.h"
 #include "MemoryFrame.h"
 #include "PlayerSolution.h"
 #include "Scene.h"
@@ -11,7 +12,7 @@
 const double stdInOutRows = 0.66;
 
 DataSegment::DataSegment(Unit& unit, Scene* scene, QObject* parent)
-	: GdbResponseListener(parent)
+	: QObject(parent)
 	, MemorySegment(unit, scene, Qt::Vertical)
 {
 	buildDataSegment();

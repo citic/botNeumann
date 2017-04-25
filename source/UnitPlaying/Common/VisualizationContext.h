@@ -40,5 +40,13 @@ const char* const nameForStderrPtr = "stderr";
 #endif
 #endif
 
+/// Macro to update the maxDuration parameter in virtual functions if the duration of the current
+/// animation is longer than the maxDuration value currently known
+#define updateMaxDuration(code) \
+	{ \
+		int duration = (code); \
+		if ( duration > maxDuration ) \
+			maxDuration = duration; \
+	} \
 
 #endif // VISUALIZATIONCONTEXT_H

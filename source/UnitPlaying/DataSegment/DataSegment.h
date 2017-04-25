@@ -1,15 +1,16 @@
 #ifndef DATASEGMENT_H
 #define DATASEGMENT_H
 
-#include "GdbResponseListener.h"
 #include "MemorySegment.h"
+#include "VisualizationContext.h"
 
 class ExecutionThread;
+class GdbItemTree;
 class MemoryFrame;
 class PlayerSolution;
 class StandardInputOutput;
 
-class DataSegment : public GdbResponseListener, public MemorySegment
+class DataSegment : public QObject, public MemorySegment
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(DataSegment)

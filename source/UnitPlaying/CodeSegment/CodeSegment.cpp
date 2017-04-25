@@ -4,10 +4,10 @@
 #include "Compiler.h"
 #include "Diagnostic.h"
 #include "ExecutionThread.h"
-#include "GdbResponseListener.h"
 #include "LogManager.h"
 #include "PlayerSolution.h"
 #include "Unit.h"
+#include "VisualizationContext.h"
 #include "VisualizationSpeed.h"
 
 #include <QAction>

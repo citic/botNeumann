@@ -87,7 +87,6 @@ HEADERS += \
 	source/UnitPlaying/CodeSegment/PlayerSolution.h \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.h \
 	source/UnitPlaying/Common/Assets.h \
-	source/UnitPlaying/Common/GdbResponseListener.h \
 	source/UnitPlaying/Common/StaticAnalysisGlobals.h \
 	source/UnitPlaying/Common/VisualizationContext.h \
 	source/UnitPlaying/Common/VisualizationSpeed.h \
@@ -172,7 +171,6 @@ SOURCES += \
 	source/UnitPlaying/CodeSegment/LineNumberArea.cpp \
 	source/UnitPlaying/CodeSegment/PlayerSolution.cpp \
 	source/UnitPlaying/CodeSegment/SyntaxHighlighter.cpp \
-	source/UnitPlaying/Common/GdbResponseListener.cpp \
 	source/UnitPlaying/Common/VisualizationSpeed.cpp \
 	source/UnitPlaying/DataSegment/DataSegment.cpp \
 	source/UnitPlaying/DataSegment/StandardInputOutput.cpp \

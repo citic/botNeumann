@@ -1,13 +1,12 @@
 #ifndef HEAPSEGMENT_H
 #define HEAPSEGMENT_H
 
-#include "GdbResponseListener.h"
 #include "MemorySegment.h"
 
 class MemoryFrame;
 class Actor;
 
-class HeapSegment : public GdbResponseListener, public MemorySegment
+class HeapSegment : public QObject, public MemorySegment
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(HeapSegment)

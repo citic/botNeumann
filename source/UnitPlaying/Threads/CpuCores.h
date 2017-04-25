@@ -1,7 +1,6 @@
 #ifndef CPUCORES_H
 #define CPUCORES_H
 
-#include "GdbResponseListener.h"
 #include "MemorySegment.h"
 
 #include <QVector>
@@ -9,9 +8,11 @@
 class CpuCore;
 class DebuggerBreakpoint;
 class ExecutionThread;
+class GdbTreeNode;
+class GdbItemTree;
 class GdbCall;
 
-class CpuCores : public GdbResponseListener, public MemorySegment
+class CpuCores : public QObject, public MemorySegment
 {
 	Q_OBJECT
 	Q_DISABLE_COPY(CpuCores)
@@ -36,12 +37,14 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;
-	/// Allocate local variables in some thread that is running
-	virtual bool allocate(MemoryAllocation* memoryAllocation) override;
-	/// Deallocate local variables in some thread that is running
-	virtual bool deallocate(MemoryAllocation* memoryAllocation) override;
-	/// Called when player solution stopped by a function body breakpoint
-	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
+	/// Debugger reports the creation of a new execution thread, show it
+	/// @return the duration in milliseconds of the animation
+	int createThread(int id);
+	/// Debugger reports an execution thread exited, remove it from scene
+	/// @return the duration in milliseconds of the animation
+	int removeThread(int id);
+	/// A Gdb result brought an updated list of threads, refresh them
+	void updateThreads(const GdbTreeNode* threadsNode, int& maxDuration);
 	/// GDB generated any response that has a '/frame/' subtree. E.g: stopped by
 	/// reason="end-stepping-range", or "reason="breakpoint-hit". The '/frame' subtree tells the
 	/// line being executed by the thread. We update it
@@ -54,6 +57,12 @@ class CpuCores : public GdbResponseListener, public MemorySegment
 	/// execution thread actor and code editor
 	/// @return true if a function called or returned, false if we are running at the same function
 	bool checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall);
+	/// Called when player solution stopped by a function body breakpoint
+	bool processFunctionCall(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration);
+	/// Allocate local variables in some thread that is running
+	virtual bool allocate(MemoryAllocation* memoryAllocation) override;
+	/// Deallocate local variables in some thread that is running
+	virtual bool deallocate(MemoryAllocation* memoryAllocation) override;
 	/// Returns a list of threads that are waiting for some input/output operation.
 	void getThreadsWaitingForIO(QList<ExecutionThread*>& inputQueue, QList<ExecutionThread*>& outputQueue);
 
@@ -68,23 +77,9 @@ class CpuCores : public GdbResponseListener, public MemorySegment
   protected:
 	/// Creates a CPU core (workstation) for each CPU core requested in .botnu file
 	void createCpuCores();
-	/// Notifications that begin with '=', for example '=thread-group-added,id="id"'
-	///	@see GdbResponseListener::onNotifyAsyncOut()
-	virtual void onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration) override;
-	/// Notifications that begin with '^': ^done, ^connected, ^error, ^exit
-	///	@see GdbResponseListener::onResult()
-	virtual void onResult(const GdbItemTree& tree, VisualizationContext context, int& maxDuration) override;
-	/// Debugger reports the creation of a new execution thread, show it
-	/// @return the duration in milliseconds of the animation
-	int createThread(int id);
-	/// Debugger reports an execution thread exited, remove it from scene
-	/// @return the duration in milliseconds of the animation
-	int removeThread(int id);
 	/// @return The index of the next available (free) CPU core to execute a thread, -1 if all cores
 	/// are busy executing threads
 	int findFirstIdleCpuCore() const;
-	/// A Gdb result brought an updated list of threads, refresh them
-	void updateThreads(const GdbTreeNode* threadsNode, int& maxDuration);
 	/// Finds the thread with the given id using linear search
 	/// @param threadIndex If a pointer is given, the pointed variable will be updated with the
 	/// index where the found thread is located

@@ -306,11 +306,6 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 	// When user creates or removes breakpoints and visualization is running, update them
 	connect( codeSegment, SIGNAL(breakpointAction(GuiBreakpoint*)), visualizator, SLOT(breakpointAction(GuiBreakpoint*)) );
 
-	// When visualizator dispatches a GdbResponse, some segments may create an animation
-	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), heapSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
-	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), cpuCores, SLOT(onGdbResponse(const GdbResponse*,int&)) );
-	connect( visualizator, SIGNAL(dispatchGdbResponse(const GdbResponse*,int&)), dataSegment, SLOT(onGdbResponse(const GdbResponse*,int&)) );
-
 	// When animation finished, reflect the result in the test case manager
 	Q_ASSERT(testCaseManager);
 	connect( visualizator, &Visualizator::playerSolutionFinished, testCaseManager, &TestCaseManager::playerSolutionFinished );

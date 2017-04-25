@@ -3,6 +3,7 @@
 #include "CpuCores.h"
 #include "DebuggerBreakpoint.h"
 #include "ExecutionThread.h"
+#include "GdbItemTree.h"
 #include "LogManager.h"
 #include "Scene.h"
 #include "Unit.h"
@@ -12,7 +13,7 @@
 const double idleThreadsRows = 1.0;
 
 CpuCores::CpuCores(Unit& unit, Scene* scene, QObject* parent)
-	: GdbResponseListener(parent)
+	: QObject(parent)
 	, MemorySegment(unit, scene, Qt::Vertical)
 {
 	createCpuCores();
@@ -80,31 +81,6 @@ void CpuCores::createCpuCores()
 	addStretch( 0.5 / totalRows, zUnitPlaying::cpuCores);
 	// Idle threads overflow to use space behind the data segment
 	addLayout(idleThreadsLayout, (idleThreadsRows + 2.0) / totalRows, zUnitPlaying::cpuCores);
-}
-
-void CpuCores::onNotifyAsyncOut(const GdbItemTree& tree, AsyncClass asyncClass, VisualizationContext context, int& maxDuration)
-{
-	Q_UNUSED(context);
-	switch ( asyncClass )
-	{
-		case AsyncClass::AC_THREAD_CREATED:
-			updateMaxDuration( createThread( tree.findNodeTextValue("/id").toInt() ) );
-			break;
-
-		case AsyncClass::AC_THREAD_EXITED:
-			updateMaxDuration( removeThread( tree.findNodeTextValue("/id").toInt() ) );
-			break;
-
-		default: break;
-	}
-}
-
-void CpuCores::onResult(const GdbItemTree& tree, VisualizationContext context, int& maxDuration)
-{
-	Q_UNUSED(context);
-	const GdbTreeNode* node = nullptr;
-	if ( ( node = tree.findNode("/threads") ) )
-		return updateThreads( node, maxDuration );
 }
 
 int CpuCores::createThread(int id)

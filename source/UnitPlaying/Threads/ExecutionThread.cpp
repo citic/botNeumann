@@ -4,11 +4,11 @@
 #include "CpuCore.h"
 #include "ExecutionThreadActor.h"
 #include "GdbCall.h"
-#include "GdbResponseListener.h"
 #include "LogManager.h"
 #include "Scene.h"
 #include "Spacer.h"
 #include "StaticAnalysisGlobals.h"
+#include "VisualizationContext.h"
 #include "Util.h"
 
 #include <climits>
