@@ -24,6 +24,15 @@ enum ThreadState
 	threadTerminated, // exited
 };
 
+enum StandardIOIndex
+{
+	standardInputIndex = 0,
+	standardOutputIndex,
+	standardErrorIndex,
+
+	standardIOCount
+};
+
 /** An ExecutionThread is a graphical object to represent an execution thread running on the
 	user program (inferior). An ExecutionThread that is running is shown in one of the available
 	CpuCores. A sleeping ExecutionThread is not shown in any CpuCore.
@@ -87,6 +96,11 @@ class ExecutionThread : public QObject, public LinearLayout
 	/// invisible on the visualization, but not deleted. The call stack gets deleted only when the
 	/// execution thread is finished
 	CallStack* callStack = nullptr;
+	/// A three-elements array of counters that indicate the number of pending IO operations made
+	/// by this thread. Counters are for stdin, stdout and stderr respectively. The counter is
+	/// required because IO animations are made later than the thread executed the line where the
+	/// IO operation is requested
+	int pendingIOOperations[standardIOCount] = { 0 };
 
   public: // States
 	/// Build an execution thread and adds it to the scene in invisible mode. In order to make it
@@ -126,12 +140,22 @@ class ExecutionThread : public QObject, public LinearLayout
 	inline CallStack* getCallStack() const { return callStack; }
 	/// True if this thread is being executed on some cpu core
 	inline bool isActive() const { return state == threadActive; }
+
+  public: // Standard input/output operations
 	/// Checks if this thread is running an input/output operation
 	/// @return 0 if it is not doing any input/output operation, 1 if its reading, and 2 if it
 	/// is writing to stdout or stderr or some other file
 	/// @remarks This function does static analys code of the line being executed by the thread.
 	/// It may fail to identify a real input/output operation
-	int isWaitingForIO();
+	void checkWaitingForIO();
+	/// Returns true if this thread executed a read operation that is pending to be animated
+	inline bool isWaitingForInput() const { return pendingIOOperations[standardInputIndex] > 0; }
+	inline bool isWaitingForOutput() const { return pendingIOOperations[standardOutputIndex] > 0; }
+	inline bool isWaitingForErrorOutput() const { return pendingIOOperations[standardErrorIndex] > 0; }
+	/// Called when an standard input/output animation is done
+	inline void setInputAnimationDone() { /* if ( isWaitingForInput() ) --pendingIOOperations[standardInputIndex]; */ pendingIOOperations[standardInputIndex] = 0; }
+	inline void setOutputAnimationDone() { if ( isWaitingForOutput() ) --pendingIOOperations[standardOutputIndex]; }
+	inline void setErrorOutputAnimationDone() { if ( isWaitingForErrorOutput() ) --pendingIOOperations[standardErrorIndex]; }
 
   public:
 	/// Updates this execution thread from Gdb information.

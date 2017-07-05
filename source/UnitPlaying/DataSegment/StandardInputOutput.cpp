@@ -84,6 +84,8 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 	int maxDuration = 0, duration = 0;
 
 	// Get the thread that made the read operation
+	if ( waitingQueue.count() <= 0 ) qCCritical(logTemporary()) << "@@@ERROR Read of" << length << "bytes towards NO thread";
+	if ( waitingQueue.count() <= 0 ) return maxDuration;
 	Q_ASSERT(waitingQueue.count() > 0);
 	ExecutionThread* thread = waitingQueue[0];
 	qCCritical(logTemporary()) << "Read of" << length << "bytes towards thread" << thread->getId();
@@ -104,6 +106,7 @@ int InputOutputBuffer::animateRead(int length, const QList<ExecutionThread*>& wa
 
 	// When read animation is done, turn the robot back
 	thread->animateTurnBack(maxDuration);
+	thread->setInputAnimationDone();
 	maxDuration += 2 * robotTurnDuration;
 
 	// Remove the read characters from the buffer
@@ -136,6 +139,7 @@ int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& w
 
 	// Turn the robot front to receive the characters
 	int robotTurnDuration = thread->animateTurnFront();
+	thread->setOutputAnimationDone();
 
 	// Create the written characters, place them and animate them traveling towards the stdout
 	for ( int charCounter = 0; charCounter < length; ++charCounter )

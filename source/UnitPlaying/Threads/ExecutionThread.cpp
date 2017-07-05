@@ -260,7 +260,7 @@ qreal ExecutionThread::getActorReferenceWidth() const
 	return actor->boundingRect().width();
 }
 
-int ExecutionThread::isWaitingForIO()
+void ExecutionThread::checkWaitingForIO()
 {
 	// GDB does not provide any way to know if a thread issued a input/output operation
 	// As a workaround we do static code analysis. If thread is running a line that contains a
@@ -269,19 +269,23 @@ int ExecutionThread::isWaitingForIO()
 
 	// Get the lines being executed
 	const QString& line = loadRunningLine(false);
+	qCritical(logApplication, "Looking for input in [%s]", qPrintable(line));
 
 	// ToDo: a line may have two or more stdin/stdout operations
 	// Check for any input function call
 	for ( size_t index = 0; index < stdInputTokensSize; ++index )
 		if ( line.contains(QRegularExpression("\\b" + QString(stdInputTokens[index]) + "\\b")) )
-			return 1;
+		{
+			++pendingIOOperations[standardInputIndex];
+			qCritical(logApplication, "INPUT found, waiting for [%d] operations", pendingIOOperations[standardInputIndex]);
+		}
 
+	qCritical(logApplication, "Looking for OUTPUT in [%s]", qPrintable(line));
 	// Check for any output function call
 	for ( size_t index = 0; index < stdOutputTokensSize; ++index )
 		if ( line.contains(QRegularExpression("\\b" + QString(stdOutputTokens[index]) + "\\b")) )
-			return 2;
-
-	return 0;
+			++pendingIOOperations[standardOutputIndex];
+//			qCritical(logApplication, "OUTPUT found, waiting for [%d] operations", ++pendingIOOperations[standardOutputIndex]);
 }
 
 bool ExecutionThread::checkForFunctionCallOrReturn(const GdbItemTree& tree, GdbCall* debuggerCall, int& maxDuration, bool checkCall)
@@ -484,6 +488,7 @@ QString ExecutionThread::loadRunningLine(bool fromPreviousLine) const
 	int lastLine = lineNumber;
 	if ( fromPreviousLine && previousLineNumber < lineNumber )
 		lastLine = previousLineNumber;
+	qCritical(logApplication, "Thr%d: FIND_LINES [%d:%d]", id, lineNumber, lastLine);
 
 	// Open the file
 	QFile inputFile(filename);
@@ -504,6 +509,8 @@ QString ExecutionThread::loadRunningLine(bool fromPreviousLine) const
 		// The line is done, write it to the target file
 		if ( currentLine >= lineNumber && currentLine <= lastLine )
 			result += line + '\n';
+		else if ( currentLine > lastLine )
+			return result;
 	}
 
 	// Done

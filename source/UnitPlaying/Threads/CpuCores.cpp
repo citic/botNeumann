@@ -280,12 +280,13 @@ void CpuCores::getThreadsWaitingForIO(QList<ExecutionThread*>& inputQueue, QList
 	// Get all threads that are running io operations
 	for ( int index = 0; index < executionThreads.count(); ++index )
 	{
-		switch ( executionThreads[index]->isWaitingForIO() )
-		{
-			case 0: break;
-			case 1: inputQueue.append( executionThreads[index] );
-			case 2: outputQueue.append( executionThreads[index] );
-		}
+		executionThreads[index]->checkWaitingForIO();
+		if ( executionThreads[index]->isWaitingForInput() )
+			inputQueue.append( executionThreads[index] );
+		if ( executionThreads[index]->isWaitingForOutput() )
+			outputQueue.append( executionThreads[index] );
+		//if ( executionThreads[index]->isWaitingForErrorOutput() )
+		//	outputQueue.append( executionThreads[index] );
 	}
 }
 
