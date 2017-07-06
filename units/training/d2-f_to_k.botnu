@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+
+<botnu id="﻿d2-f_to_k" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+
+
+<description lang="es"><![CDATA[
+<h1>Convertidor de Fahrenheit a Kelvin</h1>
+
+<p>El microcontrolador convertidor de temperaturas en Fahrenheit a Kelvin también se fundió por completo y un código fue restaurado de respaldos. Sin embargo, esa versión de respaldo aún tiene problemas porque no pasa las pruebas y debe corregirse. La conversión de de Fahrenheit a Kelvin se hace con la relación <i>K = (F + 459.67) * 5/9</i>.</p>
+
+<p>Use la animación del microcrontrolador para averiguar qué hace fallar al código. Al parecer hay una variable indebida en el programa.</p>
+
+<h2>Ejemplo de entrada:</h2>
+
+<pre>100</pre>
+
+<h2>Ejemplo de salida</h2>
+
+<pre>310.928</pre>
+]]></description>
+
+
+
+<initial-code lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+double temperatura = 0.0;
+
+int main()
+{
+	cin >> temperatura;
+	double temperatura = 0.0;
+	temperatura = (temperatura + 459.67) * 5 / 9;
+	cout << temperatura << endl;
+}
+]]></initial-code>
+
+
+
+<solution lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	double temperatura;
+	cin >> temperatura;
+	temperatura = (temperatura + 459.67) * 5.0 / 9.0;
+	cout << temperatura << endl;
+}
+]]></solution>
+
+
+
+<standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+double grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	std::cout << grand(-100, 150) << std::endl;
+
+	return 0;
+}
+]]></standard-generator>
+
+
+<!--
+<test-case>
+	<input>100</input>
+	<output>310.928</output>
+</test-case>
+-->
+
+
+</botnu>

@@ -6,6 +6,6 @@
 		<file>d1-f_to_c.botnu</file>
 	</qresource>
 	<qresource prefix="/training/mem_dyn">
-		<file>median.botnu</file>
+		<file>d2-f_to_k.botnu</file>
 	</qresource>
 </RCC>
