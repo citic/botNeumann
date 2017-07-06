@@ -2,7 +2,7 @@
 <!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
 
 
-<botnu id="hello" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+<botnu id="in_output" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
 
 
@@ -40,15 +40,17 @@ cin &gt;&gt; valor1 >> valor2;
 </pre>
 
 
-<p>Este microcontrolador debe reconocer (leer) dos números enteros de la entrada estándar.</p>
+<p>En la descripción de cada micrococontrolador verá las secciones de abajo. La sección <em>Ejemplo de entrada</em> provee ejemplos de datos que recibirá el programa, y la sección <em>Ejemplo de salida</em> su correspondiente resultado.</p>
 
 <h2>Ejemplo de entrada:</h2>
+
+<p>Este microcontrolador debe reconocer (leer) dos números enteros de la entrada estándar. Por ejemplo:</p>
 
 <pre>2 -15</pre>
 
 <h2>Ejemplo de salida</h2>
 
-<p>Debe imprimir los dos números en la salida estándar, uno por línea, como se ve a continuación.</p>
+<p>Este microcontrolador debe imprimir los dos números en la salida estándar, uno por línea, precedidos por un texto como se ve a continuación.</p>
 
 <pre>Primer valor: 2
 Segundo valor: -15</pre>

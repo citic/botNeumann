@@ -2,20 +2,18 @@
 <!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
 
 
-<botnu id="sum_xy" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="yes" min-threads="1" timeout="1000" ignore-whitespace="yes">
+<botnu id="sum_xy" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
 
 
 <description lang="es"><![CDATA[
 <h1>Sumador simple</h1>
 
-<p>Este chip era un simple sumador de enteros. Nada sofisticado. Quizá por eso poco fue afectado por el atacante. Todo el código lo encontramos legible menos una línea. Lo que logramos recuperar está cargado en el editor de código, y nos sirve, de paso, para entender cómo funciona un chip.</p>
+<p>Este microcontrolador era un simple sumador de enteros. Nada sofisticado. Quizá por eso poco fue afectado por los hackers. Todo el código se recuperó legbile menos una línea.</p>
 
-<p>Un chip es una pieza de procesamiento. Es decir, hace una tarea. Este chip en particular es un sumador de enteros, y su tarea es sumar parejas de números.</p>
+<p>Los microcontroladores no trabajan en solitario, sino que son parte de un gran sistema de microcontroladores interconectados. Los microcontroladores se comunican unos con otros por tubos neumáticos. Un microcontrolador recibe datos de otros microcontroladores a través de un tubo de entrada, conocido como <em>entrada estándar</em> (<code>std::cin</code> en C++). El microcontrolador hace su tarea y envía el resultado a otros microcontroladores a través del tubo de <em>salida estándar</em> (<code>std::cout</code> en C++).</p>
 
-<p>Los chips no trabajan en solitario, sino que son parte de un gran sistema de chips interconectados. Los chips se comunican unos con otros por tubos neumáticos. Un chip recibe datos de otros chips a través de un tubo de entrada, conocido como <em>entrada estándar</em> (<code>std::cin</code> en C++). El chip hace su tarea y envía el resultado a otros chips a través del tubo de <em>salida estándar</em> (<code>std::cout</code> en C++).</p>
-
-<p>Algunos chips, como este sumador de enteros, se mantienen encendidos procesando largas secuencias de entrada, y se apagan sólo hasta que no haya más entrada. Hay una razón para ello, y es ahorro de energía. Encender y apagar un chip requiere recursos. Por eso el sistema espera que el sumador de enteros no sólo reciba una única pareja de enteros, sino muchas parejas de enteros. Por eso la lectura y procesamiento debe hacerse en un ciclo, como el siguiente:</p>
+<p>Algunos microcontroladores, como este sumador de enteros, se mantienen encendidos procesando largas secuencias de entrada, y se apagan sólo hasta que no haya más entrada. Hay una razón para ello, y es ahorro de energía. Encender y apagar un microcontrolador requiere recursos. Por eso el sistema espera que el sumador de enteros no sólo reciba una única pareja de enteros, sino muchas parejas de enteros. Por eso la lectura y procesamiento debe hacerse en un ciclo, como el siguiente:</p>
 
 <pre><code>long a, b;
 while ( std::cin &gt;&gt; a &gt;&gt; b )
@@ -24,9 +22,17 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 }
 </code></pre>
 
-<p>El sistema avisa al chip que ya se ha terminado la entrada y que puede apagarse, enviándole un dato especial, conocido en C++ como <code>EOF</code> (end-of-file). Cuando <code>std::sin</code> ve este dato <code>EOF</code>, rompe el ciclo, el programa termina y el chip se apaga.</p>
+<p>El sistema avisa al microcontrolador que ya se ha terminado la entrada y que puede apagarse, enviándole un dato especial, conocido en C++ como <code>EOF</code> (end-of-file). Cuando <code>std::sin</code> ve este dato <code>EOF</code>, rompe el ciclo, el programa termina y el microcontrolador se apaga.</p>
 
-<p>Ahora sólo falta recuperar la línea que imprime la suma de los dos números leídos! En la descripción de cada unidad verá las secciones de abajo. La sección <em>Entrada</em> provee ejemplos de datos que recibirá el programa, y la sección <em>Salida</em> su correspondiente resultado.</p>
+<p>Ahora sólo falta recuperar la línea que imprime la suma de los dos números leídos! (línea 9). C++ reconoce las siguientes operaciones con números:</p>
+
+<table>
+	<tr><td>+</td><td>Suma</td></tr>
+	<tr><td>-</td><td>Resta</td></tr>
+	<tr><td>*</td><td>Multiplicación</td></tr>
+	<tr><td>/</td><td>División</td></tr>
+	<tr><td>%</td><td>Residuo de la división entera</td></tr>
+</table>
 
 <h2>Ejemplo de entrada</h2>
 
@@ -52,11 +58,12 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 
 
 <initial-code lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
 
 int main()
 {
-	long a = 0, b = 0;
-	while ( std::cin >> a >> b )
+	int a = 0, b = 0;
+	while ( cin >> a >> b )
 	{
 
 	}
@@ -68,13 +75,14 @@ int main()
 
 
 <solution lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
 
 int main()
 {
-	long x = 0, y = 0;
-	while ( std::cin >> x >> y )
+	int x = 0, y = 0;
+	while ( cin >> x >> y )
 	{
-		std::cout << x + y << std::endl;
+		cout << x + y << endl;
 	}
 
 	return 0;
