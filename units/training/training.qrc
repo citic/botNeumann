@@ -1,10 +1,11 @@
 <RCC>
-    <qresource prefix="/training/intro">
-        <file>sum_xy.botnu</file>
-        <file>abs_diff.botnu</file>
-        <file>average_n.botnu</file>
-    </qresource>
-    <qresource prefix="/training/mem_dyn">
-        <file>median.botnu</file>
-    </qresource>
+	<qresource prefix="/training/intro">
+		<file>in_output.botnu</file>
+		<file>sum_xy.botnu</file>
+		<file>abs_diff.botnu</file>
+		<file>average_n.botnu</file>
+	</qresource>
+	<qresource prefix="/training/mem_dyn">
+		<file>median.botnu</file>
+	</qresource>
 </RCC>

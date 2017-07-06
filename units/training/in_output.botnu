@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+
+<botnu id="hello" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+
+
+<description lang="es"><![CDATA[
+<h1>Entrada y salida</h1>
+
+<p>Las personas se interesan en computadoras porque son muy rápidas y precisas procesando datos. Los programas de computadora son procesadores de datos. Los programas reciben datos, realizan cálculos con ellos, y producen resultados útiles para las personas.</p>
+
+<p>Los programas típicamente reciben datos en la <strong>entrada estándar</strong> (<code>cin</code>), hacen cálculos con ellos, y reportan los resultados en la <strong>salida estándar</strong> (<code>cout</code>). El siguiente código imprime un texto en la salida estándar.</p>
+
+<pre>cout &lt;&lt; "Bienvenido a C++\n";</pre>
+
+<p>El <code>"\n"</code> al final inserta un cambio de línea. El siguiente código crea una variable entera (integer) y almacena en ella el número 13:</p>
+
+<pre>int valor = 13;</pre>
+
+<p>El siguiente código crea una variable entera (integer) y almacena en ella un número proveniente de la entrada estándar:</p>
+
+<pre>int valor = 0;
+cin &gt;&gt; valor;
+</pre>
+
+<p>Finalmente, el siguiente código imprime en la salida estándar un valor entero leído de la entrada estándar:</p>
+
+<pre>int valor = 0;
+cin &gt;&gt; valor;
+cout &lt;&lt; "El valor leido fue " &lt;&lt; valor &lt;&lt; endl;
+</pre>
+
+<p>La palabra <code>endl</code> inserta un cambio de línea, al igual que <code>"\n"</code>. El siguiente código lee dos enteros de la entrada estándar:</p>
+
+<pre>int valor1 = 0;
+int valor2 = 0;
+cin &gt;&gt; valor1 >> valor2;
+</pre>
+
+
+<p>Este microcontrolador debe reconocer (leer) dos números enteros de la entrada estándar.</p>
+
+<h2>Ejemplo de entrada:</h2>
+
+<pre>2 -15</pre>
+
+<h2>Ejemplo de salida</h2>
+
+<p>Debe imprimir los dos números en la salida estándar, uno por línea, como se ve a continuación.</p>
+
+<pre>Primer valor: 2
+Segundo valor: -15</pre>
+]]></description>
+
+
+
+<initial-code lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	// Modifique a partir de aqui:
+	int valor = 0;
+	cin >> valor;
+	cout << "El valor leido fue: " << valor << endl;
+}
+]]></initial-code>
+
+
+
+<solution lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	int valor1 = 0;
+	int valor2 = 0;
+	cin >> valor1;
+	cin >> valor2;
+	cout << "Primer valor: " << valor1 << endl;
+	cout << "Segundo valor: " << valor2 << endl;
+
+	return 0;
+}
+]]></solution>
+
+
+
+<standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+int grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	std::cout << grand(-1000, 1000) << ' ' << grand(-1000, 1000) << std::endl;
+
+	return 0;
+}
+]]></standard-generator>
+
+
+
+<test-case>
+<input>
+2 -15
+</input>
+
+<output>Primer valor: 2
+Segundo valor: -15
+</output>
+</test-case>
+
+
+
+</botnu>
