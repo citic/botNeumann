@@ -9,22 +9,7 @@
 <description lang="es"><![CDATA[
 <h1>Sumador simple</h1>
 
-<p>Este microcontrolador era un simple sumador de enteros. Nada sofisticado. Quizá por eso poco fue afectado por los hackers. Todo el código se recuperó legbile menos una línea.</p>
-
-<p>Los microcontroladores no trabajan en solitario, sino que son parte de un gran sistema de microcontroladores interconectados. Los microcontroladores se comunican unos con otros por tubos neumáticos. Un microcontrolador recibe datos de otros microcontroladores a través de un tubo de entrada, conocido como <em>entrada estándar</em> (<code>std::cin</code> en C++). El microcontrolador hace su tarea y envía el resultado a otros microcontroladores a través del tubo de <em>salida estándar</em> (<code>std::cout</code> en C++).</p>
-
-<p>Algunos microcontroladores, como este sumador de enteros, se mantienen encendidos procesando largas secuencias de entrada, y se apagan sólo hasta que no haya más entrada. Hay una razón para ello, y es ahorro de energía. Encender y apagar un microcontrolador requiere recursos. Por eso el sistema espera que el sumador de enteros no sólo reciba una única pareja de enteros, sino muchas parejas de enteros. Por eso la lectura y procesamiento debe hacerse en un ciclo, como el siguiente:</p>
-
-<pre><code>long a, b;
-while ( std::cin &gt;&gt; a &gt;&gt; b )
-{
-
-}
-</code></pre>
-
-<p>El sistema avisa al microcontrolador que ya se ha terminado la entrada y que puede apagarse, enviándole un dato especial, conocido en C++ como <code>EOF</code> (end-of-file). Cuando <code>std::sin</code> ve este dato <code>EOF</code>, rompe el ciclo, el programa termina y el microcontrolador se apaga.</p>
-
-<p>Ahora sólo falta recuperar la línea que imprime la suma de los dos números leídos! (línea 9). C++ reconoce las siguientes operaciones con números:</p>
+<p>Este microcontrolador era un simple sumador de enteros.  Todo su código se perdió. Simplemente debe leer dos enteros de la entrada e imprimir la suma de los dos enteros en la salida. C++ reconoce las siguientes operaciones con números:</p>
 
 <table>
 	<tr><td>+</td><td>Suma</td></tr>
@@ -36,23 +21,15 @@ while ( std::cin &gt;&gt; a &gt;&gt; b )
 
 <h2>Ejemplo de entrada</h2>
 
-<p>Debe recibir parejas de dos enteros separadas por un espacio en blanco. Las parejas se separan entre ellas por cambios de línea. Los enteros son mayores a un millón negativo y menores a un millón positivo.</p>
+<p>Debe recibir un par de enteros separados por un espacio en blanco.</p>
 
-<pre><code>2 5
--4 7
-100 -0
--80 -120
-</code></pre>
+<pre>2 5</pre>
 
 <h2>Ejemplo de salida</h2>
 
 <p>Debe imprimir el resultado de la suma de cada pareja. Un resultado por línea.</p>
 
-<pre><code>7
-3
-100
--200
-</code></pre>
+<pre>7</pre>
 ]]></description>
 
 
@@ -62,13 +39,7 @@ using namespace std;
 
 int main()
 {
-	int a = 0, b = 0;
-	while ( cin >> a >> b )
-	{
-
-	}
-
-	return 0;
+	// Escriba su codigo aqui
 }
 ]]></initial-code>
 
@@ -80,10 +51,8 @@ using namespace std;
 int main()
 {
 	int x = 0, y = 0;
-	while ( cin >> x >> y )
-	{
-		cout << x + y << endl;
-	}
+	cin >> x >> y;
+	cout << x + y << endl;
 
 	return 0;
 }
@@ -95,7 +64,7 @@ int main()
 #include <ctime>
 #include <iostream>
 
-long grand(long min, long max)
+int grand(int min, int max)
 {
 	return rand() % (max - min) + min;
 }
@@ -103,8 +72,7 @@ long grand(long min, long max)
 int main()
 {
 	srand( time(0) + clock() );
-	for ( int index = 0, count = rand() % 11; index < count; ++index )
-		std::cout << grand(-1000000, 1000000) << ' ' << grand(-1000000, 1000000) << std::endl;
+	std::cout << grand(-1000000, 1000000) << ' ' << grand(-1000000, 1000000) << std::endl;
 
 	return 0;
 }
@@ -113,20 +81,9 @@ int main()
 
 
 <test-case>
-<input>0 -0
-2 5
--4 7
-100 -0
--80 -120
--999999 -999999
+<input>2 5
 </input>
-
-<output>0
-7
-3
-100
--200
--1999998
+<output>7
 </output>
 </test-case>
 
