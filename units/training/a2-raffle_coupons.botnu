@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+
+<botnu id="﻿a2-raffle_coupons" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+
+
+<description lang="es"><![CDATA[
+<h1>Cupones para el sorteo</h1>
+
+<p>La compañía de telecomunicaciones quiere dar cupones digitales a sus abonados para un sorteo mensual. Se estableció que por cada 5000 colones consumidos en el mes, el cliente tendrá derecho a un cupón.</p>
+
+<p>Este microcontrolador se usó para el cálculo de cupones, pero su código se perdió por completo. El microcontrolador recibe en la entrada el monto en colones consumidos al final del mes por un cliente en telefonía. El microcontrolador debe reportar en la salida estándar la cantidad de cupones que se darán al cliente.</p>
+
+<h2>Ejemplo de entrada:</h2>
+
+<pre>17505.18</pre>
+
+<h2>Ejemplo de salida</h2>
+
+<pre>3</pre>
+
+<p>Sugerencia: Use divisiones enteras para realizar el cálculo. En C++ se puede convertir una variable real en una entera, simplemente asignándola directamente.</p>
+]]></description>
+
+
+
+<initial-code lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	// Escriba su codigo aqui
+}
+]]></initial-code>
+
+
+
+<solution lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	double monto = 0.0;
+	cin >> monto;
+	int cupones = monto / 5000;
+	cout << cupones << endl;
+}
+]]></solution>
+
+
+
+<standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+double grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	std::cout << grand(100, 2500000) / 100.0 << std::endl;
+
+	return 0;
+}
+]]></standard-generator>
+
+
+<!--
+<test-case>
+	<input>100</input>
+	<output>310.928</output>
+</test-case>
+-->
+
+
+</botnu>

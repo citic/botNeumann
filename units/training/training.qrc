@@ -6,6 +6,7 @@
 		<file>d1-f_to_c.botnu</file>
 	</qresource>
 	<qresource prefix="/training/mem_dyn">
+		<file>a2-raffle_coupons.botnu</file>
 		<file>d2-f_to_k.botnu</file>
 	</qresource>
 </RCC>
