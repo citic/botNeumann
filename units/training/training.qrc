@@ -3,6 +3,7 @@
 		<file>a1-in_output.botnu</file>
 		<file>b1-sum_xy.botnu</file>
 		<file>c1-bmi-1.botnu</file>
+		<file>d1-f_to_c.botnu</file>
 	</qresource>
 	<qresource prefix="/training/mem_dyn">
 		<file>median.botnu</file>
