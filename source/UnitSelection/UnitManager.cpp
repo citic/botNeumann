@@ -20,7 +20,7 @@ bool UnitManager::load(const QString& context)
 		// The level contains units, traverse them and create an entry for each unit found
 		UnitLevel unitLevel( contextDirList[i] ); // :/training/intro/
 		QDir dirLevel( ":/" + context + '/' + contextDirList[i] );
-		dirLevel.setSorting(QDir::NoSort);
+		dirLevel.setSorting(QDir::Name);
 		QFileInfoList unitList = dirLevel.entryInfoList();
 		for ( int j = 0; j < unitList.size(); ++j )
 			unitLevel.units.append( unitList[j].absoluteFilePath() ); // :/training/intro/sum_xy.botnu
