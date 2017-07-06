@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+
+<botnu id="﻿c1-bmi-1" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+
+
+<description lang="es"><![CDATA[
+<h1>Índice de masa corporal</h1>
+
+<p>La obesidad es una de las enfermedades más alarmantes del presente y futuro de la humanidad. Actualmente mueren casi 3 millones de adultos por año a causa de la obesidad y el sobrepeso. Para dar un punto de comparación, si esta enfermedad atacara a todos los ticos, en año y medio acabaría con toda la población del país.</p>
+
+<p>La forma convencional de medir la obesidad es a través del índice de masa corporal (IMC), que se calcula como el cociente de la masa <i>m</i> en kilogramos de la persona con su altura <i>h</i> en metros, según la ecuación: <i>imc = m/h<sup>2</sup></i>.</p>
+
+<p>Este microcontrolador se encarga de calcular el índice de masa corporal. Recibe en la entrada la masa y la altura de una persona. Debe calcular e imprimir su índice de masa corporal. Sin embargo, el código recuperado es de un viejo respaldo y requiere varias correcciones.</p>
+
+<p>Hasta el momento hemos usado variables <code>int</code> para almacenar enteros. C++ usa variables <code>double</code> para almacenar números reales. C++ no tiene un operador para exponenciar, pero es fácil obtener el cuadrado de una variable multiplicándola por sí misma.</p>
+
+<p>La prioridad de operaciones de C++ es la misma que la aprendida en secundaria. Es decir, las multiplicaciones y divisiones se hacen primero que las sumas y restas. En el caso de que varias sumas o restas aparecen seguidas, se hacen en el orden que aparecen. Lo mismo pasa si una expresión sólo tiene divisiones y multiplicaciones. En cualquier caso, el orden de las operaciones puede alterarse usando paréntesis, como en <em>a * (b + c)</em>.</p>
+
+<h2>Ejemplo de entrada:</h2>
+
+<pre>58 1.69</pre>
+
+<h2>Ejemplo de salida</h2>
+
+<pre>20.31</pre>
+]]></description>
+
+
+
+<initial-code lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	int m = 0;
+	int h = 0;
+	cin >> m >> h;
+	int imc = m / h * h;
+	cout << imc << endl;
+}
+]]></initial-code>
+
+
+
+<solution lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	double m = 0;
+	double h = 0;
+	cin >> m >> h;
+	double imc = m / (h * h);
+	cout << imc << endl;
+
+	return 0;
+}
+]]></solution>
+
+
+
+<standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+double grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	std::cout << grand(40, 120) << ' ' << grand(90, 200) / 100.0 << std::endl;
+
+	return 0;
+}
+]]></standard-generator>
+
+
+<!--
+<test-case>
+	<input>58 1.69</input>
+	<output>20.3074</output>
+</test-case>
+-->
+
+
+</botnu>
