@@ -325,6 +325,13 @@ void UnitPlayingScene::startVisualization(int testCaseNumber)
 
 void UnitPlayingScene::loadStandardOutput()
 {
+    // Only if built was successful
+    Q_ASSERT(playerSolution);
+    Q_ASSERT(playerSolution->getPlayerSolutionProgram());
+
+    if ( playerSolution->getPlayerSolutionProgram()->getErrorCount() != 0 )
+        return;
+
 	// After the player solution has generated all output for all test cases, load the output
 	// in the visualization
 	Q_ASSERT(visualizator);
