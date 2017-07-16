@@ -54,6 +54,10 @@ class BotNeumannDirector : public Director
 	void setCurrentScene(Scene* newScene);
 	/// Reloads the last scene saved in settings
 	bool showLastScene();
+
+  protected slots:
+	/// Called when a scene transition is done
+	void sceneTransitionDone() { previousScene = nullptr; }
 };
 
 #endif // BOTNEUMANNDIRECTOR_H

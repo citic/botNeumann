@@ -99,8 +99,8 @@ bool BotNeumannDirector::replaceScene(Scene* newScene, bool forward)
 	Transition* transition = new TransitionSlide(direction, previousScene, currentScene, true, this);
 	transition->run(true);
 
-	// The transition will remove the previous scene object
-	previousScene = nullptr;
+	// The transition will delete the previous scene object from heap memory
+	connect( transition, &Transition::finished, this, &BotNeumannDirector::sceneTransitionDone );
 	return true;
 }
 
