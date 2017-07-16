@@ -36,8 +36,9 @@ void BotNeumannDirector::begin()
 bool BotNeumannDirector::showLastScene()
 {
 	// If last time the application crashed, restore the game menu
-	if ( BotNeumannApp::getInstance()->hasLastSessionCrashed() )
-		return showGameMenuScene();
+//	Disabled for experiments. It is irritating for participants
+//	if ( BotNeumannApp::getInstance()->hasLastSessionCrashed() )
+//		return showGameMenuScene();
 
 	// Last session botNeumann exited cleany, try to recover the last scene
 	QSettings settings;
