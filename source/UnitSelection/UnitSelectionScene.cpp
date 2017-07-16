@@ -107,7 +107,7 @@ void UnitSelectionScene::createUnit(int levelIndex, int unitIndex, int unitCount
 
 	// The button will be enabled if player completed the unit it or it is the first not completed
 	button->setEnabled(currentUnitEnabled);
-	if ( ! playerCompletedUnit ) currentUnitEnabled = false;
+//	if ( ! playerCompletedUnit ) currentUnitEnabled = false;
 
 	// Each button represents an unit. When the button is pressed, the respective unit should be
 	// loaded, pass the filename by a QObject's dynamic property
