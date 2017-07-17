@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+<botnu id="e0-top_ten" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+
+
+<description lang="es"><![CDATA[
+<h1>Top-ten</h1>
+
+<p>Intente código.</p>
+
+<h2>Ejemplo de entrada:</h2>
+
+<pre>100</pre>
+
+<h2>Ejemplo de salida</h2>
+
+<pre>310.928</pre>
+]]></description>
+
+
+
+<initial-code lang="cpp"><![CDATA[#include <algorithm>
+#include <iostream>
+using namespace std;
+
+short scores[10];
+
+class ScoreManager {
+  public:
+	ScoreManager() {
+		int count;
+		cin >> count;
+		while ( count-- )
+			cin >> scores[count];
+		sort(scores, scores+10);
+	}
+
+	short position(short score) {
+		for ( short i = 9; i >= 0; i-- )
+			if ( score > scores[i] )
+				return i;
+		return 0;
+	}
+};
+
+ScoreManager scoreManager;
+
+class Player
+{
+   short score = 0;
+
+  public:
+	Player() {
+		cin >> score;
+	}
+
+	void rank() {
+		cout << scoreManager.position(score)
+			  << " place\n";
+	}
+};
+
+int main()
+{
+	Player player;
+	player.rank();
+}
+]]></initial-code>
+
+
+
+<solution lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	double temperatura;
+	cin >> temperatura;
+	temperatura = (temperatura + 459.67) * 5.0 / 9.0;
+	cout << temperatura << endl;
+}
+]]></solution>
+
+
+
+<standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+double grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	std::cout << grand(-100, 150) << std::endl;
+
+	return 0;
+}
+]]></standard-generator>
+
+
+<test-case>
+	<input>100</input>
+	<output>310.928</output>
+</test-case>
+
+
+</botnu>

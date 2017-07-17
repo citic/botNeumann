@@ -1,4 +1,5 @@
 <RCC>
+<!--
 	<qresource prefix="/training/intro">
 		<file>a1-in_output.botnu</file>
 		<file>b1-sum_xy.botnu</file>
@@ -8,5 +9,11 @@
 	<qresource prefix="/training/mem_dyn">
 		<file>a2-raffle_coupons.botnu</file>
 		<file>d2-f_to_k.botnu</file>
+	</qresource>
+-->
+	<qresource prefix="/training/ndebug">
+		<file>d2-f_to_k.botnu</file>
+		<file>e0-top_ten.botnu</file>
+		<file>en-trial.botnu</file>
 	</qresource>
 </RCC>
