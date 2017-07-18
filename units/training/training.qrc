@@ -12,8 +12,8 @@
 	</qresource>
 -->
 	<qresource prefix="/training/ndebug">
-		<file>d2-f_to_k.botnu</file>
-		<file>e0-top_ten.botnu</file>
-		<file>en-trial.botnu</file>
+                <file>e1.1-f_to_k.botnu</file>
+                <file>e1.2-increment_percent.botnu</file>
+                <file>e1.4-top_ten.botnu</file>
 	</qresource>
 </RCC>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
 
-<botnu id="e0-top_ten" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+<botnu id="e1.2-increment_percent" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
 
 
 <description lang="es"><![CDATA[
-<h1>Top-ten</h1>
+<h1>Trial</h1>
 
 <p>Intente código.</p>
 
@@ -21,51 +21,12 @@
 
 
 
-<initial-code lang="cpp"><![CDATA[#include <algorithm>
-#include <iostream>
+<initial-code lang="cpp"><![CDATA[#include <iostream>
 using namespace std;
-
-short scores[10];
-
-class ScoreManager {
-  public:
-	ScoreManager() {
-		int count;
-		cin >> count;
-		while ( count-- )
-			cin >> scores[count];
-		sort(scores, scores+10);
-	}
-
-	short position(short score) {
-		for ( short i = 9; i >= 0; i-- )
-			if ( score > scores[i] )
-				return i;
-		return 0;
-	}
-};
-
-ScoreManager scoreManager;
-
-class Player
-{
-   short score = 0;
-
-  public:
-	Player() {
-		cin >> score;
-	}
-
-	void rank() {
-		cout << scoreManager.position(score)
-			  << " place\n";
-	}
-};
 
 int main()
 {
-	Player player;
-	player.rank();
+	// Haga cosas raras
 }
 ]]></initial-code>
 
@@ -97,17 +58,22 @@ double grand(int min, int max)
 int main()
 {
 	srand( time(0) + clock() );
-	std::cout << grand(-100, 150) << std::endl;
+	std::cout << grand(0, 100) << std::endl;
+
+	for ( int i = 0; i < 10; ++i )
+		std::cout << (i ? " " : "") << grand(0, 100);
 
 	return 0;
 }
 ]]></standard-generator>
 
 
+<!--
 <test-case>
 	<input>100</input>
 	<output>310.928</output>
 </test-case>
+-->
 
 
 </botnu>
