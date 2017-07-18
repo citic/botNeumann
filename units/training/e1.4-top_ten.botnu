@@ -3,23 +3,37 @@
 
 <botnu id="e1.4-top_ten" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
+<description lang="es"><![CDATA[<h2>Los diez mejores</h2>
 
+<p>Un videojuego implementa un sencillo sistema de puntuación. Cada vez que un jugador termina un nivel, incrementa su marcador. El juego silenciosamente se conecta a un servidor que guarda las 10 mejores marcas. Si el jugador tiene un puntaje mayor que alguna de las marcas, habrá conseguido una posición entre los 10 mejores del mundo, y el juego lo felicita.</p>
 
-<description lang="es"><![CDATA[
-<h1>Top-ten</h1>
+<p>Del lado del servidor, el programa que registra los marcadores está implementado en C++ y es operado por un servidor web. El programa recibe del servidor web todos los datos por entrada estándar. En la primera línea recibe el marcador del jugador. En la segunda línea recibe los 10 mejores marcadores actualmente registrados en el servidor.</p>
 
-<p>Intente código.</p>
+<p><strong>Ejemplo de entrada</strong>:</p>
+<pre>30
+15 100 94 12 230 150 71 60 0 0
+</pre>
 
-<h2>Ejemplo de entrada:</h2>
+<p><strong>Ejemplo de salida</strong>:</p>
+<pre>7 place
+</pre>
 
-<pre>100</pre>
+<p>El sistema debe indicar en la salida estándar si el jugador alcanzó alguna posición. En caso de no haber entrado a la lista de los 10 mejores, se imprime <code>-1 place</code>. Para el ejemplo anterior, las posiciones ordenadas son:</p>
 
-<h2>Ejemplo de salida</h2>
+<pre>1st 230
+2st 150
+3rd 100
+4th  94
+5th  71
+6th  60
+7th  15  &lt;-- 30
+8th  12
+9th   0
+10th  0
+</pre>
 
-<pre>310.928</pre>
+<p>Como puede verse, el jugador con marcador 30, desplazó a quien estaba en la posición 7, y por tanto el sistema reporta <code>7 place</code> en la salida estándar.</p>
 ]]></description>
-
-
 
 <initial-code lang="cpp"><![CDATA[#include <algorithm>
 #include <iostream>
@@ -30,9 +44,7 @@ short scores[10];
 class ScoreManager {
   public:
 	ScoreManager() {
-		int count;
-		cin >> count;
-		while ( count-- )
+		for ( int count = 10; count--; )
 			cin >> scores[count];
 		sort(scores, scores+10);
 	}
@@ -40,8 +52,8 @@ class ScoreManager {
 	short position(short score) {
 		for ( short i = 9; i >= 0; i-- )
 			if ( score > scores[i] )
-				return i;
-		return 0;
+				return 10 - i;
+		return -1;
 	}
 };
 
@@ -69,21 +81,50 @@ int main()
 }
 ]]></initial-code>
 
-
-
-<solution lang="cpp"><![CDATA[#include <iostream>
+<solution lang="cpp"><![CDATA[#include <algorithm>
+#include <iostream>
 using namespace std;
+
+short scores[10];
+
+class ScoreManager {
+  public:
+	ScoreManager() {
+		for ( int count = 10; count--; )
+			cin >> scores[count];
+		sort(scores, scores+10);
+	}
+
+	short position(short score) {
+		for ( short i = 9; i >= 0; i-- )
+			if ( score > scores[i] )
+				return 10 - i;
+		return -1;
+	}
+};
+
+class Player
+{
+	short score = 0;
+
+  public:
+	Player() {
+		cin >> score;
+	}
+
+	void rank(ScoreManager& scoreManager) {
+		cout << scoreManager.position(score)
+			  << " place\n";
+	}
+};
 
 int main()
 {
-	double temperatura;
-	cin >> temperatura;
-	temperatura = (temperatura + 459.67) * 5.0 / 9.0;
-	cout << temperatura << endl;
+	Player player;
+	ScoreManager scoreManager;
+	player.rank(scoreManager);
 }
 ]]></solution>
-
-
 
 <standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
 #include <ctime>
@@ -97,17 +138,84 @@ double grand(int min, int max)
 int main()
 {
 	srand( time(0) + clock() );
-	std::cout << grand(-100, 150) << std::endl;
+	std::cout << grand(0, 100) << std::endl;
+
+	for ( int i = 0; i < 10; ++i )
+		std::cout << (i ? " " : "") << grand(0, 100);
 
 	return 0;
 }
 ]]></standard-generator>
 
-
 <test-case>
-	<input>100</input>
-	<output>310.928</output>
+<input>30
+15 100 94 12 230 150 71 60 0 0
+</input>
+<output>7 place
+</output>
 </test-case>
 
+<test-case>
+<input>330
+15 100 94 12 230 150 71 60 0 0
+</input>
+<output>1 place
+</output>
+</test-case>
 
+<test-case>
+<input>1
+0 0 0 0 0 0 0 0 0 0
+</input>
+<output>1 place
+</output>
+</test-case>
+
+<test-case>
+<input>0
+0 0 0 0 0 0 0 0 0 0
+</input>
+<output>-1 place
+</output>
+</test-case>
+
+<test-case>
+<input>1
+1 2 3 4 5 6 7 8 9 10
+</input>
+<output>-1 place
+</output>
+</test-case>
+
+<test-case>
+<input>2
+1 2 3 4 5 6 7 8 9 10
+</input>
+<output>10 place
+</output>
+</test-case>
+
+<test-case>
+<input>50
+50 50 50 50 50 50 50 50 50 50
+</input>
+<output>-1 place
+</output>
+</test-case>
+
+<test-case>
+<input>51
+50 50 50 50 50 50 50 50 50 50
+</input>
+<output>1 place
+</output>
+</test-case>
+
+<test-case>
+<input>51
+50 51 50 51 50 51 50 50 50 50
+</input>
+<output>4 place
+</output>
+</test-case>
 </botnu>
