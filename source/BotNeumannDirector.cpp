@@ -49,6 +49,10 @@ bool BotNeumannDirector::showLastScene()
 	const QString& lastLevelUnit = settings.value( sk("Application/LastLevelUnit"), "" ).toString();
 	const QString& lastUnitFilename = settings.value( sk("Application/LastUnitFilename"), "" ).toString();
 
+	// If unit does not exist, start with game menu scene
+	if ( ! QFile::exists(lastUnitFilename) )
+		return showGameMenuScene();
+
 	// Recover the scene according to its type
 	if ( lastScene == mapSceneName(sceneUnitPlaying) )
 		return showUnitPlayingScene(lastContext, lastLevelUnit, lastUnitFilename);
