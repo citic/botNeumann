@@ -269,6 +269,27 @@ bool PlayerSolution::playerSolutionBuiltFinished()
 	return true;
 }
 
+#include <QRegExp>
+void PlayerSolution::logSolution(const QString &heading)
+{
+	QString contents;
+	for ( const QFileInfo& fileInfo : editableSourceFiles )
+	{
+		QFile file(fileInfo.absoluteFilePath());
+		if ( file.open(QFile::ReadOnly | QFile::Text) )
+		{
+			for ( QTextStream stream(&file); ! stream.atEnd(); )
+			{
+				QString line = stream.readLine();
+				line.replace(QRegExp("\t"), "    ");
+				contents += line + "@n";
+			}
+		}
+	}
+
+	qCInfo(logPlayer).noquote() << heading << "@n" << contents;
+}
+
 
 // Symbol extraction ------------------------------------------------------------------------------
 

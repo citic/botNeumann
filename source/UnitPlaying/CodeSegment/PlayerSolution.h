@@ -150,6 +150,9 @@ class PlayerSolution : public QObject
 	/// Get the number of generated test cases for this player solution. Only valid after the
 	/// @a testCasesGenerated() signal has been emitted
 	inline int getTestCasesCount() const { return testCasesCount; }
+	/// Copies the entire player solution's code to the application event log
+	/// @param heading Any text to be written before the source code
+	void logSolution(const QString& heading);
 
   signals:
 	/// Emitted when building of player solution executable is finished

@@ -244,6 +244,7 @@ void UnitPlayingScene::userRunOrPaused()
 	{
 		// App is in state editing code, we have to build the player solution and start animation
 		changeState(UnitPlayingState::building);
+		playerSolution->logSolution("Run");
 		buildAll();
 	}
 	else if ( state == UnitPlayingState::animating )
