@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
 
-
 <botnu id="e1.1-f_to_k" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
-
-
-<description lang="es"><![CDATA[
-<h2>Fahrenheit a Kelvin</h2>
+<description lang="es"><![CDATA[<h2>Fahrenheit a Kelvin</h2>
 
 <p>Para propósitos científicos, se requiere un programa que convierta Fahrenheit a Kelvin. Esta conversión se hace con la relación <i>K = 5/9*(F + 459.67)</i>.</p>
 
@@ -19,8 +15,6 @@
 
 <pre>310.928</pre>
 ]]></description>
-
-
 
 <initial-code lang="cpp"><![CDATA[#include <iomanip>
 #include <iostream>
@@ -37,8 +31,6 @@ int main()
 }
 ]]></initial-code>
 
-
-
 <solution lang="cpp"><![CDATA[#include <iostream>
 using namespace std;
 
@@ -50,8 +42,6 @@ int main()
 	cout << temperatura << endl;
 }
 ]]></solution>
-
-
 
 <standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
 #include <ctime>
@@ -71,11 +61,31 @@ int main()
 }
 ]]></standard-generator>
 
-
 <test-case>
-	<input>100</input>
-	<output>310.928</output>
+<input>100
+</input>
+<output>310.928
+</output>
 </test-case>
 
+<test-case>
+<input>32
+</input>
+<output>1 place
+</output>
+</test-case>
 
+<test-case>
+<input>0
+</input>
+<output>1 place
+</output>
+</test-case>
+
+<test-case>
+<input>-273.15
+</input>
+<output>-1 place
+</output>
+</test-case>
 </botnu>
