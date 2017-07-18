@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
 
-<botnu id="e1.1-f_to_k" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+<botnu id="e1-f_to_k" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
 <description lang="es"><![CDATA[<h2>Fahrenheit a Kelvin</h2>
 
@@ -25,18 +25,21 @@ double temperatura;
 int main()
 {
 	cin >> temperatura;
+	cout << fixed << setprecision(3);
 	double temperatura = 0.0;
 	temperatura =  5 / 9 * (temperatura + 459.67);
-	cout << setprecision(3) << temperatura << endl;
+	cout << temperatura << endl;
 }
 ]]></initial-code>
 
-<solution lang="cpp"><![CDATA[#include <iostream>
+<solution lang="cpp"><![CDATA[#include <iomanip>
+#include <iostream>
 using namespace std;
 
 int main()
 {
 	double temperatura = 0.0;
+	cout << fixed << setprecision(3);
 	cin >> temperatura;
 	temperatura = 5.0 / 9.0 * (temperatura + 459.67);
 	cout << temperatura << endl;
@@ -49,7 +52,7 @@ int main()
 
 double grand(int min, int max)
 {
-	return rand() % (max - min) + min;
+	return rand() % (max - min) + min + rand() % 10 / 10.0;
 }
 
 int main()
@@ -71,7 +74,7 @@ int main()
 <test-case>
 <input>32
 </input>
-<output>273.15
+<output>273.150
 </output>
 </test-case>
 

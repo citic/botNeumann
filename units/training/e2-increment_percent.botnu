@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
 
-<botnu id="e1.2-increment_percent" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+<botnu id="e2-increment_percent" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
 <description lang="es"><![CDATA[<h2>Porcentaje de incremento</h2>
 
