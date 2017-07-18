@@ -3,77 +3,161 @@
 
 <botnu id="e1.2-increment_percent" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
+<description lang="es"><![CDATA[<h2>Porcentaje de incremento</h2>
 
+<p>Pese a los esfuerzos y campañas de educación vial, cada año hay más muertes por accidentes de tránsito. De acuerdo a datos del COSEVI, en el 2015 se registraron 398 muertes, mientras que en el 2016 se registraron 448. Es decir, hubo un incremento del 12.56% ¿De dónde se obtiene este número?</p>
 
-<description lang="es"><![CDATA[
-<h1>Trial</h1>
+<p>El porcentaje de incremento entre un valor inicial <i>I</i> y un valor final <i>F</i>, se calcula con la relación <code>100(F-I)/I</code>. En el ejemplo anterior, el porcentaje de incremento de las muertes en accidentes de tránsito entre el 2015 y 2016 se calcularía <code>100*(448-398)/398 = 12.5628</code>. Se quiere un programa que dado un valor inicial y un valor final en la entrada estándar, calcule e imprima en la salida estándar el porcentaje de incremento redondeado a 3 decimales:</p>
 
-<p>Intente código.</p>
+<p><strong>Ejemplo de entrada</strong>:</p>
+<pre>398 448</pre>
 
-<h2>Ejemplo de entrada:</h2>
+<p><strong>Ejemplo de salida</strong>:</p>
+<pre>12.563%</pre>
 
-<pre>100</pre>
-
-<h2>Ejemplo de salida</h2>
-
-<pre>310.928</pre>
+<p>Si los valores son negativos o cero, el resultado del porcentaje de incremento es difícil de interpretar, y por tanto se debe imprimir el texto "<code>error</code>" en la salida estándar.</p>
 ]]></description>
 
-
-
-<initial-code lang="cpp"><![CDATA[#include <iostream>
+<initial-code lang="cpp"><![CDATA[#include <iomanip>
+#include <iostream>
 using namespace std;
+
+double leer()
+{
+	double valor;
+	cin >> valor;
+	return valor;
+}
+
+double incremento(double inicial, double final)
+{
+	return 100 * (final - inicial) / inicial;
+}
+
+void imprimir(double inicial, double final)
+{
+	if ( inicial < 0 || final < 0 )
+		cout << "error\n";
+	else
+		cout << fixed << setprecision(3)
+			 << incremento(inicial, final)
+			 << "%\n";
+}
 
 int main()
 {
-	// Haga cosas raras
+	imprimir(leer(), leer());
 }
 ]]></initial-code>
 
-
-
-<solution lang="cpp"><![CDATA[#include <iostream>
+<solution lang="cpp"><![CDATA[#include <iomanip>
+#include <iostream>
 using namespace std;
+
+double leer()
+{
+	double valor;
+	cin >> valor;
+	return valor;
+}
+
+double incremento(double inicial, double final)
+{
+	return 100 * (final - inicial) / inicial;
+}
+
+void imprimir(double inicial, double final)
+{
+	if ( inicial <= 0 || final <= 0 )
+		cout << "error\n";
+	else
+		cout << fixed << setprecision(3)
+			 << incremento(inicial, final)
+			 << "%\n";
+}
 
 int main()
 {
-	double temperatura;
-	cin >> temperatura;
-	temperatura = (temperatura + 459.67) * 5.0 / 9.0;
-	cout << temperatura << endl;
+	double inicial = leer();
+	double final = leer();
+	imprimir(inicial, final);
 }
 ]]></solution>
 
-
-
-<standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
-#include <ctime>
-#include <iostream>
-
-double grand(int min, int max)
-{
-	return rand() % (max - min) + min;
-}
-
-int main()
-{
-	srand( time(0) + clock() );
-	std::cout << grand(0, 100) << std::endl;
-
-	for ( int i = 0; i < 10; ++i )
-		std::cout << (i ? " " : "") << grand(0, 100);
-
-	return 0;
-}
-]]></standard-generator>
-
-
-<!--
 <test-case>
-	<input>100</input>
-	<output>310.928</output>
+<input>398 448
+</input>
+<output>12.563%
+</output>
 </test-case>
--->
 
+<test-case>
+<input>100 200
+</input>
+<output>100.000%
+</output>
+</test-case>
 
+<test-case>
+<input>150 100
+</input>
+<output>-33.333%
+</output>
+</test-case>
+
+<test-case>
+<input>0 300
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>80 0
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>50 -100
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>-1 0
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>30 30
+</input>
+<output>0.000%
+</output>
+</test-case>
+
+<test-case>
+<input>0 0
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>80 0.1
+</input>
+<output>-99.875%
+</output>
+</test-case>
+
+<test-case>
+<input>0.5 0.25
+</input>
+<output>-50.000%
+</output>
+</test-case>
 </botnu>
