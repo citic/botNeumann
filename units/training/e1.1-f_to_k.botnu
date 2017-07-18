@@ -20,13 +20,13 @@
 #include <iostream>
 using namespace std;
 
-double temperatura = 0.0;
+double temperatura;
 
 int main()
 {
 	cin >> temperatura;
 	double temperatura = 0.0;
-	temperatura = (temperatura + 459.67) * 5 / 9;
+	temperatura =  5 / 9 * (temperatura + 459.67);
 	cout << setprecision(3) << temperatura << endl;
 }
 ]]></initial-code>
@@ -36,9 +36,9 @@ using namespace std;
 
 int main()
 {
-	double temperatura;
+	double temperatura = 0.0;
 	cin >> temperatura;
-	temperatura = (temperatura + 459.67) * 5.0 / 9.0;
+	temperatura = 5.0 / 9.0 * (temperatura + 459.67);
 	cout << temperatura << endl;
 }
 ]]></solution>
@@ -71,21 +71,21 @@ int main()
 <test-case>
 <input>32
 </input>
-<output>1 place
+<output>273.15
 </output>
 </test-case>
 
 <test-case>
 <input>0
 </input>
-<output>1 place
+<output>255.372
 </output>
 </test-case>
 
 <test-case>
 <input>-273.15
 </input>
-<output>-1 place
+<output>103.622
 </output>
 </test-case>
 </botnu>
