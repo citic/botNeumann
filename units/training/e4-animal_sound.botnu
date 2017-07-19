@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+<botnu id="e4-animal_sound" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+<description lang="es"><![CDATA[<h2>Sonido de animales</h2>
+
+<p>En una aplicación para que niños pequeños conozcan el alfabeto de forma amena, se quiere que cada letra esté asociada a un animal. Cuando se lanza una letra a la pantalla, se quiere que el sonido del animal se reproduzca en los parlantes del dispositivo.</p>
+
+<p>Se quiere la aplicación sea polimórfica para agregar animales con facilidad en el futuro. Por el momento, se quiere que dada una letra del alfabeto, el programa indique en la salida estándar el sonido que hay que reproducir.</p>
+
+<h3>Ejemplo de entrada:</h3>
+
+<pre>c</pre>
+
+<h3>Ejemplo de salida</h3>
+
+<pre>mu.mp3</pre>
+
+<p>Si el animal aún no se ha implementado, se debe indicar el mensaje "<code>unregistered</code> en la salida estándar, para indicar a los ingenieros de sonido realizar la grabación.</p>
+]]></description>
+
+<initial-code lang="cpp"><![CDATA[#include <cctype>
+#include <iomanip>
+#include <iostream>
+using namespace std;
+
+class Animal
+{
+  public:
+	Animal() { cout << makeSound() << ".mp3\n"; }
+	virtual const char* makeSound() const { return ""; }
+	virtual ~Animal() { }
+};
+
+class Bird : public Animal
+{
+  public:
+	virtual const char* makeSound() const override { return "cucu"; }
+};
+
+class Cow : public Animal
+{
+  public:
+	virtual const char* makeSound() const override { return "mu"; }
+};
+
+class Duck : public Animal
+{
+  public:
+	virtual const char* makeSound() const override { return "cuak"; }
+};
+
+Animal* createAnimal(char letter)
+{
+	switch ( tolower(letter) )
+	{
+		case 'b': return new Bird(); break;
+		case 'c': return new Cow(); break;
+		case 'd': return new Duck(); break;
+	}
+	return nullptr;
+}
+
+int main()
+{
+	char letter;
+	cin >> letter;
+
+	Animal* animal = createAnimal(letter);
+
+	if ( ! animal )
+		cout << "unregistered\n";
+
+	delete animal;
+}
+]]></initial-code>
+
+<solution lang="cpp"><![CDATA[#include <cctype>
+#include <iomanip>
+#include <iostream>
+using namespace std;
+
+class Animal
+{
+  public:
+	Animal() { }
+	virtual const char* makeSound() const { return ""; }
+	virtual ~Animal() { }
+};
+
+class Bird : public Animal
+{
+  public:
+	virtual const char* makeSound() const override { return "cucu"; }
+};
+
+class Cow : public Animal
+{
+  public:
+	virtual const char* makeSound() const override { return "mu"; }
+};
+
+class Duck : public Animal
+{
+  public:
+	virtual const char* makeSound() const override { return "cuak"; }
+};
+
+Animal* createAnimal(char letter)
+{
+	switch ( tolower(letter) )
+	{
+		case 'b': return new Bird(); break;
+		case 'c': return new Cow(); break;
+		case 'd': return new Duck(); break;
+	}
+	return nullptr;
+}
+
+int main()
+{
+	char letter;
+	cin >> letter;
+
+	Animal* animal = createAnimal(letter);
+
+	if ( ! animal )
+		cout << "unregistered\n";
+	else
+		cout << animal->makeSound() << ".mp3\n";
+
+	delete animal;
+}
+]]></solution>
+
+<standard-generator lang="cpp" default-runs="4"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+double grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	std::cout << char('a' + grand(0, 26)) << std::endl;
+
+	return 0;
+}
+]]></standard-generator>
+
+<test-case>
+<input>c
+</input>
+<output>mu.mp3
+</output>
+</test-case>
+
+<test-case>
+<input>a
+</input>
+<output>unregistered
+</output>
+</test-case>
+
+<test-case>
+<input>d
+</input>
+<output>cuak.mp3
+</output>
+</test-case>
+
+<test-case>
+<input>b
+</input>
+<output>cucu.mp3
+</output>
+</test-case>
+</botnu>

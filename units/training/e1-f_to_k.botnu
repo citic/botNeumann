@@ -7,11 +7,11 @@
 
 <p>Para propósitos científicos, se requiere un programa que convierta Fahrenheit a Kelvin. Esta conversión se hace con la relación <i>K = 5/9*(F + 459.67)</i>.</p>
 
-<h2>Ejemplo de entrada:</h2>
+<h3>Ejemplo de entrada:</h3>
 
 <pre>100</pre>
 
-<h2>Ejemplo de salida</h2>
+<h3>Ejemplo de salida</h3>
 
 <pre>310.928</pre>
 ]]></description>

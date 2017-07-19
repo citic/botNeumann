@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+<botnu id="e3-is_binary" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+<description lang="es"><![CDATA[<h2>¿Es binario?</h2>
+
+<p>Para un juego educativo sobre el sistema numérico en base dos, se requiere que el usuario ingrese números en la entrada estándar. En cierto retos del juego se requiere que los números sólo estén compuestos de los dígitos <code>0</code> y <code>1</code>, en otros retos lo opuesto. Se requiere simplemente una rutina que dado un número entero, el cual puede ser muy grande, indique si está compuesto únicamente de digitos binarios. En caso de serlo, debe imprimir <code>1</code> en la salida estándar, de lo contrario <code>0</code>.</p>
+
+<p><strong>Ejemplo de entrada</strong>:</p>
+<pre>100110100
+</pre>
+
+<p><strong>Ejemplo de salida</strong>:</p>
+<pre>1
+</pre>
+]]></description>
+
+<initial-code lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+short is_binary(long long number){
+	if(number<0) number-=number;
+	bool bin, in_loop=number!=0;
+	do {
+		switch (number%10 ){
+			case 0:{bin=true;}
+			case 1:{bin=true;}
+			default:{
+				bin=false;
+			}
+		}
+
+		number/=10;
+		in_loop=number=!0;
+	}
+	while(in_loop);
+		return bin;
+}
+
+int main()
+{
+	long long x;
+	cin>>x;
+	cout<<is_binary(x)<<endl;
+}
+]]></initial-code>
+
+<solution lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+short is_binary(long long number){
+	bool bin = true,in_loop=number!=0;
+	if(number<0) number=-number;
+	do{
+		switch (number%10 ) {
+			case 0: break;
+			case 1: break;
+			default:{
+				bin=false;
+			}
+		}
+
+		number/=10;
+		in_loop=number!=0;
+	}
+	while(in_loop);
+		return bin;
+}
+
+int main()
+{
+	long long x;
+	cin>>x;
+	cout<<is_binary(x)<<endl;
+}
+]]></solution>
+
+<standard-generator lang="cpp" default-runs="3"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+double grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	if ( grand(0, 2) == 1 )
+		std::cout << '-';
+	for ( int i = 0, n = grand(1, 19); i < n; ++i )
+		if ( grand(0, 100) < 90 )
+			std::cout << grand(0, 2);
+		else
+			std::cout << grand(0, 10);
+
+	std::cout << std::endl;
+	return 0;
+}
+]]></standard-generator>
+
+<test-case>
+<input>100110100
+</input>
+<output>1
+</output>
+</test-case>
+
+<test-case>
+<input>00011002
+</input>
+<output>0
+</output>
+</test-case>
+
+<test-case>
+<input>001100110011001100110
+</input>
+<output>1
+</output>
+</test-case>
+
+<test-case>
+<input>0
+</input>
+<output>1
+</output>
+</test-case>
+
+<test-case>
+<input>-1
+</input>
+<output>1
+</output>
+</test-case>
+
+<test-case>
+<input>-1024
+</input>
+<output>0
+</output>
+</test-case>
+</botnu>

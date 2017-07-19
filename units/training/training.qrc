@@ -14,6 +14,7 @@
 	<qresource prefix="/training/ndebug">
 		<file>e1-f_to_k.botnu</file>
 		<file>e2-increment_percent.botnu</file>
-		<file>e4-top_ten.botnu</file>
+		<file>e3-is_binary.botnu</file>
+		<file>e4-animal_sound.botnu</file>
 	</qresource>
 </RCC>
