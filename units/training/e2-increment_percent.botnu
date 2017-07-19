@@ -13,7 +13,7 @@
 <pre>398 448</pre>
 
 <p><strong>Ejemplo de salida</strong>:</p>
-<pre>12.563%</pre>
+<pre>12.56%</pre>
 
 <p>Si los valores son negativos o cero, el resultado del porcentaje de incremento es difícil de interpretar, y por tanto se debe imprimir el texto "<code>error</code>" en la salida estándar.</p>
 ]]></description>
@@ -25,6 +25,7 @@ using namespace std;
 double leer()
 {
 	double valor;
+
 	cin >> valor;
 	return valor;
 }
@@ -39,13 +40,12 @@ void imprimir(double inicial, double final)
 	if ( inicial < 0 || final < 0 )
 		cout << "error\n";
 	else
-		cout << fixed << setprecision(3)
-			 << incremento(inicial, final)
-			 << "%\n";
+		cout << incremento(inicial, final) << "%\n";
 }
 
 int main()
 {
+	cout << fixed << setprecision(2);
 	imprimir(leer(), leer());
 }
 ]]></initial-code>
@@ -57,6 +57,7 @@ using namespace std;
 double leer()
 {
 	double valor;
+
 	cin >> valor;
 	return valor;
 }
@@ -71,15 +72,15 @@ void imprimir(double inicial, double final)
 	if ( inicial <= 0 || final <= 0 )
 		cout << "error\n";
 	else
-		cout << fixed << setprecision(3)
-			 << incremento(inicial, final)
-			 << "%\n";
+		cout << incremento(inicial, final) << "%\n";
 }
 
 int main()
 {
 	double inicial = leer();
 	double final = leer();
+
+	cout << fixed << setprecision(2);
 	imprimir(inicial, final);
 }
 ]]></solution>
@@ -87,21 +88,21 @@ int main()
 <test-case>
 <input>398 448
 </input>
-<output>12.563%
+<output>12.56%
 </output>
 </test-case>
 
 <test-case>
 <input>100 200
 </input>
-<output>100.000%
+<output>100.00%
 </output>
 </test-case>
 
 <test-case>
 <input>150 100
 </input>
-<output>-33.333%
+<output>-33.33%
 </output>
 </test-case>
 
@@ -136,7 +137,7 @@ int main()
 <test-case>
 <input>30 30
 </input>
-<output>0.000%
+<output>0.00%
 </output>
 </test-case>
 
@@ -150,14 +151,14 @@ int main()
 <test-case>
 <input>80 0.1
 </input>
-<output>-99.875%
+<output>-99.88%
 </output>
 </test-case>
 
 <test-case>
 <input>0.5 0.25
 </input>
-<output>-50.000%
+<output>-50.00%
 </output>
 </test-case>
 </botnu>

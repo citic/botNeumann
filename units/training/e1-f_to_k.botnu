@@ -25,9 +25,11 @@ double temperatura;
 int main()
 {
 	cin >> temperatura;
-	cout << fixed << setprecision(3);
 	double temperatura = 0.0;
-	temperatura =  5 / 9 * (temperatura + 459.67);
+
+	temperatura = 5 / 9 * (temperatura + 459.67);
+
+	cout << fixed << setprecision(3);
 	cout << temperatura << endl;
 }
 ]]></initial-code>
@@ -39,9 +41,11 @@ using namespace std;
 int main()
 {
 	double temperatura = 0.0;
-	cout << fixed << setprecision(3);
+
 	cin >> temperatura;
 	temperatura = 5.0 / 9.0 * (temperatura + 459.67);
+
+	cout << fixed << setprecision(3);
 	cout << temperatura << endl;
 }
 ]]></solution>
