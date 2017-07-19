@@ -85,6 +85,26 @@ int main()
 }
 ]]></solution>
 
+<standard-generator lang="cpp" default-runs="2"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+int grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	std::cout
+		<< grand(-100, 1000) << ' '
+		<< grand(-100, 1000) << std::endl;
+
+	return 0;
+}
+]]></standard-generator>
+
 <test-case>
 <input>398 448
 </input>
