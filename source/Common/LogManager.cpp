@@ -57,7 +57,7 @@ LogManager::LogManager(QObject* parent)
 		if ( ! exists )
 		{
 			// It is a new log file, write the CSV header line and the first event
-			logFile.write("Date;Time;SessionTime;User;Type;Category;Details\n");
+			logFile.write("Date\tTime\tSessionTime\tUser\tType\tCategory\tDetails\n");
 			qCInfo(logApplication(), "Log file '%s' created", qUtf8Printable(filename));
 		}
 
@@ -84,7 +84,7 @@ void LogManager::messageHandler(QtMsgType type, const QMessageLogContext& contex
 
 	// Write the date and time when the event was logged and the seconds from session start
 	const QDateTime& now = QDateTime::currentDateTime();
-	const QString& datetime = now.toString("yyMMdd;hhmmss");
+	const QString& datetime = now.toString("yyMMdd\thhmmss");
 
 	// Used to calculate the ellapsed time of each event from the start of the session
 	static QDateTime sessionStart = QDateTime::currentDateTime();
