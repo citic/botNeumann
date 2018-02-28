@@ -272,21 +272,31 @@ bool PlayerSolution::playerSolutionBuiltFinished()
 #include <QRegExp>
 void PlayerSolution::logSolution(const QString &heading)
 {
+	// Concatenate all the player solution files in a single string
 	QString contents;
+
+	// Traverse all files that compound the player solution
 	for ( const QFileInfo& fileInfo : editableSourceFiles )
 	{
+		// Open the text file
 		QFile file(fileInfo.absoluteFilePath());
 		if ( file.open(QFile::ReadOnly | QFile::Text) )
 		{
+			// Read each line of the file
 			for ( QTextStream stream(&file); ! stream.atEnd(); )
 			{
+				// Get the line and replace the CSV separator (tabs) by spaces
 				QString line = stream.readLine();
-				line.replace(QRegExp("\t"), "    ");
+				line.replace(QRegExp("\\t"), "    ");
+
+				// Append the line to the player solution, replacing the
+				// new line by a @n, because new lines mean a new record in CSV
 				contents += line + "@n";
 			}
 		}
 	}
 
+	// Log the entire source code
 	qCInfo(logPlayer).noquote() << heading << "@n" << contents;
 }
 
