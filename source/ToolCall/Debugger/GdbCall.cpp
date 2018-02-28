@@ -72,11 +72,14 @@ bool GdbCall::stop()
 
 GdbResult GdbCall::sendGdbCommand(const QString& command, int userData, GdbItemTree* resultData)
 {
+	// If GDB is already running another command, wait
 	if ( busy != 0 )
 		return GDB_ERROR;
 
+	// Now we are sending another command
 	++busy;
 
+	// Create an object representing the command and add it to the list of commands being processed
 	GdbCommand gdbCommand(command, userData);
 	pendingCommands.append(gdbCommand);
 
@@ -88,7 +91,6 @@ GdbResult GdbCall::sendGdbCommand(const QString& command, int userData, GdbItemT
 		qCDebug(logTemporary).nospace() << "Enforcing cmd=" << lastCommandNumberReceived << " usr=" << lastUserData;
 	}
 
-	qCInfo(logUnformatted()) << '\n';
 	qCInfo(logDebuggerRequest).noquote().nospace() << gdbCommand.getText() << " | usr=" << userData;
 	process->write( qPrintable( gdbCommand.getCommand() ) );
 
