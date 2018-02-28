@@ -15,9 +15,11 @@ Compiler::~Compiler()
 
 void Compiler::clear()
 {
-	for (int i = 0; i < compilerCalls.size(); ++i)
-		delete compilerCalls[i];
+	// Delete all compiler call objects
+	for (int index = 0; index < compilerCalls.size(); ++index)
+		delete compilerCalls[index];
 
+	// Clear all the containers
 	compilerCalls.clear();
 	allDiagnostics.clear();
 	objectFiles.clear();

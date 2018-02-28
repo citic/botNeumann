@@ -20,6 +20,7 @@ int CompiledProgram::getErrorCount() const
 bool CompiledProgram::build(const ProgramText* programText, const QString& destinationDirectory)
 {
 	// Store the program text for future use
+	Q_ASSERT(programText);
 	this->programText = programText;
 	this->destinationDirectory = destinationDirectory;
 
