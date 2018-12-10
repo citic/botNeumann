@@ -17,8 +17,6 @@ class DebuggerCall : public ToolCall
 	explicit DebuggerCall(QObject* parent = nullptr);
 	/// Destructor
 	~DebuggerCall();
-	/// Returns the name of the debugger command, including its full path if necessary
-	static QString getDebugger();
 	/// Emits finished() when it has finished. The result (success, error, or warnings) can be
 	/// consulted after the finished() signal has been emitted
 	virtual bool start() = 0;

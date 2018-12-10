@@ -7,11 +7,7 @@
 
 /*static*/ size_t GdbCommand::instances = 0;
 
-#ifdef Q_OS_MAC
-	static const QString gdbPath = QStringLiteral("/opt/local/bin/ggdb");
-#else
-	static const QString gdbPath = QStringLiteral("gdb");
-#endif
+static const QString gdbPath = QStringLiteral("gdb");
 
 GdbCall::GdbCall(QObject *parent)
 	: DebuggerCall(parent)

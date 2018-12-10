@@ -54,6 +54,8 @@ class BotNeumannApp : public QApplication
 	/// Adds the font from the given resource name to the font database
 	/// @return The family name of the loaded font, empty on error
 	QString loadFont(const QString& fileName);
+	/// Modifies environment variables required by botNeumann, e.g: PATH on macOS
+	void updateEnvironment();
 };
 
 #endif // BOTNEUMANNAPP_H

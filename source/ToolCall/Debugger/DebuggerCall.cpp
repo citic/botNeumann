@@ -8,12 +8,3 @@ DebuggerCall::DebuggerCall(QObject *parent)
 DebuggerCall::~DebuggerCall()
 {
 }
-
-QString DebuggerCall::getDebugger()
-{
-  #if defined(Q_OS_MACX)
-	return getCompilerInstallationDirectory() + "ggdb";
-  #else
-	return getCompilerInstallationDirectory() + "gdb";
-#endif
-}

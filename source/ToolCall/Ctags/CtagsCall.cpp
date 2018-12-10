@@ -5,11 +5,7 @@
 #include <QFileInfoList>
 #include <QRegularExpression>
 
-#ifdef Q_OS_MAC
-	static const QString ctagsPath = QStringLiteral("/opt/local/bin/ctags");
-#else
-	static const QString ctagsPath = QStringLiteral("ctags");
-#endif
+static const QString ctagsPath = QStringLiteral("ctags");
 
 bool Symbol::loadFrom(const QString& line)
 {

@@ -49,6 +49,8 @@ BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
 		qWarning("Application settings were reset");
 	}
 
+	updateEnvironment();
+
 	// Save in settings a flag indicating the application started
 	// It will be cleared when the application finishes cleany
 	lastSessionCrashed = settings.value(sk("Application/ExitClean"), "") == "running";
@@ -119,4 +121,39 @@ QString BotNeumannApp::loadFont(const QString& fileName)
 	const QStringList& list = QFontDatabase::applicationFontFamilies(id);
 	Q_ASSERT(list.size() > 0);
 	return list[0];
+}
+
+#ifdef Q_OS_MAC
+#include <QProcessEnvironment>
+#endif
+
+void BotNeumannApp::updateEnvironment()
+{
+  #ifdef Q_OS_MAC
+	// PATH in macOS excludes Homebrew and MacPorts directories, add them
+
+	// Get the list of all environment variables and their values as pairs VAR=value
+	QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+	QStringList variableList = environment.toStringList();
+
+	// Locate PATH in the list
+	for ( int index = 0; index < variableList.count(); ++index )
+	{
+		QString entry = variableList[index];
+		if ( entry.startsWith("PATH=") )
+		{
+			// We found PATH, we need to reuse its current value
+			int pos = entry.indexOf('=');
+			Q_ASSERT(pos != -1);
+			QString value = entry.mid(pos);
+
+			// Append the path for Homebrew and MacPorts
+			value += ":/usr/local/bin";
+			value += ":/opt/local/bin";
+
+			// Make it the new value for this process only
+			setenv("PATH", value.toLatin1().constData(), true);
+		}
+	}
+  #endif
 }
