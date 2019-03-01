@@ -190,7 +190,7 @@ void UnitPlayingScene::createCodeSegment()
 	Q_ASSERT(codeSegment == nullptr);
 	codeSegment = new CodeSegment(mainWindow);
 	codeSegment->setVisible(false);
-	mainWindow->addDockWidget(Qt::RightDockWidgetArea, codeSegment);
+	mainWindow->addDockWidget(Qt::LeftDockWidgetArea, codeSegment);
 
 	// When the user presses the button Run, his/her solution is compiled and linked. If there were
 	// no errors, the simulation should start
