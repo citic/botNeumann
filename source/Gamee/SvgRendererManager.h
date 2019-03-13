@@ -16,7 +16,7 @@ class SvgRendererManager : public QObject
 	/// Pointer to the instance of the manger in heap
 	static SvgRendererManager* manager;
 	/// An svg renderer for each scene
-	QSvgRenderer* renderers[sceneCount] = {0};
+	QSvgRenderer* renderers[sceneCount] = {nullptr};
 
   public:
 	/// Get access to the unique instance of this object

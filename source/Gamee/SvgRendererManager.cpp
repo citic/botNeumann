@@ -8,7 +8,7 @@ static const char* svgFiles[] =
 
 	":/game_menu.svg",
 	":/unit_selection.svg",
-	":/unit_playing.svg",
+	":/unit_playing" STRINGIZE(ASSETTYPE) ".svg",
 };
 
 SvgRendererManager::SvgRendererManager()

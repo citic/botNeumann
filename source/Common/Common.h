@@ -10,6 +10,11 @@
 /// Used to identify all QSettings keys in source code (sk=setting key)
 #define sk(key) key
 
+/// Converts a macro value into a "value"
+/// @see http://gcc.gnu.org/onlinedocs/cpp/Stringizing.html
+#define STRINGIZE(value) STRINGIZE2(value)
+#define STRINGIZE2(value) #value
+
 #define DELETE_POINTERS_ARRAY(array) \
 	for ( int index = 0; index < array.count(); ++index ) \
 		delete array[index]

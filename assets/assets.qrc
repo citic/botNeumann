@@ -6,7 +6,8 @@
 		<file>general.svg</file>
 		<file>game_menu.svg</file>
 		<file>unit_selection.svg</file>
-		<file>unit_playing.svg</file>
+		<file>unit_playing_abstract.svg</file>
+		<file>unit_playing_concrete.svg</file>
 	</qresource>
 	<qresource prefix="/fonts">
 		<file>fonts/liberation_mono_regular.ttf</file>
