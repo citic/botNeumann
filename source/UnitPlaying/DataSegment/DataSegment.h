@@ -1,6 +1,8 @@
 #ifndef DATASEGMENT_H
 #define DATASEGMENT_H
 
+#include <QObject>
+
 #include "MemorySegment.h"
 #include "VisualizationContext.h"
 

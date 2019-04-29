@@ -187,9 +187,9 @@ bool MemoryAllocation::parseIndirectionDataTypeStr(const QString& text)
 	const QString& pointerConstancy = match.captured(3).trimmed(); // const
 
 	// Set the type according to the symbol used in declaration
-	if ( pointerReference == '*' )
+    if ( pointerReference == QString('*') )
 		this->dataType = typePointer;
-	else if ( pointerReference == '&' )
+    else if ( pointerReference == QString('&') )
 		this->dataType = typeReference;
 	else
 		return false;

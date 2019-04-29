@@ -1,6 +1,8 @@
 #ifndef HEAPSEGMENT_H
 #define HEAPSEGMENT_H
 
+#include <QObject>
+
 #include "MemorySegment.h"
 
 class MemoryFrame;

@@ -7,6 +7,8 @@
 
 class LabelButton;
 class Actor;
+class QBrush;
+class QFont;
 class QGraphicsItem;
 
 /**
@@ -37,7 +39,7 @@ class MultiSvgButton : public LinearLayout
 	/// Skew the svg button
 	void setShear(qreal shearX, qreal shearY);
 
-  public slots:
+  public /*slots*/:
 	/// When disabled, the button becomes semi-transparent
 	/// @remarks This method is not virtual at QGraphicsItem
 	void setEnabled(bool enabled) /*override*/;

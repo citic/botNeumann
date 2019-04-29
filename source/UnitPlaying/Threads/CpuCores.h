@@ -3,6 +3,7 @@
 
 #include "MemorySegment.h"
 
+#include <QObject>
 #include <QVector>
 
 class CpuCore;

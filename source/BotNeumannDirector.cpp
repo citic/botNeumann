@@ -6,6 +6,7 @@
 #include "UnitPlayingScene.h"
 #include "UnitSelectionScene.h"
 
+#include <QFile>
 #include <QSettings>
 
 BotNeumannDirector::BotNeumannDirector(Stage* stage, QObject* parent)
