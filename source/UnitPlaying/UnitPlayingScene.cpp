@@ -15,6 +15,7 @@
 #include "Visualizator.h"
 
 #include <QSettings>
+#include <QTime>
 #include <QTimer>
 
 UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename, Stage* stage, QGraphicsItem* parent)
@@ -24,6 +25,11 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	, filename(filename)
 {
 	setBackground("up_background");
+
+  #ifdef BN_LAYOUT_TIMING
+	QTime creationTime;
+	creationTime.start();
+  #endif
 
 	// We extract some vertical space of the game menu to place the test cases control keeping an
 	// golden ratio (aurea) where the standard menu has the longer height and the test cases the shorter
@@ -53,6 +59,11 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	// Create the docking segments
 	createCodeSegment();
 	createMessagesArea();
+
+  #ifdef BN_LAYOUT_TIMING
+	qDebug() << "Unit playing constructor time: " << creationTime.elapsed() / 1000.0 << "s";
+	QTimer::singleShot(0, this, [creationTime]() { qCInfo(logApplication, "Unit playing scene creation time: %lfs", creationTime.elapsed() / 1000.0); } );
+  #endif
 
 	// This is the last scene loaded
 	QSettings settings;
