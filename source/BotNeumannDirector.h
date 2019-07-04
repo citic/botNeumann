@@ -21,7 +21,7 @@ class BotNeumannDirector : public Director
 	/// Constructor
 	explicit BotNeumannDirector(Stage* stage = nullptr, QObject* parent = nullptr);
 	/// Destructor
-	virtual ~BotNeumannDirector();
+	virtual ~BotNeumannDirector() override;
 	/// Begin the game. Run the first scene
 	virtual void begin() override;
 	/// Returns true if a transition is running

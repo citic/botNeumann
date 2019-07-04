@@ -34,7 +34,7 @@ BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
   #endif
 
 	// Set the seed for generating random numbers. ToDo: change it for <random>
-	qsrand(time(nullptr));
+	qsrand( static_cast<unsigned>( time(nullptr) ) );
 
 	// Default font for the game
 	robotFontName = loadFont(":/fonts/fonts/tenby_five.otf");
