@@ -76,7 +76,11 @@ bool GraphicValue::buildGraphicValue()
 		case typeInt:       buildMultiByteVariable("int", refIntPaddings); break;
 		case typeEnum:      buildMultiByteVariable("int", refIntPaddings); break;
 		case typeBitField:  buildMultiByteVariable("int", refIntPaddings); break;
+	  #if ABSTRACT
+		case typeFloat:     buildMultiByteVariable("up_float", refFloatPaddings); break;
+	  #else
 		case typeFloat:     buildMultiByteVariable("float", refFloatPaddings); break;
+	  #endif
 
 		// Indirection types
 		case typePointer:   buildMultiByteVariable("pointer", refPointerPaddings); break;

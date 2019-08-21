@@ -50,7 +50,7 @@ class Actor : public QGraphicsSvgItem, public LayoutItem, public AlignedItem
 	/// @param loadFile Dummy value to distinguish this constructor from the former
 	explicit Actor(const QString& svgFilename, QGraphicsItem* parentItem, bool loadFile);
 	/// Destructor
-	virtual ~Actor();
+	virtual ~Actor() override;
 	/// Used to differentiate between pure-layout items and scenic elements
 	virtual bool isActor() const override { return true; }
 	/// Called on QGraphicItem in order to remove them from the scene

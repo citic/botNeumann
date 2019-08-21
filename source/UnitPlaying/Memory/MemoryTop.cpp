@@ -30,6 +30,12 @@ void MemoryTop::buildMemoryTop()
 	Actor* middleRoof = new Actor("up_memory_top_middle", graphicsParentItem);
 	Actor* rightRoof = new Actor("up_memory_top_right", graphicsParentItem);
 
+  #if ABSTRACT
+	leftRoof->setPaddings  (-0.01, -0.195, -0.05, 0.0);
+	middleRoof->setPaddings(0.0, -0.005, -0.005, 0.0);
+	rightRoof->setPaddings (-0.01, 0.0, -0.05, -0.195);
+  #endif
+
 	// Add them to the layout
 	addItem(leftRoof, leftRightProportion, zValue);
 	addItem(middleRoof, middleProportion, zValue);

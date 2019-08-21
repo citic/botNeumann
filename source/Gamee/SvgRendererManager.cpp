@@ -2,13 +2,18 @@
 
 SvgRendererManager* SvgRendererManager::manager = nullptr;
 
+
 static const char* svgFiles[] =
 {
 	":/general.svg",
 
 	":/game_menu.svg",
 	":/unit_selection.svg",
-	":/unit_playing" STRINGIZE(ASSETTYPE) ".svg",
+  #if ABSTRACT
+	":/unit_playing_abstract.svg"
+  #else
+	":/unit_playing_concrete.svg"
+  #endif
 };
 
 SvgRendererManager::SvgRendererManager()

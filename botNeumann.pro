@@ -9,9 +9,8 @@ ICON = assets/game_logo.icns
 # Executable icon on Microsoft Windows
 RC_ICONS = assets/game_logo.ico
 
-# Type of interface "_abstract" or "_concrete"
- DEFINES += ASSETTYPE=_abstract
-#DEFINES += ASSETTYPE=_concrete
+# Type of interface 1=abstract, 0=concrete
+DEFINES += ABSTRACT=1
 
 INCLUDEPATH += \
 	source \
