@@ -37,7 +37,7 @@ bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
 	qCDebug(logTemporary) << qPrintable(playerSolution->getExecutablePath()) << arguments << "<" << qPrintable(input) << ">" << qPrintable(output_ps) << "2>" << qPrintable(error_ps);
 
 	// Call the player solution
-	process->setReadChannelMode(QProcess::SeparateChannels);
+	process->setProcessChannelMode(QProcess::SeparateChannels);
 	process->setStandardInputFile( input );
 	process->setStandardOutputFile( output_ps );
 	process->setStandardErrorFile( error_ps );
@@ -49,7 +49,7 @@ bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
 
 	// Start a timer to know if player solution has exceed the allowed running time (timeout)
 	if ( timeout > 0 )
-		CREATE_TIMER(timeout, this, &TestCaseActor::playerSolutionTimeout);
+		CREATE_TIMER(timeout, this, &TestCaseActor::playerSolutionTimeout)
 
 	// Done
 	return true;
@@ -57,8 +57,8 @@ bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
 
 void TestCaseActor::playerSolutionFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-	Q_UNUSED(exitCode);
-	Q_UNUSED(exitStatus);
+	Q_UNUSED(exitCode)
+	Q_UNUSED(exitStatus)
 	Q_ASSERT(playerSolution);
 	Q_ASSERT(playerSolution->getUnit());
 

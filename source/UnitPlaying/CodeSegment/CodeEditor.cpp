@@ -44,7 +44,7 @@ CodeEditor::CodeEditor(QWidget* parent)
 
 	// Make tabs the same size than 4 spaces
 	QFontMetrics metrics(font);
-	setTabStopWidth(tabStop * metrics.width(' '));
+	setTabStopDistance( metrics.horizontalAdvance("   ") );
 
 	// Create the object that will provide color to C++ code within the editor
 	highlighter = new SyntaxHighlighter( document() );
@@ -225,7 +225,7 @@ int CodeEditor::getLineNumberAreaWidth()
 	int digits = digitsRequiredBy(max);
 
 	// Calculate the maximum width in pixels of a digit
-	int digitWidth = fontMetrics().width(QLatin1Char('9'));
+	int digitWidth = fontMetrics().horizontalAdvance('9');
 
 	// The width in pixels of the line number area is the width of the last line number
 	return digits * digitWidth + breakpointEdgeWidth;
@@ -241,8 +241,8 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 	// We get the top and bottom y-coordinate of the first text block
 	QTextBlock block = firstVisibleBlock();
 	int blockNumber = block.blockNumber();
-	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
-	int bottom = top + (int) blockBoundingRect(block).height();
+	int top = static_cast<int>( blockBoundingGeometry(block).translated(contentOffset()).top() );
+	int bottom = top + static_cast<int>( blockBoundingRect(block).height() );
 	int lineNumberAreaWidth = getLineNumberAreaWidth();
 	int fontHeight = fontMetrics().height() - 1;
 
@@ -263,7 +263,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 		// Move to the nex block (complete line)
 		block = block.next();
 		top = bottom;
-		bottom = top + (int) blockBoundingRect(block).height();
+		bottom = top + static_cast<int>( blockBoundingRect(block).height() );
 		++blockNumber;
 	}
 }
@@ -282,8 +282,8 @@ void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
 	// Locate the line where user made click. Each line should be analyzed one by one because
 	// word-wrap is enabled by default and some blocks may occupy two lines
 	QTextBlock block = firstVisibleBlock();
-	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
-	int bottom = top + (int) blockBoundingRect(block).height();
+	int top = static_cast<int>( blockBoundingGeometry(block).translated(contentOffset()).top() );
+	int bottom = top + static_cast<int>( blockBoundingRect(block).height() );
 	int clickedY = event->pos().y();
 
 	// Adjust these values by the height of the current text block in each iteration in the loop
@@ -301,7 +301,7 @@ void CodeEditor::toggleBreakpointEvent(QMouseEvent* event)
 		// Move to the nex block (complete line)
 		block = block.next();
 		top = bottom;
-		bottom = top + (int) blockBoundingRect(block).height();
+		bottom = top + static_cast<int>( blockBoundingRect(block).height() );
 	}
 }
 
@@ -501,7 +501,7 @@ int CodeEditor::getVisibleLines()
 {
 	QFontMetrics fontMetrics( font() );
 	qreal rowHeight = fontMetrics.lineSpacing();
-	return  width() / rowHeight;
+	return static_cast<int>( width() / rowHeight );
 }
 
 void CodeEditor::setAnimating(bool state)
