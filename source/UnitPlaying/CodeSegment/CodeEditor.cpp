@@ -15,19 +15,16 @@
 #include <QPainter>
 #include <QTimer>
 
-// A tab is visualized as 3 space characters because screen size is reduced in the game
-const int tabStop = 3; // characters
-
 // After a change is made to the document, CodeEditor waits this amount of miliseconds, and then
 // autosaves and autocompiles the source code
-const int autoSaveWait = 2500; // milliseconds
+static const int autoSaveWait = 2500; // milliseconds
 
 // Number of pixels to leave as breakpoint area in the line number widget
 // I set it to 0. I think it is better to mark the number with some other color
-const int breakpointEdgeWidth = 0; // pixels
+static const int breakpointEdgeWidth = 0; // pixels
 
 // The color to highlight the current line
-const QColor& currentLineColor = QColor(Qt::magenta).lighter(175);
+static const QColor& currentLineColor = QColor(Qt::magenta).lighter(175);
 
 
 CodeEditor::CodeEditor(QWidget* parent)

@@ -29,10 +29,14 @@ void GameScene::createStandardMenu(const QString& title, bool enableCodeEditorTo
 	const qreal buttonWidthPercent = 0.06;
 
 	// Back button
+  #ifdef BN_NOGAMIFICATION
+	menuLayout->addStretch(buttonWidthPercent);
+  #else
 	this->backButton = new SvgButton("ge_button_back", this);
 	this->backButton->alignCenter();
 	menuLayout->addItem(backButton, buttonWidthPercent);
 	connect(backButton, SIGNAL(pressed()), this, SLOT(backButtonPressed()));
+  #endif
 
 	// Game title
 	this->gameTitle = new Actor("ge_game_title", this);

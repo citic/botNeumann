@@ -10,7 +10,10 @@ ICON = assets/game_logo.icns
 RC_ICONS = assets/game_logo.ico
 
 # Type of interface 1=abstract, 0=concrete
-DEFINES += ABSTRACT=1
+# Enable/disable gamification (levels)
+DEFINES += \
+	ABSTRACT=1 \
+	BN_NOGAMIFICATION \
 
 INCLUDEPATH += \
 	source \
@@ -205,11 +208,12 @@ SOURCES += \
 
 RESOURCES += \
 	assets/assets.qrc \
-	units/training/training.qrc
+	units/folderdrop/folderdrop.qrc \
+	units/training/training.qrc \
 
 FORMS += \
 	source/GameMenu/PlayerManagerDialog.ui \
-	source/Common/InfoDialog.ui
+	source/Common/InfoDialog.ui \
 
 OTHER_FILES += \
 	units/botnu-1.0.dtd \

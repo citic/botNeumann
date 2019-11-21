@@ -29,9 +29,13 @@ void BotNeumannDirector::begin()
 	// resuming the game
 	Q_ASSERT(currentScene == nullptr);
 
-	// ToDo: if called with arguments (a source file or directory are specified), disable
+	// If called with CLI arguments (a source file or directory are specified), disable
 	// game menu and unit selection because there are not level units (disable gamification)
-	showLastScene();
+  #ifdef BN_NOGAMIFICATION
+	this->showFolderDropUnitPlayingScene();
+  #else
+	this->showLastScene();
+  #endif
 }
 
 bool BotNeumannDirector::showLastScene()
@@ -61,7 +65,7 @@ bool BotNeumannDirector::showLastScene()
 		return showUnitSelectionScene(lastContext, true);
 
 	// Unknown or default scene
-	return  showGameMenuScene();
+	return showGameMenuScene();
 }
 
 bool BotNeumannDirector::showGameMenuScene()
@@ -89,6 +93,17 @@ bool BotNeumannDirector::showUnitPlayingScene(const QString& context, const QStr
 {
 	// If a transition is currently running, we can't replace the scene yet
 	if ( isTransitionRunning() ) return false;
+	UnitPlayingScene* newScene = new UnitPlayingScene(context, levelUnit, filename, stage);
+	connect(newScene, SIGNAL(showUnitSelectionScene(QString,bool)), this, SLOT(showUnitSelectionScene(QString,bool)));
+	return replaceScene( newScene, true );
+}
+
+bool BotNeumannDirector::showFolderDropUnitPlayingScene()
+{
+	const QString context = "folderdrop";
+	const QString levelUnit = "";
+	const QString filename = ':' + context + "/folderdrop.botnu";
+
 	UnitPlayingScene* newScene = new UnitPlayingScene(context, levelUnit, filename, stage);
 	connect(newScene, SIGNAL(showUnitSelectionScene(QString,bool)), this, SLOT(showUnitSelectionScene(QString,bool)));
 	return replaceScene( newScene, true );

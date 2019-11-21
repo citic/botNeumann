@@ -55,7 +55,7 @@ Dependencies:
 
 On Debian you may write:
 
-	sudo apt install build-essential gdb libgl1-mesa-dev libc6-dev-i386 gcc-multilib g++-multilib ctags doxygen graphviz
+	sudo apt install build-essential gdb libgl1-mesa-dev libc6-dev-i386 gcc-multilib g++-multilib universal-ctags doxygen graphviz
 
 
 ## Mac OS X

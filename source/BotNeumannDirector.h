@@ -43,6 +43,9 @@ class BotNeumannDirector : public Director
 	/// @param filename The full resource path of the .botnu unit with details of the unit
 	/// @return true on success, false if a transition is taking place
 	bool showUnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename);
+	/// Shows the scene where player can solve problems, but using a default empty level
+	/// @return true
+	bool showFolderDropUnitPlayingScene();
 
   protected:
 	/// Replaces the current scene for the new given scene

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+<botnu id="folderdrop" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+<description lang="es"><![CDATA[<p>Arrastre desde su explorador de archivos una carpeta que contenga los archivos de un ejercicio, tales como los siguientes:</p>
+
+<ul>
+	<li><code>given.cpp</code>: Código inicial</li>
+	<li><code>input001.txt</code>: Entrada del caso de prueba 001</li>
+	<li><code>output001.txt</code>: Salida esperada del caso de prueba 001</li>
+	<li><code>generator.cpp</code>: Programa que genera casos de prueba (opcional)</li>
+</ul>
+]]></description>
+
+<initial-code lang="cpp"><![CDATA[#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	cout << "Hello world!" << endl;
+}
+]]></initial-code>
+
+<solution lang="cpp"><![CDATA[
+int main()
+{
+	return 0;
+}]]></solution>
+
+<test-case>
+<input>
+</input>
+<output>
+</output>
+</test-case>
+
+</botnu>

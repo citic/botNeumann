@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/folderdrop">
+        <file>folderdrop.botnu</file>
+    </qresource>
+</RCC>

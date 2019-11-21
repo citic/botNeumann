@@ -49,6 +49,7 @@ BotNeumannApp::BotNeumannApp(int& argc, char *argv[])
 		qWarning("Application settings were reset");
 	}
 
+	// Add Homebrew and MacPorts directories to $PATH on macOS
 	updateEnvironment();
 
 	// Save in settings a flag indicating the application started

@@ -42,7 +42,7 @@ class UnitPlayingScene : public GameScene
 	QString context;
 	/// The number of the level and unit separated by a dash, e.g: "2-14"
 	QString levelUnit;
-	/// he full resource path of the .botnu unit with details of the unit
+	/// The full resource path of the .botnu unit with details of the unit
 	QString filename;
 	/// Loads the unit from the .botnu xml file
 	Unit unit;
@@ -80,7 +80,7 @@ class UnitPlayingScene : public GameScene
 	/// @param filename The full resource path of the .botnu unit with details of the unit
 	explicit UnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename, Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
-	virtual ~UnitPlayingScene();
+	virtual ~UnitPlayingScene() override;
 	/// Called when a transition starts, indicating this scene is leaving the stage
 	virtual void startLeavingStage() override;
 	/// Called when a transition has finished, indicating this scene entered into the stage
