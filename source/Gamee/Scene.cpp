@@ -45,6 +45,7 @@ void Scene::resize(qreal width, qreal height)
 
 	// This scene is a invisible QGraphicsRectItem, resize it, and its background
 	setRect(0.0, 0.0, width, height);
+	Q_ASSERT(this->background);
 	background->resize(0.0, 0.0, width, height);
 
 	// Resize any child elements

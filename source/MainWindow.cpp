@@ -7,9 +7,11 @@
 #include <QAction>
 #include <QDesktopServices>
 #include <QDockWidget>
+#include <QDragEnterEvent>
 #include <QGraphicsView>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QMimeData>
 #include <QSettings>
 #include <QUrl>
 
@@ -24,10 +26,13 @@ MainWindow::MainWindow(QWidget *parent)
 	setWindowTitle("bot Neumann++");
 	resize(1024, 768); // affects only desktop applications
 	setMinimumSize(480, 320);
+
   #ifdef Q_OS_LINUX
 	setWindowIcon(QIcon(":/game_logo.svg"));
   #endif
-
+  #ifdef BN_NOGAMIFICATION
+	setAcceptDrops(true);
+  #endif
 	// Create each window section
 	setupStage();
 	setupHiddenActions();
@@ -69,6 +74,11 @@ void MainWindow::setupStage()
 	Q_ASSERT(stage == nullptr);
 	stage = new Stage(this);
 	setCentralWidget(stage);
+
+  #ifdef BN_NOGAMIFICATION
+	// Capture drop files events, do not send them to the stage
+	this->stage->installEventFilter(this);
+  #endif
 
 	// Create the game director
 	Q_ASSERT(director == nullptr);
@@ -119,4 +129,43 @@ void MainWindow::revealLogDirectory()
 {
 	const QString& path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 	QDesktopServices::openUrl(QUrl("file://" + path, QUrl::TolerantMode));
+}
+
+#include "LogManager.h"
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+	if ( obj == this->stage )
+	{
+		if ( event->type() == QEvent::DragEnter )
+		{
+			this->dragEnterEvent( static_cast<QDragEnterEvent*>(event) );
+			return true;
+		}
+		else if ( event->type() == QEvent::Drop )
+		{
+			this->dropEvent( static_cast<QDropEvent*>(event) );
+			return true;
+		}
+		else
+			return false;
+	}
+	else
+	{
+		// Pass the event on to the parent class
+		return QMainWindow::eventFilter(obj, event);
+	}
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* event)
+{
+	if ( event->mimeData()->hasUrls() )
+		event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+	if ( event->mimeData()->hasUrls() )
+		foreach ( const QUrl& url, event->mimeData()->urls() )
+			qCDebug( logTemporary(), "main window: dropped %s", qPrintable(url.toLocalFile()) );
 }

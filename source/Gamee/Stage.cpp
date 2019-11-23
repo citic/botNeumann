@@ -10,6 +10,10 @@ Stage::Stage(QWidget *parent)
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setObjectName("stageRoom");
 	setScene(&graphicsScene);
+
+  #ifdef BN_NOGAMIFICATION
+	setAcceptDrops(true);
+  #endif
 }
 
 void Stage::resizeEvent(QResizeEvent* event)

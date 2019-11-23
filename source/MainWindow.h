@@ -29,13 +29,15 @@ class MainWindow : public QMainWindow
 	/// Constructor
 	explicit MainWindow(QWidget* parent = nullptr);
 	/// Destructor
-	virtual ~MainWindow();
+	virtual ~MainWindow() override;
 	/// Shows the info dialog with the given information
 	void showInfoDialog(const QString& title, const QString& htmlInfo);
 	/// Hides the info dialog
 	void hideInfoDialog();
 	/// Shows or hides the info dialog
 	void toggleInfoDialog(const QString& title, const QString& htmlInfo);
+	/// Capture drop files events, do not send them to the stage
+	virtual bool eventFilter(QObject* watched, QEvent* event) override;
 
   protected:
 	/// Create the control where scenes are shown and shows the first scene
@@ -46,6 +48,11 @@ class MainWindow : public QMainWindow
 	void saveSettings();
 	/// Restore (apply) the saved window dimensions
 	void restoreSettings();
+	/// Called when user drags files from a file explorer
+	/// Used to accept folders containing programming exercises
+	virtual void dragEnterEvent(QDragEnterEvent* event) override;
+	/// Called when user drops files from a file explorer
+	virtual void dropEvent(QDropEvent *event) override;
 
   protected slots:
 	/// Triggered when user presses Cmd+Shift+R to reset the settings
