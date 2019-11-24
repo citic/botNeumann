@@ -36,8 +36,6 @@ class MainWindow : public QMainWindow
 	void hideInfoDialog();
 	/// Shows or hides the info dialog
 	void toggleInfoDialog(const QString& title, const QString& htmlInfo);
-	/// Capture drop files events, do not send them to the stage
-	virtual bool eventFilter(QObject* watched, QEvent* event) override;
 
   protected:
 	/// Create the control where scenes are shown and shows the first scene

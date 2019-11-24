@@ -75,11 +75,6 @@ void MainWindow::setupStage()
 	stage = new Stage(this);
 	setCentralWidget(stage);
 
-  #ifdef BN_NOGAMIFICATION
-	// Capture drop files events, do not send them to the stage
-	this->stage->installEventFilter(this);
-  #endif
-
 	// Create the game director
 	Q_ASSERT(director == nullptr);
 	director = new BotNeumannDirector(stage);
@@ -132,30 +127,6 @@ void MainWindow::revealLogDirectory()
 }
 
 #include "LogManager.h"
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
-	if ( obj == this->stage )
-	{
-		if ( event->type() == QEvent::DragEnter )
-		{
-			this->dragEnterEvent( static_cast<QDragEnterEvent*>(event) );
-			return true;
-		}
-		else if ( event->type() == QEvent::Drop )
-		{
-			this->dropEvent( static_cast<QDropEvent*>(event) );
-			return true;
-		}
-		else
-			return false;
-	}
-	else
-	{
-		// Pass the event on to the parent class
-		return QMainWindow::eventFilter(obj, event);
-	}
-}
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)
 {
