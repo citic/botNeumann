@@ -51,6 +51,7 @@ HEADERS += \
 	source/Gamee/Actor.h \
 	source/Gamee/AlignedItem.h \
 	source/Gamee/Director.h \
+	source/Gamee/GraphicsScene.h \
 	source/Gamee/LabelButton.h \
 	source/Gamee/Layouts/Layout.h \
 	source/Gamee/Layouts/LayoutItem.h \
@@ -136,6 +137,7 @@ SOURCES += \
 	source/Gamee/Actor.cpp \
 	source/Gamee/AlignedItem.cpp \
 	source/Gamee/Director.cpp \
+	source/Gamee/GraphicsScene.cpp \
 	source/Gamee/LabelButton.cpp \
 	source/Gamee/Layouts/Layout.cpp \
 	source/Gamee/Layouts/LayoutItem.cpp \

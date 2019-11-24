@@ -3,6 +3,8 @@
 
 #include <QGraphicsView>
 
+#include "GraphicsScene.h"
+
 /**
 	@brief The Stage where scenery is placed and actors play in the game
 
@@ -16,7 +18,7 @@ class Stage : public QGraphicsView
 
   protected:
 	/// The Graphics scene where all the Gamee Scenes are shown
-	QGraphicsScene graphicsScene;
+	GraphicsScene graphicsScene;
 
   public:
 	/// Constructor
