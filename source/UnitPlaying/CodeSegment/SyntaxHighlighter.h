@@ -33,7 +33,7 @@ class SyntaxHighlighter : public QSyntaxHighlighter
 	/// Constructor
 	explicit SyntaxHighlighter(QTextDocument* parent);
 	/// Destructor
-	~SyntaxHighlighter();
+	virtual ~SyntaxHighlighter() override;
 
   protected:
 	/// Create rules for C++ keywords and add them to the rules container

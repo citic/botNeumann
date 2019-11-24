@@ -21,7 +21,7 @@ class Player : public QObject
 	/// @param id Unique identifier of this player on the world, if blank a new one will be created
 	explicit Player(const QByteArray& id = "", const QString& nickname = "", QObject* parent = nullptr);
 	/// Destructor
-	virtual ~Player();
+	virtual ~Player() override;
 	/// Get access to the unique id of this player on the world
 	inline const QByteArray& getId() const { return id; }
 	/// Get access to the nickname

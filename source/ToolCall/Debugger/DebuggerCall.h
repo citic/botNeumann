@@ -16,7 +16,7 @@ class DebuggerCall : public ToolCall
 	/// Constructor
 	explicit DebuggerCall(QObject* parent = nullptr);
 	/// Destructor
-	~DebuggerCall();
+	virtual ~DebuggerCall() override;
 	/// Emits finished() when it has finished. The result (success, error, or warnings) can be
 	/// consulted after the finished() signal has been emitted
 	virtual bool start() = 0;

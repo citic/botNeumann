@@ -38,7 +38,7 @@ class SvgButton : public Actor
 	/// @see Actor::Actor()
 	explicit SvgButton(const QString& prefixedSvgElementId, QGraphicsItem* parentItem, const QString& text = "");
 	/// Destructor
-	virtual ~SvgButton();
+	virtual ~SvgButton() override;
 
   signals:
 	/// Emitted when this button is pressed

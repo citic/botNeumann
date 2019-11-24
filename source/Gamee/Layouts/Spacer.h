@@ -11,9 +11,9 @@ class Spacer : public LayoutItem
 	/// Constructor
 	Spacer();
 	/// Destructor
-	virtual ~Spacer();
+	virtual ~Spacer() override;
 	/// zValue is currenlty only set for QGraphicsItem objects
-	virtual void setZ(qreal) { }
+	virtual void setZ(qreal) override { }
 };
 
 #endif // SPACER_H

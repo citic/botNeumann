@@ -47,7 +47,7 @@ class GuiBreakpoint : public QTextBlockUserData
 	/// Constructor
 	explicit GuiBreakpoint(const QString& filename, int lineNumberInEditor);
 	/// Destructor
-	virtual ~GuiBreakpoint() { }
+	virtual ~GuiBreakpoint() override;
 	/// Gets the filename where this breakpoint is defined
 	const QString& getFilename() const { return filename; }
 	/// Gets the line where this file is defined

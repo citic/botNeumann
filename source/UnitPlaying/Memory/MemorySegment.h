@@ -21,7 +21,7 @@ class MemorySegment : public LinearLayout
 	/// Constructor
 	explicit MemorySegment(Unit& unit, Scene* scene, Qt::Orientation orientation);
 	/// Destructor
-	~MemorySegment();
+	virtual ~MemorySegment() override;
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	/// The height of segments or frames is calculated as the number of memory rows they occupy.

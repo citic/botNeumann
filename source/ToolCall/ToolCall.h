@@ -44,7 +44,7 @@ class ToolCall : public QObject
 	/// Constructor
 	explicit ToolCall(QObject* parent = nullptr);
 	/// Destructor
-	~ToolCall();
+	virtual ~ToolCall() override;
 	/// Returns the state of the compilation process of this unit
 	inline ToolCallState getState() const { return state; }
 	/// Make the compiler to generate debug information in object files and executable

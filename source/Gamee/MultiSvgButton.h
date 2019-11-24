@@ -31,7 +31,7 @@ class MultiSvgButton : public LinearLayout
 	/// Creates a SvgButton that has several images as background
 	explicit MultiSvgButton(const QStringList& prefixedSvgElementIds, const QList<qreal>& proportions, QGraphicsItem* parentItem, const QString& text, qreal zValue);
 	/// Destructor
-	virtual ~MultiSvgButton();
+	virtual ~MultiSvgButton() override;
 	/// Set label font
 	void setFont(const QFont& font);
 	/// Set foreground color

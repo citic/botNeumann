@@ -25,7 +25,7 @@ class HeapSegment : public QObject, public MemorySegment
 	/// hidden to avoid cognitive load
 	explicit HeapSegment(Unit& unit, Scene* scene, QObject* parent = nullptr);
 	/// Destructor
-	virtual ~HeapSegment();
+	virtual ~HeapSegment() override;
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;

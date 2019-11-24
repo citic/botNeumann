@@ -65,7 +65,7 @@ class PlayerSolution : public QObject
 	/// Constructor
 	explicit PlayerSolution(QObject *parent = nullptr);
 	/// Destructor
-	~PlayerSolution();
+	virtual ~PlayerSolution() override;
 	/// Load code solution for the given unit. Assumes the current active player
 	/// @return The number of files found as player solution for this unit, -1 on error
 	int loadSolutionForUnit(Unit* unit);

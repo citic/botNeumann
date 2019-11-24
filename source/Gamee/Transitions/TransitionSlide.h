@@ -20,7 +20,7 @@ class TransitionSlide : public Transition
 	/// Constructor
 	explicit TransitionSlide(Direction direction, Scene* previousScene, Scene* nextScene, bool deletePreviousScene = false, QObject* parent = nullptr);
 	/// Destructor
-	virtual ~TransitionSlide();
+	virtual ~TransitionSlide() override;
 
   protected slots:
 	  /// This method

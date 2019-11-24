@@ -67,9 +67,9 @@ class GdbCall : public DebuggerCall
 	/// Constructor
 	explicit GdbCall(QObject *parent = nullptr);
 	/// Destructor
-	virtual ~GdbCall();
+	virtual ~GdbCall() override;
 	/// Stats the execution of gdb and inferior
-	bool start();
+	bool start() override;
 	/// Stop processing commands. This method must be called when user stops visualization.
 	/// No more commands must be sent to GDB after calling this method. A new instance of this
 	/// class must be created in order to start a new communiation with debugger.

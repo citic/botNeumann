@@ -16,7 +16,7 @@ class CompilerDiagnostic : public Diagnostic
 	/// Constructor
 	explicit CompilerDiagnostic(const QRegularExpressionMatch& match);
 	/// Destructor
-	~CompilerDiagnostic();
+	virtual ~CompilerDiagnostic() override;
 	/// Generates a text line to the user, in order to understand the diagnostic
 	virtual QString buildUserText() const override;
 };

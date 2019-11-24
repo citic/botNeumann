@@ -19,7 +19,7 @@ class LabelButton : public QObject, public QGraphicsSimpleTextItem, public Layou
 	/// Creates an actor with the given svg filename
 	explicit LabelButton(const QString& label, QGraphicsItem* parentItem);
 	/// Destructor
-	virtual ~LabelButton();
+	virtual ~LabelButton() override;
 	/// Used to differentiate between pure-layout items and scenic elements
 	/// ToDo: rename to isPureLayoutObject()
 	virtual bool isActor() const override { return true; }

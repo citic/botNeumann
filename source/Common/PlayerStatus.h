@@ -20,7 +20,7 @@ class PlayerStatus : public LabelButton
 	/// Constructor
 	explicit PlayerStatus(QGraphicsItem* parentItem);
 	/// Destructor
-	virtual ~PlayerStatus();
+	virtual ~PlayerStatus() override;
 
   public slots:
 	/// Emitted when the player has been changed for a new one

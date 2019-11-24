@@ -56,7 +56,7 @@ class Compiler : public QObject
 	/// Constructor
 	explicit Compiler(QObject *parent = nullptr);
 	/// Destructor
-	~Compiler();
+	virtual ~Compiler() override;
 	/// Make the compiler to generate debug information in object files and executable
 	inline void optimizeForDebug(bool debug = true) { this->optimizedForDebug = debug; }
 	/// Indicates the number of error collected during the compilation process. If value is 0

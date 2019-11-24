@@ -18,7 +18,7 @@ class Director : public QObject
 	/// Constructor
 	explicit Director(Stage* stage = nullptr, QObject* parent = nullptr);
 	/// Destructor
-	virtual ~Director();
+	virtual ~Director() override;
 	/// Get access to the stage where this director is working
 	inline Stage* getStage() const { return stage; }
 	/// Change the stage where this director is working

@@ -10,6 +10,10 @@ GuiBreakpoint::GuiBreakpoint(const QString& filename, int lineNumberInEditor)
 {
 }
 
+GuiBreakpoint::~GuiBreakpoint()
+{
+}
+
 void GuiBreakpoint::updateLineNumber(int lineNumber, bool both)
 {
 	this->lineNumberInEditor = lineNumber;

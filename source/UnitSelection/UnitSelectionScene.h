@@ -25,7 +25,7 @@ class UnitSelectionScene : public GameScene
 	/// @param context The folder where units are to be loaded from: "training" or "missions"
 	explicit UnitSelectionScene(const QString& context, Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
-	virtual ~UnitSelectionScene();
+	virtual ~UnitSelectionScene() override;
 
   signals:
 	/// Emitted when Back button is pressed

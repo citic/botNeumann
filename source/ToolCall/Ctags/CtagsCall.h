@@ -66,7 +66,7 @@ class CtagsCall : public ToolCall
 	/// Constructor
 	explicit CtagsCall(QObject* parent = nullptr);
 	/// Destructor
-	~CtagsCall();
+	virtual ~CtagsCall() override;
 	/// Start the symbol extraction process. This method does some preparation and calls the
 	/// ctags command. When ctags finishes, it analyzes the output file and extracts the symbols.
 	/// When the entire process is done, i.e: the symbols have been extracted, the

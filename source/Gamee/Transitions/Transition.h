@@ -37,7 +37,7 @@ class Transition : public QObject
 	/// used even more
 	explicit Transition(Scene* previousScene, Scene* nextScene, bool deletePreviousScene = false, QObject* parent = nullptr);
 	/// Destructor
-	virtual ~Transition();
+	virtual ~Transition() override;
 	/// Start the animation
 	/// @param duration in milliseconds
 	/// @param frames the number of updates done while the animation is taking effect

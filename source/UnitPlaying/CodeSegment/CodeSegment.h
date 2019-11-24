@@ -70,9 +70,9 @@ class CodeSegment : public QDockWidget
 
   public:
 	/// Constructor
-	explicit CodeSegment(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
+	explicit CodeSegment(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
 	/// Destructor
-	virtual ~CodeSegment();
+	virtual ~CodeSegment() override;
 	/// Get access to the code editor
 	inline CodeEditor* getCodeEditor() const { return codeEditor; }
 	/// Restores the last code made by player for the given unit, or the default unit's code if

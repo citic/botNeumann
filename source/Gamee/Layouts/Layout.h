@@ -22,7 +22,7 @@ class Layout : public LayoutItem
 	/// Constructor
 	Layout();
 	/// Destructor
-	virtual ~Layout();
+	virtual ~Layout() override;
 	/// Add the given item to the sequence of items
 	virtual void addItem(LayoutItem* item, qreal mainProportion, qreal zValue = 0.0);
 	/// Insert the item at the given percent

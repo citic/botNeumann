@@ -52,7 +52,7 @@ class LogManager : public QObject
 	/// Constructor
 	explicit LogManager(QObject *parent = nullptr);
 	/// Destructor
-	virtual ~LogManager();
+	virtual ~LogManager() override;
 	/// Called by the q functions: Info, Debug, Warning, Critical, Fatal
 	static void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message);
 	/// Get the log file name for this device

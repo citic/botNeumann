@@ -122,9 +122,9 @@ class Unit : public QObject
 
   public:
 	/// Constructor
-	explicit Unit(QObject *parent = 0);
+	explicit Unit(QObject* parent = nullptr);
 	/// Destructor
-	virtual ~Unit();
+	virtual ~Unit() override;
 	/// Loads the unit from the given .botnu xml filename
 	/// @return true on success, false otherwise
 	bool load(const QString& filename);

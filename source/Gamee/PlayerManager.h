@@ -23,7 +23,7 @@ class PlayerManager : public QObject
 	/// Constructor
 	explicit PlayerManager(QObject *parent = nullptr);
 	/// Destructor
-	virtual ~PlayerManager();
+	virtual ~PlayerManager() override;
 	/// Load the list of all players on this device
 	/// @return The count of players loaded
 	int loadPlayers();

@@ -30,7 +30,7 @@ class LinkerCall : public ToolCall
 	/// Constructor
 	explicit LinkerCall(const QStringList& objectFiles, const QFileInfo& executablePath, QObject *parent = nullptr);
 	/// Destructor
-	~LinkerCall();
+	virtual ~LinkerCall() override;
 	/// Get access to the list of diagnostics (warnings and errors)
 	inline const QList<Diagnostic*>& getDiagnostics() const { return diagnostics; }
 	/// Number of errors found in this source file. If > 0, code cannot be run

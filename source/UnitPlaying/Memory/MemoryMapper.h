@@ -47,7 +47,7 @@ class MemoryMapper : public QObject
 	/// Constructor
 	explicit MemoryMapper(GdbCall* debuggerCall, QObject* parent = nullptr);
 	/// Destructor
-	~MemoryMapper();
+	virtual ~MemoryMapper() override;
 	/// Get access to the unique instance of this object while it is alive
 	static inline MemoryMapper* getInstance() { return instance; }
 	/// Set the CodeSegment for later use

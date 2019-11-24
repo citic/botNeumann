@@ -52,7 +52,7 @@ class MemoryRow : public LinearLayout
 	/// Constructor
 	explicit MemoryRow(VisAddress start, VisAddress size, QGraphicsItem* graphicsParentItem, qreal zValue, bool withGarbage);
 	/// Destructor
-	~MemoryRow();
+	virtual ~MemoryRow() override;
 	/// Get access to the scene. Required by GraphicVariables
 	inline QGraphicsItem* getGraphicsParentItem() const { return graphicsParentItem; }
 	/// Get access to the z-value where this memory row is. GraphicVariables require this value also

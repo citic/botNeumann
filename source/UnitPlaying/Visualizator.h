@@ -73,7 +73,7 @@ class Visualizator : public QObject
 	/// @param unitPlayingScene is the view, and it is set as the parent QObject for this object
 	explicit Visualizator(PlayerSolution* playerSolution, int testCaseNumber, UnitPlayingScene* unitPlayingScene);
 	/// Destructor
-	~Visualizator();
+	virtual ~Visualizator() override;
 	/// Get access to the test case number being visualized
 	inline int getTestCaseNumber() const { return testCaseNumber; }
 	/// Start the visualization process

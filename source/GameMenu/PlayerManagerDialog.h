@@ -23,7 +23,7 @@ class PlayerManagerDialog : public QDialog
 
   public:
 	explicit PlayerManagerDialog(QWidget *parent = 0);
-	~PlayerManagerDialog();
+	virtual ~PlayerManagerDialog() override;
 
   protected slots:
 	void createPlayerClicked();

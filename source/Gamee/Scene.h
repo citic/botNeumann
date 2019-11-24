@@ -33,7 +33,7 @@ class Scene : public QObject, public QGraphicsRectItem
 	/// Constructor
 	explicit Scene(const QString& sceneName, Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
-	virtual ~Scene();
+	virtual ~Scene() override;
 	/// Changes the background image
 	virtual void setBackground(const QString& svgElementId);
 	/// Get access to the layout in charge of placing and resizing objects for this scene

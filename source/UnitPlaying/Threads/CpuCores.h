@@ -34,7 +34,7 @@ class CpuCores : public QObject, public MemorySegment
 	/// Constructor
 	explicit CpuCores(Unit& unit, Scene* scene, QObject* parent = nullptr);
 	/// Destructor
-	virtual ~CpuCores();
+	virtual ~CpuCores() override;
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;

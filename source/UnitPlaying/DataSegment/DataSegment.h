@@ -29,7 +29,7 @@ class DataSegment : public QObject, public MemorySegment
 	/// Constructor
 	explicit DataSegment(Unit& unit, Scene* scene, QObject* parent = nullptr);
 	/// Destructor
-	virtual ~DataSegment();
+	virtual ~DataSegment() override;
 	/// Get the number of memory rows required by this object
 	/// @see MemorySegment::getHeightInRows()
 	virtual double getHeightInRows() const override;

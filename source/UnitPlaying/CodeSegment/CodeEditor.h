@@ -62,7 +62,7 @@ class CodeEditor : public QPlainTextEdit
 	/// Constructor
 	explicit CodeEditor(QWidget* parent = nullptr);
 	/// Destructor
-	~CodeEditor();
+	virtual ~CodeEditor() override;
 	/// Set the unit being solved by player and his/her solution
 	/// @remark This method must be called when the UnitPlayingScene is launched before asking
 	/// to edit any player-solution's source files

@@ -27,7 +27,7 @@ class LineNumberArea : public QWidget
 	/// Constructor
 	explicit LineNumberArea(CodeEditor* codeEditor);
 	/// Destructor
-	~LineNumberArea();
+	virtual ~LineNumberArea() override;
 	/// ?
 	virtual QSize sizeHint() const override;
 

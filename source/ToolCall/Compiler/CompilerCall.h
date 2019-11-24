@@ -36,7 +36,7 @@ class CompilerCall : public ToolCall
 	/// Constructor
 	explicit CompilerCall(const QFileInfo& sourcePath, QObject* parent = nullptr);
 	/// Destructor
-	~CompilerCall();
+	virtual ~CompilerCall() override;
 	/// Get access to the source file path
 	inline const QFileInfo& getSourcePath() const { return sourcePath; }
 	/// Get access to the target object file path

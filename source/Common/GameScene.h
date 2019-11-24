@@ -39,7 +39,7 @@ class GameScene : public Scene
 	/// Constructor
 	explicit GameScene(const QString& sceneName, Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
-	virtual ~GameScene();
+	virtual ~GameScene() override;
 
   protected: // Title bar: menu in game
 	/// Creates a standard menu with common buttons: configure, back/exit, player...

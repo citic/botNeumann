@@ -30,7 +30,7 @@ class GameMenuScene : public Scene
 	/// Constructor
 	explicit GameMenuScene(Stage* stage, QGraphicsItem* parent = nullptr);
 	/// Destructor
-	virtual ~GameMenuScene();
+	virtual ~GameMenuScene() override;
 
   protected:
 	/// Create buttons and layouts
