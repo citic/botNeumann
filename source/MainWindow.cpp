@@ -80,6 +80,10 @@ void MainWindow::setupStage()
 	Q_ASSERT(director == nullptr);
 	director = new BotNeumannDirector(stage);
 	director->begin();
+
+  #ifdef BN_NOGAMIFICATION
+	connect( stage, &Stage::unitDropped, this, &MainWindow::unitDropped );
+  #endif
 }
 
 void MainWindow::setupHiddenActions()
@@ -138,10 +142,13 @@ void MainWindow::dropEvent(QDropEvent *event)
 	if ( event->mimeData()->hasUrls() )
 	{
 		Q_ASSERT( event->mimeData()->urls().count() > 0 );
-		Q_ASSERT( this->director );
-
-		QFileInfo fileInfo = event->mimeData()->urls()[0].toLocalFile();
-		if ( fileInfo.isDir() )
-			this->director->showFolderDropUnitPlayingScene( fileInfo );
+		this->unitDropped( event->mimeData()->urls()[0].toLocalFile() );
 	}
+}
+
+void MainWindow::unitDropped(const QString& path)
+{
+	Q_ASSERT( this->director );
+	QFileInfo fileInfo = path;
+	this->director->showFolderDropUnitPlayingScene( fileInfo );
 }

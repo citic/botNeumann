@@ -31,6 +31,8 @@ class Stage : public QGraphicsView
   signals:
 	/// Emitted each time this graphics view has been resized
 	void resized(qreal width, qreal height);
+	/// Emitted when user drags and drops an unit from a folder
+	void unitDropped(const QString& path);
 };
 
 #endif // STAGE_H

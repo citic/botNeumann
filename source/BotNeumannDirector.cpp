@@ -108,8 +108,12 @@ bool BotNeumannDirector::showFolderDropUnitPlayingScene()
 	return showFolderDropUnitPlayingScene(context, levelUnit, filename);
 }
 
-bool BotNeumannDirector::showFolderDropUnitPlayingScene(const QFileInfo& dir)
+bool BotNeumannDirector::showFolderDropUnitPlayingScene(const QFileInfo& fileInfo)
 {
+	QFileInfo dir = fileInfo;
+	if ( dir.isFile() )
+		dir = dir.absolutePath();
+
 	const QString context = dir.fileName();
 	const QString levelUnit = "";
 	const QString filename = dir.absoluteFilePath();

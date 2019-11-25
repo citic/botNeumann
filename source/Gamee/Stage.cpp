@@ -13,6 +13,7 @@ Stage::Stage(QWidget *parent)
 
   #ifdef BN_NOGAMIFICATION
 	setAcceptDrops(true);
+	connect( &graphicsScene, &GraphicsScene::unitDropped, this, &Stage::unitDropped );
   #endif
 }
 

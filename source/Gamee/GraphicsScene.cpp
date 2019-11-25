@@ -22,6 +22,8 @@ void GraphicsScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 void GraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event)
 {
 	if ( event->mimeData()->hasUrls() )
-		foreach ( const QUrl& url, event->mimeData()->urls() )
-			qCDebug( logTemporary(), "GraphicsScene: dropped %s", qPrintable(url.toLocalFile()) );
+	{
+		Q_ASSERT( event->mimeData()->urls().count() > 0 );
+		emit unitDropped( event->mimeData()->urls()[0].toLocalFile() );
+	}
 }

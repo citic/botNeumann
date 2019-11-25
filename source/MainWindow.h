@@ -57,6 +57,8 @@ class MainWindow : public QMainWindow
 	void resetSettings();
 	/// Reveals the directory where logs and user data is stored
 	void revealLogDirectory();
+	/// Called when user drags and drops an unit from a folder
+	void unitDropped(const QString& path);
 };
 
 #endif // MAINWINDOW_H

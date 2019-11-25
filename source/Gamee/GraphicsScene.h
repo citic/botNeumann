@@ -12,6 +12,9 @@ class GraphicsScene : public QGraphicsScene
 	GraphicsScene();
 	virtual ~GraphicsScene() override;
 
+  signals:
+	void unitDropped(const QString& path);
+
   protected:
 	virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
 	virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;

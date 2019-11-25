@@ -49,7 +49,7 @@ class BotNeumannDirector : public Director
 	bool showFolderDropUnitPlayingScene();
 	/// Shows the scene where player can solve problems, but using a default empty level
 	/// @return true
-	bool showFolderDropUnitPlayingScene(const QFileInfo& dir);
+	bool showFolderDropUnitPlayingScene(const QFileInfo& fileInfo);
 	/// Shows the scene where player can solve problems using the given parameters
 	/// @return true
 	bool showFolderDropUnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename);
