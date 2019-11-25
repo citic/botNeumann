@@ -15,7 +15,7 @@ static const int defaultArchitecture = 32; // bits
 /// Supported architectures by botNeumann
 static const int supportedArchitectures[] = {16, 32, 64};
 /// If not cpu-cores is specified in .botnu file, this constant will be assumed
-static const int defaultCpuCores = 4;
+static const int defaultCpuCores = 2;
 /// If not ram size is specified in .botnu file, this constant will be assumed
 static const size_t defaultRamSize = 1024; // bytes
 /// If not 'min-threads' is specified in .botnu file, this constant will be assumed
@@ -95,6 +95,7 @@ bool Unit::loadFromFolder(QDir dir)
 	if ( ! dir.exists() )
 		return false;
 
+	this->id = dir.dirName();
 	dir.setFilter(QDir::Files | QDir::Hidden); /*  | QDir::NoSymLinks */
 	dir.setSorting(QDir::Name);
 	QRegularExpression reInput("^input\\d+");
