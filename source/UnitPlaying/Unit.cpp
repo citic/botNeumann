@@ -96,7 +96,7 @@ bool Unit::loadFromFolder(QDir dir)
 		return false;
 
 	this->id = dir.dirName();
-	dir.setFilter(QDir::Files | QDir::Hidden); /*  | QDir::NoSymLinks */
+	dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
 	dir.setSorting(QDir::Name);
 	QRegularExpression reInput("^input\\d+");
 
@@ -119,6 +119,8 @@ bool Unit::loadFromFolder(QDir dir)
 			loadProgramText(fileInfo, generators, ProgramText::standardGenerator);
 		else if ( filename.startsWith("file_generator") && (extension == "c" || extension == "cpp") )
 			loadProgramText(fileInfo, generators, ProgramText::fileGenerator);
+		else if ( filename.startsWith("tests") && fileInfo.isDir() )
+			loadFromFolder(fileInfo.absoluteFilePath());
 #if 0
 		else if ( extension == "att" )
 			loadUnitAtributes(absolute);
