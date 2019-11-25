@@ -1,9 +1,13 @@
 #include "Unit.h"
+#include "Util.h"
 #include "Common.h"
 #include "LogManager.h"
 
 #include <cmath>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
+#include <QRegularExpression>
 #include <QXmlStreamReader>
 
 /// If not architecture is specified in .botnu file, this constant will be assumed
@@ -41,6 +45,23 @@ Unit::~Unit()
 bool Unit::load(const QString& filename)
 {
 	qCInfo(logPlayer) << "Unit: loading" << filename;
+	QFileInfo fileInfo(filename);
+
+	if ( filename.startsWith(':') )
+		return loadFromResource(filename);
+
+	if ( fileInfo.isDir() )
+		return loadFromFolder(filename);
+
+	QDir dir = fileInfo.dir();
+	if ( dir.exists() )
+		return loadFromFolder(dir);
+
+	return false;
+}
+
+bool Unit::loadFromResource(const QString& filename)
+{
 	QFile file(filename);
 	if ( ! file.open(QFile::ReadOnly | QFile::Text) )
 	{
@@ -58,6 +79,49 @@ bool Unit::load(const QString& filename)
 	{
 		qCCritical(logApplication) << "XML Error:" << xmlReader.errorString();
 		return false;
+	}
+
+	return true;
+}
+
+bool Unit::loadFromFolder(const QString& directory)
+{
+	QDir dir(directory);
+	return this->loadFromFolder(dir);
+}
+
+bool Unit::loadFromFolder(QDir dir)
+{
+	if ( ! dir.exists() )
+		return false;
+
+	dir.setFilter(QDir::Files | QDir::Hidden); /*  | QDir::NoSymLinks */
+	dir.setSorting(QDir::Name);
+	QRegularExpression reInput("^input\\d+");
+
+	const QFileInfoList& list = dir.entryInfoList();
+	for ( int index = 0; index < list.size(); ++index)
+	{
+		const QFileInfo& fileInfo = list.at(index);
+		const QString& filename = fileInfo.fileName();
+		const QString& extension = fileInfo.suffix();
+
+		if ( reInput.match(filename).hasMatch() )
+			loadTestCase(fileInfo);
+		else if ( filename.startsWith("problem") && extension == "html" )
+			loadDescription(fileInfo);
+		else if ( filename.startsWith("given") && (extension == "c" || extension == "cpp") )
+			loadProgramText(fileInfo, initialCodes, ProgramText::initialCode);
+		else if ( filename.startsWith("solution") && (extension == "c" || extension == "cpp") )
+			loadProgramText(fileInfo, solutions, ProgramText::solution);
+		else if ( filename.startsWith("generator") && (extension == "c" || extension == "cpp") )
+			loadProgramText(fileInfo, generators, ProgramText::standardGenerator);
+		else if ( filename.startsWith("file_generator") && (extension == "c" || extension == "cpp") )
+			loadProgramText(fileInfo, generators, ProgramText::fileGenerator);
+#if 0
+		else if ( extension == "att" )
+			loadUnitAtributes(absolute);
+#endif
 	}
 
 	return true;
@@ -83,17 +147,23 @@ const QString Unit::getDescription(const QString& language) const
 
 const ProgramText* Unit::getARandomInitialCode() const
 {
-	return initialCodes.size() <= 0 ? (ProgramText*)nullptr : initialCodes[ qrand() % initialCodes.size() ];
+	if ( initialCodes.size() > 0 )
+		return initialCodes[ qrand() % initialCodes.size() ];
+	return nullptr;
 }
 
 const ProgramText* Unit::getARandomSolution() const
 {
-	return solutions.size() <= 0 ? (ProgramText*)nullptr : solutions[ qrand() % solutions.size() ];
+	if ( solutions.size() > 0 )
+		return solutions[ qrand() % solutions.size() ];
+	return nullptr;
 }
 
 const ProgramText* Unit::getARandomGenerator() const
 {
-	return generators.size() <= 0 ? (ProgramText*)nullptr : generators[ qrand() % generators.size() ];
+	if ( generators.size() > 0 )
+		return generators[ qrand() % generators.size() ];
+	return nullptr;
 }
 
 bool Unit::loadDocument(QXmlStreamReader& xmlReader)
@@ -213,6 +283,48 @@ bool Unit::loadTestCase(QXmlStreamReader& xmlReader, bool& stayInCurrentElement)
 		stayInCurrentElement = true;
 
 	testCases.append( testCase );
+	return true;
+}
+
+bool Unit::loadTestCase(const QFileInfo& inputFileInfo)
+{
+	if ( ! inputFileInfo.isReadable() )
+		return false;
+
+	const QString& path = inputFileInfo.absolutePath();
+	const QString& suffix = inputFileInfo.fileName().mid(5); // 5 = len("input")
+
+	TestCase testCase;
+
+	testCase.args   = Util::readAllText(path + "/args" + suffix);
+	testCase.input  = Util::readAllText(inputFileInfo.absoluteFilePath());
+	testCase.output = Util::readAllText(path + "/output" + suffix);
+	testCase.error  = Util::readAllText(path + "/error" + suffix);
+
+	testCases.append(testCase);
+	return true;
+}
+
+bool Unit::loadDescription(const QFileInfo& problemFileInfo)
+{
+	if ( ! problemFileInfo.isReadable() )
+		return false;
+
+	// Get the language
+	const QString& lang = problemFileInfo.fileName().mid(8); // 8 = len("problem.")
+	descriptions.insert(lang, Util::readAllText(problemFileInfo.absoluteFilePath()));
+
+	return true;
+}
+
+bool Unit::loadProgramText(const QFileInfo& fileInfo, QList<ProgramText*>& programTexts, ProgramText::Type type)
+{
+	if ( ! fileInfo.isReadable() )
+		return false;
+
+	const QString& code = Util::readAllText(fileInfo.absoluteFilePath());
+	programTexts.append( new ProgramText(type, programTexts.count() + 1, fileInfo.suffix(), code) );
+
 	return true;
 }
 

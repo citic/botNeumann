@@ -95,7 +95,7 @@ bool ResourceToFileDumper::dumpTextResource(const QString& resource, const QStri
 	{
 		// Log an error and return an invalid file path
 		qCritical(logApplication) << "Could not open" << resource;
-		return "";
+		return false;
 	}
 
 	// Open (truncate) or create the target file
@@ -146,6 +146,21 @@ QStringList Util::readAllLines(const QString& filepath)
 		qCritical(logApplication) << "Could not open" << filepath;
 
 	return result;
+}
+
+QString Util::readAllText(const QString& filepath)
+{
+	// Open the file for reading
+	QFile inputFile(filepath);
+	if ( inputFile.open(QIODevice::ReadOnly | QIODevice::Text) == true )
+	{
+		// Copy each line of the source to the string list
+		QTextStream inputText(&inputFile);
+		return inputText.readAll();
+	}
+
+	qCritical(logApplication) << "Could not open" << filepath;
+	return "";
 }
 
 long Util::findFirstDiff(const QString& filepath1, const QString& filepath2, bool ignoreWhitespace, bool caseSensitive)

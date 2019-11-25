@@ -28,6 +28,9 @@ class Util
 	/// Read all lines from the give filename
 	/// @return A list of the read lines, empty list on error
 	static QStringList readAllLines(const QString& filepath);
+	/// Read entire text from the give filename
+	/// @return A QString with a copy of the contents of the file, an empty string on error
+	static QString readAllText(const QString& filepath);
 	/// Find the first character of the first file where the second file differs, and returns the
 	/// index of that character. If both files are identical, -1 is returned
 	/// If an error happens, it returns another negative number

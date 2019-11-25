@@ -7,6 +7,8 @@
 #include <QPair>
 #include <QStringList>
 
+class QDir;
+class QFileInfo;
 class QXmlStreamReader;
 
 /// The size in bytes of the largest data type. It must not be sliced in visualization
@@ -30,8 +32,12 @@ struct ProgramText
 	int defaultRuns = 10;
 
   public:
-	/// Constructor
-	explicit ProgramText(Type type, int id, QXmlStreamReader& xmlReader) : type(type), id(id) { load(xmlReader); }
+	/// Constructs a ProgramText from a String
+	explicit ProgramText(Type type, int id, const QString& lang, const QString& code)
+		: type(type), id(id), language(lang), code(code) { }
+	/// Constructs a ProgramText from an XML node
+	explicit ProgramText(Type type, int id, QXmlStreamReader& xmlReader)
+		: type(type), id(id) { load(xmlReader); }
 	/// Loads this text from
 	bool load(QXmlStreamReader& xmlReader);
 	/// Suggest a base filename for this piece of code
@@ -125,9 +131,18 @@ class Unit : public QObject
 	explicit Unit(QObject* parent = nullptr);
 	/// Destructor
 	virtual ~Unit() override;
-	/// Loads the unit from the given .botnu xml filename
+	/// Loads the unit from a resource or folder
 	/// @return true on success, false otherwise
 	bool load(const QString& filename);
+	/// Loads the unit from the given .botnu xml filename
+	/// @return true on success, false otherwise
+	bool loadFromResource(const QString& filename);
+	/// Loads the unit from a folder from the local computer
+	/// @return true on success, false otherwise
+	bool loadFromFolder(const QString& directory);
+	/// Loads the unit from a folder from the local computer
+	/// @return true on success, false otherwise
+	bool loadFromFolder(QDir dir);
 	/// Unique identifier of this unit on the world
 	inline const QString& getId() const { return id; }
 	/// Version of this unit. It is not botnu xml notation version
@@ -260,6 +275,17 @@ class Unit : public QObject
 	bool validateUnit();
 	/// Distributes the memory among the memory segments
 	void distributeMemory();
+
+  protected:
+	/// Loads the problem statement from a file
+	/// @param problemFileInfo For example "problem.es.html"
+	bool loadDescription(const QFileInfo& problemFileInfo);
+	/// Load a complete test case from the filesystem
+	/// @param inputFileInfo File info to the "input###.ext" file. The corresponding output and
+	/// error files are automatically inferred from the input filename;
+	bool loadTestCase(const QFileInfo& inputFileInfo);
+	/// Loads a piece of code from the given file, and adds an entry into the list of programs
+	bool loadProgramText(const QFileInfo& fileInfo, QList<ProgramText*>& programTexts, ProgramText::Type type);
 };
 
 #endif // UNIT_H
