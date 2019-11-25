@@ -7,6 +7,7 @@
 #include "UnitSelectionScene.h"
 
 #include <QFile>
+#include <QFileInfo>
 #include <QSettings>
 
 BotNeumannDirector::BotNeumannDirector(Stage* stage, QObject* parent)
@@ -104,6 +105,20 @@ bool BotNeumannDirector::showFolderDropUnitPlayingScene()
 	const QString levelUnit = "";
 	const QString filename = ':' + context + "/folderdrop.botnu";
 
+	return showFolderDropUnitPlayingScene(context, levelUnit, filename);
+}
+
+bool BotNeumannDirector::showFolderDropUnitPlayingScene(const QFileInfo& dir)
+{
+	const QString context = dir.fileName();
+	const QString levelUnit = "";
+	const QString filename = dir.absolutePath();
+
+	return showFolderDropUnitPlayingScene(context, levelUnit, filename);
+}
+
+bool BotNeumannDirector::showFolderDropUnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename)
+{
 	UnitPlayingScene* newScene = new UnitPlayingScene(context, levelUnit, filename, stage);
 	connect(newScene, SIGNAL(showUnitSelectionScene(QString,bool)), this, SLOT(showUnitSelectionScene(QString,bool)));
 	return replaceScene( newScene, true );

@@ -8,6 +8,7 @@
 #include <QDesktopServices>
 #include <QDockWidget>
 #include <QDragEnterEvent>
+#include <QFileInfo>
 #include <QGraphicsView>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -126,8 +127,6 @@ void MainWindow::revealLogDirectory()
 	QDesktopServices::openUrl(QUrl("file://" + path, QUrl::TolerantMode));
 }
 
-#include "LogManager.h"
-
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)
 {
 	if ( event->mimeData()->hasUrls() )
@@ -137,6 +136,12 @@ void MainWindow::dragEnterEvent(QDragEnterEvent* event)
 void MainWindow::dropEvent(QDropEvent *event)
 {
 	if ( event->mimeData()->hasUrls() )
-		foreach ( const QUrl& url, event->mimeData()->urls() )
-			qCDebug( logTemporary(), "main window: dropped %s", qPrintable(url.toLocalFile()) );
+	{
+		Q_ASSERT( event->mimeData()->urls().count() > 0 );
+		Q_ASSERT( this->director );
+
+		QFileInfo fileInfo = event->mimeData()->urls()[0].toLocalFile();
+		if ( fileInfo.isDir() )
+			this->director->showFolderDropUnitPlayingScene( fileInfo );
+	}
 }

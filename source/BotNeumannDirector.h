@@ -4,6 +4,7 @@
 #include "Director.h"
 #include "Common.h"
 
+class QFileInfo;
 class Scene;
 
 class BotNeumannDirector : public Director
@@ -46,6 +47,12 @@ class BotNeumannDirector : public Director
 	/// Shows the scene where player can solve problems, but using a default empty level
 	/// @return true
 	bool showFolderDropUnitPlayingScene();
+	/// Shows the scene where player can solve problems, but using a default empty level
+	/// @return true
+	bool showFolderDropUnitPlayingScene(const QFileInfo& dir);
+	/// Shows the scene where player can solve problems using the given parameters
+	/// @return true
+	bool showFolderDropUnitPlayingScene(const QString& context, const QString& levelUnit, const QString& filename);
 
   protected:
 	/// Replaces the current scene for the new given scene

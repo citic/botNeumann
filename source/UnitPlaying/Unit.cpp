@@ -124,6 +124,8 @@ bool Unit::loadFromFolder(QDir dir)
 #endif
 	}
 
+	distributeMemory();
+	validateUnit();
 	return true;
 }
 
@@ -328,7 +330,7 @@ bool Unit::loadProgramText(const QFileInfo& fileInfo, QList<ProgramText*>& progr
 	return true;
 }
 
-bool Unit::validateUnit()
+bool Unit::validateUnit() const
 {
 	// A description is mandatory
 	if ( descriptions.count() <= 0 )

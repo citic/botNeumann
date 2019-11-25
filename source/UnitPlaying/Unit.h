@@ -88,7 +88,7 @@ class Unit : public QObject
 	/// True if this unit/exercise requires heap-segment (dynamic memory), therefore, player is
 	/// supposed to use new/delete operators or malloc/free functions. By default is false, to
 	/// avoid showing the heap segment to trainees
-	bool heapSegment =  false;
+	bool heapSegment = false;
 	/// Minimun number of execution threads (represented as robots) that students must implement in
 	/// order to pass the level (fix the damaged unit). Default is 1.
 	int minThreads;
@@ -143,6 +143,9 @@ class Unit : public QObject
 	/// Loads the unit from a folder from the local computer
 	/// @return true on success, false otherwise
 	bool loadFromFolder(QDir dir);
+	/// Check that the data loaded from the XML botnu file is valid. This method should be called
+	/// after a successful load process.
+	bool validateUnit() const;
 	/// Unique identifier of this unit on the world
 	inline const QString& getId() const { return id; }
 	/// Version of this unit. It is not botnu xml notation version
@@ -270,9 +273,6 @@ class Unit : public QObject
 	bool loadDocumentChild(QXmlStreamReader& xmlReader, bool& stayInCurrentElement);
 	/// Load a test case pair of input/ouput data
 	bool loadTestCase(QXmlStreamReader& xmlReader, bool& stayInCurrentElement);
-	/// Check that the data loaded from the XML botnu file is valid. This method should be called
-	/// after a successful load process.
-	bool validateUnit();
 	/// Distributes the memory among the memory segments
 	void distributeMemory();
 
