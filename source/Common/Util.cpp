@@ -148,7 +148,7 @@ QStringList Util::readAllLines(const QString& filepath)
 	return result;
 }
 
-QString Util::readAllText(const QString& filepath)
+QString Util::readAllText(const QString& filepath, bool warnIfNotExists)
 {
 	// Open the file for reading
 	QFile inputFile(filepath);
@@ -159,7 +159,8 @@ QString Util::readAllText(const QString& filepath)
 		return inputText.readAll();
 	}
 
-	qCritical(logApplication) << "Could not open" << filepath;
+	if ( warnIfNotExists )
+		qCritical(logApplication) << "Could not open" << filepath;
 	return "";
 }
 

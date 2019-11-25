@@ -299,10 +299,10 @@ bool Unit::loadTestCase(const QFileInfo& inputFileInfo)
 
 	TestCase testCase;
 
-	testCase.args   = Util::readAllText(path + "/args" + suffix);
-	testCase.input  = Util::readAllText(inputFileInfo.absoluteFilePath());
-	testCase.output = Util::readAllText(path + "/output" + suffix);
-	testCase.error  = Util::readAllText(path + "/error" + suffix);
+	testCase.args   = Util::readAllText(path + "/args" + suffix, false);
+	testCase.input  = Util::readAllText(inputFileInfo.absoluteFilePath(), true);
+	testCase.output = Util::readAllText(path + "/output" + suffix, true);
+	testCase.error  = Util::readAllText(path + "/error" + suffix, false);
 
 	testCases.append(testCase);
 	return true;
@@ -315,7 +315,7 @@ bool Unit::loadDescription(const QFileInfo& problemFileInfo)
 
 	// Get the language
 	const QString& lang = problemFileInfo.fileName().mid(8); // 8 = len("problem.")
-	descriptions.insert(lang, Util::readAllText(problemFileInfo.absoluteFilePath()));
+	descriptions.insert(lang, Util::readAllText(problemFileInfo.absoluteFilePath(), true));
 
 	return true;
 }
@@ -325,7 +325,7 @@ bool Unit::loadProgramText(const QFileInfo& fileInfo, QList<ProgramText*>& progr
 	if ( ! fileInfo.isReadable() )
 		return false;
 
-	const QString& code = Util::readAllText(fileInfo.absoluteFilePath());
+	const QString& code = Util::readAllText(fileInfo.absoluteFilePath(), true);
 	programTexts.append( new ProgramText(type, programTexts.count() + 1, fileInfo.suffix(), code) );
 
 	return true;
