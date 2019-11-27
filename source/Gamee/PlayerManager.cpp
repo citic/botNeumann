@@ -53,6 +53,13 @@ void PlayerManager::clearPlayers()
 
 bool PlayerManager::reloadLastPlayer()
 {
+	// If running without gamification, use a default player
+  #ifdef BN_NOGAMIFICATION
+	Q_ASSERT(currentPlayer == nullptr);
+	currentPlayer = new Player("bn_player");
+	return true;
+  #endif
+
 	// Get the last player id from the settings
 	QSettings settings;
 	const QVariant& playerId = settings.value(sk("Players/LastPlayer"));
