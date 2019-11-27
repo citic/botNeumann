@@ -10,6 +10,7 @@ TestCaseActor::TestCaseActor(int index, QGraphicsItem* parentItem)
 {
 	Q_ASSERT(index >= 1);
 	setFlag( QGraphicsItem::ItemIsSelectable );
+	 updateToolTip("running");
 }
 
 bool TestCaseActor::testPlayerSolution(PlayerSolution* playerSolution)
@@ -123,10 +124,15 @@ void TestCaseActor::reflectTestCaseResult(bool hideActiveTestCaseResult)
 
 	switch (state)
 	{
-		case unknown: setElementId("up_standard_output_test_inactive1"); break;
-		case passed: setElementId("up_standard_output_test_valid1"); break;
-		case failed: setElementId("up_standard_output_test_invalid1"); break;
+		case unknown: setElementId("up_standard_output_test_inactive1"); updateToolTip("?"); break;
+		case passed: setElementId("up_standard_output_test_valid1"); updateToolTip("passed"); break;
+		case failed: setElementId("up_standard_output_test_invalid1"); updateToolTip("failed"); break;
 	}
+}
+
+void TestCaseActor::updateToolTip(const QString& result)
+{
+	setToolTip(tr("Test case %1 (%2)\nClick for visualizing it").arg(index).arg(result));
 }
 
 void TestCaseActor::setActiveTestCase(bool active, bool updateInterface)

@@ -123,6 +123,8 @@ int InputOutputBuffer::animateWrite(int length, const QList<ExecutionThread*>& w
 {
 	// This is the inverse process of reading
 	// Make sure we have pending characters to read from buffer
+	if ( text.isEmpty() )
+		return 0;
 	Q_ASSERT( text.length() - cursor >= length );
 
 	// The parent of the buffer is the scene

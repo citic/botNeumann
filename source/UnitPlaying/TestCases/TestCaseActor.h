@@ -76,6 +76,8 @@ class TestCaseActor : public Actor
 	/// result anyway. The latter is the case when the active test case has finished the
 	/// visualization and the test case actor must update
 	void reflectTestCaseResult(bool hideActiveTestCaseResult);
+	/// Updates the tool tip to reflect the result of the test case
+	void updateToolTip(const QString& result);
 
   signals:
 	/// Emitted when user presses this test case in order to make it active
