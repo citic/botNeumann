@@ -65,12 +65,14 @@ UnitPlayingScene::UnitPlayingScene(const QString& context, const QString& levelU
 	QTimer::singleShot(0, this, [creationTime]() { qCInfo(logApplication, "Unit playing scene creation time: %lfs", creationTime.elapsed() / 1000.0); } );
   #endif
 
+  #if GAMIFICATION
 	// This is the last scene loaded
 	QSettings settings;
 	settings.setValue( sk("Application/LastScene"), sceneName );
 	settings.setValue( sk("Application/LastContext"), context );
 	settings.setValue( sk("Application/LastLevelUnit"), levelUnit );
 	settings.setValue( sk("Application/LastUnitFilename"), filename );
+  #endif
 }
 
 UnitPlayingScene::~UnitPlayingScene()
