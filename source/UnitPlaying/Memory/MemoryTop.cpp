@@ -47,14 +47,23 @@ void MemoryTop::buildLabel(const QString& labelText)
 	// Create a label that uses an array of images (represented by a piece of tape)
 	Q_ASSERT(label == nullptr);
 	QStringList labelAssets;
+  #if ABSTRACT
+	labelAssets << "up_variable_name_middle";
+  #else
 	labelAssets << "up_variable_name_left" << "up_variable_name_middle" << "up_variable_name_right";
+  #endif
 
 	// Calculate proportions of each part of the tape, using the bytes they require
+	QList<qreal> proportions;
 	const qreal labelBytes = qMin( labelText.length() / 2.85, qreal(size) );
+
+  #if ABSTRACT
+	proportions << 1.0;
+  #else
 	const qreal leftRightProportion = 3.246 / 11.951 / labelBytes;
 	const qreal middleProportion =  1.0 - 2 * leftRightProportion;
-	QList<qreal> proportions;
 	proportions << leftRightProportion << middleProportion << leftRightProportion;
+  #endif
 
 	// Create the label and add it to the scene
 	label = new MultiSvgButton(labelAssets, proportions, graphicsParentItem, labelText, zValue + 0.01 );
