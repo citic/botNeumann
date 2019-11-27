@@ -32,10 +32,10 @@ void BotNeumannDirector::begin()
 
 	// If called with CLI arguments (a source file or directory are specified), disable
 	// game menu and unit selection because there are not level units (disable gamification)
-  #ifdef BN_NOGAMIFICATION
-	this->showFolderDropUnitPlayingScene();
-  #else
+  #if GAMIFICATION
 	this->showLastScene();
+  #else
+	this->showFolderDropUnitPlayingScene();
   #endif
 }
 

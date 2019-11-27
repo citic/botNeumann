@@ -43,7 +43,7 @@ CodeEditor::CodeEditor(QWidget* parent)
 	QFontMetrics metrics(font);
 	setTabStopDistance( metrics.horizontalAdvance("   ") );
 
-  #ifdef BN_NOGAMIFICATION
+  #if ! GAMIFICATION
 	// Disable inserting urls in the text editor when file are dropped
 	// The MainWindow reacts to the drops instead of the CodeEditor
 	setAcceptDrops(false);

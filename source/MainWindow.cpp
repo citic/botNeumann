@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
   #ifdef Q_OS_LINUX
 	setWindowIcon(QIcon(":/game_logo.svg"));
   #endif
-  #ifdef BN_NOGAMIFICATION
+  #if ! GAMIFICATION
 	setAcceptDrops(true);
   #endif
 	// Create each window section
@@ -81,7 +81,7 @@ void MainWindow::setupStage()
 	director = new BotNeumannDirector(stage);
 	director->begin();
 
-  #ifdef BN_NOGAMIFICATION
+  #if ! GAMIFICATION
 	connect( stage, &Stage::unitDropped, this, &MainWindow::unitDropped );
   #endif
 }

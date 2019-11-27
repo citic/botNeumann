@@ -11,7 +11,7 @@ Stage::Stage(QWidget *parent)
 	setObjectName("stageRoom");
 	setScene(&graphicsScene);
 
-  #ifdef BN_NOGAMIFICATION
+  #if ! GAMIFICATION
 	setAcceptDrops(true);
 	connect( &graphicsScene, &GraphicsScene::unitDropped, this, &Stage::unitDropped );
   #endif

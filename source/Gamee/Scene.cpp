@@ -27,7 +27,7 @@ void Scene::setBackground(const QString& svgElementId)
 {
 	background = new Actor(svgElementId, this);
 
-  #ifdef BN_NOGAMIFICATION
+  #if ! GAMIFICATION
 	background->setAcceptDrops(true);
   #endif
 }

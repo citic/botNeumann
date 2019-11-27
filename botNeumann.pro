@@ -13,7 +13,7 @@ RC_ICONS = assets/game_logo.ico
 # Enable/disable gamification (levels)
 DEFINES += \
 	ABSTRACT=1 \
-	BN_NOGAMIFICATION \
+        GAMIFICATION=0 \
 
 INCLUDEPATH += \
 	source \
