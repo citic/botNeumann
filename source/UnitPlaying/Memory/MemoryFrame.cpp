@@ -43,11 +43,17 @@ MemoryFrame::~MemoryFrame()
 
 void MemoryFrame::buildMemoryFrame(const QString& topLabel)
 {
-	// Create the memory roof
 	Q_ASSERT(graphicsParentItem);
 	Q_ASSERT(memoryTop == nullptr);
+
+	// Create the memory roof
 	memoryTop = new MemoryTop(rowSize, topLabel, graphicsParentItem, zValue);
 	addItem(memoryTop, memoryRoofRows / getHeightInRows(), zValue);
+
+  #if ABSTRACT
+	addItem( new Actor("up_rectangle", graphicsParentItem), 1.0 );
+	withLegs = false;
+  #endif
 
 	// Create the initial memory rows
 	createRows(rowCount, startByte);

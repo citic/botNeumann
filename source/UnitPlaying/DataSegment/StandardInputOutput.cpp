@@ -345,16 +345,32 @@ void StandardInputOutput::buildStandardInputOutput()
 	// segment row
 	byteWidth *= 2;
 
-	// Standard input/output tubes have fixed width parts and variable length parts
-	// The opening can extract 8-bytes values
-	double openingProportion = 8 * byteWidth;
-
 	// The elbow requires almost a pair of bytes
 	double elbowProportion = 2.0 * byteWidth;
+
+  #if ABSTRACT
+	const qreal baselineProportion = (rowSize - 4.0) / rowSize;
+	if ( type == standardInput )
+	{
+		addItem( new Actor("up_standard_input_baseline", scene), baselineProportion, zElbow );
+		addItem( new Actor("up_standard_input_right", scene), elbowProportion, zElbow );
+	}
+	else
+	{
+		addItem( new Actor("up_standard_output_left", scene), elbowProportion, zElbow );
+		addItem( new Actor("up_standard_output_baseline", scene), baselineProportion, zElbow );
+		tester = new OutputTester(scene);
+		insertItem(tester, 0.0, elbowProportion, zElbow);
+	}
+  #else
 
 	// Map the type to a string
 	Q_ASSERT(type < standardIoUnknown);
 	const char* typeStr = ioTypeStr[type];
+
+	// Standard input/output tubes have fixed width parts and variable length parts
+	// The opening can extract 8-bytes values
+	double openingProportion = 8 * byteWidth;
 
 	// A tube has three parts: left, middle, and right
 	Actor* left = new Actor(QString("up_standard_%1_left").arg(typeStr), scene);
@@ -409,6 +425,7 @@ void StandardInputOutput::buildStandardInputOutput()
 		// Make the middle tube to plug to the tester
 		middle->setPaddingLeft(-0.011);
 	}
+  #endif
 
 	// The buffer has half size of the data segment row, and 3 chars are lost by elbows and edges
 	const size_t bufferSize = rowSize / 2 - 3;

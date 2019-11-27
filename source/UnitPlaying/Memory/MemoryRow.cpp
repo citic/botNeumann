@@ -30,6 +30,9 @@ void MemoryRow::buildMemoryRow(bool withGarbage)
 {
 	Q_ASSERT(graphicsParentItem);
 
+  #if ABSTRACT
+	addItem( new Actor("up_rectangle", graphicsParentItem), 1.0 );
+  #else
 	// The left and right extremes of the shelf require 1 byte each
 	const double leftRightProportion = getByteProportion();
 	// The middle element occupies the rest
@@ -44,6 +47,7 @@ void MemoryRow::buildMemoryRow(bool withGarbage)
 	addItem(leftShelf, leftRightProportion, zValue);
 	addItem(middleShelf, middleProportion, zValue);
 	addItem(rightShelf, leftRightProportion, zValue);
+  #endif
 
 	// Create the memory addresses in a new layer
 	buildMemoryAddresses();
@@ -69,7 +73,11 @@ void MemoryRow::buildMemoryAddresses()
 		memoryAddress->setPaddingTop(0.77);
 		memoryAddress->setPaddingBottom(0.073);
 		memoryAddress->setFont(QFont(BotNeumannApp::getMonospacedFontName()));
+	  #if ABSTRACT
+		memoryAddress->setBrush(QBrush(Qt::darkGray));
+	  #else
 		memoryAddress->setBrush(QBrush(Qt::yellow));
+	  #endif
 		addItem(memoryAddress, byteProportion, zMemoryAddress);
 	}
 }

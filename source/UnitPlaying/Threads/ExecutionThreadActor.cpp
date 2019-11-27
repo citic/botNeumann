@@ -9,6 +9,7 @@
 #include "VisualizationSpeed.h"
 
 #include <QFont>
+#include <QBrush>
 
 ExecutionThreadActor::ExecutionThreadActor(int threadId, QGraphicsItem* parentItem)
 	: Actor("", parentItem)
@@ -35,6 +36,9 @@ void ExecutionThreadActor::buildActor()
 	lineNumber = new LabelButton("00", this);
 	lineNumber->setFont( QFont(BotNeumannApp::getMonospacedFontName()) );
 	lineNumber->setAlignment(Qt::AlignCenter);
+  #ifdef ABSTRACT
+	lineNumber->setBrush( QBrush(Qt::black) );
+  #endif
 
 	// Center the line number within the robot's display
 	qreal lineNumberLeft = (this->boundingRect().width() - lineNumberRefWidth) * 0.5;
