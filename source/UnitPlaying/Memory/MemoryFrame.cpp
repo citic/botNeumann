@@ -9,7 +9,9 @@
 const double memoryRoofRows = 0.5;
 const double memoryLegsRows = 1.0 / 3.0;
 
-MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs, size_t maxSize)
+MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte
+	, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs
+	, bool opaque, size_t maxSize)
 	: LinearLayoutActor(Qt::Vertical)
 	, graphicsParentItem(graphicsParentItem)
 	, zValue(zValue)
@@ -20,6 +22,15 @@ MemoryFrame::MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, siz
 	, withGarbage(withGarbage)
 	, withLegs(withLegs)
 {
+  #if ABSTRACT
+	if ( opaque )
+		addItem( new Actor("up_rectangle_filled", graphicsParentItem), 1.0, zValue );
+	else
+		addItem( new Actor("up_rectangle", graphicsParentItem), 1.0/*, zValue*/ );
+  #else
+	Q_UNUSED(opaque)
+  #endif
+
 	// Initially there is just one big fragment of free memory. We select the size for the free
 	// stack space among the real size between the actual size and the allowed max size
 	size_t freeSize = qMax( getSize(), maxSize );
@@ -51,7 +62,6 @@ void MemoryFrame::buildMemoryFrame(const QString& topLabel)
 	addItem(memoryTop, memoryRoofRows / getHeightInRows(), zValue);
 
   #if ABSTRACT
-	addItem( new Actor("up_rectangle", graphicsParentItem), 1.0 );
 	withLegs = false;
   #endif
 

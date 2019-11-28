@@ -60,7 +60,9 @@ class MemoryFrame : public LinearLayoutActor
 
   public:
 	/// Constructor
-	explicit MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs, size_t maxSize = 0);
+	explicit MemoryFrame(QGraphicsItem* graphicsParentItem, size_t rowCount, size_t startByte
+		, size_t rowSize, const QString& topLabel, qreal zValue, bool withGarbage, bool withLegs
+		, bool opaque, size_t maxSize = 0);
 	/// Destructor
 	virtual ~MemoryFrame() override;
 	/// Get the number of memory rows required by this object

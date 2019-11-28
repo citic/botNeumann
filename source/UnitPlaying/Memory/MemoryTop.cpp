@@ -21,7 +21,7 @@ void MemoryTop::buildMemoryTop()
 	Q_ASSERT(graphicsParentItem);
 
   #if ABSTRACT
-	addItem( new Actor("up_rectangle", graphicsParentItem), 1.0 );
+	addItem( new Actor("up_rectangle", graphicsParentItem), 1.0, zValue );
   #else
 	// The left and right extremes of the shelf require 1 byte each
 	const double leftRightProportion = 1.0 / (size + 2.0);

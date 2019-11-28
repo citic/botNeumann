@@ -61,7 +61,7 @@ void DataSegment::buildDataSegment()
 
 	// Create the memory rows and their roof
 	Q_ASSERT(scene);
-	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize, tr("Data segment"), zUnitPlaying::dataSegment, false, false);
+	memoryFrame = new MemoryFrame(scene, rowCount, rowStartByte, rowSize, tr("Data segment"), zUnitPlaying::dataSegment, false, false, false);
 
 	// Distribute child elements according to the number of rows they require
 	const double allRows = memoryFrame->getHeightInRows() + stdInOutRows;

@@ -38,7 +38,7 @@ int CallStack::callFunction(const GdbItemTree& tree, int initialDelay)
 	// Build a memory frame for the new stack frame with the function name (/frame/func) in the roof
 	// By default, memory frames are filled of garbage.
 	qreal zFunctionCall = zValue + 0.01 * stackFrames.count();
-	MemoryFrame* functionCall = new MemoryFrame(parent, rowCount, startByte, rowSize, functionName, zFunctionCall, withGarbage, withLegs, maxSize);
+	MemoryFrame* functionCall = new MemoryFrame(parent, rowCount, startByte, rowSize, functionName, zFunctionCall, withGarbage, withLegs, true, maxSize);
 
 	// Add the functionCall to the list
 	stackFrames.append(functionCall);
