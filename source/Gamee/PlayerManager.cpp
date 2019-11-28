@@ -70,7 +70,7 @@ bool PlayerManager::reloadLastPlayer()
 	return true;
   #else
 	Q_ASSERT(currentPlayer == nullptr);
-	currentPlayer = new Player("bn_player");
+	currentPlayer = new Player("player", "player");
 	return true;
   #endif
 }

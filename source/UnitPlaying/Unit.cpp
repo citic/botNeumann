@@ -55,7 +55,7 @@ bool Unit::load(const QString& filename)
 
 	QDir dir = fileInfo.dir();
 	if ( dir.exists() )
-		return loadFromFolder(dir);
+		return loadFromFolder(dir, true);
 
 	return false;
 }
@@ -87,15 +87,16 @@ bool Unit::loadFromResource(const QString& filename)
 bool Unit::loadFromFolder(const QString& directory)
 {
 	QDir dir(directory);
-	return this->loadFromFolder(dir);
+	return this->loadFromFolder(dir, true);
 }
 
-bool Unit::loadFromFolder(QDir dir)
+bool Unit::loadFromFolder(QDir dir, bool root)
 {
 	if ( ! dir.exists() )
 		return false;
 
-	this->id = dir.dirName();
+	if ( root )
+		this->id = dir.dirName();
 	dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
 	dir.setSorting(QDir::Name);
 	QRegularExpression reInput("^input\\d+");
@@ -120,7 +121,7 @@ bool Unit::loadFromFolder(QDir dir)
 		else if ( filename.startsWith("file_generator") && (extension == "c" || extension == "cpp") )
 			loadProgramText(fileInfo, generators, ProgramText::fileGenerator);
 		else if ( filename.startsWith("tests") && fileInfo.isDir() )
-			loadFromFolder(fileInfo.absoluteFilePath());
+			loadFromFolder(fileInfo.absoluteFilePath(), false);
 #if 0
 		else if ( extension == "att" )
 			loadUnitAtributes(absolute);

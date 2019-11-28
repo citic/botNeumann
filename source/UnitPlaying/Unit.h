@@ -141,8 +141,9 @@ class Unit : public QObject
 	/// @return true on success, false otherwise
 	bool loadFromFolder(const QString& directory);
 	/// Loads the unit from a folder from the local computer
+	/// @param root Send true for the root folder containing the exercise, false for subfolders
 	/// @return true on success, false otherwise
-	bool loadFromFolder(QDir dir);
+	bool loadFromFolder(QDir dir, bool root);
 	/// Check that the data loaded from the XML botnu file is valid. This method should be called
 	/// after a successful load process.
 	bool validateUnit() const;
