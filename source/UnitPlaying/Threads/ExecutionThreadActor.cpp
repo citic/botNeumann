@@ -36,7 +36,7 @@ void ExecutionThreadActor::buildActor()
 	lineNumber = new LabelButton("00", this);
 	lineNumber->setFont( QFont(BotNeumannApp::getMonospacedFontName()) );
 	lineNumber->setAlignment(Qt::AlignCenter);
-  #ifdef ABSTRACT
+  #if ABSTRACT
 	lineNumber->setBrush( QBrush(Qt::black) );
   #endif
 

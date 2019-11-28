@@ -64,6 +64,11 @@ int GraphicValue::animateValueChange(const QString& value)
 
 bool GraphicValue::buildGraphicValue()
 {
+  #if ABSTRACT
+	const QString prefix("up_");
+  #else
+	const QString prefix;
+  #endif
 	// Create the pod, the value, and the label of the variable
 	switch ( dataType )
 	{
@@ -73,20 +78,16 @@ bool GraphicValue::buildGraphicValue()
 		// Atomic types
 		case typeBool:      buildSingleByteVariable("up_bool_false", refBoolPaddings); break;
 		case typeChar:      buildSingleByteVariable("up_char", refCharPaddings); break;
-		case typeInt:       buildMultiByteVariable("int", refIntPaddings); break;
-		case typeEnum:      buildMultiByteVariable("int", refIntPaddings); break;
-		case typeBitField:  buildMultiByteVariable("int", refIntPaddings); break;
-	  #if ABSTRACT
-		case typeFloat:     buildMultiByteVariable("up_float", refFloatPaddings); break;
-	  #else
-		case typeFloat:     buildMultiByteVariable("float", refFloatPaddings); break;
-	  #endif
+		case typeInt:       buildMultiByteVariable(prefix + "int", refIntPaddings); break;
+		case typeEnum:      buildMultiByteVariable(prefix + "int", refIntPaddings); break;
+		case typeBitField:  buildMultiByteVariable(prefix + "int", refIntPaddings); break;
+		case typeFloat:     buildMultiByteVariable(prefix + "float", refFloatPaddings); break;
 
 		// Indirection types
-		case typePointer:   buildMultiByteVariable("pointer", refPointerPaddings); break;
-		case typeReference: buildMultiByteVariable("pointer", refPointerPaddings); break;
-		case typeRValue:    buildMultiByteVariable("pointer", refPointerPaddings); break;
-		case typeFunction:  buildMultiByteVariable("pointer", refPointerPaddings); break;
+		case typePointer:   buildMultiByteVariable(prefix + "pointer", refPointerPaddings); break;
+		case typeReference: buildMultiByteVariable(prefix + "pointer", refPointerPaddings); break;
+		case typeRValue:    buildMultiByteVariable(prefix + "pointer", refPointerPaddings); break;
+		case typeFunction:  buildMultiByteVariable(prefix + "pointer", refPointerPaddings); break;
 
 		// Composite types
 		case typeArray:     buildArray(); break;
@@ -177,6 +178,15 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 			: new Actor(svgFileBase + "_middle"".svg", graphicsParent, true);
 	qreal middleSize = size - (VisAddress)buildLeftPod - (VisAddress)buildRightPod;
 	addItem(podMiddle, middleSize / size, zPod);
+  #if ABSTRACT
+	// ToDo: ugly fix
+	podMiddle->setPaddings(0.0, -0.05, 0.0, -0.06);
+	if ( dataType == typeFloat )
+	{
+		podMiddle->setPaddingTop(0.035);
+		podMiddle->setPaddingBottom(0.035);
+	}
+  #endif
 
 	// Pod: right
 	if ( buildRightPod )
@@ -185,6 +195,9 @@ bool GraphicValue::buildPod(const QString& asset, bool buildLeftPod, bool buildR
 				? new Actor(asset + "_right", graphicsParent)
 				: new Actor(svgFileBase + "_right"".svg", graphicsParent, true);
 		addItem(podRight, 1.0 / size, zPod);
+	  #if ABSTRACT
+		podRight->setPaddings(0.0, 0.0, 0.0, -0.05);
+	  #endif
 	}
 
 	return true;
