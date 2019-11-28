@@ -3,7 +3,7 @@
 
 <botnu id="g3-lottery" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
 
-<description lang="es"><![CDATA[<h2>¿Es binario?</h2>
+<description lang="es"><![CDATA[<h2>Lotería</h2>
 
 <p>Se quiere un objeto que pueda indicar si números de lotería tienen o no premio por coincidir con el mayor o coincidir la terminación. El programa recibe en la primera línea el número favorecido, y en las subsecuentes líneas los números que se quieren probar.</p>
 
@@ -31,9 +31,10 @@ int mayor;
 
 class Loteria
 {
-	private:
-		int terminacion;
+private:
+	int terminacion;
 
+public:
 	Loteria()
 	{
 		terminacion = mayor % 10;
@@ -41,10 +42,11 @@ class Loteria
 
 	void clasificar(int numero)
 	{
+		cout << numero << ": ";
 		if ( numero == mayor )
 			cout << "Mayor!\n";
 		else if ( numero % 10 == terminacion )
-			cout << "Antecesor!\n";
+			cout << "Terminacion!\n";
 		else
 			cout << "Suerte para la proxima\n";
 	}
@@ -54,6 +56,7 @@ Loteria loteria;
 
 int main()
 {
+	cin >> mayor;
 	int numero = 0;
 	while ( cin >> numero )
 		loteria.clasificar(numero);
@@ -63,38 +66,50 @@ int main()
 <solution lang="cpp"><![CDATA[#include <iostream>
 using namespace std;
 
-short is_binary(long long number){
-	bool bin = true,in_loop=number!=0;
-	if(number<0) number=-number;
-	do{
-		switch (number%10 ) {
-			case 0: break;
-			case 1: break;
-			default:{
-				bin=false;
-			}
-		}
+int mayor;
 
-		number/=10;
-		in_loop=number!=0;
+class Loteria
+{
+private:
+	int terminacion;
+
+public:
+	Loteria()
+	{
+		terminacion = mayor % 10;
 	}
-	while(in_loop);
-		return bin;
-}
+
+	void clasificar(int numero)
+	{
+		cout << numero << ": ";
+		if ( numero < 0 || numero >= 100 )
+			cout << "Numero no valido\n";
+		else if ( numero == mayor )
+			cout << "Mayor!\n";
+		else if ( numero % 10 == terminacion )
+			cout << "Terminacion!\n";
+		else
+			cout << "Suerte para la proxima\n";
+	}
+};
+
 
 int main()
 {
-	long long x;
-	cin>>x;
-	cout<<is_binary(x)<<endl;
+	cin >> mayor;
+	Loteria loteria;
+	int numero = 0;
+	while ( cin >> numero )
+		loteria.clasificar(numero);
 }
+
 ]]></solution>
 
 <standard-generator lang="cpp" default-runs="3"><![CDATA[#include <cstdlib>
 #include <ctime>
 #include <iostream>
 
-double grand(int min, int max)
+int grand(int min, int max)
 {
 	return rand() % (max - min) + min;
 }
@@ -102,58 +117,92 @@ double grand(int min, int max)
 int main()
 {
 	srand( time(0) + clock() );
-	if ( grand(0, 2) == 1 )
-		std::cout << '-';
-	for ( int i = 0, n = grand(1, 19); i < n; ++i )
-		if ( grand(0, 100) < 90 )
-			std::cout << grand(0, 2);
-		else
-			std::cout << grand(0, 10);
+	std::cout << grand(0, 100) << "\n\n";
 
-	std::cout << std::endl;
+	int n = grand(1, 11);
+	for ( int i = 0; i < n; ++i )
+		switch ( grand(0,10) )
+		{
+			case 9: std::cout << 0 - grand(0, 10) << '\n'; break;
+			case 8: std::cout << 100 + grand(0, 10) << '\n'; break;
+			default: std::cout << grand(0, 100) << '\n'; break;
+		}
+
 	return 0;
 }
+
 ]]></standard-generator>
 
 <test-case>
-<input>100110100
+<input>13
+
+76
+13
+12
+93
 </input>
-<output>1
+<output>76: Suerte para la proxima
+13: Mayor!
+12: Suerte para la proxima
+93: Terminacion!
 </output>
 </test-case>
 
 <test-case>
-<input>00011002
+<input>70
+
+60
+65
+69
+70
+71
+75
 </input>
-<output>0
+<output>60: Terminacion!
+65: Suerte para la proxima
+69: Suerte para la proxima
+70: Mayor!
+71: Suerte para la proxima
+75: Suerte para la proxima
 </output>
 </test-case>
 
 <test-case>
-<input>001100110011001100110
+<input>77
+
+7
+17
+27
+77
+97
+71
 </input>
-<output>1
+<output>7: Terminacion!
+17: Terminacion!
+27: Terminacion!
+77: Mayor!
+97: Terminacion!
+71: Suerte para la proxima
 </output>
 </test-case>
 
 <test-case>
-<input>0
+<input>62
+
+-62
+-2
+2
+62
+72
+162
 </input>
-<output>1
+<output>-62: Numero no valido
+-2: Numero no valido
+2: Terminacion!
+62: Mayor!
+72: Terminacion!
+162: Numero no valido
 </output>
 </test-case>
 
-<test-case>
-<input>-1
-</input>
-<output>1
-</output>
-</test-case>
-
-<test-case>
-<input>-1024
-</input>
-<output>0
-</output>
-</test-case>
 </botnu>

@@ -5,18 +5,33 @@
 
 <description lang="es"><![CDATA[<h2>En rango</h2>
 
-<p>Un programa de medicina recibe un rango de referencia en la primera línea de la entrada estándar. Luego recibe valores resultados de exámenes, uno por línea. El programa debe indicar cuáles de estos valores se encuentran fuera de rango de referencia en la salida estándar.</p>
+<p>Un programa recibe un rango de referencia entero en la primera línea de la entrada estándar. Luego recibe valores de resultados que deberían estar dentro del rango, uno por línea. El programa debe indicar cuáles de estos valores se encuentran fuera de rango de referencia en la salida estándar.</p>
+
+<h3>Ejemplo de entrada:</h3>
+
+<pre>70 100
+
+95
+65
+100
+150
+</pre>
+
+<h3>Ejemplo de salida</h3>
+
+<pre>65
+150</pre>
+
 ]]></description>
 
-<initial-code lang="cpp"><![CDATA[#include <iomanip>
-#include <iostream>
+<initial-code lang="cpp"><![CDATA[#include <iostream>
 using namespace std;
 
 unsigned int minimo, maximo;
 
 bool en_rango(int valor)
 {
-	if ( minimo < value < maximo )
+	if ( minimo < valor < maximo )
 		return true;
 	else
 		return false;
@@ -37,38 +52,31 @@ int main()
 }
 ]]></initial-code>
 
-<solution lang="cpp"><![CDATA[#include <iomanip>
-#include <iostream>
+<solution lang="cpp"><![CDATA[#include <iostream>
 using namespace std;
 
-double leer()
-{
-	double valor;
+int minimo, maximo;
 
-	cin >> valor;
-	return valor;
-}
-
-double incremento(double inicial, double final)
+bool en_rango(int valor)
 {
-	return 100 * (final - inicial) / inicial;
-}
-
-void imprimir(double inicial, double final)
-{
-	if ( inicial <= 0 || final <= 0 )
-		cout << "error\n";
+	if ( valor >= minimo && valor <= maximo )
+		return true;
 	else
-		cout << incremento(inicial, final) << "%\n";
+		return false;
+}
+
+void clasificar(int valor)
+{
+	if ( ! en_rango(valor) )
+		cout << valor << endl;
 }
 
 int main()
 {
-	double inicial = leer();
-	double final = leer();
-
-	cout << fixed << setprecision(2);
-	imprimir(inicial, final);
+	cin >> minimo >> maximo;
+	int valor;
+	while ( cin >> valor )
+		clasificar(valor);
 }
 ]]></solution>
 
@@ -84,88 +92,91 @@ int grand(int min, int max)
 int main()
 {
 	srand( time(0) + clock() );
-	std::cout
-		<< grand(-100, 1000) << ' '
-		<< grand(-100, 1000) << std::endl;
+	int a = grand(-100, 1000);
+	int b = grand(a, 1000);
+	std::cout << a << ' ' << b << "\n\n";
+
+	int n = grand(1, 11);
+	for ( int i = 0; i < n; ++i )
+		switch ( grand(0,3) )
+		{
+			case 0: std::cout << grand(a, b) << '\n'; break;
+			case 1: std::cout << a - grand(a, b) << '\n'; break;
+			case 2: std::cout << b + grand(a, b) << '\n'; break;
+		}
 
 	return 0;
 }
 ]]></standard-generator>
 
 <test-case>
-<input>398 448
+<input>70 100
+
+95
+65
+100
+150
 </input>
-<output>12.56%
+<output>65
+150
 </output>
 </test-case>
 
 <test-case>
 <input>100 200
+
+-100
+-50
+0
+50
+100
+150
+200
+250
 </input>
-<output>100.00%
+<output>-100
+-50
+0
+50
+250
 </output>
 </test-case>
 
 <test-case>
-<input>150 100
+<input>-100 100
+
+-150
+-100
+-50
+0
+50
+100
+150
+200
 </input>
-<output>-33.33%
+<output>-150
+150
+200
 </output>
 </test-case>
 
 <test-case>
-<input>0 300
+<input>-25 0
+
+-27
+-22
+-16
+-8
+-0
+7
+8509
+7654
 </input>
-<output>error
+<output>-27
+7
+8509
+7654
 </output>
 </test-case>
 
-<test-case>
-<input>80 0
-</input>
-<output>error
-</output>
-</test-case>
-
-<test-case>
-<input>50 -100
-</input>
-<output>error
-</output>
-</test-case>
-
-<test-case>
-<input>-1 0
-</input>
-<output>error
-</output>
-</test-case>
-
-<test-case>
-<input>30 30
-</input>
-<output>0.00%
-</output>
-</test-case>
-
-<test-case>
-<input>0 0
-</input>
-<output>error
-</output>
-</test-case>
-
-<test-case>
-<input>80 0.1
-</input>
-<output>-99.88%
-</output>
-</test-case>
-
-<test-case>
-<input>0.5 0.25
-</input>
-<output>-50.00%
-</output>
-</test-case>
 </botnu>

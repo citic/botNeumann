@@ -27,14 +27,14 @@
 <initial-code lang="cpp"><![CDATA[#include <iostream>
 using namespace std;
 
-int cupones(int consumo)
+double cupones(double consumo)
 {
 	return consumo / 5000;
 }
 
 int main()
 {
-	int consumo = 0;
+	double consumo = 0;
 	cin >> consumo;
 	cout << cupones(consumo) << endl;
 }
@@ -75,12 +75,35 @@ int main()
 ]]></standard-generator>
 
 
-<!--
 <test-case>
-	<input>100</input>
-	<output>310.928</output>
+	<input>17505.18</input>
+	<output>3</output>
 </test-case>
--->
+
+<test-case>
+	<input>0</input>
+	<output>0</output>
+</test-case>
+
+<test-case>
+	<input>4999.99</input>
+	<output>0</output>
+</test-case>
+
+<test-case>
+	<input>5000</input>
+	<output>1</output>
+</test-case>
+
+<test-case>
+	<input>5000</input>
+	<output>1</output>
+</test-case>
+
+<test-case>
+	<input>55000.01</input>
+	<output>11</output>
+</test-case>
 
 
 </botnu>
