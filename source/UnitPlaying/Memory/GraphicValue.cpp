@@ -210,6 +210,8 @@ bool GraphicValue::buildValueLabel(const qreal refDataPaddings[], qreal proporti
 	QString visibleValue = value;
 	if ( dataType == typeChar )
 		visibleValue = processInvisibleChars();
+	else if ( dataType == typeFloat )
+		visibleValue = QString::asprintf("%g", value.toDouble());
 
 	// Create the label to show the value
 	Q_ASSERT(valueLabel == nullptr);
