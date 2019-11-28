@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+
+<botnu id="f2-f_to_c" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+
+
+<description lang="es"><![CDATA[
+<h1>Convertidor de Fahrenheit a Celcius</h1>
+
+<p>La temperatura es un factor importante en los sistemas eléctricos y otros contextos. Este programa se encarga de convertir temperaturas en Fahrenheit a Celcius, con la relación <i>C = 5/9(F-32)</i>.</p>
+
+
+<h2>Ejemplo de entrada:</h2>
+
+<pre>100</pre>
+
+<h2>Ejemplo de salida</h2>
+
+<pre>37.7778</pre>
+]]></description>
+
+
+
+<initial-code lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	double fahrenheit = 0;
+	cin >> fahrenheit;
+	double celcius = 5/9*(fahrenheit-32);
+	cout << celcius << endl;
+}
+]]></initial-code>
+
+
+
+<solution lang="cpp"><![CDATA[#include <iostream>
+using namespace std;
+
+int main()
+{
+	double fahrenheit = 0;
+	cin >> fahrenheit;
+	double celcius = 5.0 / 9.0 * (fahrenheit - 32.0);
+	cout << celcius << endl;
+}
+]]></solution>
+
+
+
+<standard-generator lang="cpp" default-runs="5"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+double grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	std::cout << grand(-100, 150) << std::endl;
+
+	return 0;
+}
+]]></standard-generator>
+
+
+<!--
+<test-case>
+	<input>100</input>
+	<output>37.7778</output>
+</test-case>
+-->
+
+
+</botnu>

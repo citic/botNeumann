@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE botnu SYSTEM "../botnu-1.0.dtd">
+
+<botnu id="g2-in_range" version="1.0" architecture="32" cpu-cores="2" ram="512" heap-segment="no" min-threads="1" timeout="1000" ignore-whitespace="yes">
+
+<description lang="es"><![CDATA[<h2>En rango</h2>
+
+<p>Un programa de medicina recibe un rango de referencia en la primera línea de la entrada estándar. Luego recibe valores resultados de exámenes, uno por línea. El programa debe indicar cuáles de estos valores se encuentran fuera de rango de referencia en la salida estándar.</p>
+]]></description>
+
+<initial-code lang="cpp"><![CDATA[#include <iomanip>
+#include <iostream>
+using namespace std;
+
+unsigned int minimo, maximo;
+
+bool en_rango(int valor)
+{
+	if ( minimo < value < maximo )
+		return true;
+	else
+		return false;
+}
+
+void clasificar(int valor)
+{
+	if ( ! en_rango(valor) )
+		cout << valor << endl;
+}
+
+int main()
+{
+	cin >> minimo >> maximo;
+	int valor;
+	while ( cin >> valor )
+		clasificar(valor);
+}
+]]></initial-code>
+
+<solution lang="cpp"><![CDATA[#include <iomanip>
+#include <iostream>
+using namespace std;
+
+double leer()
+{
+	double valor;
+
+	cin >> valor;
+	return valor;
+}
+
+double incremento(double inicial, double final)
+{
+	return 100 * (final - inicial) / inicial;
+}
+
+void imprimir(double inicial, double final)
+{
+	if ( inicial <= 0 || final <= 0 )
+		cout << "error\n";
+	else
+		cout << incremento(inicial, final) << "%\n";
+}
+
+int main()
+{
+	double inicial = leer();
+	double final = leer();
+
+	cout << fixed << setprecision(2);
+	imprimir(inicial, final);
+}
+]]></solution>
+
+<standard-generator lang="cpp" default-runs="2"><![CDATA[#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+int grand(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
+int main()
+{
+	srand( time(0) + clock() );
+	std::cout
+		<< grand(-100, 1000) << ' '
+		<< grand(-100, 1000) << std::endl;
+
+	return 0;
+}
+]]></standard-generator>
+
+<test-case>
+<input>398 448
+</input>
+<output>12.56%
+</output>
+</test-case>
+
+<test-case>
+<input>100 200
+</input>
+<output>100.00%
+</output>
+</test-case>
+
+<test-case>
+<input>150 100
+</input>
+<output>-33.33%
+</output>
+</test-case>
+
+<test-case>
+<input>0 300
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>80 0
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>50 -100
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>-1 0
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>30 30
+</input>
+<output>0.00%
+</output>
+</test-case>
+
+<test-case>
+<input>0 0
+</input>
+<output>error
+</output>
+</test-case>
+
+<test-case>
+<input>80 0.1
+</input>
+<output>-99.88%
+</output>
+</test-case>
+
+<test-case>
+<input>0.5 0.25
+</input>
+<output>-50.00%
+</output>
+</test-case>
+</botnu>

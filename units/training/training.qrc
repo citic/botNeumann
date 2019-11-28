@@ -11,10 +11,22 @@
 		<file>d2-f_to_k.botnu</file>
 	</qresource>
 -->
+<!--
 	<qresource prefix="/training/ndebug">
 		<file>e1-f_to_k.botnu</file>
 		<file>e2-increment_percent.botnu</file>
 		<file>e3-is_binary.botnu</file>
 		<file>e4-animal_sound.botnu</file>
+	</qresource>
+-->
+	<qresource prefix="/training/fam">
+		<file>f1-in_output.botnu</file>
+		<file>f2-f_to_c.botnu</file>
+		<file>f3-raffle_coupons.botnu</file>
+	</qresource>
+	<qresource prefix="/training/probl">
+		<file>g1-f_to_k.botnu</file>
+		<file>g2-in_range.botnu</file>
+		<file>g3-lottery.botnu</file>
 	</qresource>
 </RCC>
