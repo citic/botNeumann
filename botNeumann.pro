@@ -14,7 +14,7 @@ RC_ICONS = assets/game_logo.ico
 #!defined(DEFINES, var):
 DEFINES += \
 	ABSTRACT=1 \
-	GAMIFICATION=1 \
+	GAMIFICATION=0 \
 
 INCLUDEPATH += \
 	source \

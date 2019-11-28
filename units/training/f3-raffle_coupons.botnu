@@ -45,12 +45,16 @@ int main()
 <solution lang="cpp"><![CDATA[#include <iostream>
 using namespace std;
 
+long cupones(long consumo)
+{
+	return consumo / 5000;
+}
+
 int main()
 {
-	double monto = 0.0;
-	cin >> monto;
-	int cupones = monto / 5000;
-	cout << cupones << endl;
+	double consumo = 0;
+	cin >> consumo;
+	cout << cupones(consumo) << endl;
 }
 ]]></solution>
 
@@ -96,7 +100,7 @@ int main()
 </test-case>
 
 <test-case>
-	<input>5000</input>
+	<input>5000.99</input>
 	<output>1</output>
 </test-case>
 

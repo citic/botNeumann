@@ -111,8 +111,7 @@ int main()
 
 
 <test-case>
-<input>
-2 -15
+<input>2 -15
 </input>
 
 <output>Primer valor: 2
