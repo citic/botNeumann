@@ -11,9 +11,10 @@ RC_ICONS = assets/game_logo.ico
 
 # Type of interface 1=abstract, 0=concrete
 # Enable/disable gamification (levels)
-!defined(DEFINES, var):DEFINES += \
+#!defined(DEFINES, var):
+DEFINES += \
 	ABSTRACT=1 \
-        GAMIFICATION=1 \
+	GAMIFICATION=1 \
 
 INCLUDEPATH += \
 	source \
