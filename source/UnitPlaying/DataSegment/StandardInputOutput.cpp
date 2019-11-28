@@ -17,6 +17,9 @@ const qreal zElbow =   zUnitPlaying::standardInputOutput + 0.0;
 const qreal zBuffer =  zUnitPlaying::standardInputOutput - 0.1;
 const qreal zOpening = zUnitPlaying::standardInputOutput - 0.2;
 
+static const char* const defaultTesterToolTip = /*tr*/("The color of this tester indicates if the output of your program matches the expected output for this problem");
+static const char* const stdinToolTip = /*tr*/("Standard input: Here your program receives this data coming from the current test case");
+static const char* const stdoutToolTip = /*tr*/("Standard output: Here your program should write the data that solves the problem");
 
 // InputOutputBuffer class ------------------------------------------------------------------------
 
@@ -192,6 +195,7 @@ int InputOutputBuffer::clear()
 OutputTester::OutputTester(QGraphicsItem* parentItem)
 	: Actor("up_standard_output_test_inactive", parentItem)
 {
+	setToolTip( tr(defaultTesterToolTip) );
 }
 
 int OutputTester::test(const QString& character)
@@ -211,12 +215,14 @@ int OutputTester::test(const QString& character)
 	{
 		setElementId("up_standard_output_test_invalid");
 		valid = false;
+		setToolTip( tr("Test case failed: the output of your program does not match the expected output") );
 	}
 	else if ( cursor == 1 )
 	{
 		// The character matched the expected one and it is the first one. The tester is still
 		// inactive. Turn it valid
 		setElementId("up_standard_output_test_valid");
+		setToolTip( tr("As far the output of your program matches the expected output") );
 	}
 
 	// ToDo: tester change is not animated
@@ -228,8 +234,8 @@ void OutputTester::clear()
 	valid = true;
 	setElementId("up_standard_output_test_inactive");
 	setText("");
+	setToolTip( tr(defaultTesterToolTip) );
 }
-
 
 
 // StandardInputOutput class ----------------------------------------------------------------------
@@ -352,13 +358,19 @@ void StandardInputOutput::buildStandardInputOutput()
 	const qreal baselineProportion = (rowSize - 4.0) / rowSize;
 	if ( type == standardInput )
 	{
-		addItem( new Actor("up_standard_input_baseline", scene), baselineProportion, zElbow );
-		addItem( new Actor("up_standard_input_right", scene), elbowProportion, zElbow );
+		Actor* baseline = new Actor("up_standard_input_baseline", scene);
+		Actor* elbow = new Actor("up_standard_input_right", scene);
+		baseline->setToolTip( QObject::tr(stdinToolTip) );
+		elbow->setToolTip( QObject::tr(stdinToolTip) );
+		addItem( baseline, baselineProportion, zElbow );
+		addItem( elbow, elbowProportion, zElbow );
 	}
 	else
 	{
+		Actor* baseline = new Actor("up_standard_output_baseline", scene);
+		baseline->setToolTip( QObject::tr(stdoutToolTip) );
 		addItem( new Actor("up_standard_output_left", scene), elbowProportion, zElbow );
-		addItem( new Actor("up_standard_output_baseline", scene), baselineProportion, zElbow );
+		addItem( baseline, baselineProportion, zElbow );
 		tester = new OutputTester(scene);
 		insertItem(tester, 0.0, elbowProportion, zElbow);
 	}
@@ -367,6 +379,7 @@ void StandardInputOutput::buildStandardInputOutput()
 	// Map the type to a string
 	Q_ASSERT(type < standardIoUnknown);
 	const char* typeStr = ioTypeStr[type];
+	const char* toolTip = type == standardInput ? stdinToolTip : stdoutToolTip;
 
 	// Standard input/output tubes have fixed width parts and variable length parts
 	// The opening can extract 8-bytes values
@@ -377,6 +390,11 @@ void StandardInputOutput::buildStandardInputOutput()
 	Actor* middle = new Actor(QString("up_standard_%1_middle").arg(typeStr), scene);
 	Actor* coupling = new Actor(QString("up_standard_input_output_coupling"), scene);
 	Actor* right = new Actor(QString("up_standard_%1_right").arg(typeStr), scene);
+
+	left->setToolTip( QObject::tr(toolTip) );
+	middle->setToolTip( QObject::tr(toolTip) );
+	coupling->setToolTip( QObject::tr(toolTip) );
+	right->setToolTip( QObject::tr(toolTip) );
 
 	// Ugly fix: the coupling is part of the opening, but it must be placed in a higher layer
 	const qreal couplingStart = (refOpeningWidth - refCouplingWidth) / refOpeningWidth * openingProportion;

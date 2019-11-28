@@ -17,6 +17,7 @@ ExecutionThreadActor::ExecutionThreadActor(int threadId, QGraphicsItem* parentIt
 {
 	setRenderer(sceneUnitPlaying);
 	setElementId( QString("up_thread%1_back").arg(actorNumber) );
+	setToolTip( tr("Execution thread %1").arg(threadId) );
 	buildActor();
 }
 
@@ -36,6 +37,7 @@ void ExecutionThreadActor::buildActor()
 	lineNumber = new LabelButton("00", this);
 	lineNumber->setFont( QFont(BotNeumannApp::getMonospacedFontName()) );
 	lineNumber->setAlignment(Qt::AlignCenter);
+	lineNumber->setToolTip( tr("Line number being executed") );
   #if ABSTRACT
 	lineNumber->setBrush( QBrush(Qt::black) );
   #endif
