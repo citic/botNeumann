@@ -70,12 +70,50 @@ int main()
 ]]></standard-generator>
 
 
-<!--
 <test-case>
-	<input>100</input>
-	<output>37.7778</output>
+	<input>4</input>
+	<output>-15.5556</output>
 </test-case>
--->
+
+<test-case>
+	<input>-55</input>
+	<output>-48.3333</output>
+</test-case>
+
+<test-case>
+	<input>21</input>
+	<output>-6.11111</output>
+</test-case>
+
+<test-case>
+	<input>41</input>
+	<output>5</output>
+</test-case>
+
+<test-case>
+	<input>128</input>
+	<output>53.3333</output>
+</test-case>
+
+<test-case>
+	<input>79</input>
+	<output>26.1111</output>
+</test-case>
+
+<test-case>
+	<input>-12</input>
+	<output>-24.4444</output>
+</test-case>
+
+<test-case>
+	<input>-25</input>
+	<output>-31.6667</output>
+</test-case>
+
+<test-case>
+	<input>143</input>
+	<output>61.6667</output>
+</test-case>
 
 
 </botnu>
