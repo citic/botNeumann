@@ -52,6 +52,8 @@ class PlayerSolution : public QObject
 	/// Counts the number of steps to have the entire player solution built and emit the
 	/// @a allBuilt() signal
 	int builtSteps = -1;
+	/// The number of build steps reached in order to consider the player solution built
+	int totalBuildSteps = 0;
 	/// The executable from a random selected Unit's generator
 	TestCaseGenerator* testCaseGeneratorProgram = nullptr;
 	/// Manages the process of building the executable from player solution's source code

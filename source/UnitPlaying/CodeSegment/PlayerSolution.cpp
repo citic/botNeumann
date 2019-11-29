@@ -12,8 +12,6 @@
 #include <QDir>
 #include <QTextStream>
 
-const int totalBuildSteps = 2;
-
 
 // Construction -----------------------------------------------------------------------------------
 
@@ -231,7 +229,7 @@ QString PlayerSolution::createBotNeumannSourceFile()
 
 bool PlayerSolution::buildAll()
 {
-	this->builtSteps = 0;
+	this->totalBuildSteps = this->builtSteps = 0;
 	return buildPlayerSolution() && extractSymbols() && generateTestCases();
 }
 
@@ -255,6 +253,7 @@ bool PlayerSolution::buildPlayerSolution()
 	connect( playerSolutionProgram, SIGNAL(buildFinished()), this, SLOT(playerSolutionBuiltFinished()) );
 
 	// Start the compiling process with the files in the solution and the expected executable file
+	++totalBuildSteps;
 	playerSolutionProgram->build( getAllSourceFiles(), getExecutablePath() );
 	return true;
 }
@@ -315,6 +314,7 @@ bool PlayerSolution::extractSymbols()
 	connect( ctagsCall, &CtagsCall::extractionFailed, this, &PlayerSolution::ctagsFailed );
 
 	// Start the symbol extraction process
+//	++totalBuildSteps;
 	return ctagsCall->extractSymbols( getEditableSourceFiles(), getPlayerUnitPath() );
 }
 
@@ -355,6 +355,12 @@ int PlayerSolution::generateTestCases()
 	const ProgramText* randomGenerator = unit->getARandomGenerator();
 	if ( randomGenerator )
 		generateExtraTestCases(randomGenerator);
+
+	// ToDo: Ugly fix
+  #if GAMIFICATION
+	if ( testCasesCount > 0 )
+		++totalBuildSteps;
+  #endif
 
 	// Done
 	return testCasesCount;
